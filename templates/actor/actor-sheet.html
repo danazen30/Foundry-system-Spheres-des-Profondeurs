@@ -1,0 +1,32 @@
+<form class="{{cssClass}}" autocomplete="off">
+
+  <header class="sheet-header">
+    <img class="profile-img" src="{{actor.img}}" data-edit="img" height="100" width="100"/>
+    
+    <h1>
+      <input name="name" type="text" value="{{actor.name}}" placeholder="Nom du personnage"/>
+    </h1>
+  </header>
+
+  <section class="sheet-body">
+    
+    <div class="attribute">
+      <label>Force</label>
+      <input type="number" name="system.attributes.force" value="{{system.attributes.force}}"/>
+    </div>
+
+    <div class="attribute">
+      <label>Endurance</label>
+      <input type="number" name="system.attributes.endurance" value="{{system.attributes.endurance}}"/>
+    </div>
+
+    <div class="attribute">
+      <label>Points de vie</label>
+      <input type="number" name="system.hp.value" value="{{system.hp.value}}"/>
+      /
+      <input type="number" name="system.hp.max" value="{{system.hp.max}}" disabled/>
+    </div>
+
+  </section>
+
+</form>

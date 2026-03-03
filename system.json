@@ -1,0 +1,29 @@
+{
+  "id": "sdp",
+  "title": "spheres des profondeurs",
+  "description": "sphres en formation",
+  "version": "0.0.1",
+  "compatibility": {
+    "minimum": "13",
+    "verified": "13"
+  },
+  "authors": [
+    {
+      "name": "Danazen"
+    }
+  ],
+  "esmodules": [
+    "module/sdp.js"
+  ],
+  "styles": [
+    "styles/sdp.css"
+  ],
+  "documentTypes": {
+    "Actor": {
+      "personnage": {
+        "htmlFields": []
+      }
+    }
+  }
+
+}

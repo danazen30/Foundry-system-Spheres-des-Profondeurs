@@ -1,0 +1,13 @@
+.sdp .sheet-header {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.sdp .attribute {
+  margin: 10px 0;
+}
+
+.sdp input {
+  width: 60px;
+}

@@ -1,0 +1,15 @@
+ { "template": {
+  "Actor": {
+    "personnage": {
+      "attributes": {
+        "force": 1,
+        "endurance": 1
+      },
+      "hp": {
+        "value": 10,
+        "max": 10
+      }
+    }
+  }
+}
+ }
