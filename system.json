@@ -1,7 +1,7 @@
 {
   "id": "sdp",
-  "title": "spheres des profondeurs",
-  "description": "sphres en formation",
+  "title": "Spheres of the Depths",
+  "description": "A custom tabletop RPG system for Foundry VTT",
   "version": "0.0.1",
   "compatibility": {
     "minimum": "13",
@@ -18,9 +18,13 @@
   "styles": [
     "styles/sdp.css"
   ],
+  "url": "https://github.com/danazen30/Foundry-system-Spheres-des-Profondeurs",
+  "manifest": "",
+  "download": "",
+
   "documentTypes": {
     "Actor": {
-      "personnage": {
+      "character": {
         "htmlFields": []
       }
     }
