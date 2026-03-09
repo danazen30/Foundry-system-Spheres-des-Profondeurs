@@ -1,15 +1,385 @@
- { "template": {
+{
   "Actor": {
-    "personnage": {
+    "templates": {
       "attributes": {
-        "force": 1,
-        "endurance": 1
+        "meleeAbility": {
+          "type": "number",
+          "label": "CHAR.MA",
+          "value": 20,
+          "initial": 20,
+          "modifier": 0,
+          "advances": 0,
+          "levelBonus": 0
+        },
+        "rangedAbility": {
+          "type": "number",
+          "label": "CHAR.RA",
+          "value": 20,
+          "initial": 20,
+          "modifier": 0,
+          "advances": 0,
+          "levelBonus": 0
+        },
+        "strength": {
+          "type": "number",
+          "label": "CHAR.S",
+          "value": 20,
+          "initial": 20,
+          "modifier": 0,
+          "advances": 0,
+          "levelBonus": 0
+        },
+        "toughness": {
+          "type": "number",
+          "label": "CHAR.T",
+          "value": 20,
+          "initial": 20,
+          "modifier": 0,
+          "advances": 0,
+          "levelBonus": 0
+        },
+        "initiative": {
+          "type": "number",
+          "label": "CHAR.I",
+          "value": 20,
+          "initial": 20,
+          "modifier": 0,
+          "advances": 0,
+          "levelBonus": 0
+        },
+        "agility": {
+          "type": "number",
+          "label": "CHAR.A",
+          "value": 20,
+          "initial": 20,
+          "modifier": 0,
+          "advances": 0,
+          "levelBonus": 0
+        },
+        "dexterity": {
+          "type": "number",
+          "label": "CHAR.D",
+          "value": 20,
+          "initial": 20,
+          "modifier": 0,
+          "advances": 0,
+          "levelBonus": 0
+        },
+        "intelligence": {
+          "type": "number",
+          "label": "CHAR.Int",
+          "value": 20,
+          "initial": 20,
+          "modifier": 0,
+          "advances": 0,
+          "levelBonus": 0
+        },
+        "willpower": {
+          "type": "number",
+          "label": "CHAR.WP",
+          "value": 20,
+          "initial": 20,
+          "modifier": 0,
+          "advances": 0,
+          "levelBonus": 0
+        },
+        "charisma": {
+          "type": "number",
+          "label": "CHAR.C",
+          "value": 20,
+          "initial": 20,
+          "modifier": 0,
+          "advances": 0,
+          "levelBonus": 0
+        }
       },
-      "hp": {
-        "value": 10,
-        "max": 10
+      "details": {
+        "species": {
+          "type": "string",
+          "label": "Species",
+          "value": ""
+        },
+        "careerGroup": {
+          "type": "string",
+          "label": "Career Group",
+          "value": ""
+        },
+        "career": {
+          "type": "string",
+          "label": "Career",
+          "value": ""
+        },
+        "standing": {
+          "type": "string",
+          "label": "Standing",
+          "value": ""
+        },
+        "age" : {
+          "type": "string",
+          "label": "Age",
+          "value": ""
+        },
+        "height": {
+          "type": "string",
+          "label": "Height",
+          "value": ""
+        },
+        "weight": {
+          "type": "string",
+          "label": "Weight",
+          "value": ""
+        },
+        "hairColor": {
+          "type": "string",
+          "label": "Hair color",
+          "value": ""
+        },
+        "eyeColor": {
+          "type": "string",
+          "label": "Eye color",
+          "value": ""
+        },
+        "distinguishingMark": {
+          "type": "string",
+          "label": "Distinguishing mark",
+          "value": ""
+        },
+        "sign": {
+          "type": "string",
+          "label": "Sign",
+          "value": ""
+        },
+        "polarity": {
+          "type": "string",
+          "label": "Polarity",
+          "value": ""
+        },
+        "motivation": {
+          "type": "string",
+          "label": "Motivation",
+          "value": ""
+        },
+        "gmNotes": {
+          "type": "string",
+          "label": "GM notes",
+          "value": ""
+        },
+        "playerNotes": {
+          "type": "string",
+          "label": "PJ notes",
+          "value": ""
+        },
+        "size": {
+          "type": "string",
+          "label": "Size",
+          "value": "average"          
+        }
+      },
+      "resources": {
+        "movement": {
+          "type": "number",
+          "label": "Movement",
+          "value": 4,
+          "walk": 0,
+          "run": 0
+        },
+        "health": {
+          "type": "number",
+          "label": "Health",
+          "value": 8,
+          "max": 8
+        },
+        "mana": {
+          "type": "number",
+          "label": "Mana",
+          "value": 6,
+          "max": 6
+        },
+        "encumbrance": {
+          "type": "number",
+          "label": "Encumbrance",
+          "value": 0
+        }
+      },
+      "derived": {
+        "woundThreshold": {
+          "type": "number",
+          "label": "Wound Threshold",
+          "value": 0
+        },
+        "evasion": {
+          "type": "number",
+          "label": "evasion",
+          "value": 0
+        },
+        "parry": {
+          "type": "number",
+          "label": "parry",
+          "value": 0
+        },
+        "carryingCapacity": {
+          "type": "number",
+          "label": "carryingCapacity",
+          "value": 0
+        },
+        "attack": {
+          "type": "number",
+          "label": "attack",
+          "value": 0
+        }
       }
+    },
+    "character": {
+      "templates": [
+        "attributes",
+        "details",
+        "resources",
+        "derived"
+        ],
+
+      "details": {
+        "personalAmbitions": {
+          "shortTerm": "",
+          "longTerm": ""
+        },
+        "partyAmbitions": {
+          "name": "",
+          "shortTerm": "",
+          "longTerm": ""
+        },
+        "level": {
+          "type": "number",
+          "label": "level",
+          "value": 0
+        },
+        "experience": {
+          "type": "number",
+          "label": "Experience",
+          "total": 0,
+          "spent": 0,
+          "log": []
+        },
+        "biography": {
+          "type": "string",
+          "label": "Biography",
+          "value": ""
+        }
+      },
+
+      "resources": {
+        "fate": {
+          "type": "number",
+          "label": "Fate",
+          "value": 0
+        },
+        "fortune": {
+          "type": "number",
+          "label": "Fortune",
+          "value": 0
+        },
+        "resilience": {
+          "type": "number",
+          "label": "Resilience",
+          "value": 0
+        },
+        "resolve": {
+          "type": "number",
+          "label": "Resolve",
+          "value": 0
+        },
+        "corruption": {
+          "type": "number",
+          "label": "Corruption",
+          "value": 0
+        }
+      }
+    },
+
+    "npc": {
+      "templates": [
+        "attributes",
+        "details",
+        "resources",
+        "derived"
+      ],
+
+      "details": {
+        "level": {
+          "type": "number",
+          "label": "level",
+          "value": 0
+        }
+      }
+    },
+
+    "creature": {
+      "templates": [
+        "attributes",
+        "details",
+        "resources",
+        "derived"
+      ]
+    }
+  },
+  "item": {
+    "templates": {
+      "quantity": {
+        "type": "number",
+        "label": "Quantity",
+        "value": 0
+      },
+      "descritpion": {
+        "type": "string",
+        "label": "Descriptinon",
+        "value": ""
+      },
+      "encumbrance": {
+        "type": "number",
+        "label": "Encumbrance",
+        "value": 0
+      },
+      "price": {
+        "type": "string",
+        "label": "Price",
+        "po": 0,
+        "pa": 0,
+        "pc": 0
+      },
+      "gmNotes": {
+        "type": "string",
+        "label": "GM notes",
+        "value": ""
+      },
+      "playerNotes": {
+        "type": "string",
+        "label": "Player Notes",
+        "value": ""
+      }
+    },
+    "weapon": {
+      "category": "melee",
+      "skill": "melee",
+      "weaponGroup": "basic",
+      "parryBonus": 0,
+      "attackBonus": 0,
+      "damage" : 0,
+      "range": 0,
+      "offhand": false,
+      "handedness": "one",
+      "equipped": false,
+      "ammunitionGroup": "",
+      "currentAmmo" : "",
+      "consumesAmmo": true
+    },
+    "skills": {
+      "keys": "",
+      "characteristic": "",
+      "type": "basic",
+      "canAdvance": true,
+      "advances": 0,
+      "modifier": 0,
+      "value": 0,
+      "bonus": 0
     }
   }
 }
- }

@@ -1,0 +1,158 @@
+<form class="{{cssClass}}" autocomplete="off">
+
+<header class="sheet-header">
+
+<h1>
+<input
+type="text"
+name="name"
+value="{{item.name}}"
+placeholder="Skill Name"
+/>
+</h1>
+
+</header>
+
+
+<section class="sheet-body">
+
+
+<!-- KEY -->
+
+<div class="form-group">
+<label>Key</label>
+
+<input
+type="text"
+name="system.key"
+value="{{system.key}}"
+/>
+
+</div>
+
+
+<!-- CHARACTERISTIC -->
+
+<div class="form-group">
+
+<label>Characteristic</label>
+
+<select name="system.characteristic">
+
+{{#select system.characteristic}}
+
+<option value="meleeAbility">Melee Ability</option>
+<option value="rangedAbility">Ranged Ability</option>
+<option value="strength">Strength</option>
+<option value="toughness">Toughness</option>
+<option value="initiative">Initiative</option>
+<option value="agility">Agility</option>
+<option value="dexterity">Dexterity</option>
+<option value="intelligence">Intelligence</option>
+<option value="willpower">Willpower</option>
+<option value="charisma">Charisma</option>
+
+{{/select}}
+
+</select>
+
+</div>
+
+
+<!-- TYPE -->
+
+<div class="form-group">
+
+<label>Type</label>
+
+<select name="system.type">
+
+<option value="basic">Basic</option>
+<option value="advanced">Advanced</option>
+
+</select>
+
+</div>
+
+
+<!-- CAN ADVANCE -->
+
+<div class="form-group">
+
+<label>Can Advance</label>
+
+<input
+type="checkbox"
+name="system.canAdvance"
+{{checked system.canAdvance}}
+/>
+
+</div>
+
+
+<!-- ADVANCES -->
+
+<div class="form-group">
+
+<label>Advances</label>
+
+<input
+type="number"
+name="system.advances"
+value="{{system.advances}}"
+/>
+
+</div>
+
+
+<!-- MODIFIER -->
+
+<div class="form-group">
+
+<label>Modifier</label>
+
+<input
+type="number"
+name="system.modifier"
+value="{{system.modifier}}"
+/>
+
+</div>
+
+
+<!-- DESCRIPTION -->
+
+<div class="form-group">
+
+<label>Description</label>
+
+<textarea name="system.description">{{system.description}}</textarea>
+
+</div>
+
+
+<!-- PLAYER NOTES -->
+
+<div class="form-group">
+
+<label>Player Notes</label>
+
+<textarea name="system.playerNotes">{{system.playerNotes}}</textarea>
+
+</div>
+
+
+<!-- GM NOTES -->
+
+<div class="form-group">
+
+<label>GM Notes</label>
+
+<textarea name="system.gmNotes">{{system.gmNotes}}</textarea>
+
+</div>
+
+
+</section>
+
+</form>

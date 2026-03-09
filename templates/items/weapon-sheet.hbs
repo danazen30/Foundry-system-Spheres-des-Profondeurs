@@ -1,0 +1,112 @@
+<form class="{{cssClass}}" autocomplete="off">
+
+<h1>
+<input type="text" name="name" value="{{item.name}}" />
+</h1>
+
+<h2>Weapon</h2>
+
+<label>Weapon Category</label>
+
+<select name="system.category">
+
+{{#select system.category}}
+
+<option value="melee">Melee</option>
+<option value="ranged">Ranged</option>
+
+{{/select}}
+
+</select>
+
+<div class="form-group">
+
+<label>Skill</label>
+
+<input
+type="text"
+name="system.skill"
+value="{{system.skill}}" />
+
+</div>
+
+
+<div class="form-group">
+
+<label>Weapon Group</label>
+
+<input
+type="text"
+name="system.weaponGroup"
+value="{{system.weaponGroup}}" />
+
+</div>
+
+
+<div class="form-group">
+
+<label>Attack Bonus</label>
+
+<input
+type="number"
+name="system.attackBonus"
+value="{{system.attackBonus}}" />
+
+</div>
+
+
+<div class="form-group">
+
+<label>Parry Bonus</label>
+
+<input
+type="number"
+name="system.parryBonus"
+value="{{system.parryBonus}}" />
+
+</div>
+
+
+<div class="form-group">
+
+<label>Offhand</label>
+
+<input
+type="checkbox"
+name="system.offhand"
+{{checked system.offhand}} />
+
+</div>
+
+
+<div class="form-group">
+
+<label>Handedness</label>
+
+<select name="system.handedness">
+
+{{#select system.handedness}}
+
+<option value="one">One Hand</option>
+<option value="two">Two Hands</option>
+<option value="special">Special</option>
+
+{{/select}}
+
+</select>
+</div>
+
+
+<div class="form-group">
+
+<label>Equipped</label>
+
+<input
+type="checkbox"
+name="system.equipped"
+data-item-id="{{item.id}}"
+{{checked system.equipped}} />
+
+</div>
+
+</form>

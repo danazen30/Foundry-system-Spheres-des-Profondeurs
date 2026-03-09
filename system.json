@@ -18,6 +18,7 @@
   "styles": [
     "styles/sdp.css"
   ],
+
   "url": "https://github.com/danazen30/Foundry-system-Spheres-des-Profondeurs",
   "manifest": "",
   "download": "",
@@ -25,9 +26,34 @@
   "documentTypes": {
     "Actor": {
       "character": {
-        "htmlFields": []
+        "htmlFields": [
+          "system.details.gmNotes.value",
+          "system.details.playerNotes.value",
+          "system.details.motivation.value",
+          "system.details.personalAmbitions.value",
+          "system.details.partyAmbitions.value"
+        ]
+      },
+      "npc": {
+        "htmlFields": [
+          "system.details.gmNotes.value",
+          "system.details.playerNotes.value",
+          "system.details.motivation.value"
+        ]
+      },
+      "creature": {
+        "htmlFields": [
+          "system.details.gmNotes.value",
+          "system.details.playerNotes.value",
+          "system.details.motivation.value"
+        ]
       }
+    },
+    "Item": {
+      "skill": {},
+      "weapon": {},
+      "talent": {},
+      "spell": {}
     }
   }
-
 }

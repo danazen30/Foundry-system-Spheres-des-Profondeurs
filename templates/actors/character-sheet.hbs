@@ -1,0 +1,186 @@
+<form class="{{cssClass}}" autocomplete="off">
+
+<h1>{{actor.name}}</h1>
+
+<div class="attributes-grid">
+
+<div class="attr-header"></div>
+
+{{#each system.attributes as |attr key|}}
+<div class="attr-header">{{attr.label}}</div>
+{{/each}}
+
+<div class="attr-row">Init</div>
+{{#each system.attributes as |attr key|}}
+<input
+type="number"
+name="system.attributes.{{key}}.initial"
+value="{{attr.initial}}">
+{{/each}}
+
+<div class="attr-row">Adv</div>
+{{#each system.attributes as |attr key|}}
+<input
+type="number"
+name="system.attributes.{{key}}.advances"
+value="{{attr.advances}}">
+{{/each}}
+
+<div class="attr-row">Mod</div>
+{{#each system.attributes as |attr key|}}
+<input
+type="number"
+name="system.attributes.{{key}}.modifier"
+value="{{attr.modifier}}">
+{{/each}}
+
+<div class="attr-row">Final</div>
+{{#each system.attributes as |attr key|}}
+<input
+type="number"
+value="{{attr.value}}"
+disabled>
+{{/each}}
+
+</div>
+
+
+<h2>Resources</h2>
+
+<div class="resource-row">
+
+<label>Health</label>
+
+<input
+type="number"
+name="system.resources.health.value"
+value="{{system.resources.health.value}}">
+
+</div>
+
+
+<div class="resource-row">
+
+<label>Mana</label>
+
+<input
+type="number"
+name="system.resources.mana.value"
+value="{{system.resources.mana.value}}">
+
+</div>
+
+
+<h2>Derived</h2>
+
+<div class="derived">
+
+<p>Parry : {{system.derived.parry.value}}</p>
+
+<p>Evasion : {{system.derived.evasion.value}}</p>
+
+<p>Wound Threshold : {{system.derived.woundThreshold.value}}</p>
+
+<p>Attack : {{system.derived.attack.value}}</p>
+
+</div>
+
+<h2>Skills</h2>
+
+<table class="skills-table">
+
+<thead>
+<tr>
+<th>Name</th>
+<th>Characteristic</th>
+<th>Adv</th>
+<th>Value</th>
+</tr>
+</thead>
+
+<tbody>
+
+{{#each actor.items as |item|}}
+{{#if (eq item.type "skill")}}
+
+<tr>
+
+<td>{{item.name}}</td>
+
+<td>{{item.system.characteristic}}</td>
+
+<td>
+<input
+type="number"
+class="skill-advances"
+data-item-id="{{item.id}}"
+value="{{item.system.advances}}">
+</td>
+
+<td>{{item.system.value}}</td>
+
+</tr>
+
+{{/if}}
+{{/each}}
+
+</tbody>
+
+</table>
+
+<h2>Weapons</h2>
+
+<table class="weapons-table">
+
+<thead>
+<tr>
+<th>Name</th>
+<th>Skill</th>
+<th>Atk</th>
+<th>Parry</th>
+<th>Offhand</th>
+<th>Equipped</th>
+</tr>
+</thead>
+
+<tbody>
+
+{{#each actor.items as |item|}}
+{{#if (eq item.type "weapon")}}
+
+<tr>
+
+<td>{{item.name}}</td>
+
+<td>{{item.system.skill}}</td>
+
+<td>{{item.system.attackBonus}}</td>
+
+<td>{{item.system.parryBonus}}</td>
+
+<td>
+<input
+type="checkbox"
+class="weapon-offhand"
+data-item-id="{{item.id}}"
+{{checked item.system.offhand}}>
+</td>
+
+<td>
+<input
+type="checkbox"
+class="weapon-equipped"
+data-item-id="{{item.id}}"
+{{checked item.system.equipped}}>
+</td>
+
+</tr>
+
+{{/if}}
+{{/each}}
+
+</tbody>
+
+</table>
+
+</form>

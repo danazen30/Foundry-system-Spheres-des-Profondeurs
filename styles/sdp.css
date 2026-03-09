@@ -1,13 +1,65 @@
-.sdp .sheet-header {
-  display: flex;
-  gap: 10px;
-  align-items: center;
+.attributes-grid{
+display:grid;
+grid-template-columns:80px repeat(10,60px);
+gap:4px;
+align-items:center;
+text-align:center;
+margin-bottom:10px;
 }
 
-.sdp .attribute {
-  margin: 10px 0;
+.attr-header{
+font-weight:bold;
 }
 
-.sdp input {
-  width: 60px;
+.attr-row{
+font-weight:bold;
+background:#ddd;
+padding:4px;
+}
+
+.attributes-grid input{
+width:50px;
+text-align:center;
+}
+
+.resource-row{
+display:flex;
+align-items:center;
+gap:10px;
+margin-bottom:5px;
+}
+
+.derived{
+margin-top:10px;
+}
+
+.skills-table{
+width:100%;
+border-collapse:collapse;
+margin-top:10px;
+}
+
+.skills-table th,
+.skills-table td{
+border:1px solid #444;
+padding:4px;
+text-align:center;
+}
+
+.skills-table input{
+width:50px;
+text-align:center;
+}
+
+.weapons-table{
+width:100%;
+border-collapse:collapse;
+margin-top:10px;
+}
+
+.weapons-table th,
+.weapons-table td{
+border:1px solid #444;
+padding:4px;
+text-align:center;
 }

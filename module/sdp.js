@@ -1,47 +1,42 @@
-Hooks.once("init", async function () {
-  console.log("Mon Système | Initialisation");
+import { SdpActor } from "./actors/actor.js";
+import { SdpActorSheet } from "./actors/actor-sheet.js";
+import { SdpItemSheet } from "./items/item-sheet.js";
+import { SdpWeaponSheet } from "./items/weapon-sheet.js";
 
-  // Définir une classe Actor personnalisée
-  class sdpActor extends Actor {
-    prepareData() {
-      super.prepareData();
-      const data = this.system;
+Hooks.once("init", () => {
 
-      // Exemple : calcul automatique
-      data.hp.max = data.attributes.endurance * 5;
-    }
-  }
+  console.log("SDP | Initializing Spheres of the Depths system");
 
-  // Enregistrer la classe
-  CONFIG.Actor.documentClass = sdpActor;
+  // =========================
+  // Actor
+  // =========================
 
-  // Enregistrer la feuille personnalisée
+  CONFIG.Actor.documentClass = SdpActor;
+
   Actors.unregisterSheet("core", ActorSheet);
-  Actors.registerSheet("sdp", sdpActorSheet, {
-    types: ["personnage"],
+
+  Actors.registerSheet("sdp", SdpActorSheet, {
+    types: ["character"],
     makeDefault: true
   });
+
+
+  // =========================
+  // Items
+  // =========================
+
+  Items.unregisterSheet("core", ItemSheet);
+
+  // Feuille générique (skills, talents etc)
+  Items.registerSheet("sdp", SdpItemSheet, {
+    types: ["skill"],
+    makeDefault: true
+  });
+
+  // Feuille arme
+  Items.registerSheet("sdp", SdpWeaponSheet, {
+    types: ["weapon"],
+    makeDefault: true
+  });
+
 });
-
-
-// ===========================
-// FEUILLE DE PERSONNAGE
-// ===========================
-
-class sdpActorSheet extends ActorSheet {
-
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: ["sdp", "sheet", "actor"],
-      template: "systems/sdp/templates/actor/actor-sheet.html",
-      width: 600,
-      height: 600
-    });
-  }
-
-  getData() {
-    const context = super.getData();
-    context.system = context.actor.system;
-    return context;
-  }
-}
