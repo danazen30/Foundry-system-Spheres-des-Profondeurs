@@ -1,0 +1,57 @@
+<form class="{{cssClass}}" autocomplete="off">
+
+<h2>{{item.name}}</h2>
+
+<div class="armor-main">
+
+<label>Armor Type</label>
+<input
+type="text"
+name="system.armorType.value"
+value="{{system.armorType.value}}">
+
+<label>Worn</label>
+<input
+type="checkbox"
+name="system.worn.value"
+{{checked system.worn.value}}>
+
+</div>
+
+<h3>Armor Points</h3>
+
+<div class="armor-grid">
+
+<label>Head</label>
+<input type="number" name="system.AP.head" value="{{system.AP.head}}">
+
+<label>Body</label>
+<input type="number" name="system.AP.body" value="{{system.AP.body}}">
+
+<label>Left Arm</label>
+<input type="number" name="system.AP.leftArm" value="{{system.AP.leftArm}}">
+
+<label>Right Arm</label>
+<input type="number" name="system.AP.rightArm" value="{{system.AP.rightArm}}">
+
+<label>Left Leg</label>
+<input type="number" name="system.AP.leftLeg" value="{{system.AP.leftLeg}}">
+
+<label>Right Leg</label>
+<input type="number" name="system.AP.rightLeg" value="{{system.AP.rightLeg}}">
+
+</div>
+
+<h3>Qualities</h3>
+
+<textarea
+name="system.qualities.value"
+rows="2">{{system.qualities.value}}</textarea>
+
+<h3>Flaws</h3>
+
+<textarea
+name="system.flaws.value"
+rows="2">{{system.flaws.value}}</textarea>
+
+</form>

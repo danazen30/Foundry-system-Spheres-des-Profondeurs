@@ -328,9 +328,9 @@
         "label": "Quantity",
         "value": 0
       },
-      "descritpion": {
+      "description": {
         "type": "string",
-        "label": "Descriptinon",
+        "label": "Description",
         "value": ""
       },
       "encumbrance": {
@@ -347,7 +347,7 @@
       },
       "gmNotes": {
         "type": "string",
-        "label": "GM notes",
+        "label": "GM Notes",
         "value": ""
       },
       "playerNotes": {
@@ -356,30 +356,226 @@
         "value": ""
       }
     },
+
     "weapon": {
-      "category": "melee",
-      "skill": "melee",
-      "weaponGroup": "basic",
-      "parryBonus": 0,
-      "attackBonus": 0,
-      "damage" : 0,
-      "range": 0,
-      "offhand": false,
-      "handedness": "one",
-      "equipped": false,
-      "ammunitionGroup": "",
-      "currentAmmo" : "",
-      "consumesAmmo": true
+      "templates": [
+        "quantity",
+        "description",
+        "encumbrance",
+        "price",
+        "gmNotes",
+        "playerNotes"
+      ],
+
+      "category": {
+        "type": "string",
+        "label": "Category",
+        "value": "melee"
+      },
+
+      "skill": {
+        "type": "string",
+        "label": "Skill",
+        "value": "melee"
+      },
+
+      "weaponGroup": {
+        "type": "string",
+        "label": "Weapon Group",
+        "value": "basic"
+      },
+
+      "parryBonus": {
+        "type": "number",
+        "label": "Parry Bonus",
+        "value": 0
+      },
+
+      "attackBonus": {
+        "type": "number",
+        "label": "Attack Bonus",
+        "value": 0
+      },
+
+      "damage": {
+        "type": "number",
+        "label": "Weapon Damage",
+        "value": 0
+      },
+
+      "damageDice": {
+        "type": "string",
+        "label": "Damage Dice",
+        "value": "1d4"
+      },
+
+      "range": {
+        "type": "number",
+        "label": "Range",
+        "value": 0
+      },
+
+      "offhand": {
+        "type": "boolean",
+        "label": "Offhand",
+        "value": false
+      },
+
+      "handedness": {
+        "type": "string",
+        "label": "Handedness",
+        "value": "one"
+      },
+
+      "equipped": {
+        "type": "boolean",
+        "label": "Equipped",
+        "value": false
+      },
+
+      "ammunitionGroup": {
+        "type": "string",
+        "label": "Ammunition Group",
+        "value": ""
+      },
+
+      "currentAmmo": {
+        "type": "string",
+        "label": "Current Ammo",
+        "value": ""
+      },
+
+      "consumesAmmo": {
+        "type": "boolean",
+        "label": "Consumes Ammo",
+        "value": true
+      }
     },
-    "skills": {
-      "keys": "",
-      "characteristic": "",
-      "type": "basic",
-      "canAdvance": true,
-      "advances": 0,
-      "modifier": 0,
-      "value": 0,
-      "bonus": 0
+
+    "skill": {
+      "templates": [
+        "description",
+        "gmNotes",
+        "playerNotes"
+      ],
+
+      "key": {
+        "type": "string",
+        "label": "Key",
+        "value": ""
+      },
+
+      "characteristic": {
+        "type": "string",
+        "label": "Characteristic",
+        "value": ""
+      },
+
+      "type": {
+        "type": "string",
+        "label": "Skill Type",
+        "value": "basic"
+      },
+
+      "canAdvance": {
+        "type": "boolean",
+        "label": "Can Advance",
+        "value": true
+      },
+
+      "advances": {
+        "type": "number",
+        "label": "Advances",
+        "value": 0
+      },
+
+      "modifier": {
+        "type": "number",
+        "label": "Modifier",
+        "value": 0
+      },
+
+      "value": {
+        "type": "number",
+        "label": "Value",
+        "value": 0
+      },
+
+      "bonus": {
+        "type": "number",
+        "label": "Bonus",
+        "value": 0
+      }
+    },
+
+    "talent": {
+      "templates": [
+        "description",
+        "gmNotes",
+        "playerNotes"
+      ],
+      "max": {
+        "type": "number",
+        "label": "Max Advances",
+        "value": 1
+      },
+      "advances": {
+        "type": "number",
+        "label": "Advances",
+        "value": 1
+      },
+      "canAdvance": {
+        "type": "boolean",
+        "label": "Can Advance",
+        "value": true
+      },
+      "key": {
+        "type": "string",
+        "label": "Key",
+        "value": ""
+      }
+    },
+    "armor": {
+            "templates": [
+        "quantity",
+        "description",
+        "encumbrance",
+        "price",
+        "gmNotes",
+        "playerNotes"
+      ],
+      "worn": {
+        "type": "boolean",
+        "label": "worn",
+        "value": false
+      },
+      "armorType": {
+        "type": "string",
+        "label": "Armor Type",
+        "value": ""
+      },
+      "qualities": {
+        "type": "string",
+        "label": "Qualities",
+        "value": ""
+      },
+      "flaws": {
+        "type": "string",
+        "label": ""
+      },
+      "AP": {
+        "head": 0,
+        "body": 0,
+        "leftArm": 0,
+        "rightArm": 0,
+        "leftLeg": 0,
+        "rightLeg": 0
+      },
+      "layer": {
+        "type": "number",
+        "label": "Layer",
+        "value": 1
+      }
     }
   }
 }

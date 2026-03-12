@@ -5,7 +5,10 @@ export class SdpActor extends Actor {
 
     const system = this.system;
 
-    // Création des attributes si absent
+    // =====================
+    // ATTRIBUTES DEFAULT
+    // =====================
+
     const defaultAttributes = {
       meleeAbility: { label: "MA", initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
       rangedAbility: { label: "RA", initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
@@ -33,7 +36,10 @@ export class SdpActor extends Actor {
 
     }
 
-    // Création derived si absent
+    // =====================
+    // DERIVED DEFAULT
+    // =====================
+
     if (!system.derived) {
 
       system.derived = {
@@ -46,12 +52,30 @@ export class SdpActor extends Actor {
 
     }
 
+    // =====================
+    // HEALTH DEFAULT
+    // =====================
+
+if (!system.health) {
+  system.health = { value: 8, max: 8 };
+}
+
+    // =====================
+    // CUSTOM MODIFIERS
+    // =====================
+
+    system.custom ??= {};
+    system.custom.offhandReduction ??= 0;
   }
 
 
   prepareDerivedData() {
 
+    super.prepareDerivedData();
+
     const system = this.system;
+
+    system.custom.offhandReduction = 0;
 
     // =====================
     // ATTRIBUTES
@@ -65,10 +89,31 @@ export class SdpActor extends Actor {
         Number(attr.modifier || 0) +
         Number(attr.levelBonus || 0);
 
-      attr.bonus = attr.value / 10;
+      attr.bonus = Math.floor(attr.value / 10);
 
     }
 
+   // =====================
+// HEALTH CALCULATION
+// =====================
+
+const TB = system.attributes.toughness.bonus;
+const SB = system.attributes.strength.bonus;
+const WPB = system.attributes.willpower.bonus;
+
+const maxHealth = (TB * 2) + SB + WPB;
+
+system.health.max = maxHealth;
+
+// si aucune valeur actuelle → initialise
+if (system.health.value === undefined || system.health.value === null) {
+  system.health.value = maxHealth;
+}
+
+// empêcher dépassement
+if (system.health.value > maxHealth) {
+  system.health.value = maxHealth;
+}
 
     // =====================
     // SKILLS
@@ -87,61 +132,61 @@ export class SdpActor extends Actor {
         Number(skill.system.modifier || 0);
 
       skill.system.bonus =
-        Math.round((skill.system.value / 10) * 10) / 10;
+        Math.floor(skill.system.value / 10);
 
     }
 
-
     // =====================
-    // HELPER : récupérer skill
+    // HELPER
     // =====================
 
     const getSkill = (key) => {
       return skills.find(s => s.system.key === key);
     };
 
-
     const resistance = getSkill("resistance") || null;
     const dodge = getSkill("dodge") || null;
     const brawl = getSkill("brawl") || null;
 
-
     // =====================
-    // TALENTS
+    // WEAPON DAMAGE
     // =====================
 
-    const talents = this.items.filter(i => i.type === "talent");
+    const SB_damage = system.attributes.strength.bonus;
 
-    // réduction du malus offhand
-    let offhandReduction = 0;
+    const weapons = this.items.filter(i => i.type === "weapon");
 
-    for (let talent of talents) {
-      offhandReduction += Number(talent.system.offhandReduction || 0);
+    for (let weapon of weapons) {
+
+      let formula = weapon.system.damage || "0";
+
+      formula = formula.replace("SB", SB_damage);
+
+      let value = 0;
+
+      try {
+        value = Roll.safeEval(formula);
+      } catch {
+        value = 0;
+      }
+
+      weapon.system.finalDamage = value;
+
     }
-
 
     // =====================
     // WEAPONS
     // =====================
+
     const equippedWeapons = this.items.filter(
       i => i.type === "weapon" && i.system.equipped === true
     );
-console.log("Equipped weapons:", equippedWeapons);
-    // =====================
-    // MAIN HAND / OFFHAND
-    // =====================
 
-    // arme principale = première arme non offhand
     let mainWeapon = equippedWeapons.find(w => !w.system.offhand);
 
-    // si aucune définie → première arme
     if (!mainWeapon && equippedWeapons.length > 0) {
       mainWeapon = equippedWeapons[0];
     }
-
-    // =====================
-    // GESTION 2 MAINS
-    // =====================
 
     const twoHandedWeapon = equippedWeapons.find(
       w => w.system.handedness === "two"
@@ -150,28 +195,17 @@ console.log("Equipped weapons:", equippedWeapons);
     let usableWeapons;
 
     if (twoHandedWeapon) {
-
-      // si arme à deux mains → seule utilisable
       usableWeapons = [twoHandedWeapon];
-
     } else {
-
       usableWeapons = equippedWeapons.filter(
         w => w.system.handedness !== "two"
       );
-
     }
-
-
-    // =====================
-    // OFFHAND PENALTY
-    // =====================
 
     const OFFHAND_PENALTY = 2;
 
     const offhandPenalty =
-      Math.max(0, OFFHAND_PENALTY - offhandReduction);
-
+      Math.max(0, OFFHAND_PENALTY - system.custom.offhandReduction);
 
     // =====================
     // PARRY
@@ -191,23 +225,14 @@ console.log("Equipped weapons:", equippedWeapons);
 
         const weaponSkill = getSkill(weapon.system.skill);
 
-        let baseBonus;
-
-        if (weaponSkill) {
-
-          baseBonus = weaponSkill.system.bonus;
-
-        } else {
-
-          baseBonus = system.attributes.meleeAbility.bonus;
-
-        }
+        let baseBonus = weaponSkill
+          ? weaponSkill.system.bonus
+          : system.attributes.meleeAbility.bonus;
 
         let value =
           baseBonus +
           Number(weapon.system.parryBonus || 0);
 
-        // malus offhand
         if (weapon.system.offhand) {
           value -= offhandPenalty;
         }
@@ -228,7 +253,6 @@ console.log("Equipped weapons:", equippedWeapons);
 
     }
 
-
     // =====================
     // ATTACK
     // =====================
@@ -246,28 +270,17 @@ console.log("Equipped weapons:", equippedWeapons);
         let baseBonus;
 
         if (weaponSkill) {
-
           baseBonus = weaponSkill.system.bonus;
-
         } else {
-
-          if (weapon.system.category === "ranged") {
-
-            baseBonus = system.attributes.rangedAbility.bonus;
-
-          } else {
-
-            baseBonus = system.attributes.meleeAbility.bonus;
-
-          }
-
+          baseBonus = weapon.system.category === "ranged"
+            ? system.attributes.rangedAbility.bonus
+            : system.attributes.meleeAbility.bonus;
         }
 
         let value =
           baseBonus +
           Number(weapon.system.attackBonus || 0);
 
-        // malus offhand
         if (weapon.system.offhand) {
           value -= offhandPenalty;
         }
@@ -287,7 +300,6 @@ console.log("Equipped weapons:", equippedWeapons);
       attackBase = system.attributes.meleeAbility.bonus;
 
     }
-
 
     // =====================
     // DERIVED
@@ -312,5 +324,22 @@ console.log("Equipped weapons:", equippedWeapons);
 
   }
 
-}
+  // =====================
+  // TALENT MAX
+  // =====================
 
+  getTalentMax(talent){
+
+    const max = talent.system.max;
+
+    if(!isNaN(max)){
+      return Number(max);
+    }
+
+    const attr = this.system.attributes[max];
+
+    return attr?.bonus ?? 1;
+
+  }
+
+}

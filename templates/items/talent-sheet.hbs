@@ -1,0 +1,101 @@
+<form class="{{cssClass}}" autocomplete="off">
+
+<h1>{{item.name}}</h1>
+
+<div class="form-group">
+<label>Key</label>
+<input type="text" name="system.key" value="{{system.key}}">
+</div>
+
+<div class="form-group">
+<label>Advances</label>
+<input type="number" name="system.advances" value="{{system.advances}}">
+</div>
+
+<div class="form-group">
+<label>Can Advance</label>
+<input type="checkbox" name="system.canAdvance" {{checked system.canAdvance}}>
+</div>
+
+<div class="form-group">
+<label>Max Advances</label>
+
+<select name="system.max">
+
+<option value="1" {{#if (eq system.max "1")}}selected{{/if}}>1</option>
+<option value="2" {{#if (eq system.max "2")}}selected{{/if}}>2</option>
+<option value="3" {{#if (eq system.max "3")}}selected{{/if}}>3</option>
+<option value="4" {{#if (eq system.max "4")}}selected{{/if}}>4</option>
+<option value="5" {{#if (eq system.max "5")}}selected{{/if}}>5</option>
+
+<option value="strength" {{#if (eq system.max "strength")}}selected{{/if}}>Strength Bonus</option>
+<option value="toughness" {{#if (eq system.max "toughness")}}selected{{/if}}>Toughness Bonus</option>
+<option value="agility" {{#if (eq system.max "agility")}}selected{{/if}}>Agility Bonus</option>
+<option value="dexterity" {{#if (eq system.max "dexterity")}}selected{{/if}}>Dexterity Bonus</option>
+<option value="initiative" {{#if (eq system.max "initiative")}}selected{{/if}}>Initiative Bonus</option>
+<option value="intelligence" {{#if (eq system.max "intelligence")}}selected{{/if}}>Intelligence Bonus</option>
+<option value="willpower" {{#if (eq system.max "willpower")}}selected{{/if}}>Willpower Bonus</option>
+<option value="charisma" {{#if (eq system.max "charisma")}}selected{{/if}}>Charisma Bonus</option>
+
+</select>
+
+</div>
+
+<div class="form-group">
+<label>Description</label>
+<textarea name="system.description">{{system.description}}</textarea>
+</div>
+
+<div class="form-group">
+<label>Player Notes</label>
+<textarea name="system.playerNotes">{{system.playerNotes}}</textarea>
+</div>
+
+<div class="form-group">
+<label>GM Notes</label>
+<textarea name="system.gmNotes">{{system.gmNotes}}</textarea>
+</div>
+
+<h2>Effects</h2>
+
+<section class="effects">
+
+<div class="effect-controls">
+
+<a class="effect-control" data-action="create">
+<i class="fas fa-plus"></i> Add Effect
+</a>
+
+</div>
+
+<ol class="effects-list">
+
+{{#each item.effects}}
+
+<li class="effect flexrow" data-effect-id="{{this.id}}">
+
+<div class="effect-name">
+{{this.name}}
+</div>
+
+<div class="effect-controls">
+
+<a class="effect-control" data-action="edit">
+<i class="fas fa-edit"></i>
+</a>
+
+<a class="effect-control" data-action="delete">
+<i class="fas fa-trash"></i>
+</a>
+
+</div>
+
+</li>
+
+{{/each}}
+
+</ol>
+
+</section>
+
+</form>

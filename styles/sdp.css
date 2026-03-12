@@ -63,3 +63,88 @@ border:1px solid #444;
 padding:4px;
 text-align:center;
 }
+
+.talents-table {
+
+  width:100%;
+  border-collapse:collapse;
+  margin-top:10px;
+
+}
+
+.talents-table th,
+.talents-table td{
+
+  border:1px solid #444;
+  padding:4px;
+  text-align:center;
+
+}
+
+.talents-table input{
+
+  width:50px;
+  text-align:center;
+
+}
+
+.roll-attribute,
+.roll-skill {
+  cursor: pointer;
+  background: rgba(0,0,0,0.05);
+}
+
+.roll-attribute:hover,
+.roll-skill:hover {
+  background: rgba(0,0,0,0.15);
+}
+
+.health-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 4px 8px;
+  border: 1px solid #444;
+  border-radius: 6px;
+
+  width: fit-content;
+}
+
+.health-container input {
+  width: 50px;
+  text-align: center;
+}
+
+.health-bar {
+  width: 150px;
+  height: 10px;
+
+  background: #222;
+  border: 1px solid #555;
+  border-radius: 6px;
+
+  overflow: hidden;
+}
+
+.health-bar-fill {
+  height: 100%;
+  background: #c0392b;
+  transition: width 0.3s;
+}
+
+.armors-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.armors-table th,
+.armors-table td {
+  border: 1px solid #444;
+  padding: 4px;
+  text-align: center;
+}
+
+.armors-table th {
+  background: #222;
+}

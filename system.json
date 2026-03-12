@@ -51,8 +51,9 @@
     },
     "Item": {
       "skill": {},
-      "weapon": {},
       "talent": {},
+      "weapon": {},
+      "armor": {},
       "spell": {}
     }
   }

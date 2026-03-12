@@ -39,25 +39,27 @@ value="{{attr.modifier}}">
 <input
 type="number"
 value="{{attr.value}}"
-disabled>
+class="roll-attribute"
+data-attr="{{key}}"
+readonly>
 {{/each}}
 
 </div>
 
-
 <h2>Resources</h2>
 
-<div class="resource-row">
+<div class="health-container">
 
 <label>Health</label>
 
 <input
 type="number"
-name="system.resources.health.value"
-value="{{system.resources.health.value}}">
+name="system.health.value"
+value="{{system.health.value}}">
+
+<span>/ {{system.health.max}}</span>
 
 </div>
-
 
 <div class="resource-row">
 
@@ -70,17 +72,13 @@ value="{{system.resources.mana.value}}">
 
 </div>
 
-
 <h2>Derived</h2>
 
 <div class="derived">
 
 <p>Parry : {{system.derived.parry.value}}</p>
-
 <p>Evasion : {{system.derived.evasion.value}}</p>
-
 <p>Wound Threshold : {{system.derived.woundThreshold.value}}</p>
-
 <p>Attack : {{system.derived.attack.value}}</p>
 
 </div>
@@ -117,7 +115,13 @@ data-item-id="{{item.id}}"
 value="{{item.system.advances}}">
 </td>
 
-<td>{{item.system.value}}</td>
+<td
+class="roll-skill"
+data-item-id="{{item.id}}">
+
+{{item.system.value}}
+
+</td>
 
 </tr>
 
@@ -127,6 +131,64 @@ value="{{item.system.advances}}">
 </tbody>
 
 </table>
+
+
+<h2>Talents</h2>
+
+<table class="talents-table">
+
+<thead>
+<tr>
+<th>Name</th>
+<th>Level</th>
+<th>Max</th>
+</tr>
+</thead>
+
+<tbody>
+
+{{#each actor.items as |item|}}
+{{#if (eq item.type "talent")}}
+
+<tr>
+
+<td>{{item.name}}</td>
+
+<td>
+
+<input
+type="number"
+class="talent-advances"
+data-item-id="{{item.id}}"
+value="{{item.system.advances}}"
+min="0"
+
+max="{{#if (lookup ../system.attributes item.system.max)}}{{lookup (lookup ../system.attributes item.system.max) "bonus"}}{{else}}{{item.system.max}}{{/if}}"
+
+{{#unless item.system.canAdvance}}disabled{{/unless}}
+>
+
+</td>
+
+<td>
+
+{{#if (lookup ../system.attributes item.system.max)}}
+{{lookup (lookup ../system.attributes item.system.max) "bonus"}}
+{{else}}
+{{item.system.max}}
+{{/if}}
+
+</td>
+
+</tr>
+
+{{/if}}
+{{/each}}
+
+</tbody>
+
+</table>
+
 
 <h2>Weapons</h2>
 
@@ -140,6 +202,8 @@ value="{{item.system.advances}}">
 <th>Parry</th>
 <th>Offhand</th>
 <th>Equipped</th>
+<th>Damage</th>
+<th>Attack</th>
 </tr>
 </thead>
 
@@ -172,6 +236,80 @@ type="checkbox"
 class="weapon-equipped"
 data-item-id="{{item.id}}"
 {{checked item.system.equipped}}>
+</td>
+
+<td>
+
+{{item.system.finalDamage}}
+
+{{#if item.system.damageDice}}
+ + {{item.system.damageDice}}
+{{/if}}
+
+</td>
+
+
+<td>
+<button
+class="weapon-attack"
+data-item-id="{{item.id}}">
+Attack
+</button>
+</td>
+
+</tr>
+
+{{/if}}
+{{/each}}
+
+</tbody>
+
+</table>
+
+<h2>Armors</h2>
+
+<table class="armors-table">
+
+<thead>
+<tr>
+<th>Name</th>
+<th>Head</th>
+<th>Body</th>
+<th>L Arm</th>
+<th>R Arm</th>
+<th>L Leg</th>
+<th>R Leg</th>
+<th>Worn</th>
+</tr>
+</thead>
+
+<tbody>
+
+{{#each actor.items as |item|}}
+{{#if (eq item.type "armor")}}
+
+<tr>
+
+<td>{{item.name}}</td>
+
+<td>{{item.system.AP.head}}</td>
+
+<td>{{item.system.AP.body}}</td>
+
+<td>{{item.system.AP.leftArm}}</td>
+
+<td>{{item.system.AP.rightArm}}</td>
+
+<td>{{item.system.AP.leftLeg}}</td>
+
+<td>{{item.system.AP.rightLeg}}</td>
+
+<td>
+<input
+type="checkbox"
+class="armor-worn"
+data-item-id="{{item.id}}"
+{{checked item.system.worn.value}}>
 </td>
 
 </tr>
