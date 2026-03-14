@@ -6,26 +6,25 @@ import { SdpWeaponSheet } from "./items/weapon-sheet.js";
 import { SdpTalentSheet } from "./items/talent-sheet.js";
 import { SdpArmorSheet } from "./items/armor-sheet.js";
 import { SdpItem } from "./items/item.js";
+import { SdpConditionSheet } from "./items/condition-sheet.js";
 
 import { SdpRoll } from "./rolls/roll.js";
 import { SdpDamage } from "./combat/damage.js";
 
-import { SDP } from "./system/config.js"; // ⭐ IMPORT CONFIG
+import { SDP } from "./system/config.js";
+import { SdpConditionEngine } from "./system/condition-engine.js";
+import { SdpTurnEngine } from "./system/turn-engine.js";
 
+
+/* ========================================= */
+/* INIT                                      */
+/* ========================================= */
 
 Hooks.once("init", () => {
 
   console.log("SDP | Initializing Spheres of the Depths system");
 
-  // =========================
-  // CONFIG SYSTEM
-  // =========================
-
-  CONFIG.SDP = SDP; // ⭐ REND LA CONFIG DISPONIBLE PARTOUT
-
-  // =========================
-  // ACTORS
-  // =========================
+  CONFIG.SDP = SDP;
 
   CONFIG.Actor.documentClass = SdpActor;
   CONFIG.Item.documentClass = SdpItem;
@@ -37,37 +36,32 @@ Hooks.once("init", () => {
     makeDefault: true
   });
 
-
-  // =========================
-  // ITEMS
-  // =========================
-
-
   Items.unregisterSheet("core", ItemSheet);
 
-  // skills
   Items.registerSheet("sdp", SdpItemSheet, {
     types: ["skill"],
     makeDefault: true
   });
 
-  // weapons
   Items.registerSheet("sdp", SdpWeaponSheet, {
     types: ["weapon"],
     makeDefault: true
   });
 
-  // talents
   Items.registerSheet("sdp", SdpTalentSheet, {
     types: ["talent"],
     makeDefault: true
   });
 
-  // armor
-Items.registerSheet("sdp", SdpArmorSheet, {
-  types: ["armor"],
-  makeDefault: true
-});
+  Items.registerSheet("sdp", SdpArmorSheet, {
+    types: ["armor"],
+    makeDefault: true
+  });
+
+  Items.registerSheet("sdp", SdpConditionSheet, {
+    types: ["condition"],
+    makeDefault: true
+  });
 
 });
 
@@ -87,10 +81,6 @@ Hooks.on("renderChatMessage", (message, html) => {
 
     game.sdp = game.sdp || {};
 
-    // =========================
-    // AUCUNE OPPOSITION ACTIVE
-    // =========================
-
     if(!game.sdp.opposed){
 
       game.sdp.opposed = {
@@ -100,54 +90,39 @@ Hooks.on("renderChatMessage", (message, html) => {
       };
 
       ui.notifications.info(`${actor}'s roll is now the opposed reference`);
-
       return;
 
     }
-
-    // =========================
-    // OPPOSER DEUX JETS EXISTANTS
-    // =========================
 
     const base = game.sdp.opposed;
 
     let resultText;
 
     if(sl > base.SL){
-
       resultText = `${actor} wins`;
-
     }else if(sl < base.SL){
-
       resultText = `${base.actor} wins`;
-
     }else{
-
       resultText = "Draw";
-
     }
 
     ChatMessage.create({
       content: `
       <h3>Opposed Test</h3>
-
       <p>${base.actor} SL: ${base.SL}</p>
       <p>${actor} SL: ${sl}</p>
-
       <strong>${resultText}</strong>
       `
     });
 
   });
 
+
   html.find(".sdp-stop-opposed").click(ev => {
 
     if(!game.sdp?.opposed){
-
       ui.notifications.warn("No opposition active");
-
       return;
-
     }
 
     game.sdp.opposed = null;
@@ -158,8 +133,8 @@ Hooks.on("renderChatMessage", (message, html) => {
 
 
  //================
-  // SELECT TARGET
-  //================
+ // SELECT TARGET
+ //================
 
   html.find(".select-target").click(async ev => {
 
@@ -292,9 +267,10 @@ Hooks.on("renderChatMessage", (message, html) => {
 
   });
 
-//===================
-// DAMAGE ROLL
-//===================
+
+/* =================== */
+/* DAMAGE ROLL         */
+/* =================== */
 
 html.find(".roll-damage").click(async ev => {
 
@@ -309,39 +285,26 @@ html.find(".roll-damage").click(async ev => {
   const actor = game.actors.get(actorId);
   const weapon = actor.items.get(weaponId);
 
-  let target = null;
   let armor = 0;
 
   if(targetId){
     const token = canvas.tokens.get(targetId);
     if(token){
-      target = token.actor;
-      armor = SdpDamage.getArmorValue(target, location);
+      armor = SdpDamage.getArmorValue(token.actor, location);
     }
   }
 
   const SB = actor.system.attributes.strength.bonus;
 
-  // ==========================
-  // BASE DAMAGE
-  // ==========================
-
   let baseWeapon = 0;
   let diceFormula = weapon.system.damageDice || "";
-
   let baseFormula = weapon.system.damage || "0";
 
-  // récupérer SB si présent
   let useSB = baseFormula.includes("SB");
 
-  // retirer SB pour calculer seulement la partie arme
   baseFormula = baseFormula.replace("SB", "").replace("+", "").trim();
 
   baseWeapon = Number(baseFormula) || 0;
-
-  // ==========================
-  // CRITICAL SUCCESS
-  // ==========================
 
   if(critical){
 
@@ -364,10 +327,6 @@ html.find(".roll-damage").click(async ev => {
 
   }
 
-  // ==========================
-  // BUILD ROLL FORMULA
-  // ==========================
-
   let formula = "";
 
   if(useSB){
@@ -386,55 +345,23 @@ html.find(".roll-damage").click(async ev => {
 
   let damage = roll.total;
 
-  // ==========================
-  // HEADSHOT BONUS
-  // ==========================
-
   if(location === "head"){
     damage = Math.floor(damage * 1.5);
   }
 
-  // ==========================
-  // ARMOR REDUCTION
-  // ==========================
-
   let finalDamage = Math.max(damage - armor, 0);
-
-  // ==========================
-  // PLAYER MESSAGE
-  // ==========================
-
-  let playerMessage = `
-  <h3>Damage Roll</h3>
-
-  <p>Attacker: ${actor.name}</p>
-  <p>Weapon: ${weapon.name}</p>
-
-  <p>Location: ${CONFIG.SDP.hitLocations[location]}</p>
-  `;
 
   roll.toMessage({
     speaker: ChatMessage.getSpeaker({actor}),
-    flavor: playerMessage
+    flavor: `
+    <h3>Damage Roll</h3>
+    <p>Attacker: ${actor.name}</p>
+    <p>Weapon: ${weapon.name}</p>
+    <p>Location: ${CONFIG.SDP.hitLocations[location]}</p>
+    `
   });
 
   if(!targetId) return;
-
-  // ==========================
-  // GM BUTTON
-  // ==========================
-
-  let applyButton = `
-  <button class="apply-damage"
-    data-target="${targetId}"
-    data-damage="${finalDamage}">
-    Apply Damage
-  </button>
-  `;
-
-  // ==========================
-  // GM MESSAGE
-  // ==========================
 
   ChatMessage.create({
 
@@ -448,46 +375,9 @@ html.find(".roll-damage").click(async ev => {
 
     <p>Final Damage: ${finalDamage}</p>
 
-    ${applyButton}
-    `,
-
-    whisper: ChatMessage.getWhisperRecipients("GM")
-
-  });
-
-});
-
-
-//=========================
-// SELECT TARGET AFTER DAMAGE
-//=========================
-
-html.find(".select-damage-target").click(async ev => {
-
-  const damage = Number(ev.currentTarget.dataset.damage);
-
-  const targets = Array.from(game.user.targets);
-
-  if(targets.length === 0){
-
-    ui.notifications.warn("Select a target first");
-
-    return;
-
-  }
-
-  const token = targets[0];
-
-  ChatMessage.create({
-
-    content: `
-    <h3>Damage Ready</h3>
-
-    <p>Target: ${token.name}</p>
-
     <button class="apply-damage"
-      data-target="${token.id}"
-      data-damage="${damage}">
+      data-target="${targetId}"
+      data-damage="${finalDamage}">
       Apply Damage
     </button>
     `,
@@ -499,9 +389,9 @@ html.find(".select-damage-target").click(async ev => {
 });
 
 
-//=========================
-// APPLY DAMAGE (GM)
-//=========================
+/* ========================= */
+/* APPLY DAMAGE              */
+/* ========================= */
 
 html.find(".apply-damage").click(async ev => {
 
@@ -541,19 +431,108 @@ html.find(".apply-damage").click(async ev => {
   });
 
 });
-})
 
+
+/* ========================= */
+/* STUNNED TEST              */
+/* ========================= */
+
+html.find(".stunned-roll").click(async ev => {
+
+  const card = ev.currentTarget.closest(".sdp-stunned-test");
+
+  const actorId = card.dataset.actor;
+  const conditionId = card.dataset.condition;
+
+  const actor = game.actors.get(actorId);
+  const condition = actor.items.get(conditionId);
+
+  const stack = condition.system.stack || 1;
+
+  const resistance = actor.items.find(i =>
+    i.type === "skill" && i.system.key === "resistance"
+  );
+
+  const target = resistance?.system.value ?? actor.system.attributes.toughness.value;
+
+  const roll = await (new Roll("1d100")).roll();
+
+  const result = roll.total;
+
+  const SL = Math.floor(target / 10) - Math.floor(result / 10);
+
+  let removed = 0;
+
+  if(result <= target){
+    removed = Math.max(SL,1);
+  }
+
+  const newStack = Math.max(stack - removed,0);
+
+  roll.toMessage({
+    speaker: ChatMessage.getSpeaker({actor}),
+    flavor: `
+    <h3>Stunned Test</h3>
+    <p>Target: ${target}</p>
+    <p>Roll: ${result}</p>
+    <p>SL: ${SL}</p>
+    <p><strong>Stacks removed: ${removed}</strong></p>
+    `
+  });
+
+  if(newStack <= 0){
+
+    await actor.deleteEmbeddedDocuments("Item",[condition.id]);
+
+    await game.sdp.conditions.applyCondition(actor,"exhausted",1);
+
+  }
+  else{
+
+    await condition.update({
+      "system.stack": newStack
+    });
+
+  }
+
+});
+
+});
+
+
+/* ========================================= */
+/* READY                                     */
+/* ========================================= */
 
 Hooks.once("ready", () => {
 
   game.sdp = game.sdp || {};
+  game.sdp.conditions = SdpConditionEngine;
+  game.sdp.turn = SdpTurnEngine;
 
-  game.sdp.clearOpposition = function(){
+});
 
-    game.sdp.opposed = null;
 
-    ui.notifications.info("Opposition cleared");
+Hooks.on("updateCombat", async (combat, changed) => {
 
-  };
+  if(!("turn" in changed)) return;
 
-})
+  const newTurn = combat.turn;
+
+  const previousTurn =
+    newTurn === 0
+      ? combat.turns.length - 1
+      : newTurn - 1;
+
+  const previousCombatant = combat.turns[previousTurn];
+  const currentCombatant = combat.turns[newTurn];
+
+  if(previousCombatant?.actor){
+    await game.sdp.turn.endTurn(previousCombatant.actor);
+  }
+
+  if(currentCombatant?.actor){
+    await game.sdp.turn.startTurn(currentCombatant.actor);
+  }
+
+});

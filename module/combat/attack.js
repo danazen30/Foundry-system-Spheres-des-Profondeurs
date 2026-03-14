@@ -5,6 +5,22 @@ export class SdpAttack {
 
 static async attackTest(actor, weapon, attackValue){
 
+  // ======================
+// STUNNED CHECK
+// ======================
+
+const stunned = actor.items.find(i =>
+  i.type === "condition" && i.system.key === "stunned"
+);
+
+if(stunned){
+
+  ui.notifications.warn(`${actor.name} is stunned and cannot attack`);
+
+  return;
+
+}
+
   const isRanged = weapon.system.category === "ranged";
 
   const targets = Array.from(game.user.targets);
@@ -138,7 +154,21 @@ if(crit.failure){
 
   }
 
-  const attackScore = attackValue + SL;
+ let bonus = 0;
+
+if(targetActor){
+
+  const stunned = targetActor.items.find(i =>
+    i.type === "condition" && i.system.key === "stunned"
+  );
+
+  if(stunned){
+    bonus = stunned.system.stack || 1;
+  }
+
+}
+
+const attackScore = attackValue + SL + bonus;
 
   let critText = "";
 
@@ -164,7 +194,8 @@ if(crit.failure){
   <p>Roll: ${result}</p>
   <p>SL: ${SL}</p>
   ${critText}
-  <p>Attack Score: ${attackScore}</p>
+ <p>Attack Score: ${attackScore}</p>
+${bonus ? `<p>Bonus vs Stunned: +${bonus}</p>` : ""}
 
   <p>Hit Location: ${CONFIG.SDP.hitLocations[hitLocation.location]} (${hitLocation.roll.total})</p>
 

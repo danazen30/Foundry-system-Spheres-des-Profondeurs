@@ -1,0 +1,67 @@
+<form class="{{cssClass}}" autocomplete="off">
+
+<h1>{{item.name}}</h1>
+
+<div class="form-group">
+<label>Key</label>
+<input type="text" name="system.key" value="{{system.key}}">
+</div>
+
+<div class="form-group">
+<label>Stackable</label>
+<input type="checkbox" name="system.stackable" {{checked system.stackable}}>
+</div>
+
+<div class="form-group">
+<label>Duration</label>
+<input type="number" name="system.duration" value="{{system.duration}}">
+</div>
+
+<div class="form-group">
+<label>Description</label>
+<textarea name="system.description">{{system.description}}</textarea>
+</div>
+
+<h2>Effects</h2>
+
+<section class="effects">
+
+<div class="effect-controls">
+
+<a class="effect-control" data-action="create">
+<i class="fas fa-plus"></i> Add Effect
+</a>
+
+</div>
+
+<ol class="effects-list">
+
+{{#each item.effects}}
+
+<li class="effect flexrow" data-effect-id="{{this.id}}">
+
+<div class="effect-name">
+{{this.name}}
+</div>
+
+<div class="effect-controls">
+
+<a class="effect-control" data-action="edit">
+<i class="fas fa-edit"></i>
+</a>
+
+<a class="effect-control" data-action="delete">
+<i class="fas fa-trash"></i>
+</a>
+
+</div>
+
+</li>
+
+{{/each}}
+
+</ol>
+
+</section>
+
+</form>

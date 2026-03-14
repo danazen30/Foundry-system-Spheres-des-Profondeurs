@@ -321,4 +321,47 @@ data-item-id="{{item.id}}"
 
 </table>
 
-</form>
+<h2>Conditions</h2>
+
+<section class="conditions">
+
+<div class="condition-controls">
+
+<button type="button" class="add-condition">
+Add Condition
+</button>
+
+</div>
+
+<ul class="conditions-list">
+
+{{#each actor.items as |item|}}
+{{#if (eq item.type "condition")}}
+
+<li class="condition flexrow" data-item-id="{{item.id}}">
+
+<span class="condition-name">
+{{item.name}}
+</span>
+
+<input
+type="number"
+class="condition-stack-input"
+data-item-id="{{item.id}}"
+value="{{item.system.stack}}"
+min="1"
+style="width:40px"
+/>
+
+<button class="remove-condition" data-item-id="{{item.id}}">
+Remove
+</button>
+
+</li>
+
+{{/if}}
+{{/each}}
+
+</ul>
+
+</section>

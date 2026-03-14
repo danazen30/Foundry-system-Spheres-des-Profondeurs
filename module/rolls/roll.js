@@ -13,29 +13,29 @@ export class SdpRoll {
 
   }
 
-// =====================
-// CRITICAL CHECK
-// =====================
+  // =====================
+  // CRITICAL CHECK
+  // =====================
 
-static getCritical(result){
+  static getCritical(result){
 
-  let criticalSuccess = false;
-  let criticalFailure = false;
+    let criticalSuccess = false;
+    let criticalFailure = false;
 
-  if(result >= 1 && result <= 5){
-    criticalSuccess = true;
+    if(result >= 1 && result <= 5){
+      criticalSuccess = true;
+    }
+
+    if(result >= 96){
+      criticalFailure = true;
+    }
+
+    return {
+      success: criticalSuccess,
+      failure: criticalFailure
+    };
+
   }
-
-  if(result >= 96){
-    criticalFailure = true;
-  }
-
-  return {
-    success: criticalSuccess,
-    failure: criticalFailure
-  };
-
-}
 
   // =====================
   // BASIC TEST
@@ -47,31 +47,67 @@ static getCritical(result){
 
     const result = roll.total;
 
-    const SL = this.getSuccessLevel(result, value);
+// =====================
+// CONDITION MODIFIERS
+// =====================
+
+let conditionModifier = 0;
+
+const conditions = actor.items.filter(i => i.type === "condition");
+
+for(const condition of conditions){
+
+  const key = condition.system.key;
+
+  const config = CONFIG.SDP.conditionConfig?.[key];
+
+  if(!config?.modifier) continue;
+
+  const stack = condition.system.stack || 1;
+
+  conditionModifier += config.modifier * stack;
+
+}
+
+// =====================
+// GLOBAL MODIFIER
+// =====================
+
+const globalModifier = actor.system.modifiers?.allTests ?? 0;
+
+// =====================
+// FINAL TARGET
+// =====================
+
+const target = value + conditionModifier + globalModifier;
+
+    const SL = this.getSuccessLevel(result, target);
+
     const crit = this.getCritical(result);
 
     let critText = "";
 
-if(crit.success){
-  critText = `<p><strong>CRITICAL SUCCESS</strong></p>`;
-}
+    if(crit.success){
+      critText = `<p><strong>CRITICAL SUCCESS</strong></p>`;
+    }
 
-if(crit.failure){
-  critText = `<p><strong>CRITICAL FAILURE</strong></p>`;
-}
+    if(crit.failure){
+      critText = `<p><strong>CRITICAL FAILURE</strong></p>`;
+    }
 
     const html = `
 <div class="sdp-roll" 
      data-roll="${result}" 
-     data-target="${value}" 
+     data-target="${target}" 
      data-sl="${SL}" 
      data-actor="${actor.name}">
 
   <h3>${actor.name} — ${label}</h3>
 
-  <p>Target: ${value}</p>
+  <p>Target: ${target}</p>
   <p>Roll: ${result}</p>
   <p>SL: ${SL}</p>
+
   ${critText}
 
   <button class="sdp-opposed">Oppose</button>

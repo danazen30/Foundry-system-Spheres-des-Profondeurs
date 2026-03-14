@@ -19,9 +19,64 @@
     "styles/sdp.css"
   ],
 
+
   "url": "https://github.com/danazen30/Foundry-system-Spheres-des-Profondeurs",
   "manifest": "",
   "download": "",
+
+  "initiative": "1d20 + @attributes.initiative.value",
+
+  "packs": [
+
+    {
+      "name": "conditions",
+      "label": "SDP Conditions",
+      "system": "sdp",
+      "path": "packs/conditions",
+      "type": "Item"
+    },
+
+    {
+      "name": "injuries",
+      "label": "SDP Injuries",
+      "system": "sdp",
+      "path": "packs/injuries",
+      "type": "Item"
+    },
+
+    {
+      "name": "traits",
+      "label": "SDP Traits",
+      "system": "sdp",
+      "path": "packs/traits",
+      "type": "Item"
+    },
+
+    {
+      "name": "talents",
+      "label": "SDP Talents",
+      "system": "sdp",
+      "path": "packs/talents",
+      "type": "Item"
+    },
+
+    {
+      "name": "skills",
+      "label": "SDP Skills",
+      "system": "sdp",
+      "path": "packs/skills",
+      "type": "Item"
+    },
+
+    {
+      "name": "weapons",
+      "label": "SDP Weapons",
+      "system": "sdp",
+      "path": "packs/weapons",
+      "type": "Item"
+    }
+
+  ],
 
   "documentTypes": {
     "Actor": {
@@ -54,7 +109,9 @@
       "talent": {},
       "weapon": {},
       "armor": {},
-      "spell": {}
+      "spell": {},
+      "condition": {},
+      "injury": {}
     }
   }
 }

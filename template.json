@@ -227,6 +227,13 @@
           "label": "attack",
           "value": 0
         }
+      },
+      "modifiers": {
+        "allTests": {
+          "type": "number",
+          "label": "All Tests Modifier",
+          "value": 0
+        }
       }
     },
     "character": {
@@ -234,7 +241,8 @@
         "attributes",
         "details",
         "resources",
-        "derived"
+        "derived",
+        "modifiers"
         ],
 
       "details": {
@@ -300,7 +308,8 @@
         "attributes",
         "details",
         "resources",
-        "derived"
+        "derived",
+        "modifiers"
       ],
 
       "details": {
@@ -317,7 +326,8 @@
         "attributes",
         "details",
         "resources",
-        "derived"
+        "derived",
+        "modifiers"
       ]
     }
   },
@@ -575,6 +585,73 @@
         "type": "number",
         "label": "Layer",
         "value": 1
+      }
+    },
+    "condition": {
+      "templates": [
+        "description",
+        "gmNotes",
+        "playerNotes"
+      ],
+      "key": {
+        "type": "string",
+        "label": "Condition Key",
+        "value": ""
+      },
+      "severity": {
+        "type": "string",
+        "label": "Severity",
+        "value": ""
+      },
+      "stackable": {
+        "type": "boolean",
+        "label": "Stackable",
+        "value": false
+      },
+      "stack": {
+        "type": "number",
+        "value": 1
+      },
+      "duration": {
+        "type": "number",
+        "label": "Duration",
+        "value": 0
+      }
+    },
+    "injury": {
+      "templates": [
+        "description",
+        "gmNotes",
+        "playerNotes"
+      ],
+      "severity": {
+        "type": "string",
+        "label": "Severity",
+        "value": ""
+      },
+
+      "location": {
+        "type": "string",
+        "label": "Location",
+        "value": ""
+      },
+
+      "resistanceTest": {
+        "type": "string",
+        "label": "Resistance Test",
+        "value": ""
+      },
+
+      "conditionOnFailure": {
+        "type": "string",
+        "label": "Condition on Failure",
+        "value": ""
+      },
+
+      "conditionOnSuccess": {
+        "type": "string",
+        "label": "Condition on Success",
+        "value": ""
       }
     }
   }
