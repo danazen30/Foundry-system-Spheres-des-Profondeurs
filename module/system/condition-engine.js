@@ -1,134 +1,145 @@
+import { SDP } from "./config.js";
+
 export class SdpConditionEngine {
 
-  // ===============================
-  // CHECK CONDITION
-  // ===============================
+  static get(actor, key){
 
-  static hasCondition(actor, key){
-
-    return actor.items.find(i =>
-      i.type === "condition" && i.system.key === key
-    );
+    return actor.system.conditions?.[key] ?? 0;
 
   }
 
-  // ===============================
-  // APPLY CONDITION
-  // ===============================
+  static async add(actor, key, value = 1){
 
-  static async applyCondition(actor, key, value = 1){
+    const config = SDP.conditionConfig[key];
 
-    const existing = actor.items.find(i =>
-      i.type === "condition" && i.system.key === key
-    );
+    // =====================
+// FRIGHTENED OVERRIDE
+// =====================
 
-    if(existing){
+if(key === "frightened"){
 
-      const stack = existing.system.stack || 1;
+  await actor.update({
+    "system.conditions.shaken": false
+  });
 
-      await existing.update({
-        "system.stack": stack + value
+}
+
+    // =====================
+    // STATE CONDITIONS
+    // =====================
+
+    if(config?.type === "state"){
+
+      await actor.update({
+        [`system.conditions.${key}`]: true
       });
 
-      await this.updateConditionEffects(existing);
-
-      return existing;
+      return;
 
     }
 
-    const pack = game.packs.get("sdp.conditions");
+    // =====================
+    // STACK CONDITIONS
+    // =====================
 
-    const index = await pack.getIndex();
+    const current = this.get(actor, key);
+    const newValue = current + value;
 
-    const entry = index.find(e => e.system.key === key);
+    await actor.update({
+      [`system.conditions.${key}`]: newValue
+    });
 
-    if(!entry) return;
+    // =====================
+    // EXHAUSTION LIMIT
+    // =====================
 
-    const doc = await pack.getDocument(entry._id);
+    if(key === "exhausted"){
 
-    const data = doc.toObject();
+      const TB = actor.system.attributes.toughness.bonus;
 
-    data.system.stack = value;
+      if(newValue >= TB){
 
-    const created = await actor.createEmbeddedDocuments("Item",[data]);
-
-    const condition = created[0];
-
-    await this.updateConditionEffects(condition);
-
-    return condition;
-
-  }
-
-  // ===============================
-  // REMOVE CONDITION
-  // ===============================
-
-  static async removeCondition(actor, key, stacks = 1){
-
-    const existing = this.hasCondition(actor, key);
-
-    if(!existing) return;
-
-    const current = existing.system.stack || 1;
-
-    const newStack = current - stacks;
-
-    if(newStack <= 0){
-
-      await actor.deleteEmbeddedDocuments("Item",[existing.id]);
-
-    }else{
-
-      await existing.update({
-        "system.stack": newStack
-      });
-
-      await this.updateConditionEffects(existing);
-
-    }
-
-  }
-
-  // ===============================
-  // CLEAR CONDITION
-  // ===============================
-
-  static async clearCondition(actor, key){
-
-    const existing = this.hasCondition(actor, key);
-
-    if(!existing) return;
-
-    await actor.deleteEmbeddedDocuments("Item",[existing.id]);
-
-  }
-
-  // ===============================
-  // UPDATE EFFECTS BY STACK
-  // ===============================
-
-  static async updateConditionEffects(condition){
-
-    const stack = condition.system.stack || 1;
-
-    for(const effect of condition.effects){
-
-      for(const change of effect.changes){
-
-        const base = Number(change.value) || 0;
-
-        const newValue = base * stack;
-
-        change.value = newValue;
+        await actor.update({
+          "system.conditions.unconscious": true,
+          "system.conditions.prone": true
+        });
 
       }
 
-      await effect.update({
-        changes: effect.changes
+    }
+
+  }
+
+  static async remove(actor, key, value = 1){
+
+    const config = SDP.conditionConfig[key];
+
+    // =====================
+    // STATE CONDITIONS
+    // =====================
+
+    if(config?.type === "state"){
+
+      await actor.update({
+        [`system.conditions.${key}`]: false
+      });
+
+      return;
+
+    }
+
+    // =====================
+    // STACK CONDITIONS
+    // =====================
+
+    const current = this.get(actor, key);
+    const newValue = Math.max(current - value, 0);
+
+    await actor.update({
+      [`system.conditions.${key}`]: newValue
+    });
+
+    // =====================
+    // FATIGUE FROM RECOVERY
+    // =====================
+
+    if((key === "stunned" || key === "poisoned") && newValue === 0){
+
+      const exhausted = actor.system.conditions.exhausted ?? 0;
+
+      await actor.update({
+        "system.conditions.exhausted": exhausted + 1
       });
 
     }
+
+  }
+
+  static async clear(actor, key){
+
+    const config = SDP.conditionConfig[key];
+
+    // =====================
+    // STATE CONDITIONS
+    // =====================
+
+    if(config?.type === "state"){
+
+      await actor.update({
+        [`system.conditions.${key}`]: false
+      });
+
+      return;
+
+    }
+
+    // =====================
+    // STACK CONDITIONS
+    // =====================
+
+    await actor.update({
+      [`system.conditions.${key}`]: 0
+    });
 
   }
 

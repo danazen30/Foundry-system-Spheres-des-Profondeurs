@@ -9,14 +9,11 @@ static async attackTest(actor, weapon, attackValue){
 // STUNNED CHECK
 // ======================
 
-const stunned = actor.items.find(i =>
-  i.type === "condition" && i.system.key === "stunned"
-);
+const stunned = actor.system.conditions?.stunned || 0;
 
-if(stunned){
+if(stunned > 0){
 
   ui.notifications.warn(`${actor.name} is stunned and cannot attack`);
-
   return;
 
 }
@@ -25,13 +22,54 @@ if(stunned){
 
   const targets = Array.from(game.user.targets);
 
-  let targetId = null;
-  let targetActor = null;
+let targetId = null;
+let targetActor = null;
 
-  if(targets.length > 0){
-    targetId = targets[0].id;
-    targetActor = targets[0].actor;
+let conditionText = "";
+let bonus = 0;
+
+if(targets.length > 0){
+
+  targetId = targets[0].id;
+  targetActor = targets[0].actor;
+
+if(targetActor){
+
+  const stunned = targetActor.system.conditions?.stunned || 0;
+  const deafened = targetActor.system.conditions?.deafened || 0;
+  const prone = targetActor.system.conditions?.prone || false;
+  const surprised = targetActor.system.conditions?.surprised ? 3 : 0;
+
+  if(stunned > 0){
+
+    bonus += stunned;
+    conditionText += `<p>Bonus vs Stunned: +${stunned}</p>`;
+
   }
+
+  if(deafened > 0){
+
+    bonus += deafened;
+    conditionText += `<p>Bonus vs Deafened: +${deafened}</p>`;
+
+  }
+
+  if(surprised){
+
+  bonus += surprised;
+  conditionText += `<p>Bonus vs Surprised: +3</p>`;
+
+}
+
+  if(prone){
+
+  bonus += 2;
+  conditionText += `<p>Bonus vs Prone: +2</p>`;
+
+  }
+}
+
+}
 
   const hitLocation = await rollHitLocation();
 
@@ -54,6 +92,33 @@ if(stunned){
     }else{
       targetValue = actor.system.attributes.rangedAbility.value;
     }
+
+    // ======================
+// DEAFENED MODIFIER
+// ======================
+
+const deafenedStacks = actor.system.conditions?.deafened || 0;
+
+if(deafenedStacks > 0){
+
+  targetValue -= deafenedStacks * 10;
+
+}
+
+    // ======================
+// POISON MODIFIER (RANGED)
+// ======================
+
+const poisonStacks = actor.system.conditions?.poisoned || 0;
+const exhaustedStacks = actor.system.conditions?.exhausted || 0;
+const shaken = actor.system.conditions?.shaken ? 1 : 0;
+const frightened = actor.system.conditions?.frightened ? 3 : 0;
+
+const penalty = (poisonStacks + exhaustedStacks + shaken + frightened) * 10;
+
+if(penalty > 0){
+  targetValue -= penalty;
+}
 
     let source;
 
@@ -154,20 +219,6 @@ if(crit.failure){
 
   }
 
- let bonus = 0;
-
-if(targetActor){
-
-  const stunned = targetActor.items.find(i =>
-    i.type === "condition" && i.system.key === "stunned"
-  );
-
-  if(stunned){
-    bonus = stunned.system.stack || 1;
-  }
-
-}
-
 const attackScore = attackValue + SL + bonus;
 
   let critText = "";
@@ -195,7 +246,7 @@ if(crit.failure){
   <p>SL: ${SL}</p>
   ${critText}
  <p>Attack Score: ${attackScore}</p>
-${bonus ? `<p>Bonus vs Stunned: +${bonus}</p>` : ""}
+ ${conditionText}
 
   <p>Hit Location: ${CONFIG.SDP.hitLocations[hitLocation.location]} (${hitLocation.roll.total})</p>
 

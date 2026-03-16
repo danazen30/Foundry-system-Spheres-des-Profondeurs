@@ -28,7 +28,7 @@ SDP.conditions = {
   entangled: "Entangled",
   unconscious: "Unconscious",
   dying: "Dying",
-  confused: "Confused"
+  surprised: "Surprised"
 
 };
 
@@ -43,23 +43,85 @@ SDP.turnConditions = {
 SDP.conditionConfig = {
 
   stunned: {
-    stackable: true,
+    type: "stack",
     modifier: -10,
-    trigger: "endTurn",
+    attackBonusAgainst: 1,
+    trigger: "startTurn",
     test: "resistance",
     onRecover: "exhausted"
   },
 
   bleeding: {
-    stackable: true,
-    trigger: "startTurn",
+    type: "stack",
+    trigger: "endTurn",
     damagePerStack: 1
   },
 
+  staggered: {
+    type: "state"
+
+  },
+  poisoned: {
+    type: "stack",
+    trigger: "endTurn",
+    damagePerStack: 1,
+    modifier: -10,
+    test: "resistance",
+    onRecover: "exhausted"
+  },
+
   burning: {
-    stackable: true,
+    type: "stack",
+    trigger: "endTurn",
+    dicePerStack: "d6",
+    armor:"lowest"
+  },
+  exhausted: {
+    type: "stack",
+    modifier: -10
+  },
+  deafened: {
+    type: "stack",
+    modifier: -10,
+    attackBonusAgainst : 1,
+    trigger: "endTurn",
+    removePerTurn: 1
+  },
+  prone: {
+    type: "state"
+  },
+  shaken: {
+    type : "state",
+    modifier: -10
+  },
+  frightened: {
+    type: "state",
+    modifier: -30,
+    trigger: "endTurn",
+    test: "calm"
+  },
+  slowed: {
+    type: "stack",
+    movementPenalty: 1
+  },
+  entangled: {
+    type: "state",
     trigger: "startTurn",
-    dicePerStack: "1d6"
+    test: "strength"
+  },
+  unconscious: {
+    type: "state"
+  },
+  dying: {
+    type: "state",
+    trigger: "startTurn",
+    test: "dying"
+  },
+  surprised: {
+    type: "state",
+    trigger: "endTurn",
+    removePerTurn: 1,
+    attackBonusAgainst: 3
   }
 
 };

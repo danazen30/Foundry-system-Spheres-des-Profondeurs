@@ -1,4 +1,5 @@
 import { SDP } from "./config.js";
+
 export class SdpTurnEngine {
 
   // =========================
@@ -7,70 +8,169 @@ export class SdpTurnEngine {
 
   static async startTurn(actor){
 
-console.log("SDP | startTurn", actor.name);
+    console.log("SDP | startTurn", actor.name);
 
+    const conditions = actor.system.conditions;
 
+    for(const key in conditions){
 
-    const conditions = actor.items.filter(i => i.type === "condition");
+      const value = conditions[key];
 
-    const handled = new Set();
+      if(!value) continue;
 
-for(const condition of conditions){
+      const stack = typeof value === "number" ? value : 1;
 
-  const key = condition.system.key;
+      const config = SDP.conditionConfig[key];
 
-  const config = SDP.conditionConfig[key];
+      if(!config) continue;
 
-  if(!config) continue;
+      if(config.trigger !== "startTurn") continue;
 
-  if(config.trigger !== "startTurn") continue;
+      // =========================
+      // RESISTANCE TEST
+      // =========================
 
-  const stack = condition.system.stack || 1;
+      if(config.test === "resistance"){
 
-  if(config.damagePerStack){
+        await ChatMessage.create({
 
-    const damage = stack * config.damagePerStack;
+          speaker: ChatMessage.getSpeaker({actor}),
 
-    const current = actor.system.health.value;
+          content: `
+          <div class="sdp-stunned-test"
+               data-actor="${actor.id}"
+               data-condition="${key}">
 
-    const newHealth = Math.max(current - damage,0);
+            <h3>${key}</h3>
 
-    await actor.update({
-      "system.health.value": newHealth
-    });
+            <p>${actor.name} suffers ${key} (${stack})</p>
 
-    ChatMessage.create({
-      content: `
-      <h3>${condition.name}</h3>
-      <p>${actor.name} suffers ${damage} damage.</p>
-      `
-    });
+            <button class="stunned-roll">
+              Roll Resistance
+            </button>
+
+          </div>
+          `
+        });
+
+      }
+
+      // =========================
+      // STRENGTH TEST (ENTANGLED)
+      // =========================
+
+      if(config.test === "strength"){
+
+        await ChatMessage.create({
+
+          speaker: ChatMessage.getSpeaker({actor}),
+
+          content: `
+          <div class="sdp-strength-test"
+               data-actor="${actor.id}"
+               data-condition="${key}">
+
+            <h3>Entangled</h3>
+
+            <p>${actor.name} is entangled.</p>
+
+            <button class="strength-roll">
+              Roll Strength
+            </button>
+
+          </div>
+          `
+        });
+
+      }
+
+      // =========================
+      // DYING TEST
+      // =========================
+
+      if(config.test === "dying"){
+
+        await ChatMessage.create({
+
+          speaker: ChatMessage.getSpeaker({actor}),
+
+          content: `
+          <div class="sdp-dying-test"
+               data-actor="${actor.id}">
+
+            <h3>Dying</h3>
+
+            <p>${actor.name} is dying.</p>
+
+            <button class="dying-roll">
+              Roll Resistance
+            </button>
+
+          </div>
+          `
+        });
+
+      }
+
+      // =========================
+      // DAMAGE PER STACK
+      // =========================
+
+      if(config.damagePerStack){
+
+        const damage = stack * config.damagePerStack;
+
+        const current = actor.system.health.value;
+
+        const newHealth = current - damage;
+
+        await actor.update({
+          "system.health.value": newHealth
+        });
+
+        await ChatMessage.create({
+
+          speaker: ChatMessage.getSpeaker({actor}),
+
+          content: `
+          <h3>${key}</h3>
+
+          <p>${actor.name} suffers ${damage} damage.</p>
+
+          <p>Health: ${current} → ${newHealth}</p>
+          `
+        });
+
+      }
+
+      // =========================
+      // DAMAGE DICE
+      // =========================
+
+      if(config.dicePerStack){
+
+        const roll = await new Roll(`${stack}${config.dicePerStack}`).roll();
+
+        const damage = roll.total;
+
+        const current = actor.system.health.value;
+
+        const newHealth = current - damage;
+
+        await actor.update({
+          "system.health.value": newHealth
+        });
+
+        await roll.toMessage({
+          flavor: `${key} damage`
+        });
+
+      }
+
+    }
 
   }
 
-  if(config.dicePerStack){
-
-    const roll = await new Roll(`${stack}${config.dicePerStack}`).roll();
-
-    const damage = roll.total;
-
-    const current = actor.system.health.value;
-
-    const newHealth = Math.max(current - damage,0);
-
-    await actor.update({
-      "system.health.value": newHealth
-    });
-
-    roll.toMessage({
-      flavor: `${condition.name} damage`
-    });
-
-  }
-
-}
-
-  }
 
   // =========================
   // END OF TURN
@@ -78,73 +178,135 @@ for(const condition of conditions){
 
   static async endTurn(actor){
 
-    const conditions = actor.items.filter(i => i.type === "condition");
+    console.log("SDP | endTurn", actor.name);
 
-    const handled = new Set();
+    const conditions = actor.system.conditions;
 
-   for(const condition of conditions){
+    for(const key in conditions){
 
-  const key = condition.system.key;
+      const stack = conditions[key];
 
-  const config = SDP.conditionConfig[key];
+      if(stack <= 0) continue;
 
-  if(!config) continue;
+      const config = SDP.conditionConfig[key];
 
-  if(config.trigger !== "endTurn") continue;
+      if(!config) continue;
 
-  if(config.test === "resistance"){
+      if(config.trigger !== "endTurn") continue;
 
-    const stack = condition.system.stack || 1;
+      // =========================
+      // REMOVE STACK PER TURN
+      // =========================
 
-    ChatMessage.create({
+if(config.removePerTurn){
+
+  // STATE condition
+  if(config.type === "state"){
+
+    await actor.update({
+      [`system.conditions.${key}`]: false
+    });
+
+    await ChatMessage.create({
 
       speaker: ChatMessage.getSpeaker({actor}),
 
       content: `
-      <div class="sdp-stunned-test"
-           data-actor="${actor.id}"
-           data-condition="${condition.id}">
-
-        <h3>${condition.name}</h3>
-
-        <p>${actor.name} is stunned (${stack})</p>
-
-        <button class="stunned-roll">
-        Roll Resistance
-        </button>
-
-      </div>
+      <h3>${key}</h3>
+      <p>${actor.name} is no longer ${key}.</p>
       `
-
     });
+
+  }
+
+  // STACK condition
+  else{
+
+    const remove = config.removePerTurn;
+
+    const newStack = Math.max(stack - remove,0);
+
+    if(newStack !== stack){
+
+      await actor.update({
+        [`system.conditions.${key}`]: newStack
+      });
+
+      await ChatMessage.create({
+
+        speaker: ChatMessage.getSpeaker({actor}),
+
+        content: `
+        <h3>${key}</h3>
+        <p>${actor.name} recovers from ${key}</p>
+        <p>Stacks: ${stack} → ${newStack}</p>
+        `
+      });
+
+    }
 
   }
 
 }
 
-  }
+      // =========================
+// RESISTANCE TEST
+// =========================
 
-  // =========================
-  // BLEEDING
-  // =========================
+if(config.test === "resistance"){
 
-  static async _bleeding(actor, condition){
+  await ChatMessage.create({
 
-    const stack = condition.system.stack || 1;
+    speaker: ChatMessage.getSpeaker({actor}),
 
-    const damage = stack;
+    content: `
+    <div class="sdp-poison-test"
+         data-actor="${actor.id}"
+         data-condition="${key}"
+         data-stack="${stack}">
+
+      <h3>${key}</h3>
+
+      <p>${actor.name} suffers ${key} (${stack})</p>
+
+      <button class="poison-roll">
+        Roll Resistance
+      </button>
+
+    </div>
+    `
+  });
+
+}
+
+      // =========================
+      // DAMAGE PER STACK
+      // =========================
+
+if(config.damagePerStack){
+
+  const isDying = actor.system.conditions?.dying;
+
+  if(isDying && (key === "bleeding" || key === "poisoned")){
+    // skip damage but keep other mechanics
+  } else {
+
+    const damage = stack * config.damagePerStack;
 
     const current = actor.system.health.value;
 
-    const newHealth = Math.max(current - damage,0);
+    const newHealth = current - damage;
 
     await actor.update({
       "system.health.value": newHealth
     });
 
-    ChatMessage.create({
+    await ChatMessage.create({
+
+      speaker: ChatMessage.getSpeaker({actor}),
+
       content: `
-      <h3>Bleeding</h3>
+      <h3>${key}</h3>
 
       <p>${actor.name} loses ${damage} health.</p>
 
@@ -153,62 +315,87 @@ for(const condition of conditions){
     });
 
   }
+}
 
-  // =========================
-  // BURNING
-  // =========================
+      // =========================
+      // DAMAGE DICE
+      // =========================
 
-  static async _burning(actor, condition){
+      if(config.dicePerStack){
 
-    const stack = condition.system.stack || 1;
+        const roll = await new Roll(`${stack}${config.dicePerStack}`).roll();
 
-    const roll = await (new Roll(`${stack}d6`)).roll();
+        await roll.toMessage({
+          speaker: ChatMessage.getSpeaker({actor}),
+          flavor: `<h3>${key} damage</h3>`
+        });
 
-    const damage = roll.total;
+        const rawDamage = roll.total;
 
-    const current = actor.system.health.value;
+        let lowestArmor = Infinity;
 
-    const newHealth = Math.max(current - damage,0);
+        const armorItems = actor.items.filter(i =>
+          i.type === "armor" && i.system.worn?.value === true
+        );
 
-    await actor.update({
-      "system.health.value": newHealth
-    });
+        for(const armor of armorItems){
 
-    roll.toMessage({
-      flavor: `${actor.name} suffers burning damage`
-    });
+          const AP = armor.system.AP;
+
+          const values = [
+            AP.head,
+            AP.body,
+            AP.leftArm,
+            AP.rightArm,
+            AP.leftLeg,
+            AP.rightLeg
+          ];
+
+          const min = Math.min(...values);
+
+          if(min < lowestArmor){
+            lowestArmor = min;
+          }
+
+        }
+
+        if(!isFinite(lowestArmor)){
+          lowestArmor = 0;
+        }
+
+        const finalDamage = Math.max(rawDamage - lowestArmor,0);
+
+        const current = actor.system.health.value;
+
+        const newHealth = current - finalDamage;
+
+        await actor.update({
+          "system.health.value": newHealth
+        });
+
+        await ChatMessage.create({
+
+          content: `
+          <h3>Burning Resolution</h3>
+
+          <p>Target: ${actor.name}</p>
+
+          <p>Raw Damage: ${rawDamage}</p>
+          <p>Lowest Armor: ${lowestArmor}</p>
+
+          <p><strong>Final Damage: ${finalDamage}</strong></p>
+
+          <p>Health: ${current} → ${newHealth}</p>
+          `,
+
+          whisper: ChatMessage.getWhisperRecipients("GM")
+
+        });
+
+      }
+
+    }
 
   }
-// =========================
-// STUNNED
-// =========================
-
-static async _stunned(actor, condition){
-
-    console.log("SDP | stunned triggered", actor.name);
-
-  const stack = condition.system.stack || 1;
-
-await ChatMessage.create({
-
-  speaker: ChatMessage.getSpeaker({actor}),
-
-  content: `
-  <div class="sdp-stunned-test"
-       data-actor="${actor.id}"
-       data-condition="${condition.id}">
-
-    <h3>Stunned</h3>
-
-    <p>${actor.name} is stunned (${stack})</p>
-
-    <button class="stunned-roll">
-    Roll Resistance
-    </button>
-
-  </div>
-  `
-});
-}
 
 }

@@ -53,17 +53,19 @@ export class SdpRoll {
 
 let conditionModifier = 0;
 
-const conditions = actor.items.filter(i => i.type === "condition");
+const conditions = actor.system.conditions;
 
-for(const condition of conditions){
+for(const key in conditions){
 
-  const key = condition.system.key;
+const value = conditions[key];
+
+if(!value) continue;
+
+const stack = value === true ? 1 : value;
 
   const config = CONFIG.SDP.conditionConfig?.[key];
 
   if(!config?.modifier) continue;
-
-  const stack = condition.system.stack || 1;
 
   conditionModifier += config.modifier * stack;
 

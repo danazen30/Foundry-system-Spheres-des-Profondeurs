@@ -180,6 +180,7 @@
           "type": "number",
           "label": "Movement",
           "value": 4,
+          "current": 4,
           "walk": 0,
           "run": 0
         },
@@ -234,6 +235,23 @@
           "label": "All Tests Modifier",
           "value": 0
         }
+      },
+      "conditions": {
+        "staggered": false,
+        "bleeding": 0,
+        "stunned": 0,
+        "burning": 0,
+        "deafened": 0,
+        "poisoned": 0,
+        "shaken": false,
+        "frightened": false,
+        "exhausted": 0,
+        "slowed": 0,
+        "entangled": false,
+        "surprised": false,
+        "prone": false,
+        "unconscious": false,
+        "dying": false
       }
     },
     "character": {
@@ -242,7 +260,8 @@
         "details",
         "resources",
         "derived",
-        "modifiers"
+        "modifiers",
+        "conditions"
         ],
 
       "details": {
@@ -309,7 +328,8 @@
         "details",
         "resources",
         "derived",
-        "modifiers"
+        "modifiers",
+        "conditions"
       ],
 
       "details": {
@@ -327,7 +347,8 @@
         "details",
         "resources",
         "derived",
-        "modifiers"
+        "modifiers",
+        "conditions"
       ]
     }
   },

@@ -1,5 +1,6 @@
 import { SdpRoll } from "../rolls/roll.js";
 import { SdpAttack } from "../combat/attack.js";
+import { SDP } from "../system/config.js";
 
 export class SdpActorSheet extends ActorSheet {
 
@@ -21,6 +22,8 @@ export class SdpActorSheet extends ActorSheet {
     context.system = this.actor.system;
     context.attributes = this.actor.system.attributes;
 
+     context.config = SDP;   // ← AJOUTER CETTE LIGNE
+     
     // récupérer les talents
     const talents = this.actor.items.filter(i => i.type === "talent");
 
@@ -254,18 +257,6 @@ export class SdpActorSheet extends ActorSheet {
 
     });
 
-    // =====================
-    // ADD CONDITION
-    // =====================
-
-    html.find(".add-condition").click(this._onAddCondition.bind(this));
-
-    // =====================
-    // REMOVE CONDITION
-    // =====================
-
-    html.find(".remove-condition").click(this._onRemoveCondition.bind(this));
-
 
 // =====================
 // CONDITION STACK UPDATE
@@ -275,93 +266,33 @@ html.find(".condition-stack-input").change(async ev => {
 
   const input = ev.currentTarget;
 
-  const itemId = input.dataset.itemId;
+  const key = input.dataset.key;
 
-  const value = Number(input.value);
+  let value = Number(input.value);
 
-  const item = this.actor.items.get(itemId);
+  if(isNaN(value)) value = 0;
 
-  if(!item) return;
+  value = Math.max(value,0);
 
-  await item.update({
-    "system.stack": value
+  await this.actor.update({
+    [`system.conditions.${key}`]: value
   });
-
-  await game.sdp.conditions.updateConditionEffects(item);
 
 });
 
-this.form.onsubmit = ev => ev.preventDefault();
+// =====================
+// CONDITION STATE UPDATE
+// =====================
 
-  }
+html.find(".condition-state-input").change(async ev => {
 
-  // =====================
-  // ADD CONDITION
-  // =====================
+  const input = ev.currentTarget;
+  const key = input.dataset.key;
+  const value = input.checked;
 
-  async _onAddCondition(event){
+  await this.actor.update({
+    [`system.conditions.${key}`]: value
+  });
 
-    const pack = game.packs.get("sdp.conditions");
-
-    const index = await pack.getIndex();
-
-    const options = index.map(c => {
-      return `<option value="${c._id}">${c.name}</option>`;
-    }).join("");
-
-    const content = `
-    <form>
-      <div class="form-group">
-        <label>Condition</label>
-        <select name="condition">
-        ${options}
-        </select>
-      </div>
-    </form>
-    `;
-
-    new Dialog({
-
-      title: "Add Condition",
-
-      content: content,
-
-      buttons: {
-
-        add: {
-
-          label: "Add",
-
-          callback: async (html) => {
-
-            const id = html.find('[name="condition"]').val();
-
-            const doc = await pack.getDocument(id);
-
-            const data = doc.toObject();
-
-            await this.actor.createEmbeddedDocuments("Item",[data]);
-
-          }
-
-        }
-
-      }
-
-    }).render(true);
-
-  }
-
-  // =====================
-  // REMOVE CONDITION
-  // =====================
-
-  async _onRemoveCondition(event){
-
-    const itemId = event.currentTarget.dataset.itemId;
-
-    await this.actor.deleteEmbeddedDocuments("Item",[itemId]);
-
-  }
-
-}
+});
+  }}

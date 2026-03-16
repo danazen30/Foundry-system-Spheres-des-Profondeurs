@@ -56,9 +56,24 @@ export class SdpActor extends Actor {
     // HEALTH DEFAULT
     // =====================
 
-if (!system.health) {
-  system.health = { value: 8, max: 8 };
-}
+    if (!system.health) {
+      system.health = { value: 8, max: 8 };
+    }
+
+    // =====================
+    // RESOURCES DEFAULT
+    // =====================
+
+    system.resources ??= {};
+
+    system.resources.mana ??= { value: 0 };
+
+    system.resources.movement ??= {
+      value: 4,
+      current: 4,
+      walk: 0,
+      run: 0
+    };
 
     // =====================
     // CUSTOM MODIFIERS
@@ -94,26 +109,27 @@ if (!system.health) {
     }
 
    // =====================
-// HEALTH CALCULATION
-// =====================
+   // HEALTH CALCULATION
+   // =====================
 
-const TB = system.attributes.toughness.bonus;
-const SB = system.attributes.strength.bonus;
-const WPB = system.attributes.willpower.bonus;
+   const TB = system.attributes.toughness.bonus;
+   const SB = system.attributes.strength.bonus;
+   const WPB = system.attributes.willpower.bonus;
 
-const maxHealth = (TB * 2) + SB + WPB;
+   const maxHealth = (TB * 2) + SB + WPB;
 
-system.health.max = maxHealth;
+   system.health.max = maxHealth;
 
-// si aucune valeur actuelle → initialise
-if (system.health.value === undefined || system.health.value === null) {
-  system.health.value = maxHealth;
-}
+   if (system.health.value === undefined || system.health.value === null) {
+     system.health.value = maxHealth;
+   }
 
-// empêcher dépassement
-if (system.health.value > maxHealth) {
-  system.health.value = maxHealth;
-}
+   // ⚠️ IMPORTANT
+   // On empêche seulement de dépasser le max
+   // MAIS on autorise les valeurs négatives
+   if (system.health.value > maxHealth) {
+     system.health.value = maxHealth;
+   }
 
     // =====================
     // SKILLS
@@ -182,25 +198,7 @@ if (system.health.value > maxHealth) {
       i => i.type === "weapon" && i.system.equipped === true
     );
 
-    let mainWeapon = equippedWeapons.find(w => !w.system.offhand);
-
-    if (!mainWeapon && equippedWeapons.length > 0) {
-      mainWeapon = equippedWeapons[0];
-    }
-
-    const twoHandedWeapon = equippedWeapons.find(
-      w => w.system.handedness === "two"
-    );
-
-    let usableWeapons;
-
-    if (twoHandedWeapon) {
-      usableWeapons = [twoHandedWeapon];
-    } else {
-      usableWeapons = equippedWeapons.filter(
-        w => w.system.handedness !== "two"
-      );
-    }
+    let usableWeapons = equippedWeapons;
 
     const OFFHAND_PENALTY = 2;
 
@@ -243,14 +241,6 @@ if (system.health.value > maxHealth) {
 
       parryBase = Math.max(...parryValues);
 
-    } else if (brawl !== null) {
-
-      parryBase = brawl.system.bonus;
-
-    } else {
-
-      parryBase = system.attributes.meleeAbility.bonus;
-
     }
 
     // =====================
@@ -267,15 +257,9 @@ if (system.health.value > maxHealth) {
 
         const weaponSkill = getSkill(weapon.system.skill);
 
-        let baseBonus;
-
-        if (weaponSkill) {
-          baseBonus = weaponSkill.system.bonus;
-        } else {
-          baseBonus = weapon.system.category === "ranged"
-            ? system.attributes.rangedAbility.bonus
-            : system.attributes.meleeAbility.bonus;
-        }
+        let baseBonus = weaponSkill
+          ? weaponSkill.system.bonus
+          : system.attributes.meleeAbility.bonus;
 
         let value =
           baseBonus +
@@ -290,14 +274,6 @@ if (system.health.value > maxHealth) {
       }
 
       attackBase = Math.max(...attackValues);
-
-    } else if (brawl !== null) {
-
-      attackBase = brawl.system.bonus;
-
-    } else {
-
-      attackBase = system.attributes.meleeAbility.bonus;
 
     }
 
@@ -316,11 +292,48 @@ if (system.health.value > maxHealth) {
     system.derived.parry.value =
       parryBase + 5;
 
+    // =====================
+    // CONDITION MODIFIER
+    // =====================
+
+    const poisonStacks = system.conditions?.poisoned ?? 0;
+    const exhaustedStacks = system.conditions?.exhausted ?? 0;
+    const deafenedStacks = system.conditions?.deafened ?? 0;
+    const shaken = system.conditions?.shaken ? 1 : 0;
+    const frightened = system.conditions?.frightened ? 3 : 0;
+
+    const conditionPenalty =
+      poisonStacks +
+      exhaustedStacks +
+      deafenedStacks +
+      shaken +
+      frightened;
+
     system.derived.attack.value =
-      attackBase;
+      Math.max(attackBase - conditionPenalty, 0);
 
     system.derived.carryingCapacity.value =
       system.attributes.toughness.bonus;
+
+    // =====================
+    // MOVEMENT
+    // =====================
+
+    const baseMove = system.resources.movement.value ?? 0;
+
+    const slowedStacks = system.conditions?.slowed ?? 0;
+
+    const currentMove = Math.max(baseMove - slowedStacks, 0);
+
+    system.resources.movement.current = currentMove;
+
+    system.resources.movement.walk = currentMove * 2;
+
+    system.resources.movement.run = system.resources.movement.walk * 2;
+
+    if(currentMove === 0 && slowedStacks > 0){
+      system.conditions.entangled = true;
+    }
 
   }
 

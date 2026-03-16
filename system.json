@@ -29,14 +29,6 @@
   "packs": [
 
     {
-      "name": "conditions",
-      "label": "SDP Conditions",
-      "system": "sdp",
-      "path": "packs/conditions",
-      "type": "Item"
-    },
-
-    {
       "name": "injuries",
       "label": "SDP Injuries",
       "system": "sdp",
