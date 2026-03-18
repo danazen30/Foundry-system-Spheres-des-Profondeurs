@@ -83,6 +83,32 @@ export class SdpActor extends Actor {
     system.custom.offhandReduction ??= 0;
   }
 
+  _getItemModifiers(targetKey){
+
+  let total = 0;
+
+  for(const item of this.items.contents){
+
+    if(item.type !== "injury") continue;
+
+ const effects = Array.isArray(item.system.effects?.value)
+  ? item.system.effects.value
+  : [];
+
+    for(const effect of effects){
+
+      if(effect.target !== targetKey) continue;
+
+      total += Number(effect.value ?? 0);
+
+    }
+
+  }
+
+  return total;
+
+}
+
 
   prepareDerivedData() {
 
@@ -96,17 +122,24 @@ export class SdpActor extends Actor {
     // ATTRIBUTES
     // =====================
 
-    for (let attr of Object.values(system.attributes)) {
+for (let [key, attr] of Object.entries(system.attributes)) {
 
-      attr.value =
-        Number(attr.initial || 0) +
-        Number(attr.advances || 0) +
-        Number(attr.modifier || 0) +
-        Number(attr.levelBonus || 0);
+  const itemMod = this._getItemModifiers(key) ?? 0;
 
-      attr.bonus = Math.floor(attr.value / 10);
+  attr.itemModifier = itemMod;
 
-    }
+  attr.totalModifier =
+    Number(attr.modifier || 0) + itemMod;
+
+  attr.value =
+    Number(attr.initial || 0) +
+    Number(attr.advances || 0) +
+    attr.totalModifier +
+    Number(attr.levelBonus || 0);
+
+  attr.bonus = Math.floor(attr.value / 10);
+
+}
 
    // =====================
    // HEALTH CALCULATION

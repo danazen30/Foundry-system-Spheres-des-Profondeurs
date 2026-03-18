@@ -18,6 +18,12 @@ export class SdpActorSheet extends ActorSheet {
 
     const context = super.getData(options);
 
+    context.itemModifiers = {};
+
+for(const key in context.attributes){
+  context.itemModifiers[key] = this.actor._getItemModifiers(key);
+}
+
     context.actor = this.actor;
     context.system = this.actor.system;
     context.attributes = this.actor.system.attributes;
@@ -295,4 +301,10 @@ html.find(".condition-state-input").change(async ev => {
   });
 
 });
-  }}
+
+
+  }
+
+}
+
+

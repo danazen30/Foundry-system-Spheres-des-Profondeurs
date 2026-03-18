@@ -148,3 +148,16 @@ text-align:center;
 .armors-table th {
   background: #222;
 }
+
+.injuries-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.injuries-table th,
+.injuries-table td {
+  border: 1px solid #444;
+  padding: 4px;
+  text-align: center;
+}

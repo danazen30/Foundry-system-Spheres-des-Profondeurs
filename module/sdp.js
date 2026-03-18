@@ -5,6 +5,7 @@ import { SdpItemSheet } from "./items/item-sheet.js";
 import { SdpWeaponSheet } from "./items/weapon-sheet.js";
 import { SdpTalentSheet } from "./items/talent-sheet.js";
 import { SdpArmorSheet } from "./items/armor-sheet.js";
+import { SdpInjurySheet } from "./items/injury-sheet.js";
 import { SdpItem } from "./items/item.js";
 
 import { SdpRoll } from "./rolls/roll.js";
@@ -56,6 +57,11 @@ Hooks.once("init", () => {
     types: ["armor"],
     makeDefault: true
   });
+
+  Items.registerSheet("sdp", SdpInjurySheet, {
+  types: ["injury"],
+  makeDefault: true
+});
 
   Hooks.on("createActor", async (actor) => {
 

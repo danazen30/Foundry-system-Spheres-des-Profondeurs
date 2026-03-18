@@ -10,38 +10,44 @@
 <div class="attr-header">{{attr.label}}</div>
 {{/each}}
 
+<!-- INIT -->
 <div class="attr-row">Init</div>
 {{#each system.attributes as |attr key|}}
 <input
 type="number"
 name="system.attributes.{{key}}.initial"
-value="{{attr.initial}}">
+value="{{attr.initial}}"
+data-key="init-{{key}}">
 {{/each}}
 
+<!-- ADV -->
 <div class="attr-row">Adv</div>
 {{#each system.attributes as |attr key|}}
 <input
 type="number"
 name="system.attributes.{{key}}.advances"
-value="{{attr.advances}}">
+value="{{attr.advances}}"
+data-key="adv-{{key}}">
 {{/each}}
 
+<!-- MODIFIER (VERSION STABLE) -->
 <div class="attr-row">Mod</div>
 {{#each system.attributes as |attr key|}}
 <input
 type="number"
 name="system.attributes.{{key}}.modifier"
-value="{{attr.modifier}}">
+value="{{attr.modifier}}"
+data-key="mod-{{key}}">
 {{/each}}
 
+<!-- FINAL -->
 <div class="attr-row">Final</div>
 {{#each system.attributes as |attr key|}}
 <input
 type="number"
 value="{{attr.value}}"
-class="roll-attribute"
-data-attr="{{key}}"
-readonly>
+readonly
+data-key="final-{{key}}">
 {{/each}}
 
 </div>
@@ -397,4 +403,37 @@ style="width:40px"
 </ul>
 
 </section>
+
+<h2>Injuries</h2>
+
+<table class="injuries-table">
+
+<thead>
+<tr>
+<th>Name</th>
+<th>Severity</th>
+<th>Location</th>
+</tr>
+</thead>
+
+<tbody>
+
+{{#each actor.items as |item|}}
+{{#if (eq item.type "injury")}}
+
+<tr>
+
+<td>{{item.name}}</td>
+<td>{{item.system.severity}}</td>
+<td>{{item.system.location}}</td>
+
+</tr>
+
+{{/if}}
+{{/each}}
+
+</tbody>
+
+</table>
+
 </form>

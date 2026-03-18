@@ -673,6 +673,10 @@
         "type": "string",
         "label": "Condition on Success",
         "value": ""
+      },
+      "effects": {
+        "type": "array",
+        "value": []
       }
     }
   }

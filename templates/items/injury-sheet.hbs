@@ -1,0 +1,100 @@
+<form class="{{cssClass}}" autocomplete="off">
+
+<h1>
+<input type="text" name="name" value="{{item.name}}" />
+</h1>
+
+<div class="form-group">
+<label>Severity</label>
+<input type="text" name="system.severity" value="{{system.severity}}">
+</div>
+
+<div class="form-group">
+<label>Location</label>
+<input type="text" name="system.location" value="{{system.location}}">
+</div>
+
+<div class="form-group">
+<label>Resistance Test</label>
+<input type="text" name="system.resistanceTest" value="{{system.resistanceTest}}">
+</div>
+
+<div class="form-group">
+<label>On Failure</label>
+<input type="text" name="system.conditionOnFailure" value="{{system.conditionOnFailure}}">
+</div>
+
+<div class="form-group">
+<label>On Success</label>
+<input type="text" name="system.conditionOnSuccess" value="{{system.conditionOnSuccess}}">
+</div>
+
+<div class="form-group">
+<label>Description</label>
+<textarea name="system.description">{{system.description}}</textarea>
+</div>
+
+<h2>Effects</h2>
+
+<button type="button" class="add-effect">Add Effect</button>
+
+<table class="effects-table">
+
+<thead>
+<tr>
+<th>Target</th>
+<th>Value</th>
+<th></th>
+</tr>
+</thead>
+
+<tbody>
+
+{{#each system.effects.value as |effect i|}}
+
+<tr>
+
+<td>
+<select name="system.effects.value.{{i}}.target">
+
+{{#select effect.target}}
+<option value="meleeAbility">MA</option>
+<option value="rangedAbility">RA</option>
+<option value="strength">Strength</option>
+<option value="toughness">Toughness</option>
+<option value="initiative">Initiative</option>
+<option value="agility">Agility</option>
+<option value="dexterity">Dexterity</option>
+<option value="intelligence">Intelligence</option>
+<option value="willpower">Willpower</option>
+<option value="charisma">Charisma</option>
+{{/select}}
+
+</select>
+</td>
+
+<td>
+<input
+type="number"
+name="system.effects.value.{{i}}.value"
+value="{{effect.value}}">
+</td>
+
+<td>
+<button
+type="button"
+class="remove-effect"
+data-index="{{i}}">
+❌
+</button>
+</td>
+
+</tr>
+
+{{/each}}
+
+</tbody>
+
+</table>
+
+</form>
