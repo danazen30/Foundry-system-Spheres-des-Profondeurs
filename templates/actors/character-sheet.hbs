@@ -153,10 +153,11 @@ readonly>
 
 <td>
 <input
-type="number"
-data-action="updateSkillAdv"
-data-item-id="{{item.id}}"
-value="{{item.system.advances}}">
+  type="number"
+  data-action="updateSkillAdv"
+  data-item-id="{{item.id}}"
+  value="{{item.system.advances}}"
+  data-event="change">   <!-- 🔥 IMPORTANT -->
 </td>
 
 <td data-action="rollSkill" data-item-id="{{item.id}}">

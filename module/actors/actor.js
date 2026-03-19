@@ -237,73 +237,102 @@ for (let [key, attr] of Object.entries(system.attributes)) {
     // PARRY
     // =====================
 
-    let parryBase = 0;
+let parryBase = 0;
 
-    const meleeWeapons = usableWeapons.filter(
-      w => w.system.category === "melee"
-    );
+const meleeWeapons = usableWeapons.filter(
+  w => w.system.category === "melee"
+);
 
-    if (meleeWeapons.length > 0) {
+if (meleeWeapons.length > 0) {
 
-      const parryValues = [];
+  const parryValues = [];
 
-      for (let weapon of meleeWeapons) {
+  for (let weapon of meleeWeapons) {
 
-        const weaponSkill = getSkill(weapon.system.skill);
+    const weaponSkill = getSkill(weapon.system.skill);
 
-        let baseBonus = weaponSkill
-          ? weaponSkill.system.bonus
-          : system.attributes.meleeAbility.bonus;
+    let baseBonus = weaponSkill
+      ? weaponSkill.system.bonus
+      : system.attributes.meleeAbility.bonus;
 
-        let value =
-          baseBonus +
-          Number(weapon.system.parryBonus || 0);
+    let value =
+      baseBonus +
+      Number(weapon.system.parryBonus || 0);
 
-        if (weapon.system.offhand) {
-          value -= offhandPenalty;
-        }
-
-        parryValues.push(value);
-
-      }
-
-      parryBase = Math.max(...parryValues);
-
+    if (weapon.system.offhand) {
+      value -= offhandPenalty;
     }
+
+    parryValues.push(value);
+  }
+
+  parryBase = Math.max(...parryValues);
+
+} else {
+
+  // 🔥 NO WEAPON → BRAWL
+  const brawlSkill = getSkill("brawl");
+
+  parryBase = brawlSkill
+    ? brawlSkill.system.bonus
+    : system.attributes.meleeAbility.bonus;
+}
 
     // =====================
     // ATTACK
     // =====================
 
-    let attackBase = 0;
+let attackBase = 0;
 
-    if (usableWeapons.length > 0) {
+if (usableWeapons.length > 0) {
 
-      const attackValues = [];
+  const attackValues = [];
 
-      for (let weapon of usableWeapons) {
+  for (let weapon of usableWeapons) {
 
-        const weaponSkill = getSkill(weapon.system.skill);
+    const weaponSkill = getSkill(weapon.system.skill);
 
-        let baseBonus = weaponSkill
-          ? weaponSkill.system.bonus
-          : system.attributes.meleeAbility.bonus;
+    let baseBonus;
 
-        let value =
-          baseBonus +
-          Number(weapon.system.attackBonus || 0);
+    // ===== RANGED =====
+    if (weapon.system.category === "ranged") {
 
-        if (weapon.system.offhand) {
-          value -= offhandPenalty;
-        }
-
-        attackValues.push(value);
-
-      }
-
-      attackBase = Math.max(...attackValues);
+      baseBonus = weaponSkill
+        ? weaponSkill.system.bonus
+        : system.attributes.rangedAbility.bonus;
 
     }
+
+    // ===== MELEE =====
+    else {
+
+      baseBonus = weaponSkill
+        ? weaponSkill.system.bonus
+        : system.attributes.meleeAbility.bonus;
+    }
+
+    let value =
+      baseBonus +
+      Number(weapon.system.attackBonus || 0);
+
+    if (weapon.system.offhand) {
+      value -= offhandPenalty;
+    }
+
+    attackValues.push(value);
+  }
+
+  attackBase = Math.max(...attackValues);
+
+} else {
+
+  // 🔥 NO WEAPON → BRAWL
+  const brawlSkill = getSkill("brawl");
+
+  attackBase = brawlSkill
+    ? brawlSkill.system.bonus
+    : system.attributes.meleeAbility.bonus;
+}
 
     // =====================
     // DERIVED
