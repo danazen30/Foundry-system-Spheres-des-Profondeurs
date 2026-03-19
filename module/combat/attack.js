@@ -151,8 +151,7 @@ if(crit.failure){
     if(success){
 
       damageButton = `
-      <button
-        class="roll-damage"
+      <button type="button" type="button" class="roll-damage"
         data-actor="${actor.id}"
         data-weapon="${weapon.id}"
         data-target="${targetId ?? ""}">
@@ -163,7 +162,7 @@ if(crit.failure){
     }
 
     const html = `
-<div class="sdp-attack"
+<div class="sdp-attack" data-sdp-safe="true"
      data-actor="${actor.id}"
      data-critical="${crit.success}"
      data-weapon="${weapon.id}"
@@ -232,7 +231,7 @@ if(crit.failure){
 }
 
   const html = `
-<div class="sdp-attack"
+<div class="sdp-attack" data-sdp-safe="true"
      data-attack="${attackScore}"
      data-critical="${crit.success}"
      data-actor="${actor.id}"
@@ -251,9 +250,9 @@ if(crit.failure){
   <p>Hit Location: ${CONFIG.SDP.hitLocations[hitLocation.location]} (${hitLocation.roll.total})</p>
 
   ${targetId ?
-    `<button class="apply-defense">Apply Defense</button>` :
+    `<button type="button" class="apply-defense">Apply Defense</button>` :
     `<p>No target selected</p>
-     <button class="select-target">Select Target</button>`
+     <button type="button" class="select-target">Select Target</button>`
   }
 
 </div>

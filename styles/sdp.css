@@ -161,3 +161,15 @@ text-align:center;
   padding: 4px;
   text-align: center;
 }
+
+/* CONTENEUR PRINCIPAL */
+.application.sdp.sheet.actor {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* ZONE SCROLLABLE (IMPORTANT) */
+.application.sdp.sheet.actor .window-content {
+  overflow-y: auto;
+}

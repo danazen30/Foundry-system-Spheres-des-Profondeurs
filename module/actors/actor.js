@@ -40,40 +40,35 @@ export class SdpActor extends Actor {
     // DERIVED DEFAULT
     // =====================
 
-    if (!system.derived) {
+system.derived ??= {};
 
-      system.derived = {
-        woundThreshold: { value: 0 },
-        evasion: { value: 0 },
-        parry: { value: 0 },
-        attack: { value: 0 },
-        carryingCapacity: { value: 0 }
-      };
-
-    }
+system.derived.woundThreshold ??= { value: 0 };
+system.derived.evasion ??= { value: 0 };
+system.derived.parry ??= { value: 0 };
+system.derived.attack ??= { value: 0 };
+system.derived.carryingCapacity ??= { value: 0 };
 
     // =====================
     // HEALTH DEFAULT
     // =====================
 
-    if (!system.health) {
-      system.health = { value: 8, max: 8 };
-    }
+system.health ??= {};
+system.health.value ??= 8;
+system.health.max ??= 8;
 
     // =====================
     // RESOURCES DEFAULT
     // =====================
 
-    system.resources ??= {};
+system.resources ??= {};
+system.resources.mana ??= system.resources.mana ?? {};
+system.resources.mana.value ??= 0;
 
-    system.resources.mana ??= { value: 0 };
-
-    system.resources.movement ??= {
-      value: 4,
-      current: 4,
-      walk: 0,
-      run: 0
-    };
+system.resources.movement ??= {};
+system.resources.movement.value ??= 4;
+system.resources.movement.current ??= 4;
+system.resources.movement.walk ??= 0;
+system.resources.movement.run ??= 0;
 
     // =====================
     // CUSTOM MODIFIERS

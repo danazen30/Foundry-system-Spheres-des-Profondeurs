@@ -2,307 +2,137 @@ import { SdpRoll } from "../rolls/roll.js";
 import { SdpAttack } from "../combat/attack.js";
 import { SDP } from "../system/config.js";
 
-export class SdpActorSheet extends ActorSheet {
+const { ActorSheetV2 } = foundry.applications.sheets;
+const { HandlebarsApplicationMixin } = foundry.applications.api;
 
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: ["sdp", "sheet", "actor"],
-      template: "systems/sdp/templates/actors/character-sheet.hbs",
-      width: 600,
-      height: 600,
-      submitOnChange: true
-    });
+export class SdpActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
+static tag = "form";
+static formAssociated = true;
+static DEFAULT_OPTIONS = {
+  classes: ["sdp", "sheet", "actor"],
+
+  position: {
+    width: 800,
+    height: 900
+  },
+
+  window: {
+    frame: true,
+    positioned: true,
+    resizable: true,
+    minimizable: true
+  },
+
+form: {
+  handler: "onSubmit",
+  submitOnChange: true
+}
+};
+  static PARTS = {
+    sheet: {
+      template: "systems/sdp/templates/actors/character-sheet.hbs"
+    }
+  };
+
+  static LAYOUT = {
+    template: "templates/applications/sheet.hbs",
+    parts: ["sheet"]
+  };
+
+  async _prepareContext() {
+    return {
+      actor: this.document,
+      system: this.document.system,
+      config: SDP
+    };
   }
 
-  getData(options) {
+  // 🔥 FIX ICI
+  _onRender(context, options) {
+    super._onRender(context, options);
 
-    const context = super.getData(options);
+    const root = this.element;
 
-    context.itemModifiers = {};
+    // ===== ATTRIBUTES =====
+    root.querySelectorAll('[data-action="rollAttribute"]').forEach(el => {
+      el.onclick = (e) => {
+        const attr = e.currentTarget.dataset.attr;
+        const value = this.document.system.attributes[attr].value;
 
-for(const key in context.attributes){
-  context.itemModifiers[key] = this.actor._getItemModifiers(key);
+        SdpRoll.basicTest(this.document, value, `Attribute Test (${attr})`);
+      };
+    });
+
+    // ===== SKILLS =====
+    root.querySelectorAll('[data-action="rollSkill"]').forEach(el => {
+      el.onclick = (e) => {
+        const itemId = e.currentTarget.dataset.itemId;
+        const skill = this.document.items.get(itemId);
+
+        SdpRoll.basicTest(this.document, skill.system.value, `Skill Test (${skill.name})`);
+      };
+    });
+
+    // ===== ATTACK =====
+    root.querySelectorAll('[data-action="weaponAttack"]').forEach(el => {
+      el.onclick = (e) => {
+        e.preventDefault();
+
+        const itemId = e.currentTarget.dataset.itemId;
+        const weapon = this.document.items.get(itemId);
+
+        const attackValue = this.document.system.derived.attack.value;
+
+        SdpAttack.attackTest(this.document, weapon, attackValue);
+      };
+    });
+
+    // ===== CHECKBOXES =====
+    root.querySelectorAll('[data-action="toggleWeaponEquip"]').forEach(el => {
+      el.onclick = (e) => {
+        const item = this.document.items.get(e.currentTarget.dataset.itemId);
+        item.update({ "system.equipped": !item.system.equipped });
+      };
+    });
+
+    root.querySelectorAll('[data-action="toggleOffhand"]').forEach(el => {
+      el.onclick = (e) => {
+        const item = this.document.items.get(e.currentTarget.dataset.itemId);
+        item.update({ "system.offhand": !item.system.offhand });
+      };
+    });
+
+    root.querySelectorAll('[data-action="toggleArmor"]').forEach(el => {
+      el.onclick = (e) => {
+        const item = this.document.items.get(e.currentTarget.dataset.itemId);
+        item.update({ "system.worn.value": !item.system.worn.value });
+      };
+    });
+
+  }
+
+// =====================
+// SAVE FORM
+// =====================
+
+async _updateObject(event, formData) {
+  return this.document.update(formData);
+}
+render(force = false, options = {}) {
+
+  // Si déjà rendue → on force un rerender propre
+  if (this.rendered) {
+    return super.render(true, { ...options, focus: true });
+  }
+
+  return super.render(force, options);
 }
 
-    context.actor = this.actor;
-    context.system = this.actor.system;
-    context.attributes = this.actor.system.attributes;
-
-     context.config = SDP;   // ← AJOUTER CETTE LIGNE
-     
-    // récupérer les talents
-    const talents = this.actor.items.filter(i => i.type === "talent");
-
-    context.talents = talents.map(t => {
-
-      let max = t.system.max;
-
-      if (isNaN(max)) {
-
-        const attr = this.actor.system.attributes[max];
-        max = attr?.bonus ?? 1;
-
-      }
-
-      return {
-        id: t.id,
-        name: t.name,
-        advances: t.system.advances,
-        canAdvance: t.system.canAdvance,
-        max: max
-      };
-
-    });
-
-    return context;
-
-  }
-
-  activateListeners(html) {
-
-    super.activateListeners(html);
-
-    // =====================
-    // SKILL ADVANCES
-    // =====================
-
-    html.find(".skill-advances").change(async ev => {
-
-      const input = ev.currentTarget;
-      const itemId = input.dataset.itemId;
-      const value = Number(input.value);
-
-      const item = this.actor.items.get(itemId);
-
-      await item.update({
-        "system.advances": value
-      });
-
-    });
-
-    // =====================
-    // WEAPON EQUIP
-    // =====================
-
-    html.find(".weapon-equipped").change(async ev => {
-
-      const input = ev.currentTarget;
-      const itemId = input.dataset.itemId;
-      const value = input.checked;
-
-      const item = this.actor.items.get(itemId);
-
-      if (!value) {
-
-        await item.update({
-          "system.equipped": false
-        });
-
-        this.actor.prepareData();
-        this.actor.render();
-        return;
-
-      }
-
-      const weapons = this.actor.items.filter(i => i.type === "weapon");
-
-      const equipped = weapons.filter(w => w.system.equipped);
-
-      const oneHand = equipped.filter(w => w.system.handedness === "one");
-      const twoHand = equipped.find(w => w.system.handedness === "two");
-
-      if (item.system.handedness === "two") {
-
-        for (let w of equipped) {
-
-          if (w.system.handedness !== "special") {
-
-            await w.update({ "system.equipped": false });
-
-          }
-
-        }
-
-        await item.update({ "system.equipped": true });
-
-        this.actor.prepareData();
-        this.actor.render();
-        return;
-
-      }
-
-      if (item.system.handedness === "one") {
-
-        if (twoHand) {
-
-          ui.notifications.warn("Two-handed weapon already equipped.");
-          input.checked = false;
-          return;
-
-        }
-
-        if (oneHand.length >= 2) {
-
-          ui.notifications.warn("You cannot equip more than two one-handed weapons.");
-          input.checked = false;
-          return;
-
-        }
-
-      }
-
-      await item.update({ "system.equipped": true });
-
-      this.actor.prepareData();
-      this.actor.render();
-
-    });
-
-    // =====================
-    // OFFHAND
-    // =====================
-
-    html.find(".weapon-offhand").change(async ev => {
-
-      const input = ev.currentTarget;
-      const itemId = input.dataset.itemId;
-      const value = input.checked;
-
-      const item = this.actor.items.get(itemId);
-
-      await item.update({
-        "system.offhand": value
-      });
-
-    });
-
-    // =====================
-    // TALENT ADVANCES
-    // =====================
-
-    html.find(".talent-advances").change(async ev => {
-
-      const input = ev.currentTarget;
-      const itemId = input.dataset.itemId;
-      const value = Number(input.value);
-
-      const item = this.actor.items.get(itemId);
-
-      await item.update({
-        "system.advances": value
-      });
-
-    });
-
-    // =====================
-    // ATTRIBUTE ROLL
-    // =====================
-
-    html.find(".roll-attribute").click(ev => {
-
-      const attr = ev.currentTarget.dataset.attr;
-      const value = this.actor.system.attributes[attr].value;
-
-      SdpRoll.basicTest(
-        this.actor,
-        value,
-        `Attribute Test (${attr})`
-      );
-
-    });
-
-    // =====================
-    // SKILL ROLL
-    // =====================
-
-    html.find(".roll-skill").click(ev => {
-
-      const itemId = ev.currentTarget.dataset.itemId;
-
-      const skill = this.actor.items.get(itemId);
-
-      const value = skill.system.value;
-
-      SdpRoll.basicTest(
-        this.actor,
-        value,
-        `Skill Test (${skill.name})`
-      );
-
-    });
-
-    // =====================
-    // WEAPON ATTACK
-    // =====================
-
-    html.find(".weapon-attack").click(ev => {
-
-      const itemId = ev.currentTarget.dataset.itemId;
-
-      const weapon = this.actor.items.get(itemId);
-
-      const attackValue = this.actor.system.derived.attack.value;
-
-      SdpAttack.attackTest(this.actor, weapon, attackValue);
-
-    });
-
-    //================
-    // ARMOR WORN
-    //================
-
-    html.find(".armor-worn").click(ev => {
-
-      const itemId = ev.currentTarget.dataset.itemId;
-
-      const armor = this.actor.items.get(itemId);
-
-      armor.update({
-        "system.worn.value": ev.currentTarget.checked
-      });
-
-    });
-
-
-// =====================
-// CONDITION STACK UPDATE
-// =====================
-
-html.find(".condition-stack-input").change(async ev => {
-
-  const input = ev.currentTarget;
-
-  const key = input.dataset.key;
-
-  let value = Number(input.value);
-
-  if(isNaN(value)) value = 0;
-
-  value = Math.max(value,0);
-
-  await this.actor.update({
-    [`system.conditions.${key}`]: value
-  });
-
-});
-
-// =====================
-// CONDITION STATE UPDATE
-// =====================
-
-html.find(".condition-state-input").change(async ev => {
-
-  const input = ev.currentTarget;
-  const key = input.dataset.key;
-  const value = input.checked;
-
-  await this.actor.update({
-    [`system.conditions.${key}`]: value
-  });
-
-});
-
-
-  }
-
+async onSubmit(event, form, formData) {
+  await this.document.update(formData.object);
+}
+
+get id() {
+  return `sdp-actor-sheet-${this.document.id}`;
+}
 }

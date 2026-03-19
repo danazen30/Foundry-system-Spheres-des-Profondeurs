@@ -1,6 +1,10 @@
-<form class="{{cssClass}}" autocomplete="off">
+<div class="sdp-sheet">
 
-<h1>{{actor.name}}</h1>
+  <header class="sheet-header">
+    <h1>{{actor.name}}</h1>
+  </header>
+
+  <section class="sheet-body">
 
 <div class="attributes-grid">
 
@@ -44,10 +48,11 @@ data-key="mod-{{key}}">
 <div class="attr-row">Final</div>
 {{#each system.attributes as |attr key|}}
 <input
-type="number"
-value="{{attr.value}}"
-readonly
-data-key="final-{{key}}">
+  type="number"
+  value="{{attr.value}}"
+  readonly
+  data-action="rollAttribute"
+  data-attr="{{key}}">
 {{/each}}
 
 </div>
@@ -149,14 +154,12 @@ readonly>
 <td>
 <input
 type="number"
-class="skill-advances"
+data-action="updateSkillAdv"
 data-item-id="{{item.id}}"
 value="{{item.system.advances}}">
 </td>
 
-<td
-class="roll-skill"
-data-item-id="{{item.id}}">
+<td data-action="rollSkill" data-item-id="{{item.id}}">
 
 {{item.system.value}}
 
@@ -197,7 +200,7 @@ data-item-id="{{item.id}}">
 
 <input
 type="number"
-class="talent-advances"
+data-action="updateTalentAdv"
 data-item-id="{{item.id}}"
 value="{{item.system.advances}}"
 min="0"
@@ -263,18 +266,16 @@ max="{{#if (lookup ../system.attributes item.system.max)}}{{lookup (lookup ../sy
 
 <td>
 <input
-type="checkbox"
-class="weapon-offhand"
-data-item-id="{{item.id}}"
-{{checked item.system.offhand}}>
+  type="checkbox"
+  data-action="toggleOffhand"
+  data-item-id="{{item.id}}"
+  {{checked item.system.offhand}}>
 </td>
-
 <td>
-<input
-type="checkbox"
-class="weapon-equipped"
-data-item-id="{{item.id}}"
-{{checked item.system.equipped}}>
+<input type="checkbox"
+  data-action="toggleWeaponEquip"
+  data-item-id="{{item.id}}"
+  {{checked item.system.equipped}}>
 </td>
 
 <td>
@@ -289,9 +290,7 @@ data-item-id="{{item.id}}"
 
 
 <td>
-<button
-class="weapon-attack"
-data-item-id="{{item.id}}">
+<button data-action="weaponAttack" data-item-id="{{item.id}}">
 Attack
 </button>
 </td>
@@ -345,12 +344,11 @@ Attack
 
 <td>
 <input
-type="checkbox"
-class="armor-worn"
-data-item-id="{{item.id}}"
-{{checked item.system.worn.value}}>
+  type="checkbox"
+  data-action="toggleArmor"
+  data-item-id="{{item.id}}"
+  {{checked item.system.worn.value}}>
 </td>
-
 </tr>
 
 {{/if}}
@@ -377,21 +375,20 @@ data-item-id="{{item.id}}"
 {{#if (eq (lookup (lookup ../config.conditionConfig key) "type") "state")}}
 
 <input
-type="checkbox"
-class="condition-state-input"
-data-key="{{key}}"
-{{checked value}}
+  type="checkbox"
+  data-action="updateConditionState"
+  data-key="{{key}}"
+  {{checked value}}
 />
 
 {{else}}
 
 <input
-type="number"
-class="condition-stack-input"
-data-key="{{key}}"
-value="{{value}}"
-min="0"
-style="width:40px"
+  type="number"
+  name="system.conditions.{{key}}"
+  value="{{value}}"
+  min="0"
+  style="width:40px"
 />
 
 {{/if}}
@@ -435,5 +432,5 @@ style="width:40px"
 </tbody>
 
 </table>
-
-</form>
+</section>
+</div>

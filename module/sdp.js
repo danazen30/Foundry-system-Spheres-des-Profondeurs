@@ -29,12 +29,13 @@ Hooks.once("init", () => {
   CONFIG.Actor.documentClass = SdpActor;
   CONFIG.Item.documentClass = SdpItem;
 
-  Actors.unregisterSheet("core", ActorSheet);
 
-  Actors.registerSheet("sdp", SdpActorSheet, {
-    types: ["character"],
-    makeDefault: true
-  });
+Actors.unregisterSheet("core", ActorSheet);
+
+Actors.registerSheet("sdp", SdpActorSheet, {
+  types: ["character"],
+  makeDefault: true
+});
 
   Items.unregisterSheet("core", ItemSheet);
 
@@ -97,6 +98,15 @@ Hooks.once("init", () => {
 /* ========================================= */
 
 Hooks.on("renderChatMessage", (message, html) => {
+
+  html[0].querySelectorAll(".sdp-attack button").forEach(btn => {
+
+    btn.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+    });
+
+  });
 
   html.find(".sdp-opposed").click(ev => {
 
@@ -162,7 +172,7 @@ Hooks.on("renderChatMessage", (message, html) => {
  // SELECT TARGET
  //================
 
-  html.find(".select-target").click(async ev => {
+  html.find(".sdp-attack .select-target").click(async ev => {
 
     const targets = Array.from(game.user.targets);
 
@@ -212,7 +222,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 
     await message.update({
       content: newHtml
-    });
+    }); 
 
   });
 
@@ -221,7 +231,7 @@ Hooks.on("renderChatMessage", (message, html) => {
   // APPLY DEFENSE
   //===================
 
-  html.find(".apply-defense").click(async ev => {
+  html.find(".sdp-attack .apply-defense").click(async ev => {
 
     const card = ev.currentTarget.closest(".sdp-attack");
 
@@ -310,7 +320,7 @@ ChatMessage.create({
 
     await message.update({
       content: newHtml
-    });
+    }); 
 
   });
 
@@ -319,7 +329,7 @@ ChatMessage.create({
 /* DAMAGE ROLL         */
 /* =================== */
 
-html.find(".roll-damage").click(async ev => {
+html.find(".sdp-attack .roll-damage").click(async ev => {
 
   const card = ev.currentTarget.closest(".sdp-attack");
 
@@ -527,7 +537,7 @@ else if(newHealth < 0){
 
   await message.update({
     content: newHtml
-  });
+  }); 
 
 });
 
@@ -979,113 +989,6 @@ Hooks.on("updateCombat", async (combat, changed) => {
 
 });
 
-Hooks.on("updateActor", async (actor, changed) => {
-
-  if(!changed.system?.conditions) return;
-
-  const changedConditions = changed.system.conditions;
-  const currentConditions = actor.system.conditions;
-
-  // =========================
-  // STUNNED / POISON RECOVERY
-  // =========================
-
-  for(const key of ["stunned","poisoned"]){
-
-    if(changedConditions[key] === 0){
-
-      const exhausted = currentConditions.exhausted ?? 0;
-
-      await actor.update({
-        "system.conditions.exhausted": exhausted + 1
-      });
-
-    }
-
-  }
-
-// =========================
-// CONDITION INTERACTIONS
-// =========================
-
-const cond = changed.system?.conditions ?? {};
-
-// -------------------------
-// FRIGHTENED REMOVED
-// -------------------------
-
-if(cond.frightened === false){
-
-  await actor.update({
-    "system.conditions.shaken": true
-  });
-
-}
-
-// -------------------------
-// SHAKEN REMOVED
-// -------------------------
-
-if(cond.shaken === false){
-
-  const exhausted = actor.system.conditions.exhausted ?? 0;
-
-  await actor.update({
-    "system.conditions.exhausted": exhausted + 1
-  });
-
-}
-
-// -------------------------
-// UNCONSCIOUS REMOVED
-// -------------------------
-
-if(cond.unconscious === false){
-
-  const exhausted = actor.system.conditions.exhausted ?? 0;
-
-  await actor.update({
-    "system.conditions.exhausted": exhausted + 1
-  });
-
-}
-
-  // =========================
-  // EXHAUSTION COLLAPSE
-  // =========================
-
-  if(changedConditions.exhausted !== undefined){
-
-    const stacks = actor.system.conditions.exhausted ?? 0;
-    const TB = actor.system.attributes.toughness.bonus;
-
-    if(stacks >= TB){
-
-      await actor.update({
-        "system.conditions.unconscious": true,
-        "system.conditions.prone": true
-      });
-
-    }
-
-  }
-
-// -------------------------
-// DYING TRIGGER
-// -------------------------
-
-if(changed.system?.health?.value !== undefined){
-
-  const hp = actor.system.health.value;
-
-  if(hp < 0){
-
-    await actor.update({
-      "system.conditions.dying": true
-    });
-
-  }
-
-}
-
+Hooks.on("updateActor", (actor, changed, options) => {
+  // 🔥 TEMPORAIRE : désactivé pour debug
 });
