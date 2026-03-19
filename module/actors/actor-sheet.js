@@ -306,5 +306,3 @@ html.find(".condition-state-input").change(async ev => {
   }
 
 }
-
-
