@@ -136,6 +136,10 @@ for (let [key, attr] of Object.entries(system.attributes)) {
 
 }
 
+const toDecimal = (value) => {
+  return Math.floor(value / 10) + (value % 10) / 10;
+};
+
    // =====================
    // HEALTH CALCULATION
    // =====================
@@ -252,8 +256,8 @@ if (meleeWeapons.length > 0) {
     const weaponSkill = getSkill(weapon.system.skill);
 
     let baseBonus = weaponSkill
-      ? weaponSkill.system.bonus
-      : system.attributes.meleeAbility.bonus;
+  ? weaponSkill.system.value
+  : system.attributes.meleeAbility.value;
 
     let value =
       baseBonus +
@@ -273,9 +277,9 @@ if (meleeWeapons.length > 0) {
   // 🔥 NO WEAPON → BRAWL
   const brawlSkill = getSkill("brawl");
 
-  parryBase = brawlSkill
-    ? brawlSkill.system.bonus
-    : system.attributes.meleeAbility.bonus;
+ parryBase = brawlSkill
+  ? brawlSkill.system.value
+  : system.attributes.meleeAbility.value;
 }
 
     // =====================
@@ -298,8 +302,8 @@ if (usableWeapons.length > 0) {
     if (weapon.system.category === "ranged") {
 
       baseBonus = weaponSkill
-        ? weaponSkill.system.bonus
-        : system.attributes.rangedAbility.bonus;
+        ? weaponSkill.system.value
+        : system.attributes.rangedAbility.value;
 
     }
 
@@ -307,10 +311,11 @@ if (usableWeapons.length > 0) {
     else {
 
       baseBonus = weaponSkill
-        ? weaponSkill.system.bonus
-        : system.attributes.meleeAbility.bonus;
+        ? weaponSkill.system.value
+        : system.attributes.meleeAbility.value;
     }
 
+    // 🔥 CALCUL COMMUN (IMPORTANT)
     let value =
       baseBonus +
       Number(weapon.system.attackBonus || 0);
@@ -330,8 +335,8 @@ if (usableWeapons.length > 0) {
   const brawlSkill = getSkill("brawl");
 
   attackBase = brawlSkill
-    ? brawlSkill.system.bonus
-    : system.attributes.meleeAbility.bonus;
+    ? brawlSkill.system.value
+    : system.attributes.meleeAbility.value;
 }
 
     // =====================
@@ -341,13 +346,15 @@ if (usableWeapons.length > 0) {
     system.derived.woundThreshold.value =
       resistance?.system.bonus ?? 0;
 
-    system.derived.evasion.value =
-      (dodge?.system.bonus ??
-      system.attributes.agility.bonus ??
-      0) + 5;
+    const evasionBase =
+  (dodge?.system.value ??
+   system.attributes.agility.value ??
+   0);
 
-    system.derived.parry.value =
-      parryBase + 5;
+system.derived.evasion.value = toDecimal(evasionBase) + 5;
+
+const finalParry = toDecimal(parryBase) + 5;
+system.derived.parry.value = finalParry;
 
     // =====================
     // CONDITION MODIFIER
@@ -366,8 +373,9 @@ if (usableWeapons.length > 0) {
       shaken +
       frightened;
 
-    system.derived.attack.value =
-      Math.max(attackBase - conditionPenalty, 0);
+    const finalAttack = Math.max(attackBase - conditionPenalty, 0);
+
+system.derived.attack.value = toDecimal(finalAttack);
 
     system.derived.carryingCapacity.value =
       system.attributes.toughness.bonus;
