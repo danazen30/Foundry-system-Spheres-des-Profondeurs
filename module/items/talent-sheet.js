@@ -1,59 +1,87 @@
-export class SdpTalentSheet extends ItemSheet {
+import { SdpItemSheet } from "./item-sheet.js";
 
-  static get defaultOptions() {
+export class SdpTalentSheet extends SdpItemSheet {
 
-    return foundry.utils.mergeObject(super.defaultOptions, {
+  static PARTS = {
+    sheet: {
+      template: "systems/sdp/templates/items/talent-sheet.hbs"
+    }
+  };
 
-      classes: ["sdp", "sheet", "item"],
-      template: "systems/sdp/templates/items/talent-sheet.hbs",
-      width: 500,
-      height: 400
+  async _prepareContext() {
+    return {
+      item: this.document,
+      system: this.document.system,
+      effects: this.document.effects
+    };
+  }
+
+  _onRender(context, options) {
+    super._onRender(context, options);
+
+    if (this._eventsBound) return;
+    this._eventsBound = true;
+
+    const root = this.element;
+
+    root.addEventListener("click", (event) => {
+
+      const button = event.target.closest("[data-action]");
+      if (!button) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      const action = button.dataset.action;
+
+      switch (action) {
+
+        case "create-effect":
+          this._createEffect();
+          break;
+
+        case "edit-effect":
+          this._editEffect(event);
+          break;
+
+        case "delete-effect":
+          this._deleteEffect(event);
+          break;
+      }
 
     });
 
   }
 
-  getData() {
+  async _createEffect() {
 
-    const context = super.getData();
+    await this.document.createEmbeddedDocuments("ActiveEffect", [{
+      name: "New Effect",
+      icon: "icons/svg/aura.svg",
+      changes: []
+    }]);
 
-    context.system = this.item.system;
-
-    return context;
-
+    this.render();
   }
 
-  activateListeners(html) {
+  async _editEffect(event) {
 
-    super.activateListeners(html);
+    const li = event.target.closest(".effect");
+    if (!li) return;
 
-    html.find(".effect-control").click(this._onEffectControl.bind(this));
+    const effect = this.document.effects.get(li.dataset.effectId);
 
+    if (effect) effect.sheet.render(true);
   }
 
-  async _onEffectControl(event) {
+  async _deleteEffect(event) {
 
-    event.preventDefault();
+    const li = event.target.closest(".effect");
+    if (!li) return;
 
-    const button = event.currentTarget;
-    const li = button.closest(".effect");
-    const effect = li ? this.item.effects.get(li.dataset.effectId) : null;
+    const effect = this.document.effects.get(li.dataset.effectId);
 
-    switch (button.dataset.action) {
-
-      case "create":
-        return this.item.createEmbeddedDocuments("ActiveEffect", [{
-        name: "New Effect"
-        }]);
-
-      case "edit":
-        return effect.sheet.render(true);
-
-      case "delete":
-        return effect.delete();
-
-    }
-
+    if (effect) await effect.delete();
   }
 
 }

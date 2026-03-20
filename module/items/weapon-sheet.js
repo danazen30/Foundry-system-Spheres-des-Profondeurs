@@ -1,20 +1,28 @@
-export class SdpWeaponSheet extends ItemSheet {
+import { SdpItemSheet } from "./item-sheet.js";
 
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: ["sdp", "sheet", "item"],
-      template: "systems/sdp/templates/items/weapon-sheet.hbs",
-      width: 400,
-      height: 350
-    });
-  }
+export class SdpWeaponSheet extends SdpItemSheet {
 
-  getData() {
-    const context = super.getData();
+  static PARTS = {
+    sheet: {
+      template: "systems/sdp/templates/items/weapon-sheet.hbs"
+    }
+  };
 
-    context.system = this.item.system;
+  async _prepareContext() {
+  return {
+    item: this.document,
+    system: this.document.system,
 
-    return context;
-  }
+    categoryOptions: [
+      { value: "melee", label: "Melee" },
+      { value: "ranged", label: "Ranged" }
+    ],
 
+    handednessOptions: [
+      { value: "one", label: "One Hand" },
+      { value: "two", label: "Two Hands" },
+      { value: "special", label: "Special" }
+    ]
+  };
+}
 }

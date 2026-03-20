@@ -173,3 +173,9 @@ text-align:center;
 .application.sdp.sheet.actor .window-content {
   overflow-y: auto;
 }
+
+.sdp-item-sheet {
+  height: 100%;
+  overflow-y: auto;
+  padding: 10px;
+}

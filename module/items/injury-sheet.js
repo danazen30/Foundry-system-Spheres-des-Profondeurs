@@ -2,72 +2,85 @@ import { SdpItemSheet } from "./item-sheet.js";
 
 export class SdpInjurySheet extends SdpItemSheet {
 
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: ["sdp", "sheet", "item"],
-      width: 500,
-      height: 400
-    });
-  }
+  static PARTS = {
+    sheet: {
+      template: "systems/sdp/templates/items/injury-sheet.hbs"
+    }
+  };
 
-  get template() {
-    return "systems/sdp/templates/items/injury-sheet.hbs";
-  }
-
-  activateListeners(html){
-
-  super.activateListeners(html);
-
-  html.find(".add-effect").click(this._addEffect.bind(this));
-  html.on("click", ".remove-effect", this._removeEffect.bind(this));
-
+  async _prepareContext() {
+  return {
+    item: this.document,
+    system: this.document.system,
+    effects: this.document.effects // 🔥 MANQUANT
+  };
 }
 
-async _addEffect(){
+_onRender(context, options) {
+  super._onRender(context, options);
 
-const effects = foundry.utils.duplicate(this.item.system.effects?.value || []);
+  if (this._eventsBound) return; // 🔥 IMPORTANT
+  this._eventsBound = true;
 
-  effects.push({
-    target: "strength",
-    value: 0
+  const root = this.element;
+
+  root.addEventListener("click", (event) => {
+
+    const button = event.target.closest("[data-action]");
+    if (!button) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    const action = button.dataset.action;
+
+    console.log("ACTION:", action);
+
+    switch (action) {
+
+      case "create-effect":
+        this._createEffect();
+        break;
+
+      case "edit-effect":
+        this._editEffect(event);
+        break;
+
+      case "delete-effect":
+        this._deleteEffect(event);
+        break;
+    }
+
   });
-
-await this.item.update({
-  "system.effects.value": effects
-});
-
 }
 
-async _removeEffect(event){
+async _createEffect() {
 
-  event.preventDefault();
-  event.stopPropagation();
+  await this.document.createEmbeddedDocuments("ActiveEffect", [{
+    name: "New Effect",
+    icon: "icons/svg/aura.svg",
+    changes: [] // 🔥 VIDE
+  }]);
 
-  const index = Number(event.currentTarget.dataset.index);
-
-const effects = foundry.utils.duplicate(this.item.system.effects?.value || []);
-
-  effects.splice(index,1);
-
-await this.item.update({
-  "system.effects.value": effects
-});
-
+  this.render();
 }
 
-async _updateObject(event, formData){
+  async _editEffect(event) {
+    const li = event.target.closest(".effect");
+    if (!li) return;
 
-  const data = foundry.utils.expandObject(formData);
+    const effect = this.document.effects.get(li.dataset.effectId);
 
-  // transformer en vrai array
-  if(data.system?.effects?.value){
-
-    data.system.effects.value = Object.values(data.system.effects.value);
-
+    if (effect) effect.sheet.render(true);
   }
 
-  return super._updateObject(event, data);
+  async _deleteEffect(event) {
+    const li = event.target.closest(".effect");
+    if (!li) return;
 
-}
+    const effect = this.document.effects.get(li.dataset.effectId);
+
+    if (effect) await effect.delete();
+  }
 
 }

@@ -1,29 +1,25 @@
-export class SdpItemSheet extends ItemSheet {
+const { ItemSheetV2 } = foundry.applications.sheets;
+const { HandlebarsApplicationMixin } = foundry.applications.api;
 
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: ["sdp", "sheet", "item"],
-      width: 400,
-      height: 400
-    });
-  }
+export class SdpItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
 
-  get template() {
+  static DEFAULT_OPTIONS = {
+    classes: ["sdp", "sheet", "item"],
+    position: { width: 400, height: 400 },
+    window: { resizable: true },
+    form: { submitOnChange: true }
+  };
 
-    const path = "systems/sdp/templates/items";
+  static LAYOUT = {
+    template: "templates/applications/sheet.hbs",
+    parts: ["sheet"]
+  };
 
-    return `${path}/${this.item.type}-sheet.hbs`;
-
-  }
-
-  getData() {
-
-    const context = super.getData();
-
-    context.system = this.item.system;
-
-    return context;
-
+  async _prepareContext() {
+    return {
+      item: this.document,
+      system: this.document.system
+    };
   }
 
 }

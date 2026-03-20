@@ -78,30 +78,33 @@ system.resources.movement.run ??= 0;
     system.custom.offhandReduction ??= 0;
   }
 
-  _getItemModifiers(targetKey){
+_getItemModifiers(targetKey) {
 
   let total = 0;
 
-  for(const item of this.items.contents){
+  for (const item of this.items.contents) {
 
-    if(item.type !== "injury") continue;
+    if (item.type !== "injury") continue;
 
- const effects = Array.isArray(item.system.effects?.value)
-  ? item.system.effects.value
-  : [];
+    for (const effect of item.effects) {
 
-    for(const effect of effects){
+      if (effect.disabled) continue;
 
-      if(effect.target !== targetKey) continue;
+      for (const change of effect.changes) {
 
-      total += Number(effect.value ?? 0);
+        // Exemple attendu :
+        // key = "system.attributes.strength.modifier"
 
+        if (!change.key) continue;
+
+        if (!change.key.includes(targetKey)) continue;
+
+        total += Number(change.value || 0);
+      }
     }
-
   }
 
   return total;
-
 }
 
 
