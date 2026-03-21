@@ -632,10 +632,12 @@ html.find(".poison-roll").click(async ev => {
 
   const actor = game.actors.get(actorId);
 
-  
-const stack = base + effect;
+  // ✅ BASE + EFFECT
+  const base = actor.system.conditions?.[conditionKey] ?? 0;
+  const effect = actor._getConditionEffects(conditionKey);
+  const total = base + effect;
 
-  if(stack <= 0) return;
+  if(total <= 0) return;
 
   const resistance = actor.items.find(i =>
     i.type === "skill" && i.system.key === "resistance"
@@ -655,43 +657,31 @@ const stack = base + effect;
     removed = Math.max(SL,1);
   }
 
-  const newStack = Math.max(stack - removed,0);
+  // ✅ recalcul propre
+  const newTotal = Math.max(total - removed, 0);
+  const newBase = Math.max(newTotal - effect, 0);
 
   roll.toMessage({
     speaker: ChatMessage.getSpeaker({actor}),
     flavor: `
     <h3>Poison Test</h3>
-
     <p>Target: ${target}</p>
     <p>Roll: ${result}</p>
     <p>SL: ${SL}</p>
-
     <p><strong>Stacks removed: ${removed}</strong></p>
-    ${newStack === 0 ? "<p><strong>Exhausted gained</strong></p>" : ""}
+    ${newTotal === 0 ? "<p><strong>Exhausted gained</strong></p>" : ""}
     `
   });
 
-  const base = actor.system.conditions?.[conditionKey] ?? 0;
-const effect = actor._getConditionEffects(conditionKey);
+  await actor.update({
+    [`system.conditions.${conditionKey}`]: newBase
+  });
 
-const total = base + effect;
-
-const newTotal = Math.max(total - removed, 0);
-
-// 🔥 recalcul propre du base
-const newBase = Math.max(newTotal - effect, 0);
-
-await actor.update({
-  [`system.conditions.${conditionKey}`]: newBase
-});
-
-  if(newStack === 0){
-
+  if(newTotal === 0){
     await actor.update({
       "system.conditions.exhausted":
-      (actor.system.conditions.exhausted || 0) + 1
+        (actor.system.conditions.exhausted || 0) + 1
     });
-
   }
 
 });
