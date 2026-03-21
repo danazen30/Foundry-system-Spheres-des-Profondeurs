@@ -632,7 +632,8 @@ html.find(".poison-roll").click(async ev => {
 
   const actor = game.actors.get(actorId);
 
-  const stack = actor.system.conditionTotals?.[conditionKey] ?? 0;
+  
+const stack = base + effect;
 
   if(stack <= 0) return;
 
@@ -670,8 +671,15 @@ html.find(".poison-roll").click(async ev => {
     `
   });
 
-  const effect = actor._getConditionEffects(conditionKey);
-const newBase = Math.max(newStack - effect, 0);
+  const base = actor.system.conditions?.[conditionKey] ?? 0;
+const effect = actor._getConditionEffects(conditionKey);
+
+const total = base + effect;
+
+const newTotal = Math.max(total - removed, 0);
+
+// 🔥 recalcul propre du base
+const newBase = Math.max(newTotal - effect, 0);
 
 await actor.update({
   [`system.conditions.${conditionKey}`]: newBase

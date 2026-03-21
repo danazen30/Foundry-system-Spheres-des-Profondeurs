@@ -174,19 +174,23 @@ root.querySelectorAll('.attr-modifier-input').forEach(el => {
 
 });
 
-// ===== FIX CONDITION DISPLAY (FINAL) =====
-for (const key in this.document.system.conditions) {
+// ===== STATE CONDITIONS (CHECKBOX) =====
+root.querySelectorAll('[data-action="updateConditionState"]').forEach(el => {
 
-  const input = root.querySelector(
-    `.condition-input[data-key="${key}"]`
-  );
+  el.addEventListener("change", async (event) => {
 
-  if (!input) continue;
+    const input = event.currentTarget;
+    const key = input.dataset.key;
+    const checked = input.checked;
 
-  const total = this.document.system.conditionTotals?.[key] ?? 0;
+    await this.document.update({
+      [`system.conditions.${key}`]: checked
+    });
 
-input.value = total;
-}
+  });
+
+});
+
 }
 
 
