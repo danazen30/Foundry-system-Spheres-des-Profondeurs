@@ -556,7 +556,7 @@ html.find(".stunned-roll").click(async ev => {
 
   const actor = game.actors.get(actorId);
 
-  const stack = actor.system.conditions[conditionKey] || 0;
+  const stack = actor.system.conditionTotals?.[conditionKey] ?? 0;
 
   const resistance = actor.items.find(i =>
     i.type === "skill" && i.system.key === "resistance"
@@ -591,10 +591,10 @@ html.find(".stunned-roll").click(async ev => {
     ${newStack === 0 ? "<p><strong>Exhausted gained</strong></p>" : ""}
     `
   });
-
+const effect = actor._getConditionEffects(conditionKey);
+const newBase = newStack - effect;
   await actor.update({
-  [`system.conditions.${conditionKey}`]: newStack,
-  [`system.conditionOverride.-=${conditionKey}`]: null
+  [`system.conditions.${conditionKey}`]: newBase
 });
 
 // =========================
@@ -632,7 +632,7 @@ html.find(".poison-roll").click(async ev => {
 
   const actor = game.actors.get(actorId);
 
-  const stack = actor.system.conditions[conditionKey] || 0;
+  const stack = actor.system.conditionTotals?.[conditionKey] ?? 0;
 
   if(stack <= 0) return;
 
@@ -670,9 +670,11 @@ html.find(".poison-roll").click(async ev => {
     `
   });
 
-  await actor.update({
-  [`system.conditions.${conditionKey}`]: newStack,
-  [`system.conditionOverride.-=${conditionKey}`]: null
+  const effect = actor._getConditionEffects(conditionKey);
+const newBase = Math.max(newStack - effect, 0);
+
+await actor.update({
+  [`system.conditions.${conditionKey}`]: newBase
 });
 
   if(newStack === 0){

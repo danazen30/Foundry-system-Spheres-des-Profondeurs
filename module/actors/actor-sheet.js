@@ -120,19 +120,42 @@ root.querySelectorAll('.condition-input').forEach(el => {
 
     const actor = this.document;
 
-    // 🔥 récupérer les effets actuels
+    // valeur actuelle (affichée)
+    const previous = actor.system.conditionTotals?.[key] ?? 0;
+
+    // effets actifs
     const effect = actor._getConditionEffects(key);
 
-    // 🔥 on stocke la base = valeur voulue - effets
+    // base recalculée
     const newBase = value - effect;
+
+    // =========================
+    // UPDATE PRINCIPAL
+    // =========================
 
     await actor.update({
       [`system.conditions.${key}`]: newBase
     });
 
+    // =========================
+    // FATIGUE (STUNNED / POISONED / BLEEDING)
+    // =========================
+
+    if (
+      (key === "stunned" || key === "poisoned" || key === "bleeding") &&
+      previous > 0 &&
+      value === 0
+    ) {
+      await actor.update({
+        "system.conditions.exhausted":
+          (actor.system.conditions.exhausted || 0) + 1
+      });
+    }
+
   });
 
 });
+
 
 // ===== ATTRIBUTE MODIFIER (MANUEL + EFFECTS) =====
 root.querySelectorAll('.attr-modifier-input').forEach(el => {

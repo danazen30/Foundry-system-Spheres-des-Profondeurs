@@ -10,7 +10,7 @@ export class SdpTurnEngine {
 
     console.log("SDP | startTurn", actor.name);
 
-    const conditions = actor.system.conditions;
+    const conditions = actor.system.conditionTotals;
 
     for(const key in conditions){
 
@@ -180,7 +180,7 @@ export class SdpTurnEngine {
 
     console.log("SDP | endTurn", actor.name);
 
-    const conditions = actor.system.conditions;
+    const conditions = actor.system.conditionTotals;
 
     for(const key in conditions){
 
@@ -205,7 +205,6 @@ if(config.removePerTurn){
 
     await actor.update({
   [`system.conditions.${key}`]: false,
-  [`system.conditionOverride.-=${key}`]: null
 });
 
     await ChatMessage.create({
@@ -229,10 +228,7 @@ if(config.removePerTurn){
 
     if(newStack !== stack){
 
-      await actor.update({
-  [`system.conditions.${key}`]: newStack,
-  [`system.conditionOverride.-=${key}`]: null
-});
+      await game.sdp.conditions.remove(actor, key, remove);
 
       await ChatMessage.create({
 
