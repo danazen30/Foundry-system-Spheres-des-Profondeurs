@@ -123,11 +123,9 @@ root.querySelectorAll('.condition-input').forEach(el => {
     // valeur actuelle (affichée)
     const previous = actor.system.conditionTotals?.[key] ?? 0;
 
-    // effets actifs
-    const effect = actor._getConditionEffects(key);
-
-    // base recalculée
-    const newBase = value - effect;
+   await actor.update({
+  [`system.conditions.${key}`]: value
+});
 
     // =========================
     // UPDATE PRINCIPAL

@@ -591,11 +591,10 @@ html.find(".stunned-roll").click(async ev => {
     ${newStack === 0 ? "<p><strong>Exhausted gained</strong></p>" : ""}
     `
   });
-const effect = actor._getConditionEffects(conditionKey);
-const newBase = newStack - effect;
-  await actor.update({
-  [`system.conditions.${conditionKey}`]: newBase
+await actor.update({
+  [`system.conditions.${conditionKey}`]: newStack
 });
+
 
 // =========================
 // APPLY EXHAUSTED IF RECOVERED
@@ -633,10 +632,7 @@ html.find(".poison-roll").click(async ev => {
   const actor = game.actors.get(actorId);
 
   // ✅ BASE + EFFECT
-  const base = actor.system.conditions?.[conditionKey] ?? 0;
-  const effect = actor._getConditionEffects(conditionKey);
-  const total = base + effect;
-
+  const total = actor.system.conditions?.[conditionKey] ?? 0;
   if(total <= 0) return;
 
   const resistance = actor.items.find(i =>
@@ -656,10 +652,11 @@ html.find(".poison-roll").click(async ev => {
   if(result <= target){
     removed = Math.max(SL,1);
   }
+const newTotal = Math.max(total - removed, 0);
 
-  // ✅ recalcul propre
-  const newTotal = Math.max(total - removed, 0);
-  const newBase = Math.max(newTotal - effect, 0);
+await actor.update({
+  [`system.conditions.${conditionKey}`]: newTotal
+});
 
   roll.toMessage({
     speaker: ChatMessage.getSpeaker({actor}),
@@ -674,8 +671,8 @@ html.find(".poison-roll").click(async ev => {
   });
 
   await actor.update({
-    [`system.conditions.${conditionKey}`]: newBase
-  });
+  [`system.conditions.${conditionKey}`]: newTotal
+});
 
   if(newTotal === 0){
     await actor.update({
@@ -992,7 +989,58 @@ Hooks.on("updateCombat", async (combat, changed) => {
   }
 
 });
+Hooks.on("createItem", async (item) => {
 
-Hooks.on("updateActor", (actor, changed, options) => {
-  // 🔥 TEMPORAIRE : désactivé pour debug
+  if (item.type !== "injury") return;
+
+  const actor = item.parent;
+  if (!actor) return;
+
+  for (const effect of item.effects) {
+
+    for (const change of effect.changes) {
+
+      if (!change.key?.startsWith("system.custom.conditionEffects")) continue;
+
+      const key = change.key.split(".").pop();
+      const value = Number(change.value || 0);
+
+      const current = actor.system.conditions?.[key] ?? 0;
+
+      await actor.update({
+        [`system.conditions.${key}`]: current + value
+      });
+
+    }
+
+  }
+
+});
+
+Hooks.on("deleteItem", async (item) => {
+
+  if (item.type !== "injury") return;
+
+  const actor = item.parent;
+  if (!actor) return;
+
+  for (const effect of item.effects) {
+
+    for (const change of effect.changes) {
+
+      if (!change.key?.startsWith("system.custom.conditionEffects")) continue;
+
+      const key = change.key.split(".").pop();
+      const value = Number(change.value || 0);
+
+      const current = actor.system.conditions?.[key] ?? 0;
+
+      await actor.update({
+        [`system.conditions.${key}`]: Math.max(current - value, 0)
+      });
+
+    }
+
+  }
+
 });

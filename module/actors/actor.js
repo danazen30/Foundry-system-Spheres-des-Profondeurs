@@ -118,31 +118,6 @@ export class SdpActor extends Actor {
     return total;
   }
 
-  _getConditionEffects(key) {
-
-  let total = 0;
-
-  for (const item of this.items.contents) {
-
-    if (item.type !== "injury") continue;
-
-    for (const effect of item.effects) {
-
-      if (effect.disabled) continue;
-
-      for (const change of effect.changes) {
-
-        if (change.key !== `system.custom.conditionEffects.${key}`) continue;
-
-        total += Number(change.value || 0);
-
-      }
-    }
-  }
-
-  return total;
-}
-
 
   // =====================
   // DERIVED DATA
@@ -168,9 +143,8 @@ system.conditionTotals = {};
 for (const key in system.conditions) {
 
   const base = system.conditions[key] ?? 0;
-  const effect = this._getConditionEffects(key);
 
-  system.conditionTotals[key] = base + effect;
+  system.conditionTotals[key] = base;
 
 }
 
