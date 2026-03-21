@@ -1,72 +1,30 @@
-import { SDP } from "./config.js";
-
 export class SdpConditionEngine {
 
   static get(actor, key){
-
     return actor.system.conditions?.[key] ?? 0;
-
   }
 
   static async add(actor, key, value = 1){
 
     const config = SDP.conditionConfig[key];
 
-    // =====================
-// FRIGHTENED OVERRIDE
-// =====================
-
-if(key === "frightened"){
-
-  await actor.update({
-    "system.conditions.shaken": false
-  });
-
-}
-
-    // =====================
-    // STATE CONDITIONS
-    // =====================
-
     if(config?.type === "state"){
 
       await actor.update({
-        [`system.conditions.${key}`]: true
+        [`system.conditions.${key}`]: true,
+        [`system.conditionManual.${key}`]: false
       });
 
       return;
-
     }
-
-    // =====================
-    // STACK CONDITIONS
-    // =====================
 
     const current = this.get(actor, key);
     const newValue = current + value;
 
     await actor.update({
-      [`system.conditions.${key}`]: newValue
+      [`system.conditions.${key}`]: newValue,
+      [`system.conditionManual.${key}`]: false
     });
-
-    // =====================
-    // EXHAUSTION LIMIT
-    // =====================
-
-    if(key === "exhausted"){
-
-      const TB = actor.system.attributes.toughness.bonus;
-
-      if(newValue >= TB){
-
-        await actor.update({
-          "system.conditions.unconscious": true,
-          "system.conditions.prone": true
-        });
-
-      }
-
-    }
 
   }
 
@@ -74,44 +32,23 @@ if(key === "frightened"){
 
     const config = SDP.conditionConfig[key];
 
-    // =====================
-    // STATE CONDITIONS
-    // =====================
-
     if(config?.type === "state"){
 
       await actor.update({
-        [`system.conditions.${key}`]: false
+        [`system.conditions.${key}`]: false,
+        [`system.conditionManual.${key}`]: false
       });
 
       return;
-
     }
-
-    // =====================
-    // STACK CONDITIONS
-    // =====================
 
     const current = this.get(actor, key);
     const newValue = Math.max(current - value, 0);
 
     await actor.update({
-      [`system.conditions.${key}`]: newValue
+      [`system.conditions.${key}`]: newValue,
+      [`system.conditionManual.${key}`]: false
     });
-
-    // =====================
-    // FATIGUE FROM RECOVERY
-    // =====================
-
-    if((key === "stunned" || key === "poisoned") && newValue === 0){
-
-      const exhausted = actor.system.conditions.exhausted ?? 0;
-
-      await actor.update({
-        "system.conditions.exhausted": exhausted + 1
-      });
-
-    }
 
   }
 
@@ -119,26 +56,19 @@ if(key === "frightened"){
 
     const config = SDP.conditionConfig[key];
 
-    // =====================
-    // STATE CONDITIONS
-    // =====================
-
     if(config?.type === "state"){
 
       await actor.update({
-        [`system.conditions.${key}`]: false
+        [`system.conditions.${key}`]: false,
+        [`system.conditionManual.${key}`]: false
       });
 
       return;
-
     }
 
-    // =====================
-    // STACK CONDITIONS
-    // =====================
-
     await actor.update({
-      [`system.conditions.${key}`]: 0
+      [`system.conditions.${key}`]: 0,
+      [`system.conditionManual.${key}`]: false
     });
 
   }

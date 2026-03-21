@@ -593,8 +593,9 @@ html.find(".stunned-roll").click(async ev => {
   });
 
   await actor.update({
-    [`system.conditions.${conditionKey}`]: newStack
-  });
+  [`system.conditions.${conditionKey}`]: newStack,
+  [`system.conditionOverride.-=${conditionKey}`]: null
+});
 
 // =========================
 // APPLY EXHAUSTED IF RECOVERED
@@ -603,9 +604,10 @@ html.find(".stunned-roll").click(async ev => {
 if(newStack === 0){
 
   await actor.update({
-    "system.conditions.exhausted":
-    (actor.system.conditions.exhausted || 0) + 1
-  });
+  "system.conditions.exhausted":
+    (actor.system.conditions.exhausted || 0) + 1,
+  "system.conditionOverride.-=exhausted": null
+});
 
 }
 
@@ -669,8 +671,9 @@ html.find(".poison-roll").click(async ev => {
   });
 
   await actor.update({
-    [`system.conditions.${conditionKey}`]: newStack
-  });
+  [`system.conditions.${conditionKey}`]: newStack,
+  [`system.conditionOverride.-=${conditionKey}`]: null
+});
 
   if(newStack === 0){
 

@@ -110,7 +110,6 @@ root.querySelectorAll('[data-action="updateSkillAdv"]').forEach(el => {
 });
 
 
-// ===== CONDITIONS (MANUELLES PROPRE) =====
 root.querySelectorAll('.condition-input').forEach(el => {
 
   el.addEventListener("change", async (event) => {
@@ -119,9 +118,16 @@ root.querySelectorAll('.condition-input').forEach(el => {
     const key = input.dataset.key;
     const value = Number(input.value) || 0;
 
-    await this.document.update({
-      [`system.conditions.${key}`]: value,
-      [`system.conditionOverride.${key}`]: value
+    const actor = this.document;
+
+    // 🔥 récupérer les effets actuels
+    const effect = actor._getConditionEffects(key);
+
+    // 🔥 on stocke la base = valeur voulue - effets
+    const newBase = value - effect;
+
+    await actor.update({
+      [`system.conditions.${key}`]: newBase
     });
 
   });
@@ -154,11 +160,9 @@ for (const key in this.document.system.conditions) {
 
   if (!input) continue;
 
-  const override = this.document.system.conditionOverride?.[key];
-  const base = this.document.system.conditions[key] ?? 0;
+  const total = this.document.system.conditionTotals?.[key] ?? 0;
 
-  // 🔥 PRIORITÉ : override > base
-  input.value = override !== undefined ? override : base;
+input.value = total;
 }
 }
 

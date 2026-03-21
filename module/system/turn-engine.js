@@ -204,8 +204,9 @@ if(config.removePerTurn){
   if(config.type === "state"){
 
     await actor.update({
-      [`system.conditions.${key}`]: false
-    });
+  [`system.conditions.${key}`]: false,
+  [`system.conditionOverride.-=${key}`]: null
+});
 
     await ChatMessage.create({
 
@@ -229,8 +230,9 @@ if(config.removePerTurn){
     if(newStack !== stack){
 
       await actor.update({
-        [`system.conditions.${key}`]: newStack
-      });
+  [`system.conditions.${key}`]: newStack,
+  [`system.conditionOverride.-=${key}`]: null
+});
 
       await ChatMessage.create({
 

@@ -80,6 +80,7 @@ export class SdpActor extends Actor {
     system.conditionOverride ??= {};
   }
 
+
   // =====================
   // ITEM MODIFIERS (ATTRIBUTES)
   // =====================
@@ -117,41 +118,38 @@ export class SdpActor extends Actor {
     return total;
   }
 
-  // =====================
-  // CONDITION EFFECTS
-  // =====================
-
   _getConditionEffects(key) {
 
-    let total = 0;
+  let total = 0;
 
-    for (const item of this.items.contents) {
+  for (const item of this.items.contents) {
 
-      if (item.type !== "injury") continue;
+    if (item.type !== "injury") continue;
 
-      for (const effect of item.effects) {
+    for (const effect of item.effects) {
 
-        if (effect.disabled) continue;
+      if (effect.disabled) continue;
 
-        for (const change of effect.changes) {
+      for (const change of effect.changes) {
 
-          if (!change.key) continue;
+        if (change.key !== `system.custom.conditionEffects.${key}`) continue;
 
-          if (change.key !== `system.conditions.${key}`) continue;
+        total += Number(change.value || 0);
 
-          total += Number(change.value || 0);
-        }
       }
     }
-
-    return total;
   }
+
+  return total;
+}
+
 
   // =====================
   // DERIVED DATA
   // =====================
 
   prepareDerivedData() {
+    
 
     super.prepareDerivedData();
 
@@ -159,21 +157,22 @@ export class SdpActor extends Actor {
 
     system.custom.offhandReduction = 0;
 
+  
+
     // =====================
     // CONDITIONS
     // =====================
 
-    system.conditionTotals = {};
+system.conditionTotals = {};
 
-    for (const key in system.conditions) {
+for (const key in system.conditions) {
 
-      const override = system.conditionOverride?.[key];
-      const base = override !== undefined ? override : (system.conditions[key] ?? 0);
+  const base = system.conditions[key] ?? 0;
+  const effect = this._getConditionEffects(key);
 
-      const effect = this._getConditionEffects(key);
+  system.conditionTotals[key] = base + effect;
 
-      system.conditionTotals[key] = base + effect;
-    }
+}
 
     // =====================
     // ATTRIBUTES
@@ -300,7 +299,7 @@ export class SdpActor extends Actor {
           ? skill.system.value
           : system.attributes.meleeAbility.value;
 
-        let value = base + Number(weapon.system.parryBonus || 0);
+        let value = base + (Number(weapon.system.parryBonus || 0) * 10);
 
         if (weapon.system.offhand) value -= offhandPenalty;
 
@@ -337,7 +336,7 @@ export class SdpActor extends Actor {
             ? (skill?.system.value ?? system.attributes.rangedAbility.value)
             : (skill?.system.value ?? system.attributes.meleeAbility.value);
 
-        let value = base + Number(weapon.system.attackBonus || 0);
+        let value = base + (Number(weapon.system.attackBonus || 0) * 10);
 
         if (weapon.system.offhand) value -= offhandPenalty;
 
