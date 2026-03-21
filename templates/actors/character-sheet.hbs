@@ -39,9 +39,9 @@ data-key="adv-{{key}}">
 {{#each system.attributes as |attr key|}}
 <input
 type="number"
-name="system.attributes.{{key}}.modifier"
-value="{{attr.modifier}}"
-data-key="mod-{{key}}">
+class="attr-modifier-input"
+data-key="{{key}}"
+value="{{attr.modifier}}">
 {{/each}}
 
 <!-- FINAL -->
@@ -386,8 +386,9 @@ Attack
 
 <input
   type="number"
-  name="system.conditions.{{key}}"
-  value="{{value}}"
+  class="condition-input"
+  data-key="{{key}}"
+  value="{{lookup ../system.conditions key}}"
   min="0"
   style="width:40px"
 />

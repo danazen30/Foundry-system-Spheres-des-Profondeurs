@@ -40,73 +40,116 @@ export class SdpActor extends Actor {
     // DERIVED DEFAULT
     // =====================
 
-system.derived ??= {};
+    system.derived ??= {};
 
-system.derived.woundThreshold ??= { value: 0 };
-system.derived.evasion ??= { value: 0 };
-system.derived.parry ??= { value: 0 };
-system.derived.attack ??= { value: 0 };
-system.derived.carryingCapacity ??= { value: 0 };
+    system.derived.woundThreshold ??= { value: 0 };
+    system.derived.evasion ??= { value: 0 };
+    system.derived.parry ??= { value: 0 };
+    system.derived.attack ??= { value: 0 };
+    system.derived.carryingCapacity ??= { value: 0 };
 
     // =====================
     // HEALTH DEFAULT
     // =====================
 
-system.health ??= {};
-system.health.value ??= 8;
-system.health.max ??= 8;
+    system.health ??= {};
+    system.health.value ??= 8;
+    system.health.max ??= 8;
 
     // =====================
     // RESOURCES DEFAULT
     // =====================
 
-system.resources ??= {};
-system.resources.mana ??= system.resources.mana ?? {};
-system.resources.mana.value ??= 0;
+    system.resources ??= {};
+    system.resources.mana ??= {};
+    system.resources.mana.value ??= 0;
 
-system.resources.movement ??= {};
-system.resources.movement.value ??= 4;
-system.resources.movement.current ??= 4;
-system.resources.movement.walk ??= 0;
-system.resources.movement.run ??= 0;
+    system.resources.movement ??= {};
+    system.resources.movement.value ??= 4;
+    system.resources.movement.current ??= 4;
+    system.resources.movement.walk ??= 0;
+    system.resources.movement.run ??= 0;
 
     // =====================
-    // CUSTOM MODIFIERS
+    // CUSTOM
     // =====================
 
     system.custom ??= {};
     system.custom.offhandReduction ??= 0;
+
+    system.conditionOverride ??= {};
   }
 
-_getItemModifiers(targetKey) {
+  // =====================
+  // ITEM MODIFIERS (ATTRIBUTES)
+  // =====================
 
-  let total = 0;
+  _getItemModifiers(targetKey) {
 
-  for (const item of this.items.contents) {
+    let total = 0;
 
-    if (item.type !== "injury") continue;
+    for (const item of this.items.contents) {
 
-    for (const effect of item.effects) {
+      if (item.type !== "injury") continue;
 
-      if (effect.disabled) continue;
+      for (const effect of item.effects) {
 
-      for (const change of effect.changes) {
+        if (effect.disabled) continue;
 
-        // Exemple attendu :
-        // key = "system.attributes.strength.modifier"
+        for (const change of effect.changes) {
 
-        if (!change.key) continue;
+          if (!change.key) continue;
 
-        if (!change.key.includes(targetKey)) continue;
+          // ❌ ignore conditions
+          if (change.key.startsWith("system.conditions")) continue;
 
-        total += Number(change.value || 0);
+          // ❌ ignore modifier (avoid double)
+          if (change.key.endsWith(".modifier")) continue;
+
+          // ✔ match attribute
+          if (!change.key.startsWith(`system.attributes.${targetKey}`)) continue;
+
+          total += Number(change.value || 0);
+        }
       }
     }
+
+    return total;
   }
 
-  return total;
-}
+  // =====================
+  // CONDITION EFFECTS
+  // =====================
 
+  _getConditionEffects(key) {
+
+    let total = 0;
+
+    for (const item of this.items.contents) {
+
+      if (item.type !== "injury") continue;
+
+      for (const effect of item.effects) {
+
+        if (effect.disabled) continue;
+
+        for (const change of effect.changes) {
+
+          if (!change.key) continue;
+
+          if (change.key !== `system.conditions.${key}`) continue;
+
+          total += Number(change.value || 0);
+        }
+      }
+    }
+
+    return total;
+  }
+
+  // =====================
+  // DERIVED DATA
+  // =====================
 
   prepareDerivedData() {
 
@@ -117,54 +160,63 @@ _getItemModifiers(targetKey) {
     system.custom.offhandReduction = 0;
 
     // =====================
+    // CONDITIONS
+    // =====================
+
+    system.conditionTotals = {};
+
+    for (const key in system.conditions) {
+
+      const override = system.conditionOverride?.[key];
+      const base = override !== undefined ? override : (system.conditions[key] ?? 0);
+
+      const effect = this._getConditionEffects(key);
+
+      system.conditionTotals[key] = base + effect;
+    }
+
+    // =====================
     // ATTRIBUTES
     // =====================
 
-for (let [key, attr] of Object.entries(system.attributes)) {
+    for (let [key, attr] of Object.entries(system.attributes)) {
 
-  const itemMod = this._getItemModifiers(key) ?? 0;
+      const itemMod = this._getItemModifiers(key) ?? 0;
+      const manualMod = Number(attr.modifier || 0);
 
-  attr.itemModifier = itemMod;
+      attr.itemModifier = itemMod;
+      attr.totalModifier = manualMod + itemMod;
 
-  attr.totalModifier =
-    Number(attr.modifier || 0) + itemMod;
+      attr.value =
+        Number(attr.initial || 0) +
+        Number(attr.advances || 0) +
+        attr.totalModifier +
+        Number(attr.levelBonus || 0);
 
-  attr.value =
-    Number(attr.initial || 0) +
-    Number(attr.advances || 0) +
-    attr.totalModifier +
-    Number(attr.levelBonus || 0);
+      attr.bonus = Math.floor(attr.value / 10);
+    }
 
-  attr.bonus = Math.floor(attr.value / 10);
 
-}
 
-const toDecimal = (value) => {
-  return Math.floor(value / 10) + (value % 10) / 10;
-};
+    // =====================
+    // HEALTH
+    // =====================
 
-   // =====================
-   // HEALTH CALCULATION
-   // =====================
+    const TB = system.attributes.toughness.bonus;
+    const SB = system.attributes.strength.bonus;
+    const WPB = system.attributes.willpower.bonus;
 
-   const TB = system.attributes.toughness.bonus;
-   const SB = system.attributes.strength.bonus;
-   const WPB = system.attributes.willpower.bonus;
+    const maxHealth = (TB * 2) + SB + WPB;
 
-   const maxHealth = (TB * 2) + SB + WPB;
+    system.health.max = maxHealth;
 
-   system.health.max = maxHealth;
+    if (system.health.value == null) {
+      system.health.value = maxHealth;
+    }
 
-   if (system.health.value === undefined || system.health.value === null) {
-     system.health.value = maxHealth;
-   }
-
-   // ⚠️ IMPORTANT
-   // On empêche seulement de dépasser le max
-   // MAIS on autorise les valeurs négatives
-   if (system.health.value > maxHealth) {
-     system.health.value = maxHealth;
-   }
+    if (system.health.value > maxHealth) {
+      system.health.value = maxHealth;
+    }
 
     // =====================
     // SKILLS
@@ -184,20 +236,13 @@ const toDecimal = (value) => {
 
       skill.system.bonus =
         Math.floor(skill.system.value / 10);
-
     }
 
-    // =====================
-    // HELPER
-    // =====================
+    const getSkill = (key) => skills.find(s => s.system.key === key);
 
-    const getSkill = (key) => {
-      return skills.find(s => s.system.key === key);
-    };
-
-    const resistance = getSkill("resistance") || null;
-    const dodge = getSkill("dodge") || null;
-    const brawl = getSkill("brawl") || null;
+    const resistance = getSkill("resistance");
+    const dodge = getSkill("dodge");
+    const brawl = getSkill("brawl");
 
     // =====================
     // WEAPON DAMAGE
@@ -210,7 +255,6 @@ const toDecimal = (value) => {
     for (let weapon of weapons) {
 
       let formula = weapon.system.damage || "0";
-
       formula = formula.replace("SB", SB_damage);
 
       let value = 0;
@@ -222,7 +266,6 @@ const toDecimal = (value) => {
       }
 
       weapon.system.finalDamage = value;
-
     }
 
     // =====================
@@ -230,13 +273,10 @@ const toDecimal = (value) => {
     // =====================
 
     const equippedWeapons = this.items.filter(
-      i => i.type === "weapon" && i.system.equipped === true
+      i => i.type === "weapon" && i.system.equipped
     );
 
-    let usableWeapons = equippedWeapons;
-
     const OFFHAND_PENALTY = 2;
-
     const offhandPenalty =
       Math.max(0, OFFHAND_PENALTY - system.custom.offhandReduction);
 
@@ -244,165 +284,126 @@ const toDecimal = (value) => {
     // PARRY
     // =====================
 
-let parryBase = 0;
+    let parryBase = 0;
 
-const meleeWeapons = usableWeapons.filter(
-  w => w.system.category === "melee"
-);
+    const meleeWeapons = equippedWeapons.filter(w => w.system.category === "melee");
 
-if (meleeWeapons.length > 0) {
+    if (meleeWeapons.length > 0) {
 
-  const parryValues = [];
+      const values = [];
 
-  for (let weapon of meleeWeapons) {
+      for (let weapon of meleeWeapons) {
 
-    const weaponSkill = getSkill(weapon.system.skill);
+        const skill = getSkill(weapon.system.skill);
 
-    let baseBonus = weaponSkill
-  ? weaponSkill.system.value
-  : system.attributes.meleeAbility.value;
+        let base = skill
+          ? skill.system.value
+          : system.attributes.meleeAbility.value;
 
-    let value =
-      baseBonus +
-      Number(weapon.system.parryBonus || 0);
+        let value = base + Number(weapon.system.parryBonus || 0);
 
-    if (weapon.system.offhand) {
-      value -= offhandPenalty;
+        if (weapon.system.offhand) value -= offhandPenalty;
+
+        values.push(value);
+      }
+
+      parryBase = Math.max(...values);
+
+    } else {
+
+      const skill = getSkill("brawl");
+
+      parryBase = skill
+        ? skill.system.value
+        : system.attributes.meleeAbility.value;
     }
-
-    parryValues.push(value);
-  }
-
-  parryBase = Math.max(...parryValues);
-
-} else {
-
-  // 🔥 NO WEAPON → BRAWL
-  const brawlSkill = getSkill("brawl");
-
- parryBase = brawlSkill
-  ? brawlSkill.system.value
-  : system.attributes.meleeAbility.value;
-}
 
     // =====================
     // ATTACK
     // =====================
 
-let attackBase = 0;
+    let attackBase = 0;
 
-if (usableWeapons.length > 0) {
+    if (equippedWeapons.length > 0) {
 
-  const attackValues = [];
+      const values = [];
 
-  for (let weapon of usableWeapons) {
+      for (let weapon of equippedWeapons) {
 
-    const weaponSkill = getSkill(weapon.system.skill);
+        const skill = getSkill(weapon.system.skill);
 
-    let baseBonus;
+        let base =
+          weapon.system.category === "ranged"
+            ? (skill?.system.value ?? system.attributes.rangedAbility.value)
+            : (skill?.system.value ?? system.attributes.meleeAbility.value);
 
-    // ===== RANGED =====
-    if (weapon.system.category === "ranged") {
+        let value = base + Number(weapon.system.attackBonus || 0);
 
-      baseBonus = weaponSkill
-        ? weaponSkill.system.value
-        : system.attributes.rangedAbility.value;
+        if (weapon.system.offhand) value -= offhandPenalty;
 
-    }
+        values.push(value);
+      }
 
-    // ===== MELEE =====
-    else {
+      attackBase = Math.max(...values);
 
-      baseBonus = weaponSkill
-        ? weaponSkill.system.value
+    } else {
+
+      const skill = getSkill("brawl");
+
+      attackBase = skill
+        ? skill.system.value
         : system.attributes.meleeAbility.value;
     }
 
-    // 🔥 CALCUL COMMUN (IMPORTANT)
-    let value =
-      baseBonus +
-      Number(weapon.system.attackBonus || 0);
-
-    if (weapon.system.offhand) {
-      value -= offhandPenalty;
-    }
-
-    attackValues.push(value);
-  }
-
-  attackBase = Math.max(...attackValues);
-
-} else {
-
-  // 🔥 NO WEAPON → BRAWL
-  const brawlSkill = getSkill("brawl");
-
-  attackBase = brawlSkill
-    ? brawlSkill.system.value
-    : system.attributes.meleeAbility.value;
-}
-
     // =====================
-    // DERIVED
+    // DERIVED FINAL
     // =====================
 
-    system.derived.woundThreshold.value =
-      resistance?.system.bonus ?? 0;
+    system.derived.woundThreshold.value = resistance?.system.bonus ?? 0;
 
     const evasionBase =
-  (dodge?.system.value ??
-   system.attributes.agility.value ??
-   0);
+      dodge?.system.value ??
+      system.attributes.agility.value ??
+      0;
 
-system.derived.evasion.value = toDecimal(evasionBase) + 5;
+    system.derived.evasion.value = evasionBase/10 + 5;
 
-const finalParry = toDecimal(parryBase) + 5;
-system.derived.parry.value = finalParry;
+    const finalParry = parryBase/10 +5;
+    system.derived.parry.value = finalParry;
 
     // =====================
-    // CONDITION MODIFIER
+    // CONDITIONS EFFECTS
     // =====================
 
-    const poisonStacks = system.conditions?.poisoned ?? 0;
-    const exhaustedStacks = system.conditions?.exhausted ?? 0;
-    const deafenedStacks = system.conditions?.deafened ?? 0;
-    const shaken = system.conditions?.shaken ? 1 : 0;
-    const frightened = system.conditions?.frightened ? 3 : 0;
+    const poison = system.conditionTotals?.poisoned ?? 0;
+    const exhausted = system.conditionTotals?.exhausted ?? 0;
+    const deafened = system.conditionTotals?.deafened ?? 0;
+    const shaken = system.conditionTotals?.shaken ? 1 : 0;
+    const frightened = system.conditionTotals?.frightened ? 3 : 0;
 
-    const conditionPenalty =
-      poisonStacks +
-      exhaustedStacks +
-      deafenedStacks +
-      shaken +
-      frightened;
+    const penalty = poison + exhausted + deafened + shaken + frightened;
 
-    const finalAttack = Math.max(attackBase - conditionPenalty, 0);
+    const finalAttack = Math.max(attackBase, 0);
 
-system.derived.attack.value = toDecimal(finalAttack);
-
-    system.derived.carryingCapacity.value =
-      system.attributes.toughness.bonus;
+   system.derived.attack.value =
+  Math.round((finalAttack / 10 - penalty) * 10) / 10;
 
     // =====================
     // MOVEMENT
     // =====================
 
     const baseMove = system.resources.movement.value ?? 0;
+    const slowed = system.conditionTotals?.slowed ?? 0;
 
-    const slowedStacks = system.conditions?.slowed ?? 0;
-
-    const currentMove = Math.max(baseMove - slowedStacks, 0);
+    const currentMove = Math.max(baseMove - slowed, 0);
 
     system.resources.movement.current = currentMove;
-
     system.resources.movement.walk = currentMove * 2;
+    system.resources.movement.run = currentMove * 4;
 
-    system.resources.movement.run = system.resources.movement.walk * 2;
-
-    if(currentMove === 0 && slowedStacks > 0){
+    if (currentMove === 0 && slowed > 0) {
       system.conditions.entangled = true;
     }
-
   }
 
   // =====================
@@ -413,14 +414,10 @@ system.derived.attack.value = toDecimal(finalAttack);
 
     const max = talent.system.max;
 
-    if(!isNaN(max)){
-      return Number(max);
-    }
+    if(!isNaN(max)) return Number(max);
 
     const attr = this.system.attributes[max];
 
     return attr?.bonus ?? 1;
-
   }
-
 }

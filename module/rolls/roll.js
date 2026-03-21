@@ -53,7 +53,7 @@ export class SdpRoll {
 
 let conditionModifier = 0;
 
-const conditions = actor.system.conditions;
+const conditions = actor.system.conditionTotals;
 
 for(const key in conditions){
 

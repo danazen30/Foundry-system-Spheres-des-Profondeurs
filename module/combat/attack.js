@@ -35,10 +35,10 @@ if(targets.length > 0){
 
 if(targetActor){
 
-  const stunned = targetActor.system.conditions?.stunned || 0;
-  const deafened = targetActor.system.conditions?.deafened || 0;
-  const prone = targetActor.system.conditions?.prone || false;
-  const surprised = targetActor.system.conditions?.surprised ? 3 : 0;
+  const stunned = targetActor.system.conditionTotals?.stunned || 0;
+const deafened = targetActor.system.conditionTotals?.deafened || 0;
+const prone = targetActor.system.conditionTotals?.prone || false;
+const surprised = targetActor.system.conditionTotals?.surprised ? 3 : 0;
 
   if(stunned > 0){
 
@@ -97,7 +97,7 @@ if(targetActor){
 // DEAFENED MODIFIER
 // ======================
 
-const deafenedStacks = actor.system.conditions?.deafened || 0;
+const deafenedStacks = actor.system.conditionTotals?.deafened || 0;
 
 if(deafenedStacks > 0){
 
@@ -109,10 +109,10 @@ if(deafenedStacks > 0){
 // POISON MODIFIER (RANGED)
 // ======================
 
-const poisonStacks = actor.system.conditions?.poisoned || 0;
-const exhaustedStacks = actor.system.conditions?.exhausted || 0;
-const shaken = actor.system.conditions?.shaken ? 1 : 0;
-const frightened = actor.system.conditions?.frightened ? 3 : 0;
+const poisonStacks = actor.system.conditionTotals?.poisoned || 0;
+const exhaustedStacks = actor.system.conditionTotals?.exhausted || 0;
+const shaken = actor.system.conditionTotals?.shaken ? 1 : 0;
+const frightened = actor.system.conditionTotals?.frightened ? 3 : 0;
 
 const penalty = (poisonStacks + exhaustedStacks + shaken + frightened) * 10;
 

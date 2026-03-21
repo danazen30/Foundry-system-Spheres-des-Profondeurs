@@ -19,9 +19,6 @@ export class SdpTalentSheet extends SdpItemSheet {
   _onRender(context, options) {
     super._onRender(context, options);
 
-    if (this._eventsBound) return;
-    this._eventsBound = true;
-
     const root = this.element;
 
     root.addEventListener("click", (event) => {

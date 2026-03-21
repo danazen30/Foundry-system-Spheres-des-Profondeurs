@@ -108,6 +108,58 @@ root.querySelectorAll('[data-action="updateSkillAdv"]').forEach(el => {
 
   });
 });
+
+
+// ===== CONDITIONS (MANUELLES PROPRE) =====
+root.querySelectorAll('.condition-input').forEach(el => {
+
+  el.addEventListener("change", async (event) => {
+
+    const input = event.currentTarget;
+    const key = input.dataset.key;
+    const value = Number(input.value) || 0;
+
+    await this.document.update({
+      [`system.conditions.${key}`]: value,
+      [`system.conditionOverride.${key}`]: value
+    });
+
+  });
+
+});
+
+// ===== ATTRIBUTE MODIFIER (MANUEL + EFFECTS) =====
+root.querySelectorAll('.attr-modifier-input').forEach(el => {
+
+  el.addEventListener("change", async (event) => {
+
+    const input = event.currentTarget;
+    const key = input.dataset.key;
+    const value = Number(input.value) || 0;
+
+    await this.document.update({
+      [`system.attributes.${key}.modifier`]: value
+    });
+
+  });
+
+});
+
+// ===== FIX CONDITION DISPLAY (FINAL) =====
+for (const key in this.document.system.conditions) {
+
+  const input = root.querySelector(
+    `.condition-input[data-key="${key}"]`
+  );
+
+  if (!input) continue;
+
+  const override = this.document.system.conditionOverride?.[key];
+  const base = this.document.system.conditions[key] ?? 0;
+
+  // 🔥 PRIORITÉ : override > base
+  input.value = override !== undefined ? override : base;
+}
 }
 
 
