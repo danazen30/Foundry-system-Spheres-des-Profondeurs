@@ -121,34 +121,22 @@ root.querySelectorAll('.condition-input').forEach(el => {
     const actor = this.document;
 
     // valeur actuelle (affichée)
-    const previous = actor.system.conditionTotals?.[key] ?? 0;
+    const previous = actor.system.conditions?.[key] ?? 0;
 
-   await actor.update({
+await actor.update({
   [`system.conditions.${key}`]: value
 });
 
-    // =========================
-    // UPDATE PRINCIPAL
-    // =========================
-
-    await actor.update({
-      [`system.conditions.${key}`]: newBase
-    });
-
-    // =========================
-    // FATIGUE (STUNNED / POISONED / BLEEDING)
-    // =========================
-
-    if (
-      (key === "stunned" || key === "poisoned" || key === "bleeding") &&
-      previous > 0 &&
-      value === 0
-    ) {
-      await actor.update({
-        "system.conditions.exhausted":
-          (actor.system.conditions.exhausted || 0) + 1
-      });
-    }
+if (
+  (key === "stunned" || key === "poisoned" || key === "bleeding") &&
+  previous > 0 &&
+  value === 0
+) {
+  await actor.update({
+    "system.conditions.exhausted":
+      (actor.system.conditions.exhausted || 0) + 1
+  });
+}
 
   });
 
