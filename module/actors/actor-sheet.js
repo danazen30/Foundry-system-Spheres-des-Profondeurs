@@ -164,6 +164,12 @@ root.querySelectorAll('[data-action="updateConditionState"]').forEach(el => {
 
     const actor = this.document;
 
+    const previous = actor.system.conditions?.[key];
+
+    // =========================
+    // UPDATE PRINCIPAL
+    // =========================
+
     await actor.update({
       [`system.conditions.${key}`]: checked
     });
@@ -175,13 +181,11 @@ root.querySelectorAll('[data-action="updateConditionState"]').forEach(el => {
     if (key === "frightened") {
 
       if (checked) {
-        // frightened ON → remove shaken
         await actor.update({
           "system.conditions.shaken": false
         });
 
       } else {
-        // frightened OFF → add shaken
         await actor.update({
           "system.conditions.shaken": true
         });
@@ -189,9 +193,45 @@ root.querySelectorAll('[data-action="updateConditionState"]').forEach(el => {
 
     }
 
+    // =========================
+    // SHAKEN → EXHAUSTED
+    // =========================
+
+    if (key === "shaken" && previous === true && checked === false) {
+
+      await actor.update({
+        "system.conditions.exhausted":
+          (actor.system.conditions.exhausted || 0) + 1
+      });
+
+    }
+
+  });
+
+});
+
+root.querySelectorAll('.movement-input').forEach(el => {
+
+  el.addEventListener("change", async (event) => {
+
+    const input = event.currentTarget;
+    const newDisplayed = Number(input.value) || 0;
+
+    const actor = this.document;
+
+    const slowed = actor.system.conditionTotals?.slowed ?? 0;
+
+    // IMPORTANT : recalcul propre de la base
+    const newBase = newDisplayed + slowed;
+
+    await actor.update({
+      "system.resources.movement.value": newBase
+    });
+
   });
 
 });
 
 
 }}
+
