@@ -10,16 +10,16 @@ export class SdpActor extends Actor {
     // =====================
 
     const defaultAttributes = {
-      meleeAbility: { label: "MA", initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
-      rangedAbility: { label: "RA", initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
-      strength: { label: "S", initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
-      toughness: { label: "T", initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
-      initiative: { label: "I", initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
-      agility: { label: "A", initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
-      dexterity: { label: "D", initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
-      intelligence: { label: "Int", initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
-      willpower: { label: "WP", initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
-      charisma: { label: "C", initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 }
+      meleeAbility: { label: "MA", name: "Strength", initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
+      rangedAbility: { label: "RA", name: "rangedAbility",initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
+      strength: { label: "S", name: "strength",initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
+      toughness: { label: "T", name: "toughness",initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
+      initiative: { label: "I", name: "initiative",initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
+      agility: { label: "A", name: "agility",initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
+      dexterity: { label: "D", name: "dexterity",initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
+      intelligence: { label: "Int", name: "intelligence",initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
+      willpower: { label: "WP", name: "willpower",initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
+      charisma: { label: "C", name: "charisma",initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 }
     };
 
     system.attributes ??= {};
@@ -29,6 +29,7 @@ export class SdpActor extends Actor {
       const attr = system.attributes[key] ??= {};
 
       attr.label ??= defaults.label;
+      attr.name ??= defaults.name;
       attr.initial ??= defaults.initial;
       attr.advances ??= defaults.advances;
       attr.modifier ??= defaults.modifier;

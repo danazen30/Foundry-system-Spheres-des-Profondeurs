@@ -1,3 +1,5 @@
+import { SDP } from "./config.js";
+
 export class SdpConditionEngine {
 
   static get(actor, key){

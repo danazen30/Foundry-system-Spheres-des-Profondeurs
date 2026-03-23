@@ -48,9 +48,15 @@ _onRender(context, options) {
   root.querySelectorAll('[data-action="rollAttribute"]').forEach(el => {
     el.addEventListener("click", (event) => {
       const attr = event.currentTarget.dataset.attr;
-      const value = this.document.system.attributes[attr].value;
+      const attrData = this.document.system.attributes[attr];
 
-      SdpRoll.basicTest(this.document, value);
+const value = attrData.value;
+
+SdpRoll.basicTest(
+  this.document,
+  value,
+  attrData.name || attrData.label
+);
     });
   });
 
@@ -59,7 +65,11 @@ _onRender(context, options) {
     el.addEventListener("click", (event) => {
       const skill = this.document.items.get(event.currentTarget.dataset.itemId);
 
-      SdpRoll.basicTest(this.document, skill.system.value);
+      SdpRoll.basicTest(
+  this.document,
+  skill.system.value,
+  skill.name
+);
     });
   });
 
