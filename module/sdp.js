@@ -1044,3 +1044,27 @@ Hooks.on("deleteItem", async (item) => {
   }
 
 });
+
+Hooks.on("updateActor", async (actor, changes) => {
+
+  const exhausted = actor.system.conditions?.exhausted ?? 0;
+
+  const TB = actor.system.attributes.toughness.bonus;
+
+  // =========================
+  // TRIGGER KNOCKDOWN
+  // =========================
+
+  if(exhausted >= TB){
+
+    // déjà appliqué → skip
+    if(actor.system.conditions.unconscious && actor.system.conditions.prone) return;
+
+    await actor.update({
+      "system.conditions.unconscious": true,
+      "system.conditions.prone": true
+    });
+
+  }
+
+});
