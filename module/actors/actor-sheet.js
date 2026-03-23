@@ -154,23 +154,6 @@ if (
 
 
 // ===== ATTRIBUTE MODIFIER (MANUEL + EFFECTS) =====
-root.querySelectorAll('.attr-modifier-input').forEach(el => {
-
-  el.addEventListener("change", async (event) => {
-
-    const input = event.currentTarget;
-    const key = input.dataset.key;
-    const value = Number(input.value) || 0;
-
-    await this.document.update({
-      [`system.attributes.${key}.modifier`]: value
-    });
-
-  });
-
-});
-
-// ===== STATE CONDITIONS (CHECKBOX) =====
 root.querySelectorAll('[data-action="updateConditionState"]').forEach(el => {
 
   el.addEventListener("change", async (event) => {
@@ -179,15 +162,36 @@ root.querySelectorAll('[data-action="updateConditionState"]').forEach(el => {
     const key = input.dataset.key;
     const checked = input.checked;
 
-    await this.document.update({
+    const actor = this.document;
+
+    await actor.update({
       [`system.conditions.${key}`]: checked
     });
+
+    // =========================
+    // SHAKEN / FRIGHTENED LOGIC
+    // =========================
+
+    if (key === "frightened") {
+
+      if (checked) {
+        // frightened ON → remove shaken
+        await actor.update({
+          "system.conditions.shaken": false
+        });
+
+      } else {
+        // frightened OFF → add shaken
+        await actor.update({
+          "system.conditions.shaken": true
+        });
+      }
+
+    }
 
   });
 
 });
 
-}
 
-
-}
+}}
