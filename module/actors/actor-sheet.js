@@ -163,19 +163,14 @@ root.querySelectorAll('[data-action="updateConditionState"]').forEach(el => {
     const checked = input.checked;
 
     const actor = this.document;
-
     const previous = actor.system.conditions?.[key];
-
-    // =========================
-    // UPDATE PRINCIPAL
-    // =========================
 
     await actor.update({
       [`system.conditions.${key}`]: checked
     });
 
     // =========================
-    // SHAKEN / FRIGHTENED LOGIC
+    // SHAKEN / FRIGHTENED
     // =========================
 
     if (key === "frightened") {
@@ -184,7 +179,6 @@ root.querySelectorAll('[data-action="updateConditionState"]').forEach(el => {
         await actor.update({
           "system.conditions.shaken": false
         });
-
       } else {
         await actor.update({
           "system.conditions.shaken": true
@@ -205,6 +199,31 @@ root.querySelectorAll('[data-action="updateConditionState"]').forEach(el => {
       });
 
     }
+
+    // =========================
+    // UNCONSCIOUS → PRONE
+    // =========================
+
+    if (key === "unconscious" && checked) {
+
+      await actor.update({
+        "system.conditions.prone": true
+      });
+
+    }
+
+    // =========================
+    // DYING → UNCONSCIOUS
+    // =========================
+
+    if (key === "dying" && checked) {
+
+  await actor.update({
+    "system.conditions.unconscious": true,
+    "system.conditions.prone": true
+  });
+
+}
 
   });
 

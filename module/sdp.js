@@ -1067,4 +1067,36 @@ Hooks.on("updateActor", async (actor, changes) => {
 
   }
 
+  Hooks.on("updateActor", async (actor, changes) => {
+
+  const cond = changes.system?.conditions;
+  if (!cond) return;
+
+  // =========================
+  // DYING → UNCONSCIOUS + PRONE
+  // =========================
+
+  if (cond.dying === true) {
+
+    await actor.update({
+      "system.conditions.unconscious": true,
+      "system.conditions.prone": true
+    });
+
+  }
+
+  // =========================
+  // UNCONSCIOUS → PRONE
+  // =========================
+
+  if (cond.unconscious === true) {
+
+    await actor.update({
+      "system.conditions.prone": true
+    });
+
+  }
+
+});
+
 });
