@@ -1225,10 +1225,16 @@ Hooks.on("createItem", async (item) => {
   const actor = item.parent;
   if (!actor) return;
 
+  // 🔥 récupérer ton paramètre depuis l’item
+  const removeOnDelete = item.system.removeOnDelete ?? true;
+
   for (const effect of item.effects) {
 
     for (const change of effect.changes) {
 
+      // =========================
+      // TON CODE EXISTANT
+      // =========================
       if (!change.key?.startsWith("system.custom.conditionEffects")) continue;
 
       const key = change.key.split(".").pop();
@@ -1258,6 +1264,9 @@ Hooks.on("deleteItem", async (item) => {
     for (const change of effect.changes) {
 
       if (!change.key?.startsWith("system.custom.conditionEffects")) continue;
+
+      // 🔥 NOUVEAU : check ici
+      if (item.system.removeOnDelete === false) continue;
 
       const key = change.key.split(".").pop();
       const value = Number(change.value || 0);

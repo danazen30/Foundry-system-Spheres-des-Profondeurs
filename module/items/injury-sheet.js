@@ -19,41 +19,37 @@ export class SdpInjurySheet extends SdpItemSheet {
 _onRender(context, options) {
   super._onRender(context, options);
 
-  if (this._listenersActivated) return;
-  this._listenersActivated = true;
-
   const root = this.element;
 
-  root.addEventListener("click", (event) => {
+  root.querySelectorAll("[data-action]").forEach(el => {
 
-    const button = event.target.closest("[data-action]");
-    if (!button) return;
+    el.addEventListener("click", (event) => {
 
-    event.preventDefault();
-    event.stopPropagation();
+      const action = el.dataset.action;
 
-    const action = button.dataset.action;
+      switch (action) {
 
-    switch (action) {
+        case "create-effect":
+          this._createEffect();
+          break;
 
-      case "create-effect":
-        this._createEffect();
-        break;
+        case "edit-effect":
+          this._editEffect(event);
+          break;
 
-      case "edit-effect":
-        this._editEffect(event);
-        break;
+        case "delete-effect":
+          this._deleteEffect(event);
+          break;
+      }
 
-      case "delete-effect":
-        this._deleteEffect(event);
-        break;
-    }
+    });
 
   });
+
 }
 
 async _createEffect() {
-
+ console.log("CREATE EFFECT TRIGGERED");
   await this.document.createEmbeddedDocuments("ActiveEffect", [{
     name: "New Effect",
     icon: "icons/svg/aura.svg",

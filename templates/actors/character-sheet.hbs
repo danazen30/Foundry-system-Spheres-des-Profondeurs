@@ -412,6 +412,8 @@ Attack
 <th>Name</th>
 <th>Severity</th>
 <th>Location</th>
+<th>Duration</th>
+<th>Actions</th>
 </tr>
 </thead>
 
@@ -425,6 +427,17 @@ Attack
 <td>{{item.name}}</td>
 <td>{{item.system.severity}}</td>
 <td>{{item.system.location}}</td>
+<td>{{item.system.duration}}</td>
+
+<td>
+  <button data-action="editItem" data-item-id="{{item.id}}">
+    ✏️
+  </button>
+
+  <button data-action="deleteItem" data-item-id="{{item.id}}">
+    🗑️
+  </button>
+</td>
 
 </tr>
 

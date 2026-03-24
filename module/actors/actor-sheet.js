@@ -39,7 +39,8 @@ export class SdpActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   get id() {
     return `sdp-actor-sheet-${this.document.id}`;
   }
-_onRender(context, options) {
+
+  _onRender(context, options) {
   super._onRender(context, options);
 
   const root = this.element;
@@ -269,6 +270,25 @@ root.querySelectorAll('.attr-modifier-input').forEach(el => {
 
 });
 
+root.querySelectorAll('[data-action="editItem"]').forEach(el => {
+  el.addEventListener("click", (event) => {
+
+    const item = this.document.items.get(event.currentTarget.dataset.itemId);
+
+    item.sheet.render(true);
+
+  });
+});
+
+root.querySelectorAll('[data-action="deleteItem"]').forEach(el => {
+  el.addEventListener("click", async (event) => {
+
+    const item = this.document.items.get(event.currentTarget.dataset.itemId);
+
+    await item.delete();
+
+  });
+});
 
 }}
 

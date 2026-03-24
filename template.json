@@ -663,6 +663,11 @@
         "value": false
       },
 
+      "duration": {
+        "type": "number",
+        "value": 0
+        },
+
       "effects": {
         "type": "array",
         "value": []

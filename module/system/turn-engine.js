@@ -169,6 +169,30 @@ export class SdpTurnEngine {
 
     }
 
+    for (let item of actor.items.filter(i => i.type === "injury")) {
+
+  let duration = item.system.duration;
+
+  if (duration > 0) {
+
+    await item.update({
+      "system.duration": duration - 1
+    });
+
+    if (duration - 1 === 0) {
+
+      ChatMessage.create({
+        content: `${item.name} ends on ${actor.name}`
+      });
+
+      await item.delete();
+
+    }
+
+  }
+
+}
+
   }
 
 
