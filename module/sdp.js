@@ -16,6 +16,28 @@ import { SDP } from "./system/config.js";
 import { SdpConditionEngine } from "./system/condition-engine.js";
 import { SdpTurnEngine } from "./system/turn-engine.js";
 
+const difficultyMap = {
+  light: 0,
+  moderate: -10,
+  severe: -20,
+  critical: -30
+};
+
+async function getInjuryFromPack(location, severity, isConsequence = false) {
+
+  const pack = game.packs.get("sdp.injuries");
+  if (!pack) return null;
+
+  // 🔥 charge les vrais documents (pas juste index)
+  const docs = await pack.getDocuments();
+
+  return docs.find(i =>
+    i.system.location === location &&
+    i.system.severity === severity &&
+    i.system.consequence === isConsequence
+  );
+
+}
 
 /* ========================================= */
 /* INIT                                      */
@@ -434,8 +456,9 @@ html.find(".sdp-attack .roll-damage").click(async ev => {
     <p>Final Damage: ${finalDamage}</p>
 
     <button class="apply-damage"
-      data-target="${targetId}"
-      data-damage="${finalDamage}">
+  data-target="${targetId}"
+  data-damage="${finalDamage}"
+  data-location="${location}">
       Apply Damage
     </button>
     `,
@@ -457,6 +480,7 @@ html.find(".apply-damage").click(async ev => {
 
   const targetId = button.dataset.target;
   const damage = Number(button.dataset.damage);
+  const location = button.dataset.location;
 
   const token = canvas.tokens.get(targetId);
 
@@ -477,6 +501,92 @@ await actor.update({
 // =========================
 
 const WT = actor.system.derived.woundThreshold.value;
+
+const severity = SdpDamage.getWoundSeverity(damage, WT);
+
+if (severity === "instant") {
+
+  await actor.update({
+    "system.conditions.dying": false
+  });
+
+  ChatMessage.create({
+    content: `
+    <h3>Instant Death</h3>
+    <p>${actor.name} is obliterated.</p>
+    `
+  });
+
+  return;
+}
+
+if (severity) {
+
+  ChatMessage.create({
+
+    speaker: ChatMessage.getSpeaker({actor}),
+
+    content: `
+    <div class="sdp-injury-card"
+         data-actor="${actor.id}"
+         data-location="${location}"
+         data-severity="${severity}">
+
+      <h3>Injury Sustained</h3>
+
+      <p><strong>Location:</strong> ${CONFIG.SDP.hitLocations[location]}</p>
+      <p><strong>Severity:</strong> ${severity.toUpperCase()}</p>
+
+      <button class="roll-resistance">
+        Roll Resistance
+      </button>
+
+    </div>
+    `
+
+  });
+
+const WT = actor.system.derived.woundThreshold.value;
+
+const injuryPreview = await getInjuryFromPack(location, severity, false);
+
+ChatMessage.create({
+
+  whisper: ChatMessage.getWhisperRecipients("GM"),
+
+  content: `
+  <div class="sdp-injury-card sdp-injury-gm"
+       data-actor="${actor.id}"
+       data-location="${location}"
+       data-severity="${severity}">
+
+    <h3>Injury Debug</h3>
+
+    <p><strong>Damage:</strong> ${damage}</p>
+    <p><strong>WT:</strong> ${WT}</p>
+    <p><strong>Ratio:</strong> ${(damage / WT).toFixed(2)}x WT</p>
+
+    <p><strong>Severity:</strong> ${severity}</p>
+
+    <button class="apply-injury">
+      Apply Injury
+    </button>
+
+    ${injuryPreview ? `
+      <div class="injury-preview">
+        <p><strong>${injuryPreview.name}</strong></p>
+        <p>${injuryPreview.system.description || ""}</p>
+      </div>
+    ` : "<p>No injury found</p>"}
+
+  </div>
+  `
+
+});
+
+}
+
+
 
 // mort instantanée
 if(newHealth <= -WT){
@@ -500,6 +610,7 @@ if(newHealth <= -WT){
   });
 
 }
+
 
 // =========================
 // DYING TRIGGER
@@ -938,6 +1049,124 @@ if(Math.abs(actor.system.health.value) > threshold){
   });
 
 }
+
+});
+
+html.find(".apply-injury").click(async ev => {
+
+  const card = ev.currentTarget.closest(".sdp-injury-gm");
+
+  const actorId = card.dataset.actor;
+  const location = card.dataset.location;
+  const severity = card.dataset.severity;
+
+  const actor = game.actors.get(actorId);
+
+  const injury = await getInjuryFromPack(location, severity);
+
+  if (!injury) {
+    ui.notifications.warn("No injury found");
+    return;
+  }
+
+  await actor.createEmbeddedDocuments("Item", [injury.toObject()]);
+});
+
+html.find(".roll-resistance").click(async ev => {
+
+  const card = ev.currentTarget.closest(".sdp-injury-card");
+
+  const actorId = card.dataset.actor;
+  const severity = card.dataset.severity;
+  const location = card.dataset.location;
+
+  const actor = game.actors.get(actorId);
+
+  const resistance = actor.items.find(i =>
+    i.type === "skill" && i.system.key === "resistance"
+  );
+
+  let target =
+    resistance?.system.value ??
+    actor.system.attributes.toughness.value;
+
+  target += difficultyMap[severity] ?? 0;
+
+  const roll = await new Roll("1d100").roll();
+  const result = roll.total;
+
+  const success = result <= target;
+
+  await roll.toMessage({
+    speaker: ChatMessage.getSpeaker({actor}),
+    flavor: `
+      <h3>Resistance Test</h3>
+      <p>Severity: ${severity}</p>
+      <p>Target: ${target}</p>
+      <p>Roll: ${result}</p>
+      <p><strong>${success ? "SUCCESS" : "FAILURE"}</strong></p>
+    `
+  });
+
+if (!success) {
+
+  const location = card.dataset.location;
+
+  const consequence = await getInjuryFromPack(location, severity, true);
+
+  ChatMessage.create({
+
+  speaker: ChatMessage.getSpeaker({actor}),
+
+  whisper: ChatMessage.getWhisperRecipients("GM"),
+
+  content: `
+  <div class="sdp-consequence-card"
+       data-actor="${actor.id}"
+       data-location="${location}"
+       data-severity="${severity}">
+
+    <h3>Resistance Failed</h3>
+
+    <p>Additional consequence triggered</p>
+
+    <button class="apply-consequence">
+      Apply Consequence
+    </button>
+
+    ${consequence ? `
+      <div class="injury-preview">
+        <p><strong>${consequence.name}</strong></p>
+        <p>${consequence.system.description || ""}</p>
+      </div>
+    ` : "<p>No consequence found</p>"}
+
+  </div>
+  `
+});
+
+}
+
+});
+
+html.find(".apply-consequence").click(async ev => {
+
+  const card = ev.currentTarget.closest(".sdp-consequence-card");
+
+  const actorId = card.dataset.actor;
+  const location = card.dataset.location;
+  const severity = card.dataset.severity;
+
+  const actor = game.actors.get(actorId);
+
+  const consequence = await getInjuryFromPack(location, severity, true);
+
+  if (!consequence) {
+    ui.notifications.warn("No consequence found");
+    return;
+  }
+
+  await actor.createEmbeddedDocuments("Item", [consequence.toObject()]);
 
 });
 

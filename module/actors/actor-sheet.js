@@ -252,5 +252,25 @@ root.querySelectorAll('.movement-input').forEach(el => {
 });
 
 
+// ===== ATTRIBUTE MODIFIER (MANUEL + EFFECTS) =====
+root.querySelectorAll('.attr-modifier-input').forEach(el => {
+
+  el.addEventListener("change", async (event) => {
+
+    const input = event.currentTarget;
+    const key = input.dataset.key;
+    const value = Number(input.value) || 0;
+
+    await this.document.update({
+      [`system.attributes.${key}.modifier`]: value
+    });
+
+  });
+
+});
+
+
 }}
+
+
 

@@ -69,4 +69,16 @@ static async applyDamage(target, damage, location){
 
 }
 
+static getWoundSeverity(damage, WT) {
+
+  if (damage < WT * 2) return null;
+
+  if (damage < WT * 3) return "light";
+  if (damage < WT * 4) return "moderate";
+  if (damage < WT * 5) return "severe";
+  if (damage < WT * 6) return "critical";
+
+  return "instant";
+}
+
 }

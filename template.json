@@ -657,23 +657,12 @@
         "value": ""
       },
 
-      "resistanceTest": {
-        "type": "string",
-        "label": "Resistance Test",
-        "value": ""
+      "consequence": {
+        "type": "boolean",
+        "label": "Is Consequence",
+        "value": false
       },
 
-      "conditionOnFailure": {
-        "type": "string",
-        "label": "Condition on Failure",
-        "value": ""
-      },
-
-      "conditionOnSuccess": {
-        "type": "string",
-        "label": "Condition on Success",
-        "value": ""
-      },
       "effects": {
         "type": "array",
         "value": []
