@@ -19,6 +19,9 @@ export class SdpInjurySheet extends SdpItemSheet {
 _onRender(context, options) {
   super._onRender(context, options);
 
+  if (this._listenersActivated) return;
+  this._listenersActivated = true;
+
   const root = this.element;
 
   root.addEventListener("click", (event) => {
@@ -30,8 +33,6 @@ _onRender(context, options) {
     event.stopPropagation();
 
     const action = button.dataset.action;
-
-    console.log("ACTION:", action);
 
     switch (action) {
 
@@ -58,8 +59,6 @@ async _createEffect() {
     icon: "icons/svg/aura.svg",
     changes: [] // 🔥 VIDE
   }]);
-
-  this.render();
 }
 
   async _editEffect(event) {
