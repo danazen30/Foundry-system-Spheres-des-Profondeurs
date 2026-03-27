@@ -64,22 +64,25 @@ export class SdpRoll {
 
     for (const key in conditions) {
 
-      const value = conditions[key];
-      if (!value) continue;
+  const value = conditions[key];
+  if (!value) continue;
 
-      const stack = value === true ? 1 : value;
-      const config = CONFIG.SDP.conditionConfig?.[key];
-      if (!config?.modifier) continue;
+  if (key === "deafened") continue; // 🔥 FIX
 
-      const mod = config.modifier * stack;
+  const stack = value === true ? 1 : value;
 
-      conditionMod += mod;
+  const config = CONFIG.SDP.conditionConfig?.[key];
+  if (!config?.modifier) continue;
 
-      conditionDetails.push({
-        name: key,
-        value: mod
-      });
-    }
+  const mod = config.modifier * stack;
+
+  conditionMod += mod;
+
+  conditionDetails.push({
+    name: key,
+    value: mod
+  });
+}
 
     const html = await renderTemplate(
       "systems/sdp/templates/dialogs/roll-dialog.hbs",
@@ -110,38 +113,58 @@ export class SdpRoll {
 
         const updatePreview = () => {
 
-          let totalMod = 0;
+  let totalMod = 0;
 
-          const difficulty = Number(form.querySelector('[name="difficulty"]').value);
-          const customMod = Number(form.querySelector('[name="customMod"]').value);
+  const difficulty = Number(form.querySelector('[name="difficulty"]').value);
+  const customMod = Number(form.querySelector('[name="customMod"]').value);
 
-          totalMod += difficulty + customMod + conditionMod;
+  totalMod += difficulty + customMod + conditionMod;
 
-          // TALENTS
-          const selectedTalents = form.querySelectorAll('[name="talent"]:checked');
+  // =========================
+  // TALENTS
+  // =========================
 
-          for (let el of selectedTalents) {
+  const selectedTalents = form.querySelectorAll('[name="talent"]:checked');
 
-            const talent = actor.items.get(el.value);
-            if (!talent) continue;
+  for (let el of selectedTalents) {
 
-            const level = Number(talent.system.advances || 1);
+    const talent = actor.items.get(el.value);
+    if (!talent) continue;
 
-            for (let effect of talent.effects) {
-              for (let change of effect.changes) {
+    const level = Number(talent.system.advances || 1);
 
-                if (change.key !== "system.modifiers.dialog") continue;
+    for (let effect of talent.effects) {
+      for (let change of effect.changes) {
 
-                totalMod += Number(change.value || 0) * level;
-              }
-            }
-          }
+        if (change.key !== "system.modifiers.dialog") continue;
 
-          const final = target + totalMod;
+        totalMod += Number(change.value || 0) * level;
+      }
+    }
+  }
 
-          form.querySelector("#totalMod").textContent = totalMod;
-          form.querySelector("#finalTarget").textContent = final;
-        };
+  // =========================
+  // 🔥 DEAFENED (ICI)
+  // =========================
+
+  const deafenedChecked = form.querySelector('[name="deafened"]')?.checked;
+
+  if (deafenedChecked) {
+
+    const stacks = actor.system.conditionTotals.deafened || 0;
+
+    totalMod -= stacks * 10;
+  }
+
+  // =========================
+  // FINAL
+  // =========================
+
+  const final = target + totalMod;
+
+  form.querySelector("#totalMod").textContent = totalMod;
+  form.querySelector("#finalTarget").textContent = final;
+};
 
         form.querySelectorAll("input, select").forEach(el => {
           el.addEventListener("change", updatePreview);
@@ -167,6 +190,19 @@ export class SdpRoll {
             const customMod = Number(form.querySelector('[name="customMod"]').value);
 
             let totalMod = difficulty + customMod + conditionMod;
+
+            // =========================
+// DEAFENED (MANUAL)
+// =========================
+
+const deafenedChecked = form.querySelector('[name="deafened"]')?.checked;
+
+if (deafenedChecked) {
+
+  const stacks = actor.system.conditionTotals.deafened || 0;
+
+  totalMod -= stacks * 10;
+}
 
             // TALENTS
             const selectedTalents = form.querySelectorAll('[name="talent"]:checked');

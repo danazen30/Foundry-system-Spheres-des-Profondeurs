@@ -80,6 +80,15 @@
 {{/each}}
 </ul>
 
+<h3>Situational Conditions</h3>
+
+{{#if actor.system.conditionTotals.deafened}}
+<label>
+  <input type="checkbox" name="deafened">
+  Deafened (-10 per stack)
+</label>
+{{/if}}
+
 <h3>Result Preview</h3>
 
 <p>Base: <span id="baseTarget">{{target}}</span></p>
