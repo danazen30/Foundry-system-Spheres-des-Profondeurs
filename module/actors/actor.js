@@ -283,6 +283,8 @@ for (const key in system.conditions) {
     const offhandPenalty =
       Math.max(0, OFFHAND_PENALTY - system.custom.offhandReduction);
 
+      
+
 
     // =====================
     // PARRY
@@ -418,4 +420,42 @@ for (const key in system.conditions) {
 
     return attr?.bonus ?? 1;
   }
+
+getWeaponAttack(weapon) {
+
+  const system = this.system;
+
+  const skills = this.items.filter(i => i.type === "skill");
+  const getSkill = (key) => skills.find(s => s.system.key === key);
+
+  // =========================
+  // BASE
+  // =========================
+
+  const skill = getSkill(weapon.system.skill);
+
+  let base =
+    weapon.system.category === "ranged"
+      ? (skill?.system.value ?? system.attributes.rangedAbility.value)
+      : (skill?.system.value ?? system.attributes.meleeAbility.value);
+
+  let value = base + (Number(weapon.system.attackBonus || 0) * 10);
+
+  // =========================
+  // OFFHAND
+  // =========================
+
+  const OFFHAND_PENALTY = 20;
+
+  const reduction = system.custom.offhandReduction || 0;
+
+  const offhandPenalty = Math.max(0, OFFHAND_PENALTY - reduction);
+
+  if (weapon.system.offhand) {
+    value -= offhandPenalty;
+  }
+
+  return value;
+}
+
 }

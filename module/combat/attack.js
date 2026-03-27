@@ -152,6 +152,7 @@ if(crit.failure){
 <div class="sdp-attack" data-sdp-safe="true"
      data-actor="${actor.id}"
      data-critical="${crit.success}"
+     data-brutal="${dialogMods.brutal}"
      data-weapon="${weapon.id}"
      data-target="${targetId ?? ""}"
      data-location="${hitLocation.location}">
@@ -186,7 +187,7 @@ if(crit.failure){
   // ======================
 const meleeBonus = Math.floor((dialogMods.totalMod || 0) / 10);
 
-const baseAttack = actor.system.derived.attack.value;
+const baseAttack = actor.getWeaponAttack(weapon) / 10;
 
 const roll = await (new Roll("1d100")).roll();
 const result = roll.total;
@@ -221,6 +222,7 @@ if(crit.failure){
 <div class="sdp-attack" data-sdp-safe="true"
      data-attack="${attackScore}"
      data-critical="${crit.success}"
+     data-brutal="${dialogMods.brutal}"
      data-actor="${actor.id}"
      data-weapon="${weapon.id}"
      data-target="${targetId ?? ""}"

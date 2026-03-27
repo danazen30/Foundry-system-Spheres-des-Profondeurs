@@ -464,6 +464,19 @@
         "value": false
       },
 
+      "durability": {
+        "value": {
+          "type": "number",
+          "label": "Durability",
+          "value": 3
+        },
+        "max": {
+          "type": "number",
+          "label": "Max Durability",
+          "value": 3
+        }
+      },
+
       "ammunitionGroup": {
         "type": "string",
         "label": "Ammunition Group",

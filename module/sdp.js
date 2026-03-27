@@ -366,7 +366,32 @@ html.find(".sdp-attack .roll-damage").click(async ev => {
 
   const actor = game.actors.get(actorId);
   const weapon = actor.items.get(weaponId);
-  const brutal = card.dataset.brutal === "true";
+    const brutal = card.dataset.brutal === "true";
+
+// =========================
+// DURABILITY LOSS (BRUTAL)
+// =========================
+
+if (brutal && weapon) {
+
+  const current = weapon.system.durability?.value ?? 0;
+
+  const newValue = Math.max(current - 1, 0);
+
+  await weapon.update({
+    "system.durability.value": newValue
+  });
+
+  if (newValue === 0) {
+
+    ChatMessage.create({
+      content: `<p><strong>${weapon.name} breaks!</strong></p>`
+    });
+
+  }
+}
+
+
 
   let armor = 0;
 
@@ -459,6 +484,8 @@ html.find(".sdp-attack .roll-damage").click(async ev => {
 
   let finalDamage = Math.max(damage - armor, 0);
 
+  if (!brutal) {
+
   roll.toMessage({
     speaker: ChatMessage.getSpeaker({actor}),
     flavor: `
@@ -468,6 +495,26 @@ html.find(".sdp-attack .roll-damage").click(async ev => {
     <p>Location: ${CONFIG.SDP.hitLocations[location]}</p>
     `
   });
+
+} else {
+
+  ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({actor}),
+    content: `
+    <h3>Damage Roll (Brutal Strike)</h3>
+
+    <p>Attacker: ${actor.name}</p>
+    <p>Weapon: ${weapon.name}</p>
+
+    <p><strong>Max Damage Applied</strong></p>
+
+    <p>Formula: ${diceFormula} → MAX</p>
+
+    <p><strong>Total Damage: ${damage}</strong></p>
+    `
+  });
+
+}
 
   if(!targetId) return;
 
@@ -482,6 +529,7 @@ html.find(".sdp-attack .roll-damage").click(async ev => {
     <p>Armor: ${armor}</p>
 
     <p>Final Damage: ${finalDamage}</p>
+    <p>Brutal Strike: ${brutal ? "YES" : "NO"}</p>
 
     <button class="apply-damage"
   data-target="${targetId}"
