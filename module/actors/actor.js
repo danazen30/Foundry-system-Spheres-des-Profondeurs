@@ -129,11 +129,40 @@ export class SdpActor extends Actor {
 
     super.prepareDerivedData();
 
-    const system = this.system;
+const system = this.system;
 
-    system.custom.offhandReduction = 0;
+// =====================
+// CUSTOM MODIFIERS
+// =====================
 
-  
+system.custom.offhandReduction = 0;
+
+for (const item of this.items.contents) {
+
+  if (item.type !== "talent") continue;
+
+  const level = Number(item.system.advances || 0);
+
+  if (level <= 0) continue;
+
+  for (const effect of item.effects) {
+
+    if (effect.disabled) continue;
+
+    for (const change of effect.changes) {
+
+      if (change.key === "system.custom.offhandReduction") {
+
+        const base = Number(change.value || 0);
+
+        system.custom.offhandReduction += base * level * 10;
+
+      }
+
+    }
+  }
+}
+
 
     // =====================
     // CONDITIONS
@@ -250,9 +279,10 @@ for (const key in system.conditions) {
       i => i.type === "weapon" && i.system.equipped
     );
 
-    const OFFHAND_PENALTY = 2;
+    const OFFHAND_PENALTY = 20;
     const offhandPenalty =
       Math.max(0, OFFHAND_PENALTY - system.custom.offhandReduction);
+
 
     // =====================
     // PARRY
@@ -353,8 +383,8 @@ for (const key in system.conditions) {
 
     const finalAttack = Math.max(attackBase, 0);
 
-   system.derived.attack.value =
-  Math.round((finalAttack / 10) * 10) / 10;
+   system.derived.attack.value = finalAttack/10;
+  //Math.round((finalAttack / 10) * 10) / 10;
 
     // =====================
     // MOVEMENT
