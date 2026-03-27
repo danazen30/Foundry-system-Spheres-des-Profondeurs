@@ -226,6 +226,7 @@ Hooks.on("renderChatMessage", (message, html) => {
      data-attack="${attackScore}"
      data-critical="${critical}"
      data-location="${location}"
+     data-brutal="${card.dataset.brutal}"
      data-actor="${actorId}"
      data-weapon="${weaponId}"
      data-target="${targetId}">
@@ -324,6 +325,7 @@ ChatMessage.create({
      data-attack="${attackScore}"
      data-critical="${critical}"
      data-actor="${actorId}"
+     data-brutal="${card.dataset.brutal}"
      data-weapon="${weaponId}"
      data-target="${targetId}"
      data-location="${location}">
@@ -364,6 +366,7 @@ html.find(".sdp-attack .roll-damage").click(async ev => {
 
   const actor = game.actors.get(actorId);
   const weapon = actor.items.get(weaponId);
+  const brutal = card.dataset.brutal === "true";
 
   let armor = 0;
 
@@ -373,6 +376,8 @@ html.find(".sdp-attack .roll-damage").click(async ev => {
       armor = SdpDamage.getArmorValue(token.actor, location);
     }
   }
+
+
 
   const SB = actor.system.attributes.strength.bonus;
 
@@ -424,6 +429,29 @@ html.find(".sdp-attack .roll-damage").click(async ev => {
   const roll = await (new Roll(formula)).roll();
 
   let damage = roll.total;
+
+    if (brutal) {
+
+  const match = diceFormula.match(/(\d+)d(\d+)/);
+
+  if (match) {
+
+    const diceCount = Number(match[1]);
+    const diceSize = Number(match[2]);
+
+    const maxDice = diceCount * diceSize;
+
+    let brutalDamage = maxDice + baseWeapon + (useSB ? SB : 0);
+
+    if (critical) {
+      brutalDamage *= 2;
+    }
+
+    damage = brutalDamage;
+
+  }
+
+}
 
   if(location === "head"){
     damage = Math.floor(damage * 1.5);

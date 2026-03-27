@@ -46,31 +46,33 @@ export class SdpActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   const root = this.element;
 
   // ===== ATTRIBUTES =====
-  root.querySelectorAll('[data-action="rollAttribute"]').forEach(el => {
-    el.addEventListener("click", (event) => {
-      const attr = event.currentTarget.dataset.attr;
-      const attrData = this.document.system.attributes[attr];
+root.querySelectorAll('[data-action="rollAttribute"]').forEach(el => {
+  el.addEventListener("click", (event) => {
+    const attr = event.currentTarget.dataset.attr;
+    const attrData = this.document.system.attributes[attr];
 
-const value = attrData.value;
+    const value = attrData.value;
 
-SdpRoll.basicTest(
-  this.document,
-  value,
-  attrData.name || attrData.label
-);
+    SdpRoll.openDialog({
+      actor: this.document,
+      type: "skill",
+      label: attrData.name || attrData.label,
+      target: value
     });
   });
+});
 
   // ===== SKILLS =====
   root.querySelectorAll('[data-action="rollSkill"]').forEach(el => {
     el.addEventListener("click", (event) => {
       const skill = this.document.items.get(event.currentTarget.dataset.itemId);
 
-      SdpRoll.basicTest(
-  this.document,
-  skill.system.value,
-  skill.name
-);
+      SdpRoll.openDialog({
+  actor: this.document,
+  type: "skill",
+  label: skill.name,
+  target: skill.system.value
+});
     });
   });
 
@@ -80,7 +82,13 @@ SdpRoll.basicTest(
       const weapon = this.document.items.get(event.currentTarget.dataset.itemId);
       const attackValue = this.document.system.derived.attack.value;
 
-      SdpAttack.attackTest(this.document, weapon, attackValue);
+SdpRoll.openDialog({
+  actor: this.document,
+  type: "attack",
+  label: weapon.name,
+  target: attackValue,
+  weapon: weapon
+});
     });
   });
 

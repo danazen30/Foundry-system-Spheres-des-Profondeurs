@@ -4,7 +4,7 @@ import { rollHitLocation } from "./hit-location.js";
 export class SdpAttack {
 
 static async attackTest(actor, weapon, attackValue){
-
+const dialogMods = game.sdp?.dialogModifiers || {};
   // ======================
 // STUNNED CHECK
 // ======================
@@ -71,7 +71,20 @@ const surprised = targetActor.system.conditionTotals?.surprised ? 3 : 0;
 
 }
 
-  const hitLocation = await rollHitLocation();
+  let hitLocation;
+
+if (dialogMods.location) {
+
+  hitLocation = {
+    location: dialogMods.location,
+    roll: { total: "manual" }
+  };
+
+} else {
+
+  hitLocation = await rollHitLocation();
+
+}
 
   // ======================
   // RANGED ATTACK
@@ -87,11 +100,11 @@ const surprised = targetActor.system.conditionTotals?.surprised ? 3 : 0;
 
     let targetValue;
 
-    if(skill){
-      targetValue = skill.system.value;
-    }else{
-      targetValue = actor.system.attributes.rangedAbility.value;
-    }
+if(skill){
+  targetValue = skill.system.value + (dialogMods.totalMod || 0);
+}else{
+  targetValue = actor.system.attributes.rangedAbility.value + (dialogMods.totalMod || 0);
+}
 
     // ======================
 // DEAFENED MODIFIER
@@ -197,28 +210,28 @@ if(crit.failure){
   // ======================
   // MELEE ATTACK
   // ======================
+const meleeBonus = Math.floor((dialogMods.totalMod || 0) / 10);
 
-  const roll = await (new Roll("1d100")).roll();
+const baseAttack = actor.system.derived.attack.value;
 
-  const result = roll.total;
+const roll = await (new Roll("1d100")).roll();
+const result = roll.total;
 
-  const crit = SdpRoll.getCritical(result);
+const crit = SdpRoll.getCritical(result);
 
-  let SL;
+let SL;
 
-  if (result === 100) {
+if (result === 100) {
+  SL = 0;
+} else {
+  const tens = Math.floor(result / 10);
+  SL = 10 - tens;
+}
 
-    SL = 0;
+// 🎯 attack score final
+const attackScore = baseAttack + meleeBonus + SL + bonus;
 
-  } else {
 
-    const tens = Math.floor(result / 10);
-
-    SL = 10 - tens;
-
-  }
-
-const attackScore = attackValue + SL + bonus;
 
   let critText = "";
 
