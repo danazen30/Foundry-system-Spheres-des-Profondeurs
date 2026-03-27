@@ -298,6 +298,19 @@ root.querySelectorAll('[data-action="deleteItem"]').forEach(el => {
   });
 });
 
+root.querySelectorAll('[data-action="updateTalentAdv"]').forEach(el => {
+  el.addEventListener("change", async (event) => {
+
+    const input = event.currentTarget;
+    const item = this.document.items.get(input.dataset.itemId);
+
+    await item.update({
+      "system.advances": Number(input.value)
+    });
+
+  });
+});
+
 }}
 
 

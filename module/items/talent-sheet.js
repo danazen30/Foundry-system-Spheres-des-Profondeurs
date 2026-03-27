@@ -16,20 +16,16 @@ export class SdpTalentSheet extends SdpItemSheet {
     };
   }
 
-  _onRender(context, options) {
-    super._onRender(context, options);
+_onRender(context, options) {
+  super._onRender(context, options);
 
-    const root = this.element;
+  const root = this.element;
 
-    root.addEventListener("click", (event) => {
+  root.querySelectorAll("[data-action]").forEach(el => {
 
-      const button = event.target.closest("[data-action]");
-      if (!button) return;
+    el.addEventListener("click", (event) => {
 
-      event.preventDefault();
-      event.stopPropagation();
-
-      const action = button.dataset.action;
+      const action = el.dataset.action;
 
       switch (action) {
 
@@ -48,21 +44,20 @@ export class SdpTalentSheet extends SdpItemSheet {
 
     });
 
-  }
+  });
 
-  async _createEffect() {
+}
 
-    await this.document.createEmbeddedDocuments("ActiveEffect", [{
-      name: "New Effect",
-      icon: "icons/svg/aura.svg",
-      changes: []
-    }]);
-
-    this.render();
-  }
+async _createEffect() {
+ console.log("CREATE EFFECT TRIGGERED");
+  await this.document.createEmbeddedDocuments("ActiveEffect", [{
+    name: "New Effect",
+    icon: "icons/svg/aura.svg",
+    changes: [] // 🔥 VIDE
+  }]);
+}
 
   async _editEffect(event) {
-
     const li = event.target.closest(".effect");
     if (!li) return;
 
@@ -72,7 +67,6 @@ export class SdpTalentSheet extends SdpItemSheet {
   }
 
   async _deleteEffect(event) {
-
     const li = event.target.closest(".effect");
     if (!li) return;
 

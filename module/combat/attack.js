@@ -106,32 +106,6 @@ if(skill){
   targetValue = actor.system.attributes.rangedAbility.value + (dialogMods.totalMod || 0);
 }
 
-    // ======================
-// DEAFENED MODIFIER
-// ======================
-
-const deafenedStacks = actor.system.conditionTotals?.deafened || 0;
-
-if(deafenedStacks > 0){
-
-  targetValue -= deafenedStacks * 10;
-
-}
-
-    // ======================
-// POISON MODIFIER (RANGED)
-// ======================
-
-const poisonStacks = actor.system.conditionTotals?.poisoned || 0;
-const exhaustedStacks = actor.system.conditionTotals?.exhausted || 0;
-const shaken = actor.system.conditionTotals?.shaken ? 1 : 0;
-const frightened = actor.system.conditionTotals?.frightened ? 3 : 0;
-
-const penalty = (poisonStacks + exhaustedStacks + shaken + frightened) * 10;
-
-if(penalty > 0){
-  targetValue -= penalty;
-}
 
     let source;
 

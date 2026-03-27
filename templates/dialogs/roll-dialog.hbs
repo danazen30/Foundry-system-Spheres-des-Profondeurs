@@ -30,6 +30,15 @@
 
 <h3>Active Effects</h3>
 
+<h3>Talents</h3>
+
+{{#each talents}}
+<label>
+  <input type="checkbox" name="talent" value="{{this.id}}">
+  {{this.name}} ({{this.system.advances}})
+</label>
+{{/each}}
+
 {{#each effects}}
 <label>
   <input type="checkbox" name="effect" value="{{this.id}}">
@@ -60,5 +69,15 @@
 </label>
 
 {{/if}}
+
+<h3>Conditions</h3>
+
+<p>Total: {{conditionMod}}</p>
+
+<ul>
+{{#each conditionDetails}}
+  <li>{{this.name}}: {{this.value}}</li>
+{{/each}}
+</ul>
 
 </div>

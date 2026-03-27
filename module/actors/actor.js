@@ -349,18 +349,12 @@ for (const key in system.conditions) {
     // CONDITIONS EFFECTS
     // =====================
 
-    const poison = system.conditionTotals?.poisoned ?? 0;
-    const exhausted = system.conditionTotals?.exhausted ?? 0;
-    const deafened = system.conditionTotals?.deafened ?? 0;
-    const shaken = system.conditionTotals?.shaken ? 1 : 0;
-    const frightened = system.conditionTotals?.frightened ? 3 : 0;
-
-    const penalty = poison + exhausted + deafened + shaken + frightened;
+ 
 
     const finalAttack = Math.max(attackBase, 0);
 
    system.derived.attack.value =
-  Math.round((finalAttack / 10 - penalty) * 10) / 10;
+  Math.round((finalAttack / 10) * 10) / 10;
 
     // =====================
     // MOVEMENT
