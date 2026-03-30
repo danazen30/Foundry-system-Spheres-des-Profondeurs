@@ -367,15 +367,39 @@ for (const key in system.conditions) {
 
     system.derived.woundThreshold.value = resistance?.system.bonus ?? 0;
 
-    const evasionBase =
-      dodge?.system.value ??
-      system.attributes.agility.value ??
-      0;
+// =====================
+// CONDITION MALUS (PARry / EVASION)
+// =====================
 
-    system.derived.evasion.value = evasionBase/10 + 5;
+const cond = system.conditions || {};
 
-    const finalParry = parryBase/10 +5;
-    system.derived.parry.value = finalParry;
+let conditionPenalty = 0;
+
+// stack conditions
+conditionPenalty -= Number(cond.poisoned || 0);
+conditionPenalty -= Number(cond.exhausted || 0);
+conditionPenalty -= Number(cond.stunned || 0);
+conditionPenalty -= Number(cond.deafened || 0);
+
+if (cond.prone) conditionPenalty -= 2;
+if (cond.surprised) conditionPenalty -= 3;
+if (cond.shaken) conditionPenalty -= 1;
+if (cond.frightened) conditionPenalty -= 3;
+
+// =====================
+// APPLY TO VALUES
+// =====================
+
+const finalParry = (parryBase / 10 + 5) + conditionPenalty;
+system.derived.parry.value = Math.max(finalParry, 0);
+
+const evasionBase =
+  dodge?.system.value ??
+  system.attributes.agility.value ??
+  0;
+
+const finalEvasion = (evasionBase / 10 + 5) + conditionPenalty;
+system.derived.evasion.value = Math.max(finalEvasion, 0);
 
     // =====================
     // CONDITIONS EFFECTS

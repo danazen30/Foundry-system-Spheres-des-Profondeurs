@@ -20,56 +20,14 @@ if(stunned > 0){
 
   const isRanged = weapon.system.category === "ranged";
 
-  const targets = Array.from(game.user.targets);
+
 
 let targetId = null;
-let targetActor = null;
 
 let conditionText = "";
 let bonus = 0;
 
-if(targets.length > 0){
 
-  targetId = targets[0].id;
-  targetActor = targets[0].actor;
-
-if(targetActor){
-
-  const stunned = targetActor.system.conditionTotals?.stunned || 0;
-const deafened = targetActor.system.conditionTotals?.deafened || 0;
-const prone = targetActor.system.conditionTotals?.prone || false;
-const surprised = targetActor.system.conditionTotals?.surprised ? 3 : 0;
-
-  if(stunned > 0){
-
-    bonus += stunned;
-    conditionText += `<p>Bonus vs Stunned: +${stunned}</p>`;
-
-  }
-
-  if(deafened > 0){
-
-    bonus += deafened;
-    conditionText += `<p>Bonus vs Deafened: +${deafened}</p>`;
-
-  }
-
-  if(surprised){
-
-  bonus += surprised;
-  conditionText += `<p>Bonus vs Surprised: +3</p>`;
-
-}
-
-  if(prone){
-
-  bonus += 2;
-  conditionText += `<p>Bonus vs Prone: +2</p>`;
-
-  }
-}
-
-}
 
   let hitLocation;
 
