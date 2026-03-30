@@ -81,4 +81,117 @@ static getWoundSeverity(damage, WT) {
   return "instant";
 }
 
+static async rollDamage({ actor, weapon, target, location, critical, brutal }) {
+
+  // =========================
+  // ARMOR
+  // =========================
+  let armor = 0;
+
+  if (target) {
+    armor = this.getArmorValue(target, location);
+  }
+
+  const SB = actor.system.attributes.strength.bonus;
+
+  let baseWeapon = 0;
+  let diceFormula = weapon.system.damageDice || "";
+  let baseFormula = weapon.system.damage || "0";
+
+  let useSB = baseFormula.includes("SB");
+
+  baseFormula = baseFormula.replace("SB", "").replace("+", "").trim();
+  baseWeapon = Number(baseFormula) || 0;
+
+  // =========================
+  // CRITICAL
+  // =========================
+  if (critical) {
+    baseWeapon *= 2;
+
+    if (diceFormula) {
+      const match = diceFormula.match(/(\d+)d(\d+)/);
+      if (match) {
+        const diceCount = Number(match[1]) * 2;
+        const diceSize = match[2];
+        diceFormula = `${diceCount}d${diceSize}`;
+      }
+    }
+  }
+
+  // =========================
+  // BUILD FORMULA
+  // =========================
+  let formula = "";
+
+  if (useSB) formula += `${SB}`;
+  if (baseWeapon > 0) formula += (formula ? " + " : "") + baseWeapon;
+  if (diceFormula) formula += (formula ? " + " : "") + diceFormula;
+
+  const roll = await (new Roll(formula)).roll();
+  let damage = roll.total;
+
+  // =========================
+  // BRUTAL
+  // =========================
+  if (brutal) {
+
+    const match = diceFormula.match(/(\d+)d(\d+)/);
+
+    if (match) {
+      const diceCount = Number(match[1]);
+      const diceSize = Number(match[2]);
+
+      const maxDice = diceCount * diceSize;
+
+      damage = maxDice + baseWeapon + (useSB ? SB : 0);
+
+      if (critical) damage *= 2;
+    }
+  }
+
+  // =========================
+  // LOCATION MULT
+  // =========================
+  if (location === "head") {
+    damage = Math.floor(damage * 1.5);
+  }
+
+  const finalDamage = Math.max(damage - armor, 0);
+
+  return {
+    roll,
+    damage,
+    finalDamage,
+    armor,
+    formula
+  };
+}
+
+static async applyFullDamage({ actor, damage, location }) {
+
+  const WT = actor.system.derived.woundThreshold.value;
+
+  const armor = this.getArmorValue(actor, location);
+  const finalDamage = Math.max(damage - armor, 0);
+
+  const current = actor.system.health.value;
+  const newHealth = current - finalDamage;
+
+  await actor.update({
+    "system.health.value": newHealth
+  });
+
+  const severity = this.getWoundSeverity(finalDamage, WT);
+
+  return {
+    armor,
+    finalDamage,
+    newHealth,
+    severity,
+    WT,
+    current
+  };
+}
+
 }
