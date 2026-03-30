@@ -17,39 +17,52 @@ export class SdpRoll {
 
   static async basicTest(actor, value, label){
 
-    const roll = await (new Roll("1d100")).roll();
-    const result = roll.total;
 
-    let conditionModifier = 0;
-    const conditions = actor.system.conditionTotals;
+const roll = await (new Roll("1d100")).roll();
+const result = roll.total;
 
-    for(const key in conditions){
-      const val = conditions[key];
-      if(!val) continue;
+let conditionModifier = 0;
+const conditions = actor.system.conditionTotals;
 
-      const stack = val === true ? 1 : val;
-      const config = CONFIG.SDP.conditionConfig?.[key];
-      if(!config?.modifier) continue;
+for(const key in conditions){
+  const val = conditions[key];
+  if(!val) continue;
 
-      conditionModifier += config.modifier * stack;
-    }
+  const stack = val === true ? 1 : val;
+  const config = CONFIG.SDP.conditionConfig?.[key];
+  if(!config?.modifier) continue;
 
-    const target = value + conditionModifier;
+  conditionModifier += config.modifier * stack;
+}
 
-    const SL = this.getSuccessLevel(result, target);
-    const crit = this.getCritical(result);
+const finalTarget = value + conditionModifier;
 
-    await roll.toMessage({
-      speaker: ChatMessage.getSpeaker({actor}),
-      flavor: `
-      <h3>${actor.name} — ${label}</h3>
-      <p>Target: ${target}</p>
-      <p>Roll: ${result}</p>
-      <p>SL: ${SL}</p>
-      ${crit.success ? "<p><strong>CRIT SUCCESS</strong></p>" : ""}
-      ${crit.failure ? "<p><strong>CRIT FAILURE</strong></p>" : ""}
-      `
-    });
+const SL = Math.floor(finalTarget / 10) - Math.floor(result / 10);
+const success = result <= finalTarget;
+
+
+await roll.toMessage({
+  speaker: ChatMessage.getSpeaker({ actor }),
+  flavor: `
+<div class="sdp-roll"
+     data-target="${finalTarget}"
+     data-roll="${result}"
+     data-sl="${SL}"
+     data-actor="${actor.id}">
+
+  <h3>${actor.name} — ${label}</h3>
+
+  <button class="edit-roll">Edit</button>
+
+  <p>Target: ${finalTarget}</p>
+  <p>Roll: ${result}</p>
+  <p>SL: ${SL}</p>
+
+  <p><strong>${success ? "SUCCESS" : "FAILURE"}</strong></p>
+
+</div>
+`
+});
   }
 
   static async openDialog({ actor, type, label, target, weapon }){
@@ -242,15 +255,31 @@ if (deafenedChecked) {
             const roll = await new Roll("1d100").roll();
             const result = roll.total;
 
-            await roll.toMessage({
-              speaker: ChatMessage.getSpeaker({ actor }),
-              flavor: `
-                <h3>${actor.name} — ${label}</h3>
-                <p>Target: ${finalTarget}</p>
-                <p>Roll: ${result}</p>
-                <p><strong>${result <= finalTarget ? "SUCCESS" : "FAILURE"}</strong></p>
-              `
-            });
+            const SL = Math.floor(finalTarget / 10) - Math.floor(result / 10);
+const success = result <= finalTarget;
+
+await roll.toMessage({
+  speaker: ChatMessage.getSpeaker({ actor }),
+  flavor: `
+<div class="sdp-roll"
+     data-target="${finalTarget}"
+     data-roll="${result}"
+     data-sl="${SL}"
+     data-actor="${actor.id}">
+
+  <h3>${actor.name} — ${label}</h3>
+
+  <button class="edit-roll">Edit</button>
+
+  <p>Target: ${finalTarget}</p>
+  <p>Roll: ${result}</p>
+  <p>SL: ${SL}</p>
+
+  <p><strong>${success ? "SUCCESS" : "FAILURE"}</strong></p>
+
+</div>
+`
+});
           }
         }
 

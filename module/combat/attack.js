@@ -22,7 +22,8 @@ if(stunned > 0){
 
 
 
-let targetId = null;
+const targets = Array.from(game.user.targets);
+let targetId = targets.length ? targets[0].id : null;
 
 let conditionText = "";
 let bonus = 0;
@@ -109,6 +110,9 @@ if(crit.failure){
     const html = `
 <div class="sdp-attack" data-sdp-safe="true"
      data-actor="${actor.id}"
+     data-roll="${result}"
+     data-type="ranged"
+     data-testtarget="${targetValue}"
      data-critical="${crit.success}"
      data-brutal="${dialogMods.brutal}"
      data-weapon="${weapon.id}"
@@ -116,6 +120,8 @@ if(crit.failure){
      data-location="${hitLocation.location}">
 
   <h3>${actor.name} shoots with ${weapon.name}</h3>
+
+  <button class="edit-attack">Edit</button>
 
   <p>Test: ${source}</p>
   <p>Target: ${targetValue}</p>
@@ -177,29 +183,31 @@ if(crit.failure){
 }
 
   const html = `
-<div class="sdp-attack" data-sdp-safe="true"
+<div class="sdp-attack"
+     data-roll="${result}"
      data-attack="${attackScore}"
-     data-critical="${crit.success}"
-     data-brutal="${dialogMods.brutal}"
+     data-baseattack="${baseAttack}"
+    data-type="melee"
+    data-meleebonus="${meleeBonus}"
      data-actor="${actor.id}"
      data-weapon="${weapon.id}"
      data-target="${targetId ?? ""}"
-     data-location="${hitLocation.location}">
+     data-location="${hitLocation.location}"
+     data-critical="${crit.success}"
+     data-brutal="${dialogMods.brutal}">
 
   <h3>${actor.name} attacks with ${weapon.name}</h3>
+
+  <button class="edit-attack">Edit</button>
 
   <p>Roll: ${result}</p>
   <p>SL: ${SL}</p>
   ${critText}
- <p>Attack Score: ${attackScore}</p>
- ${conditionText}
+  <p>Attack Score: ${attackScore}</p>
 
-  <p>Hit Location: ${CONFIG.SDP.hitLocations[hitLocation.location]} (${hitLocation.roll.total})</p>
-
-  ${targetId ?
-    `<button type="button" class="apply-defense">Apply Defense</button>` :
-    `<p>No target selected</p>
-     <button type="button" class="select-target">Select Target</button>`
+  ${targetId
+    ? `<button class="apply-defense">Apply Defense</button>`
+    : `<button class="select-target">Select Target</button>`
   }
 
 </div>
