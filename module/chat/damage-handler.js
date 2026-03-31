@@ -121,6 +121,51 @@ export function registerDamageHandlers(html, message) {
 
     const { newHealth, current } = result;
 
+    const severity = result.severity;
+
+if(severity){
+
+  const pack = game.packs.get("sdp.injuries");
+  const docs = await pack.getDocuments();
+
+  const injury = docs.find(i =>
+    i.system.location === location &&
+    i.system.severity === severity &&
+    !i.system.consequence
+  );
+
+  ChatMessage.create({
+
+    speaker: ChatMessage.getSpeaker({actor}),
+    whisper: ChatMessage.getWhisperRecipients("GM"),
+
+    content: `
+    <div class="sdp-injury-card"
+         data-actor="${actor.id}"
+         data-location="${location}"
+         data-severity="${severity}">
+
+      <h3>Injury Sustained</h3>
+
+      <p>Location: ${CONFIG.SDP.hitLocations[location]}</p>
+      <p>Severity: ${severity}</p>
+
+      ${injury ? `
+        <div class="injury-preview">
+          <p><strong>${injury.name}</strong></p>
+          <p>${injury.system.description || ""}</p>
+        </div>
+      ` : "<p>No injury found</p>"}
+
+      <button class="apply-injury">Apply Injury</button>
+      <button class="roll-resistance">Roll Resistance</button>
+
+    </div>
+    `
+  });
+
+}
+
     const message = game.messages.get(
       button.closest(".message").dataset.messageId
     );

@@ -93,9 +93,12 @@ new Dialog({
   title: "Edit Attack",
 
   content: `
-    <label>Roll</label>
-    <input type="number" name="roll" value="${roll}"/>
-  `,
+  <label>Target</label>
+  <input type="number" name="target" value="${card.dataset.testtarget || 0}"/>
+
+  <label>Roll</label>
+  <input type="number" name="roll" value="${roll}"/>
+`,
 
     buttons: {
 
@@ -106,9 +109,14 @@ new Dialog({
           const type = card.dataset.type;
 
 const newRoll = Number(htmlDialog.find('[name="roll"]').val());
-const target = type === "ranged"
-  ? Number(card.dataset.testtarget)
-  : Number(card.dataset.baseattack);
+
+let target;
+
+if(type === "ranged"){
+  target = Number(htmlDialog.find('[name="target"]').val());
+}else{
+  target = Number(card.dataset.baseattack);
+}
 
 let newHtml = "";
 
@@ -122,18 +130,45 @@ if(type === "ranged"){
   const actor = game.actors.get(card.dataset.actor);
 const weapon = actor.items.get(card.dataset.weapon);
 
+const crit = {
+  success: newRoll >= 1 && newRoll <= 5,
+  failure: newRoll >= 96
+};
+
+let critText = "";
+if(crit.success){
+  critText = `<p><strong>CRITICAL SUCCESS</strong></p>`;
+}
+if(crit.failure){
+  critText = `<p><strong>CRITICAL FAILURE</strong></p>`;
+}
+
+let damageButton = "";
+
+if(success){
+  damageButton = `
+  <button class="roll-damage"
+    data-actor="${card.dataset.actor}"
+    data-weapon="${card.dataset.weapon}"
+    data-target="${card.dataset.target}">
+    Roll Damage
+  </button>
+  `;
+}
+
 newHtml = `
 <div class="sdp-attack"
      data-type="ranged"
      data-roll="${newRoll}"
-     data-target="${card.dataset.target}"
+     data-testtarget="${target}"
      data-actor="${card.dataset.actor}"
      data-weapon="${card.dataset.weapon}"
+     data-target="${card.dataset.target}"
      data-location="${card.dataset.location}"
-     data-critical="${card.dataset.critical}"
+     data-critical="${crit.success}"
      data-brutal="${card.dataset.brutal}">
 
-  <h3>${actor.name} attacks with ${weapon.name}</h3>
+  <h3>${actor.name} shoots with ${weapon.name}</h3>
 
   <button class="edit-attack">Edit</button>
 
@@ -141,10 +176,18 @@ newHtml = `
   <p>Roll: ${newRoll} (${oldRoll})</p>
   <p>SL: ${SL}</p>
 
+  ${critText}
+
+  <p>Hit Location: ${CONFIG.SDP.hitLocations[card.dataset.location]}</p>
+
   <p><strong>${success ? "HIT" : "MISS"}</strong></p>
+
+  ${damageButton}
 
 </div>
 `;
+
+
 
 }else{
 
@@ -160,6 +203,19 @@ const roll = Number(card.dataset.roll);
 const actor = game.actors.get(card.dataset.actor);
 const weapon = actor.items.get(card.dataset.weapon);
 
+const crit = {
+  success: newRoll >= 1 && newRoll <= 5,
+  failure: newRoll >= 96
+};
+
+let critText = "";
+if(crit.success){
+  critText = `<p><strong>CRITICAL SUCCESS</strong></p>`;
+}
+if(crit.failure){
+  critText = `<p><strong>CRITICAL FAILURE</strong></p>`;
+}
+
 newHtml = `
 <div class="sdp-attack"
      data-type="melee"
@@ -171,7 +227,7 @@ newHtml = `
      data-weapon="${card.dataset.weapon}"
      data-target="${card.dataset.target}"
      data-location="${card.dataset.location}"
-     data-critical="${card.dataset.critical}"
+     data-critical="${crit.success}"
      data-brutal="${card.dataset.brutal}">
 
   <h3>${actor.name} attacks with ${weapon.name}</h3>
@@ -181,6 +237,8 @@ newHtml = `
   <p>Roll: ${newRoll} (${oldRoll})</p>
   <p>SL: ${SL}</p>
   <p>Attack Score: ${attackScore} (${oldAttack})</p>
+
+  ${critText}
 
   <button class="apply-defense">Apply Defense</button>
 

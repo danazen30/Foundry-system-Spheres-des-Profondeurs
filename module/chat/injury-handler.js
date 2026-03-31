@@ -23,7 +23,7 @@ async function getInjuryFromPack(location, severity, isConsequence = false) {
 
 html.find(".apply-injury").click(async ev => {
 
-  const card = ev.currentTarget.closest(".sdp-injury-gm");
+  const card = ev.currentTarget.closest(".sdp-injury-card");
 
   const actorId = card.dataset.actor;
   const location = card.dataset.location;

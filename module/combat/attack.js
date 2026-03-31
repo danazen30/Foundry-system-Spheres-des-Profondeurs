@@ -138,9 +138,9 @@ if(crit.failure){
 `;
 
     roll.toMessage({
-      speaker: ChatMessage.getSpeaker({actor}),
-      flavor: html
-    });
+  speaker: ChatMessage.getSpeaker({actor}),
+  content: html
+});
 
     return;
 
@@ -214,9 +214,9 @@ if(crit.failure){
 `;
 
   roll.toMessage({
-    speaker: ChatMessage.getSpeaker({actor}),
-    flavor: html
-  });
+  speaker: ChatMessage.getSpeaker({actor}),
+  content: html
+});
 
 }
 
