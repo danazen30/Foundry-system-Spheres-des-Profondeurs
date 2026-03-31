@@ -202,6 +202,7 @@ if(crit.failure){
 
   <p>Roll: ${result}</p>
   <p>SL: ${SL}</p>
+  <p>Location: ${CONFIG.SDP.hitLocations[hitLocation.location]} (${hitLocation.roll.total})</p>
   ${critText}
   <p>Attack Score: ${attackScore}</p>
 

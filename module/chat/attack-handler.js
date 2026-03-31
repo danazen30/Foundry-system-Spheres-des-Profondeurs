@@ -59,8 +59,10 @@ const newHtml = `
   <button class="edit-attack">Edit</button>
 
   <p>Roll: ${roll}</p>
-  <p>Attack Score: ${attackScore}</p>
-  <p>Target: ${token.name}</p>
+<p>Attack Score: ${attackScore}</p>
+<p>Target: ${token.name}</p>
+
+<p>Location: ${CONFIG.SDP.hitLocations[location]}</p>
 
   <button class="apply-defense">Apply Defense</button>
 

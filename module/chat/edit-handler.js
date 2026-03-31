@@ -93,8 +93,10 @@ new Dialog({
   title: "Edit Attack",
 
   content: `
-  <label>Target</label>
-  <input type="number" name="target" value="${card.dataset.testtarget || 0}"/>
+  ${card.dataset.type === "ranged" ? `
+    <label>Target</label>
+    <input type="number" name="target" value="${card.dataset.testtarget || 0}"/>
+  ` : ""}
 
   <label>Roll</label>
   <input type="number" name="roll" value="${roll}"/>
@@ -235,12 +237,14 @@ newHtml = `
   <button class="edit-attack">Edit</button>
 
   <p>Roll: ${newRoll} (${oldRoll})</p>
-  <p>SL: ${SL}</p>
-  <p>Attack Score: ${attackScore} (${oldAttack})</p>
+<p>SL: ${SL}</p>
+<p>Attack Score: ${attackScore} (${oldAttack})</p>
 
-  ${critText}
+<p>Location: ${CONFIG.SDP.hitLocations[card.dataset.location]}</p>
 
-  <button class="apply-defense">Apply Defense</button>
+${critText}
+
+<button class="apply-defense">Apply Defense</button>
 
 </div>
 `;
