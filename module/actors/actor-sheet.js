@@ -28,11 +28,19 @@ export class SdpActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 
 
   async _prepareContext() {
-    return {
-      actor: this.document,
-      system: this.document.system,
-      config: SDP
-    };
+    const attributes = SDP.ATTRIBUTE_ORDER.map(key => {
+  return {
+    key,
+    ...this.document.system.attributes[key]
+  };
+});
+
+return {
+  actor: this.document,
+  system: this.document.system,
+  config: SDP,
+  attributes
+};
   }
 
 
@@ -307,6 +315,57 @@ root.querySelectorAll('[data-action="updateTalentAdv"]').forEach(el => {
     await item.update({
       "system.advances": Number(input.value)
     });
+
+  });
+});
+
+root.querySelectorAll('[data-action="addSpeciesTest"]').forEach(el => {
+  el.addEventListener("click", async (event) => {
+
+  const button = event.currentTarget;
+
+  if (button.disabled) return;
+  button.disabled = true;
+
+    const species = game.items.filter(i => i.type === "specie");
+
+    if (species.length === 0) {
+      ui.notifications.warn("No specie found");
+      return;
+    }
+
+    const specie = species[0];
+    const actor = this.document;
+
+    // =========================
+    // APPLY BASE ATTRIBUTES (REPLACE)
+    // =========================
+
+    const updates = {};
+
+    for (const [key, value] of Object.entries(specie.system.baseAttributes || {})) {
+
+      if (value === 0 || value === null || value === undefined) continue;
+
+      const path = `system.attributes.${key}.initial`;
+
+      updates[path] = value;
+    }
+
+    await actor.update(updates);
+
+    // =========================
+    // REMOVE EXISTING SPECIE
+    // =========================
+
+    const existing = actor.items.find(i => i.type === "specie");
+    if (existing) await existing.delete();
+
+    // =========================
+    // ADD SPECIE ITEM
+    // =========================
+
+    await actor.createEmbeddedDocuments("Item", [specie.toObject()]);
 
   });
 });

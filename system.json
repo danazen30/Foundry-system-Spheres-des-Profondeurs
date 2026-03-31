@@ -66,6 +66,14 @@
       "system": "sdp",
       "path": "packs/weapons",
       "type": "Item"
+    },
+
+    {
+      "name": "species",
+      "label": "SDP species",
+      "system": "sdp",
+      "path": "packs/species",
+      "type": "Item" 
     }
 
   ],
@@ -102,7 +110,8 @@
       "weapon": {},
       "armor": {},
       "spell": {},
-      "injury": {}
+      "injury": {},
+      "specie": {}
     }
   }
 }

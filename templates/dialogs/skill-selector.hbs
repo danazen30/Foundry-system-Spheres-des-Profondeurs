@@ -1,0 +1,13 @@
+<div class="sdp-dialog">
+
+  <label>Skill</label>
+
+  <select id="skill-select">
+    {{#each skills}}
+      <option value="{{this.id}}">{{this.name}}</option>
+    {{/each}}
+  </select>
+
+  <button id="confirm">Add</button>
+
+</div>

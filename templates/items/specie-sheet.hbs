@@ -1,0 +1,101 @@
+<div class="sdp-item-sheet">
+
+<h1>
+  <input type="text" name="name" value="{{item.name}}" />
+</h1>
+
+<h2>Base Attributes</h2>
+
+<label>Melee Ability</label>
+<input type="number" name="system.baseAttributes.meleeAbility" value="{{system.baseAttributes.meleeAbility}}">
+
+<label>Ranged Ability</label>
+<input type="number" name="system.baseAttributes.rangedAbility" value="{{system.baseAttributes.rangedAbility}}">
+
+<label>Strength</label>
+<input type="number" name="system.baseAttributes.strength" value="{{system.baseAttributes.strength}}">
+
+<label>Toughness</label>
+<input type="number" name="system.baseAttributes.toughness" value="{{system.baseAttributes.toughness}}">
+
+<label>Initiative</label>
+<input type="number" name="system.baseAttributes.initiative" value="{{system.baseAttributes.initiative}}">
+
+<label>Agility</label>
+<input type="number" name="system.baseAttributes.agility" value="{{system.baseAttributes.agility}}">
+
+<label>Dexterity</label>
+<input type="number" name="system.baseAttributes.dexterity" value="{{system.baseAttributes.dexterity}}">
+
+<label>Intelligence</label>
+<input type="number" name="system.baseAttributes.intelligence" value="{{system.baseAttributes.intelligence}}">
+
+<label>Will Power</label>
+<input type="number" name="system.baseAttributes.willpower" value="{{system.baseAttributes.willpower}}">
+
+<label>Charisma</label>
+<input type="number" name="system.baseAttributes.charisma" value="{{system.baseAttributes.charisma}}">
+
+<h2>Starting Skills</h2>
+
+<button type="button" data-action="add-skill">
+  ➕ Add Skill
+</button>
+
+<ul class="skill-list">
+  {{#each startingSkills as |skill|}}
+  <li>
+
+    <span>{{skill.name}}</span>
+
+    <button type="button" data-action="remove-skill" data-skill="{{skill.id}}">
+      ❌
+    </button>
+
+  </li>
+  {{/each}}
+</ul>
+
+<h3>Groups</h3>
+
+{{#each system.startingSkills.groups as |group index|}}
+
+<div class="group">
+
+  <label>Count</label>
+  <input type="number"
+         name="system.startingSkills.groups.{{index}}.count"
+         value="{{group.count}}">
+
+  <label>Value</label>
+  <input type="number"
+         name="system.startingSkills.groups.{{index}}.value"
+         value="{{group.value}}">
+
+</div>
+
+{{/each}}
+
+
+
+<h2>Description</h2>
+<textarea name="system.description">{{system.description}}</textarea>
+
+<h2>Effects</h2>
+
+<button type="button" data-action="create-effect">
+  ➕ Add Effect
+</button>
+
+<ol class="effects-list">
+  {{#each effects}}
+  <li class="effect" data-effect-id="{{this.id}}">
+    <div>{{this.name}}</div>
+
+    <button type="button" data-action="edit-effect">✏️</button>
+    <button type="button" data-action="delete-effect">🗑️</button>
+  </li>
+  {{/each}}
+</ol>
+
+</div>

@@ -685,6 +685,38 @@
         "type": "array",
         "value": []
       }
+    },
+    "specie": {
+      "templates": [
+        "description",
+        "gmNotes",
+        "playerNotes"
+      ],
+      "baseAttributes": {
+        "meleeAbility": 0,
+        "rangedAbility": 0,
+        "strength": 0,
+        "toughness": 0,
+        "initiative": 0,
+        "agility": 0,
+        "dexterity": 0,
+        "intelligence": 0,
+        "willpower": 0,
+        "charisma": 0
+      },
+      "startingSkills": {
+        "choices": [],
+        "groups": [
+          {
+            "count": 3,
+            "value": 3
+          },
+          {
+            "count": 3,
+            "value": 5
+          }
+        ]
+      }
     }
   }
 }

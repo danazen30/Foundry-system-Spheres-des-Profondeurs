@@ -10,49 +10,49 @@
 
 <div class="attr-header"></div>
 
-{{#each system.attributes as |attr key|}}
+{{#each attributes as |attr|}}
 <div class="attr-header">{{attr.label}}</div>
 {{/each}}
 
 <!-- INIT -->
 <div class="attr-row">Init</div>
-{{#each system.attributes as |attr key|}}
+{{#each attributes as |attr|}}
 <input
 type="number"
-name="system.attributes.{{key}}.initial"
+name="system.attributes.{{attr.key}}.initial"
 value="{{attr.initial}}"
-data-key="init-{{key}}">
+data-key="init-{{attr.key}}">
 {{/each}}
 
 <!-- ADV -->
 <div class="attr-row">Adv</div>
-{{#each system.attributes as |attr key|}}
+{{#each attributes as |attr|}}
 <input
 type="number"
-name="system.attributes.{{key}}.advances"
+name="system.attributes.{{attr.key}}.advances"
 value="{{attr.advances}}"
-data-key="adv-{{key}}">
+data-key="adv-{{attr.key}}">
 {{/each}}
 
 <!-- MODIFIER (VERSION STABLE) -->
 <div class="attr-row">Mod</div>
-{{#each system.attributes as |attr key|}}
+{{#each attributes as |attr|}}
 <input
 type="number"
 class="attr-modifier-input"
-data-key="{{key}}"
+data-key="{{attr.key}}"
 value="{{attr.modifier}}">
 {{/each}}
 
 <!-- FINAL -->
 <div class="attr-row">Final</div>
-{{#each system.attributes as |attr key|}}
+{{#each attributes as |attr|}}
 <input
   type="number"
   value="{{attr.value}}"
   readonly
   data-action="rollAttribute"
-  data-attr="{{key}}">
+  data-attr="{{attr.key}}">
 {{/each}}
 
 </div>
@@ -447,5 +447,8 @@ Attack
 </tbody>
 
 </table>
+
+<button data-action="addSpeciesTest">Add Species (TEST)</button>
+
 </section>
 </div>

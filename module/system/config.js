@@ -1,5 +1,18 @@
-export const SDP = {};
+export const SDP = {
 
+ATTRIBUTE_ORDER: [
+    "meleeAbility",
+    "rangedAbility",
+    "strength",
+    "toughness",
+    "initiative",
+    "agility",
+    "dexterity",
+    "intelligence",
+    "willpower",
+    "charisma"
+  ]
+}
 SDP.hitLocations = {
 
   head: "Head",
