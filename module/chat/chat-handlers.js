@@ -25,64 +25,82 @@ Hooks.on("renderChatMessage", (message, html) => {
 
   });
 
-  html.find(".sdp-opposed").click(ev => {
+html.find(".sdp-opposed").click(ev => {
 
-    const card = ev.currentTarget.closest(".sdp-roll");
+  const card = ev.currentTarget.closest(".sdp-roll");
 
-    const sl = Number(card.dataset.sl);
-    const actor = card.dataset.actor;
+  const sl = Number(card.dataset.sl);
+  const actorId = card.dataset.actor;
+const actorObj = game.actors.get(actorId);
+const actorName = actorObj?.name || "Unknown";
 
-    game.sdp = game.sdp || {};
+  game.sdp = game.sdp || {};
 
-    if(!game.sdp.opposed){
+  // =========================
+  // SET REFERENCE
+  // =========================
 
-      game.sdp.opposed = {
-        SL: sl,
-        actor: actor,
-        messageId: message.id
-      };
+  if(!game.sdp.opposed){
 
-      ui.notifications.info(`${actor}'s roll is now the opposed reference`);
-      return;
+    game.sdp.opposed = {
+      SL: sl,
+      actor: actorName,
+actorId: actorId,
+      messageId: message.id
+    };
 
-    }
+    ui.notifications.info(`${actorName} set as opposed reference`);
+    return;
 
-    const base = game.sdp.opposed;
+  }
 
-    let resultText;
+  // =========================
+  // RESOLVE OPPOSED
+  // =========================
 
-    if(sl > base.SL){
-      resultText = `${actor} wins`;
-    }else if(sl < base.SL){
-      resultText = `${base.actor} wins`;
-    }else{
-      resultText = "Draw";
-    }
+  const base = game.sdp.opposed;
 
-    ChatMessage.create({
-      content: `
-      <h3>Opposed Test</h3>
-      <p>${base.actor} SL: ${base.SL}</p>
-      <p>${actor} SL: ${sl}</p>
-      <strong>${resultText}</strong>
-      `
-    });
+  let resultText;
+let finalSL = Math.abs(sl - base.SL);
 
+if(sl > base.SL){
+  resultText = `${actorName} wins`;
+}else if(sl < base.SL){
+  resultText = `${base.actor} wins`;
+}else{
+  resultText = "Draw";
+  finalSL = 0;
+}
+
+  ChatMessage.create({
+    whisper: ChatMessage.getWhisperRecipients("GM"),
+    content: `
+    
+    <h3>Opposed Test</h3>
+
+    <p>${base.actor} SL: ${base.SL}</p>
+    <p>${actorName} SL: ${sl}</p>
+
+    <p><strong>Final SL: ${finalSL}</strong></p>
+
+    <strong>${resultText}</strong>
+    `
   });
 
+});
 
-  html.find(".sdp-stop-opposed").click(ev => {
+html.find(".sdp-stop-opposed").click(ev => {
 
-    if(!game.sdp?.opposed){
-      ui.notifications.warn("No opposition active");
-      return;
-    }
+  if(!game.sdp?.opposed){
+    ui.notifications.warn("No opposition active");
+    return;
+  }
 
-    game.sdp.opposed = null;
+  game.sdp.opposed = null;
 
-    ui.notifications.info("Opposition cleared");
+  ui.notifications.info("Opposition cleared");
 
-  });
+});
 
 
 });

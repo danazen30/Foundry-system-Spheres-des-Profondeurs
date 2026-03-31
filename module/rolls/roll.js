@@ -43,7 +43,7 @@ const success = result <= finalTarget;
 
 await roll.toMessage({
   speaker: ChatMessage.getSpeaker({ actor }),
-  flavor: `
+  content: `
 <div class="sdp-roll"
      data-target="${finalTarget}"
      data-roll="${result}"
@@ -59,6 +59,9 @@ await roll.toMessage({
   <p>SL: ${SL}</p>
 
   <p><strong>${success ? "SUCCESS" : "FAILURE"}</strong></p>
+
+  <button class="sdp-opposed">Oppose</button>
+  <button class="sdp-stop-opposed">Stop Oppose</button>
 
 </div>
 `
@@ -260,7 +263,7 @@ const success = result <= finalTarget;
 
 await roll.toMessage({
   speaker: ChatMessage.getSpeaker({ actor }),
-  flavor: `
+  content: `
 <div class="sdp-roll"
      data-target="${finalTarget}"
      data-roll="${result}"
@@ -277,9 +280,44 @@ await roll.toMessage({
 
   <p><strong>${success ? "SUCCESS" : "FAILURE"}</strong></p>
 
+  <button class="sdp-opposed">Oppose</button>
+  <button class="sdp-stop-opposed">Stop Oppose</button>
+
 </div>
 `
 });
+
+if(game.sdp?.opposed){
+
+  const base = game.sdp.opposed;
+
+  let resultText;
+  let finalSL = Math.abs(SL - base.SL);
+
+  if(SL > base.SL){
+    resultText = `${actor.name} wins`;
+  }else if(SL < base.SL){
+    resultText = `${base.actor} wins`;
+  }else{
+    resultText = "Draw";
+    finalSL = 0;
+  }
+  ChatMessage.create({
+    whisper: ChatMessage.getWhisperRecipients("GM"),
+    content: `
+    
+    <h3>Opposed Test (Auto)</h3>
+
+    <p>${base.actor} SL: ${base.SL}</p>
+    <p>${actor.name} SL: ${SL}</p>
+
+    <p><strong>Final SL: ${finalSL}</strong></p>
+
+    <strong>${resultText}</strong>
+    `
+  });
+
+}
           }
         }
 
