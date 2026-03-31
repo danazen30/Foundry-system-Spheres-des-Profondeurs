@@ -716,6 +716,14 @@
             "value": 5
           }
         ]
+      },
+      "startingTalents": {
+        "fixed": [],
+        "choices": [],
+        "random": {
+          "tableId": "",
+          "count": 1
+        }
       }
     }
   }

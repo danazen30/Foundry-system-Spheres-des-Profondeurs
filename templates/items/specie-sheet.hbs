@@ -76,6 +76,79 @@
 
 {{/each}}
 
+<h2>Starting Talents</h2>
+
+<button type="button" data-action="add-talent">
+  ➕ Add Fixed Talent
+</button>
+
+<ul>
+  {{#each startingTalents as |talent|}}
+  <li>
+    <span>{{talent.name}}</span>
+    <button data-action="remove-talent" data-id="{{talent.id}}">❌</button>
+  </li>
+  {{/each}}
+</ul>
+
+<h3>Talent Choices</h3>
+
+<button data-action="add-talent-choice">
+  ➕ Add Choice Group
+</button>
+
+{{#each choiceTalents as |group|}}
+
+<div class="talent-choice">
+
+  <label>Count</label>
+  <input
+  type="number"
+  class="choice-count"
+  data-index="{{@index}}"
+  value="{{group.count}}">
+
+  <button data-action="add-choice-option" data-index="{{@index}}">
+    ➕ Add Talent
+  </button>
+
+  <ul>
+    {{#each group.options as |talent|}}
+<li>
+  {{talent.name}}
+      <button data-action="remove-choice-option"
+              data-index="{{@../index}}"
+              data-id="{{talent.id}}">
+        ❌
+      </button>
+    </li>
+    {{/each}}
+  </ul>
+
+</div>
+
+{{/each}}
+
+<h3>Random Talents</h3>
+
+<label>Table</label>
+<select class="random-table-select">
+
+  <option value="">-- None --</option>
+
+  {{#each tables}}
+    <option value="{{this.id}}" {{#if (eq this.id ../system.startingTalents.random.tableId)}}selected{{/if}}>
+      {{this.name}}
+    </option>
+  {{/each}}
+
+</select>
+
+<label>Count</label>
+<input type="number"
+       class="random-count"
+       value="{{system.startingTalents.random.count}}">
+
 
 
 <h2>Description</h2>
