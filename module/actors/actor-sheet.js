@@ -48,6 +48,35 @@ return {
     return `sdp-actor-sheet-${this.document.id}`;
   }
 
+  async _onDropItem(event, data) {
+
+  const item = await Item.fromDropData(data);
+
+  if (item.type !== "career") return super._onDropItem(event, data);
+
+  const actor = this.document;
+
+  // =========================
+  // CREATE CAREER ON ACTOR
+  // =========================
+
+  const created = await actor.createEmbeddedDocuments("Item", [item.toObject()]);
+
+  const career = created[0];
+
+  // =========================
+  // SET AS CURRENT IF NONE
+  // =========================
+
+  const hasCurrent = actor.items.some(i => i.type === "career" && i.system.current);
+
+  if (!hasCurrent) {
+    await career.update({ "system.current": true });
+  }
+
+  return created;
+}
+
   _onRender(context, options) {
   super._onRender(context, options);
 
@@ -352,6 +381,19 @@ root.querySelectorAll('[data-action="addSpeciesTest"]').forEach(el => {
       updates[path] = value;
     }
 
+    // =========================
+// MOVEMENT (SPECIE)
+// =========================
+
+if (specie.system.movement?.walk !== undefined) {
+
+  updates["system.resources.movement.walk"] = specie.system.movement.walk;
+
+  // recalcul run (optionnel mais conseillé)
+  updates["system.resources.movement.run"] = specie.system.movement.walk * 2;
+
+}
+
     await actor.update(updates);
 
     // =========================
@@ -366,6 +408,51 @@ root.querySelectorAll('[data-action="addSpeciesTest"]').forEach(el => {
     // =========================
 
     await actor.createEmbeddedDocuments("Item", [specie.toObject()]);
+
+  });
+});
+
+// =========================
+// CAREER CURRENT
+// =========================
+
+root.querySelectorAll('[data-action="toggleCareerCurrent"]').forEach(el => {
+  el.addEventListener("change", async (event) => {
+
+    const itemId = event.currentTarget.dataset.itemId;
+    const actor = this.document;
+
+    // enlever current sur toutes
+    for (const career of actor.items.filter(i => i.type === "career")) {
+      await career.update({ "system.current": false });
+    }
+
+    // activer celle-ci
+    const item = actor.items.get(itemId);
+    await item.update({ "system.current": true });
+
+    // update actor details
+    await actor.update({
+  "system.details.career.value": item.name,
+  "system.details.careerGroup.value": item.system.careerGroup || "",
+  "system.details.standing.value": item.system.standing || ""
+});
+
+  });
+});
+
+// =========================
+// CAREER COMPLETED
+// =========================
+
+root.querySelectorAll('[data-action="toggleCareerCompleted"]').forEach(el => {
+  el.addEventListener("change", async (event) => {
+
+    const item = this.document.items.get(event.currentTarget.dataset.itemId);
+
+    await item.update({
+      "system.completed": event.currentTarget.checked
+    });
 
   });
 });

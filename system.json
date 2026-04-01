@@ -74,6 +74,14 @@
       "system": "sdp",
       "path": "packs/species",
       "type": "Item" 
+    },
+
+    {
+      "name": "careers",
+      "label": "SDP Careers",
+      "system": "sdp",
+      "path": "packs/careers",
+      "type": "Item"
     }
 
   ],
@@ -111,7 +119,8 @@
       "armor": {},
       "spell": {},
       "injury": {},
-      "specie": {}
+      "specie": {},
+      "career": {}
     }
   }
 }

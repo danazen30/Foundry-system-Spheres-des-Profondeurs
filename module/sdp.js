@@ -9,8 +9,9 @@ import { SdpTalentSheet } from "./items/talent-sheet.js";
 import { SdpArmorSheet } from "./items/armor-sheet.js";
 import { SdpInjurySheet } from "./items/injury-sheet.js";
 import { SdpSkillSheet } from "./items/skill-sheet.js";
-import { SdpItem } from "./items/item.js";
+import { SdpCareerSheet } from "./items/career-sheet.js";
 import { SdpSpecieSheet } from "./items/specie-sheet.js";
+import { SdpItem } from "./items/item.js";
 
 import { SdpRoll } from "./rolls/roll.js";
 import { SdpDamage } from "./combat/damage.js";
@@ -92,6 +93,11 @@ Items.registerSheet("sdp", SdpSkillSheet, {
 
   Items.registerSheet("sdp", SdpSpecieSheet, {
   types: ["specie"],
+  makeDefault: true
+});
+
+Items.registerSheet("sdp", SdpCareerSheet, {
+  types: ["career"],
   makeDefault: true
 });
 

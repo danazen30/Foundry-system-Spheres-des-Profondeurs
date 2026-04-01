@@ -149,9 +149,9 @@
           "label": "Sign",
           "value": ""
         },
-        "polarity": {
+        "affinity": {
           "type": "string",
-          "label": "Polarity",
+          "label": "Affinity",
           "value": ""
         },
         "motivation": {
@@ -702,8 +702,11 @@
         "dexterity": 0,
         "intelligence": 0,
         "willpower": 0,
-        "charisma": 0
+        "charisma": 0        
       },
+      "movement": {
+        "walk": 4
+        },
       "startingSkills": {
         "choices": [],
         "groups": [
@@ -725,6 +728,23 @@
           "count": 1
         }
       }
+    },
+    "career": {
+      "templates": [
+        "description",
+        "gmNotes",
+        "playerNotes"
+      ],
+      "characteristics": [],
+      "skills": [],
+      "talents": [],
+      "trappings": [],
+      "status": "",
+      "level": 1,
+      "current": false,
+      "completed": false,
+      "careerGroup": "",
+      "standing": ""
     }
   }
 }

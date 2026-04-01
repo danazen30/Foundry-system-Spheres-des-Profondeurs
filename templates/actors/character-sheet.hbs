@@ -448,7 +448,77 @@ Attack
 
 </table>
 
-<button data-action="addSpeciesTest">Add Species (TEST)</button>
+<h2>Details</h2>
+
+<div class="details">
+
+  <div class="resource-row">
+    <label>Career</label>
+    <input type="text" name="system.details.career.value" value="{{system.details.career.value}}">
+  </div>
+
+  <div class="resource-row">
+    <label>Career Group</label>
+    <input type="text" name="system.details.careerGroup.value" value="{{system.details.careerGroup.value}}">
+  </div>
+
+  <div class="resource-row">
+    <label>Standing</label>
+    <input type="text" name="system.details.standing.value" value="{{system.details.standing.value}}">
+  </div>
+
+</div>
+
+<h2>Careers</h2>
+
+<table class="careers-table">
+
+<thead>
+<tr>
+<th>Name</th>
+<th>Current</th>
+<th>Completed</th>
+<th>Actions</th>
+</tr>
+</thead>
+
+<tbody>
+
+{{#each actor.items as |item|}}
+{{#if (eq item.type "career")}}
+
+<tr>
+
+<td>{{item.name}}</td>
+
+<td>
+<input type="checkbox"
+       data-action="toggleCareerCurrent"
+       data-item-id="{{item.id}}"
+       {{checked item.system.current}}>
+</td>
+
+<td>
+<input type="checkbox"
+       data-action="toggleCareerCompleted"
+       data-item-id="{{item.id}}"
+       {{checked item.system.completed}}>
+</td>
+
+<td>
+<button data-action="deleteItem" data-item-id="{{item.id}}">
+🗑️
+</button>
+</td>
+
+</tr>
+
+{{/if}}
+{{/each}}
+
+</tbody>
+
+</table>
 
 </section>
 </div>
