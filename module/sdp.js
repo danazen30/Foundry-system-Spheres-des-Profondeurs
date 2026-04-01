@@ -101,6 +101,14 @@ Items.registerSheet("sdp", SdpCareerSheet, {
   makeDefault: true
 });
 
+Handlebars.registerHelper("gte", function(a, b) {
+  return a >= b;
+});
+
+Handlebars.registerHelper("multiply", function(a, b) {
+  return a * b;
+});
+
 Handlebars.registerHelper("includes", function(value, key) {
 
   if (!value) return false;
@@ -139,6 +147,11 @@ Handlebars.registerHelper("includes", function(value, key) {
       unconscious:0,
       dying:0,
       surprised:0
+    },
+    "system.details.experience": {
+      total: 0,
+      spent: 0,
+      log: []
     }
   });
 

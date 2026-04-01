@@ -19,10 +19,15 @@
   {{#if ../currentCareer}}
     {{#if (includes ../currentCareer.system.characteristics attr.key)}}
       <button
-        data-action="advanceAttribute"
-        data-attr="{{attr.key}}">
-        +
-      </button>
+  data-action="advanceAttribute"
+  data-attr="{{attr.key}}"
+  title="Cost: ? XP">
+  {{#if (gte attr.advances (multiply ../currentCareer.system.level 5))}}
+  ✔
+{{else}}
+  +
+{{/if}}
+</button>
     {{/if}}
   {{/if}}
 
@@ -178,10 +183,15 @@ readonly>
   {{#if ../currentCareer}}
     {{#if (includes ../currentCareer.system.skills item.name)}}
       <button
-        data-action="advanceSkill"
-        data-item-id="{{item.id}}">
-        +
-      </button>
+  data-action="advanceSkill"
+  data-item-id="{{item.id}}"
+  title="Cost: ? XP">
+  {{#if (gte item.system.advances (multiply ../currentCareer.system.level 5))}}
+  ✔
+{{else}}
+  +
+{{/if}}
+</button>
     {{/if}}
   {{/if}}
 
@@ -241,10 +251,11 @@ readonly>
   {{#if ../currentCareer}}
     {{#if (includes ../currentCareer.system.talents item.name)}}
       <button
-        data-action="advanceTalent"
-        data-item-id="{{item.id}}">
-        +
-      </button>
+  data-action="advanceTalent"
+  data-item-id="{{item.id}}"
+  title="Cost: ? XP">
+  +
+</button>
     {{/if}}
   {{/if}}
 
@@ -525,6 +536,59 @@ Attack
   </div>
 
 </div>
+
+<h2>Experience</h2>
+
+<div class="xp-container">
+
+  <div class="resource-row">
+    <label>Total</label>
+    <input
+      type="number"
+      value="{{xp.total}}"
+      data-action="updateXP"
+      data-type="total"
+      {{#unless user.isGM}}readonly{{/unless}}
+    >
+  </div>
+
+  <div class="resource-row">
+    <label>Spent</label>
+    <input
+  type="number"
+  value="{{xp.spent}}"
+  data-action="updateXP"
+  data-type="spent"
+  {{#unless user.isGM}}readonly{{/unless}}
+>
+  </div>
+
+  <div class="resource-row">
+    <label>Available</label>
+    <input
+      type="number"
+      value="{{xp.available}}"
+      readonly
+    >
+  </div>
+
+</div>
+
+<h3>XP Log</h3>
+
+<ul class="xp-log">
+
+{{#if xp.log.length}}
+  {{#each xp.log}}
+    <li class="xp-entry">
+      {{this.label}}
+    </li>
+  {{/each}}
+{{else}}
+  <li>No XP activity</li>
+{{/if}}
+
+</ul>
 
 <h2>Careers</h2>
 

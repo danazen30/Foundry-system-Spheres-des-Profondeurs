@@ -25,7 +25,46 @@ export class SdpActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     parts: ["sheet"]
   };
 
+_getCost(type, value) {
 
+  const table = {
+    attribute: [
+      [5, 25],[10,30],[15,40],[20,50],[25,100],[30,150],
+      [35,200],[40,250],[45,300],[50,350],[55,400],
+      [60,450],[65,550],[70,600],[999,650]
+    ],
+    skill: [
+      [5,10],[10,15],[15,20],[20,30],[25,60],[30,90],
+      [35,120],[40,150],[45,180],[50,210],[55,240],
+      [60,270],[65,300],[70,330],[999,360]
+    ]
+  };
+
+  const ranges = table[type];
+
+  for (let [max, cost] of ranges) {
+    if ((value + 1) <= max) return cost;
+  }
+
+  return 0;
+}
+
+_getTalentCost(current) {
+  return (current + 1) * 100;
+}
+
+_getTalentMax(item) {
+
+  const max = item.system.max;
+
+  // si attribut
+  if (this.document.system.attributes[max]) {
+    return this.document.system.attributes[max].bonus;
+  }
+
+  // sinon nombre
+  return Number(max) || 0;
+}
 
   async _prepareContext() {
     const attributes = SDP.ATTRIBUTE_ORDER.map(key => {
@@ -34,6 +73,15 @@ export class SdpActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     ...this.document.system.attributes[key]
   };
 });
+
+const xp = this.document.system.details?.experience ?? {};
+
+const xpData = {
+  total: xp.total ?? 0,
+  spent: xp.spent ?? 0,
+  available: (xp.total ?? 0) - (xp.spent ?? 0),
+  log: Array.isArray(xp.log) ? xp.log : []
+};
 
 const skillMap = Object.fromEntries(
   this.document.items
@@ -52,7 +100,8 @@ return {
   attributes,
   currentCareer,
   skillMap,
-  user: game.user
+  user: game.user,
+  xp: xpData
 };
   }
 
@@ -191,6 +240,36 @@ for (const talentName of talents) {
 
 }
 
+async _addXPLog(entry) {
+
+  const xp = this.document.system.details.experience;
+
+  const log = Array.isArray(xp.log) ? [...xp.log] : [];
+
+  const total = xp.total || 0;
+  const spent = (xp.spent || 0);
+
+  let label = "";
+
+  if (entry.type === "spend") {
+  label = `${entry.target} (${entry.old} → ${entry.value}) : -${entry.amount} XP (${spent} / ${total})${entry.reason ? " - " + entry.reason : ""}`;
+}
+else if (entry.type === "refund") {
+  label = `${entry.target} (${entry.old} → ${entry.value}) : +${entry.amount} XP (${spent} / ${total})${entry.reason ? " - " + entry.reason : ""}`;
+}
+else if (entry.type === "gain") {
+  label = `+${entry.amount} XP (${spent} / ${total}) - ${entry.reason || ""}`;
+}
+
+  log.unshift({
+    label
+  });
+
+  await this.document.update({
+    "system.details.experience.log": log
+  });
+
+}
 
   get id() {
     return `sdp-actor-sheet-${this.document.id}`;
@@ -586,54 +665,78 @@ root.querySelectorAll('[data-action="toggleCareerCurrent"]').forEach(el => {
 // =========================
 
 root.querySelectorAll('[data-action="toggleCareerCompleted"]').forEach(el => {
+
   el.addEventListener("change", async (event) => {
 
     const item = this.document.items.get(event.currentTarget.dataset.itemId);
-
-    await item.update({
-      "system.completed": event.currentTarget.checked
-    });
-
-  });
-});
-
-// =========================
-// ATTRIBUTE ADVANCE BUTTON
-// =========================
-
-root.querySelectorAll('[data-action="advanceAttribute"]').forEach(el => {
-
-  // CLICK GAUCHE → +1
-  el.addEventListener("click", async (event) => {
-
-    const key = event.currentTarget.dataset.attr;
     const actor = this.document;
 
-    const current = actor.system.attributes[key].advances || 0;
+    const checked = event.currentTarget.checked;
 
-    await actor.update({
-      [`system.attributes.${key}.advances`]: current + 1
-    });
+    const xp = actor.system.details.experience;
 
-  });
+    const cost = 100;
 
-  // CLICK DROIT → -1
-  el.addEventListener("contextmenu", async (event) => {
+    // =========================
+    // COMPLETE
+    // =========================
 
-    event.preventDefault(); // 🚨 important (sinon menu navigateur)
+    if (checked) {
 
-    const key = event.currentTarget.dataset.attr;
-    const actor = this.document;
+      const available = xp.total - xp.spent;
 
-    const current = actor.system.attributes[key].advances || 0;
+      if (available < cost) {
+        ui.notifications.warn("Not enough XP to complete career");
+        event.currentTarget.checked = false;
+        return;
+      }
 
-    await actor.update({
-      [`system.attributes.${key}.advances`]: Math.max(0, current - 1)
-    });
+      await actor.update({
+        "system.details.experience.spent": xp.spent + cost
+      });
+
+      await item.update({
+        "system.completed": true
+      });
+
+      await this._addXPLog({
+        type: "spend",
+        amount: cost,
+        target: `${item.name} (Career Completed)`,
+        old: "",
+        value: ""
+      });
+
+    }
+
+    // =========================
+    // UNDO COMPLETE
+    // =========================
+
+    else {
+
+      await actor.update({
+        "system.details.experience.spent": Math.max(0, xp.spent - cost)
+      });
+
+      await item.update({
+        "system.completed": false
+      });
+
+      await this._addXPLog({
+        type: "refund",
+        amount: cost,
+        target: `${item.name} (Career Uncompleted)`,
+        old: "",
+        value: ""
+      });
+
+    }
 
   });
 
 });
+
 
 // =========================
 // SKILL ADVANCE BUTTON
@@ -642,32 +745,70 @@ root.querySelectorAll('[data-action="advanceAttribute"]').forEach(el => {
 root.querySelectorAll('[data-action="advanceSkill"]').forEach(el => {
 
   // CLICK GAUCHE
-  el.addEventListener("click", async (event) => {
+el.addEventListener("click", async (event) => {
 
-    const item = this.document.items.get(event.currentTarget.dataset.itemId);
+  const item = this.document.items.get(event.currentTarget.dataset.itemId);
 
-    const current = item.system.advances || 0;
+  const current = item.system.advances || 0;
+  const cost = this._getCost("skill", current);
 
-    await item.update({
-      "system.advances": current + 1
-    });
+  const xp = this.document.system.details.experience;
+  const available = xp.total - xp.spent;
 
+  if (available < cost) {
+    ui.notifications.warn("Not enough XP");
+    return;
+  }
+
+  await item.update({
+    "system.advances": current + 1
   });
+
+  await this.document.update({
+    "system.details.experience.spent": xp.spent + cost
+  });
+
+  await this._addXPLog({
+  type: "spend",
+  amount: cost,
+  target: item.name,
+  old: current,
+  value: current + 1
+});
+});
 
   // CLICK DROIT
   el.addEventListener("contextmenu", async (event) => {
 
-    event.preventDefault();
+  event.preventDefault();
 
-    const item = this.document.items.get(event.currentTarget.dataset.itemId);
+  const item = this.document.items.get(event.currentTarget.dataset.itemId);
 
-    const current = item.system.advances || 0;
+  const current = item.system.advances || 0;
+  if (current <= 0) return;
 
-    await item.update({
-      "system.advances": Math.max(0, current - 1)
-    });
+  const newValue = current - 1;
+  const cost = this._getCost("skill", newValue);
 
+  const xp = this.document.system.details.experience;
+
+  await item.update({
+    "system.advances": newValue
   });
+
+  await this.document.update({
+    "system.details.experience.spent": Math.max(0, xp.spent - cost)
+  });
+
+  await this._addXPLog({
+    type: "refund",
+    amount: cost,
+    target: item.name,
+    old: current,
+    value: newValue
+  });
+
+});
 
 });
 
@@ -675,20 +816,36 @@ root.querySelectorAll('[data-action="advanceSkill"]').forEach(el => {
 // ATTRIBUTE ADV INPUT (GM FIX)
 // =========================
 
-root.querySelectorAll('input[name^="system.attributes"][name$=".advances"]').forEach(el => {
+root.querySelectorAll('[data-action="advanceAttribute"]').forEach(el => {
 
-  el.addEventListener("change", async (event) => {
+  el.addEventListener("click", async (event) => {
 
-    if (!game.user.isGM) return;
+    const key = event.currentTarget.dataset.attr;
+    const actor = this.document;
 
-    const input = event.currentTarget;
+    const current = actor.system.attributes[key].advances || 0;
+    const cost = this._getCost("attribute", current);
 
-    const path = input.name;
-    const value = Number(input.value) || 0;
+    const xp = actor.system.details.experience;
+    const available = xp.total - xp.spent;
 
-    await this.document.update({
-      [path]: value
+    if (available < cost) {
+      ui.notifications.warn("Not enough XP");
+      return;
+    }
+
+    await actor.update({
+      [`system.attributes.${key}.advances`]: current + 1,
+      "system.details.experience.spent": xp.spent + cost
     });
+
+    await this._addXPLog({
+  type: "spend",
+  amount: cost,
+  target: key,
+  old: current,
+  value: current + 1
+});
 
   });
 
@@ -703,31 +860,199 @@ root.querySelectorAll('[data-action="advanceTalent"]').forEach(el => {
   // CLICK GAUCHE
   el.addEventListener("click", async (event) => {
 
-    const item = this.document.items.get(event.currentTarget.dataset.itemId);
+  const item = this.document.items.get(event.currentTarget.dataset.itemId);
 
-    const current = item.system.advances || 0;
+  const current = item.system.advances || 0;
+  const cost = this._getTalentCost(current);
 
-    await item.update({
-      "system.advances": current + 1
-    });
+  const xp = this.document.system.details.experience;
+  const available = xp.total - xp.spent;
 
+  if (available < cost) {
+    ui.notifications.warn("Not enough XP");
+    return;
+  }
+
+  const max = this._getTalentMax(item);
+
+if (current >= max) {
+  ui.notifications.warn("Talent already at max");
+  return;
+}
+
+  await item.update({
+    "system.advances": current + 1
   });
+
+  await this.document.update({
+    "system.details.experience.spent": xp.spent + cost
+  });
+
+  await this._addXPLog({
+  type: "spend",
+  amount: cost,
+  target: item.name,
+  old: current,
+  value: current + 1
+});
+
+});
 
   // CLICK DROIT
   el.addEventListener("contextmenu", async (event) => {
 
-    event.preventDefault();
+  event.preventDefault();
 
-    const item = this.document.items.get(event.currentTarget.dataset.itemId);
+  const item = this.document.items.get(event.currentTarget.dataset.itemId);
 
-    const current = item.system.advances || 0;
+  const current = item.system.advances || 0;
+  if (current <= 0) return;
 
-    await item.update({
-      "system.advances": Math.max(0, current - 1)
-    });
+  const newValue = current - 1;
+  const cost = this._getTalentCost(newValue);
+
+  const xp = this.document.system.details.experience;
+
+  await item.update({
+    "system.advances": newValue
+  });
+
+  await this.document.update({
+    "system.details.experience.spent": Math.max(0, xp.spent - cost)
+  });
+
+  await this._addXPLog({
+    type: "refund",
+    amount: cost,
+    target: item.name,
+    old: current,
+    value: newValue
+  });
+
+});
+
+});
+
+// =========================
+// UPDATE XP (GM)
+// =========================
+
+root.querySelectorAll('[data-action="updateXP"]').forEach(el => {
+
+  el.addEventListener("change", async (event) => {
+
+    if (!game.user.isGM) return;
+
+    const input = event.currentTarget;
+    const type = input.dataset.type;
+
+    const newValue = Number(input.value) || 0;
+
+    const xp = this.document.system.details.experience;
+
+    let oldValue = 0;
+
+    if (type === "total") oldValue = xp.total || 0;
+    if (type === "spent") oldValue = xp.spent || 0;
+
+    const diff = newValue - oldValue;
+
+    if (diff === 0) return;
+
+    // =========================
+    // POPUP
+    // =========================
+
+    new Dialog({
+      title: "XP Modification",
+      content: `
+        <p>Reason for XP change (${diff > 0 ? "+" : ""}${diff} XP):</p>
+        <input type="text" id="xp-reason" style="width:100%">
+      `,
+      buttons: {
+        ok: {
+          label: "Confirm",
+          callback: async (html) => {
+
+            const reason = html.find("#xp-reason").val() || "No reason";
+
+            // =========================
+            // APPLY
+            // =========================
+
+            if (type === "total") {
+              await this.document.update({
+                "system.details.experience.total": newValue
+              });
+            }
+
+            if (type === "spent") {
+              await this.document.update({
+                "system.details.experience.spent": newValue
+              });
+            }
+
+            // =========================
+            // LOG
+            // =========================
+
+            await this._addXPLog({
+              type: diff > 0 ? "spend" : "refund",
+              amount: Math.abs(diff),
+              target: type === "total" ? "XP Total" : "XP Spent",
+              old: oldValue,
+              value: newValue,
+              reason
+            });
+
+          }
+        },
+        cancel: {
+          label: "Cancel"
+        }
+      },
+      default: "ok"
+    }).render(true);
 
   });
 
+});
+
+// =========================
+// TOOLTIP COST
+// =========================
+
+// ATTRIBUTES
+root.querySelectorAll('[data-action="advanceAttribute"]').forEach(el => {
+
+  const key = el.dataset.attr;
+  const current = this.document.system.attributes[key].advances || 0;
+
+  const cost = this._getCost("attribute", current);
+
+  el.title = `Cost: ${cost} XP`;
+});
+
+// SKILLS
+root.querySelectorAll('[data-action="advanceSkill"]').forEach(el => {
+
+  const item = this.document.items.get(el.dataset.itemId);
+
+  const current = item.system.advances || 0;
+  const cost = this._getCost("skill", current);
+
+  el.title = `Cost: ${cost} XP`;
+});
+
+// TALENTS
+root.querySelectorAll('[data-action="advanceTalent"]').forEach(el => {
+
+  const item = this.document.items.get(el.dataset.itemId);
+
+  const current = item.system.advances || 0;
+  const cost = this._getTalentCost(current);
+
+  el.title = `Cost: ${cost} XP`;
 });
 
 }}

@@ -559,9 +559,9 @@
         "playerNotes"
       ],
       "max": {
-        "type": "number",
+        "type": "string",
         "label": "Max Advances",
-        "value": 1
+        "value": "1"
       },
       "advances": {
         "type": "number",
