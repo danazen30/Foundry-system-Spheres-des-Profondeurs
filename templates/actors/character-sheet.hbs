@@ -11,7 +11,23 @@
 <div class="attr-header"></div>
 
 {{#each attributes as |attr|}}
-<div class="attr-header">{{attr.label}}</div>
+
+<div class="attr-header">
+
+  {{attr.label}}
+
+  {{#if ../currentCareer}}
+    {{#if (includes ../currentCareer.system.characteristics attr.key)}}
+      <button
+        data-action="advanceAttribute"
+        data-attr="{{attr.key}}">
+        +
+      </button>
+    {{/if}}
+  {{/if}}
+
+</div>
+
 {{/each}}
 
 <!-- INIT -->
@@ -27,11 +43,19 @@ data-key="init-{{attr.key}}">
 <!-- ADV -->
 <div class="attr-row">Adv</div>
 {{#each attributes as |attr|}}
-<input
-type="number"
-name="system.attributes.{{attr.key}}.advances"
-value="{{attr.advances}}"
-data-key="adv-{{attr.key}}">
+
+<div class="attr-cell">
+
+ <input
+  type="number"
+  value="{{attr.advances}}"
+  name="system.attributes.{{attr.key}}.advances"
+  data-dtype="Number"
+  step="1"
+  {{#unless @root.user.isGM}}readonly{{/unless}}
+>
+</div>
+
 {{/each}}
 
 <!-- MODIFIER (VERSION STABLE) -->
@@ -147,23 +171,38 @@ readonly>
 
 <tr>
 
-<td>{{item.name}}</td>
+<td>
+
+  {{item.name}}
+
+  {{#if ../currentCareer}}
+    {{#if (includes ../currentCareer.system.skills item.name)}}
+      <button
+        data-action="advanceSkill"
+        data-item-id="{{item.id}}">
+        +
+      </button>
+    {{/if}}
+  {{/if}}
+
+</td>
 
 <td>{{item.system.characteristic}}</td>
 
 <td>
+
 <input
   type="number"
   data-action="updateSkillAdv"
   data-item-id="{{item.id}}"
   value="{{item.system.advances}}"
-  data-event="change">   <!-- 🔥 IMPORTANT -->
+  {{#unless ../user.isGM}}readonly{{/unless}}
+>
+
 </td>
 
 <td data-action="rollSkill" data-item-id="{{item.id}}">
-
 {{item.system.value}}
-
 </td>
 
 </tr>
@@ -195,7 +234,21 @@ readonly>
 
 <tr>
 
-<td>{{item.name}}</td>
+<td>
+
+  {{item.name}}
+
+  {{#if ../currentCareer}}
+    {{#if (includes ../currentCareer.system.talents item.name)}}
+      <button
+        data-action="advanceTalent"
+        data-item-id="{{item.id}}">
+        +
+      </button>
+    {{/if}}
+  {{/if}}
+
+</td>
 
 <td>
 
@@ -206,9 +259,13 @@ data-item-id="{{item.id}}"
 value="{{item.system.advances}}"
 min="0"
 
-max="{{#if (lookup ../system.attributes item.system.max)}}{{lookup (lookup ../system.attributes item.system.max) "bonus"}}{{else}}{{item.system.max}}{{/if}}"
+max="{{#if (lookup ../system.attributes item.system.max)}}
+{{lookup (lookup ../system.attributes item.system.max) "bonus"}}
+{{else}}
+{{item.system.max}}
+{{/if}}"
 
-{{#unless item.system.canAdvance}}disabled{{/unless}}
+{{#unless ../user.isGM}}readonly{{/unless}}
 >
 
 </td>

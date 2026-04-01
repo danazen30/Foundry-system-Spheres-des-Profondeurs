@@ -179,3 +179,9 @@ text-align:center;
   overflow-y: auto;
   padding: 10px;
 }
+
+.attr-header button {
+  margin-left: 4px;
+  font-size: 10px;
+  padding: 1px 4px;
+}

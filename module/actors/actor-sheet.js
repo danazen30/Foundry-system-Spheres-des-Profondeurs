@@ -35,13 +35,161 @@ export class SdpActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   };
 });
 
+const skillMap = Object.fromEntries(
+  this.document.items
+    .filter(i => i.type === "skill")
+    .map(i => [i.name, i.system])
+);
+
+const currentCareer = this.document.items.find(
+    i => i.type === "career" && i.system.current
+  );
+
 return {
   actor: this.document,
   system: this.document.system,
   config: SDP,
-  attributes
+  attributes,
+  currentCareer,
+  skillMap,
+  user: game.user
 };
   }
+
+  async _applyCareer(career) {
+
+  const actor = this.document;
+
+  // =========================
+  // SET CURRENT
+  // =========================
+
+  for (const c of actor.items.filter(i => i.type === "career")) {
+    await c.update({ "system.current": false });
+  }
+
+  await career.update({ "system.current": true });
+
+  // =========================
+  // UPDATE DETAILS
+  // =========================
+
+  await actor.update({
+    "system.details.career.value": career.name,
+    "system.details.careerGroup.value": career.system.careerGroup || "",
+    "system.details.standing.value": career.system.standing || ""
+  });
+
+  // =========================
+  // AUTO ADD SKILLS
+  // =========================
+
+  let skills = career.system.skills || [];
+
+if (typeof skills === "string") {
+  skills = skills.split(",").map(s => s.trim());
+}
+
+if (!Array.isArray(skills)) {
+  skills = [];
+}
+
+  for (const skillName of skills) {
+
+    const exists = actor.items.find(i =>
+      i.type === "skill" && i.name === skillName
+    );
+
+    if (!exists) {
+
+      let baseSkill = game.items.find(i =>
+        i.type === "skill" && i.name === skillName
+      );
+
+      if (!baseSkill) {
+
+        const pack = game.packs.get("sdp.skills");
+
+        if (pack) {
+
+          const index = await pack.getIndex();
+          const entry = index.find(i => i.name === skillName);
+
+          if (entry) {
+            baseSkill = await pack.getDocument(entry._id);
+          }
+
+        }
+
+      }
+
+
+      if (baseSkill) {
+        await actor.createEmbeddedDocuments("Item", [
+          baseSkill.toObject()
+        ]);
+      }
+
+    }
+
+  }
+
+        // =========================
+// AUTO ADD TALENTS
+// =========================
+
+let talents = career.system.talents || [];
+
+if (typeof talents === "string") {
+  talents = talents.split(",").map(t => t.trim());
+}
+
+if (!Array.isArray(talents)) {
+  talents = [];
+}
+
+for (const talentName of talents) {
+
+  const exists = actor.items.find(i =>
+    i.type === "talent" && i.name === talentName
+  );
+
+  if (!exists) {
+
+    let baseTalent = game.items.find(i =>
+      i.type === "talent" && i.name === talentName
+    );
+
+    if (!baseTalent) {
+
+      const pack = game.packs.get("sdp.talents");
+
+      if (pack) {
+
+        const index = await pack.getIndex();
+        const entry = index.find(i => i.name === talentName);
+
+        if (entry) {
+          baseTalent = await pack.getDocument(entry._id);
+        }
+
+      }
+
+    }
+
+    if (baseTalent) {
+      await actor.createEmbeddedDocuments("Item", [
+        baseTalent.toObject()
+      ]);
+    }
+
+  }
+
+}
+
+  await this.render();
+
+}
 
 
   get id() {
@@ -70,9 +218,9 @@ return {
 
   const hasCurrent = actor.items.some(i => i.type === "career" && i.system.current);
 
-  if (!hasCurrent) {
-    await career.update({ "system.current": true });
-  }
+if (!hasCurrent) {
+  await this._applyCareer(career);
+}
 
   return created;
 }
@@ -151,18 +299,25 @@ SdpRoll.openDialog({
     });
   });
 
-  // ===== SKILL ADV =====
+// =========================
+// SKILL ADV INPUT (GM)
+// =========================
+
 root.querySelectorAll('[data-action="updateSkillAdv"]').forEach(el => {
-  el.addEventListener("change", (event) => {
+
+  el.addEventListener("change", async (event) => {
+
+    if (!game.user.isGM) return;
 
     const input = event.currentTarget;
     const item = this.document.items.get(input.dataset.itemId);
 
-    item.update({
-      "system.advances": Number(input.value)
+    await item.update({
+      "system.advances": Number(input.value) || 0
     });
 
   });
+
 });
 
 
@@ -419,24 +574,9 @@ if (specie.system.movement?.walk !== undefined) {
 root.querySelectorAll('[data-action="toggleCareerCurrent"]').forEach(el => {
   el.addEventListener("change", async (event) => {
 
-    const itemId = event.currentTarget.dataset.itemId;
-    const actor = this.document;
+    const item = this.document.items.get(event.currentTarget.dataset.itemId);
 
-    // enlever current sur toutes
-    for (const career of actor.items.filter(i => i.type === "career")) {
-      await career.update({ "system.current": false });
-    }
-
-    // activer celle-ci
-    const item = actor.items.get(itemId);
-    await item.update({ "system.current": true });
-
-    // update actor details
-    await actor.update({
-  "system.details.career.value": item.name,
-  "system.details.careerGroup.value": item.system.careerGroup || "",
-  "system.details.standing.value": item.system.standing || ""
-});
+    await this._applyCareer(item);
 
   });
 });
@@ -455,6 +595,139 @@ root.querySelectorAll('[data-action="toggleCareerCompleted"]').forEach(el => {
     });
 
   });
+});
+
+// =========================
+// ATTRIBUTE ADVANCE BUTTON
+// =========================
+
+root.querySelectorAll('[data-action="advanceAttribute"]').forEach(el => {
+
+  // CLICK GAUCHE → +1
+  el.addEventListener("click", async (event) => {
+
+    const key = event.currentTarget.dataset.attr;
+    const actor = this.document;
+
+    const current = actor.system.attributes[key].advances || 0;
+
+    await actor.update({
+      [`system.attributes.${key}.advances`]: current + 1
+    });
+
+  });
+
+  // CLICK DROIT → -1
+  el.addEventListener("contextmenu", async (event) => {
+
+    event.preventDefault(); // 🚨 important (sinon menu navigateur)
+
+    const key = event.currentTarget.dataset.attr;
+    const actor = this.document;
+
+    const current = actor.system.attributes[key].advances || 0;
+
+    await actor.update({
+      [`system.attributes.${key}.advances`]: Math.max(0, current - 1)
+    });
+
+  });
+
+});
+
+// =========================
+// SKILL ADVANCE BUTTON
+// =========================
+
+root.querySelectorAll('[data-action="advanceSkill"]').forEach(el => {
+
+  // CLICK GAUCHE
+  el.addEventListener("click", async (event) => {
+
+    const item = this.document.items.get(event.currentTarget.dataset.itemId);
+
+    const current = item.system.advances || 0;
+
+    await item.update({
+      "system.advances": current + 1
+    });
+
+  });
+
+  // CLICK DROIT
+  el.addEventListener("contextmenu", async (event) => {
+
+    event.preventDefault();
+
+    const item = this.document.items.get(event.currentTarget.dataset.itemId);
+
+    const current = item.system.advances || 0;
+
+    await item.update({
+      "system.advances": Math.max(0, current - 1)
+    });
+
+  });
+
+});
+
+// =========================
+// ATTRIBUTE ADV INPUT (GM FIX)
+// =========================
+
+root.querySelectorAll('input[name^="system.attributes"][name$=".advances"]').forEach(el => {
+
+  el.addEventListener("change", async (event) => {
+
+    if (!game.user.isGM) return;
+
+    const input = event.currentTarget;
+
+    const path = input.name;
+    const value = Number(input.value) || 0;
+
+    await this.document.update({
+      [path]: value
+    });
+
+  });
+
+});
+
+// =========================
+// TALENT ADVANCE BUTTON
+// =========================
+
+root.querySelectorAll('[data-action="advanceTalent"]').forEach(el => {
+
+  // CLICK GAUCHE
+  el.addEventListener("click", async (event) => {
+
+    const item = this.document.items.get(event.currentTarget.dataset.itemId);
+
+    const current = item.system.advances || 0;
+
+    await item.update({
+      "system.advances": current + 1
+    });
+
+  });
+
+  // CLICK DROIT
+  el.addEventListener("contextmenu", async (event) => {
+
+    event.preventDefault();
+
+    const item = this.document.items.get(event.currentTarget.dataset.itemId);
+
+    const current = item.system.advances || 0;
+
+    await item.update({
+      "system.advances": Math.max(0, current - 1)
+    });
+
+  });
+
 });
 
 }}

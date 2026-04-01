@@ -101,6 +101,23 @@ Items.registerSheet("sdp", SdpCareerSheet, {
   makeDefault: true
 });
 
+Handlebars.registerHelper("includes", function(value, key) {
+
+  if (!value) return false;
+
+  // si string → split
+  if (typeof value === "string") {
+    return value.split(",").includes(key);
+  }
+
+  // si array
+  if (Array.isArray(value)) {
+    return value.includes(key);
+  }
+
+  return false;
+});
+
   Hooks.on("createActor", async (actor) => {
 
   if(actor.system.conditions) return;
