@@ -62,54 +62,29 @@ Hooks.once("init", () => {
   CONFIG.Item.documentClass = SdpItem;
 
 
-Actors.unregisterSheet("core", ActorSheet);
+// ACTORS
+foundry.documents.collections.Actors.unregisterSheet("core", foundry.appv1.sheets.ActorSheet);
 
-Actors.registerSheet("sdp", SdpActorSheet, {
-  types: ["character"],
-  makeDefault: true
-});
+foundry.documents.collections.Actors.registerSheet("sdp", SdpActorSheet, { makeDefault: true });
 
-  Items.unregisterSheet("core", ItemSheet);
+// items
+foundry.documents.collections.Items.unregisterSheet("core", foundry.appv1.sheets.ItemSheet);
 
-  Items.registerSheet("sdp", SdpWeaponSheet, {
-    types: ["weapon"],
-    makeDefault: true
-  });
+foundry.documents.collections.Items.registerSheet("sdp", SdpWeaponSheet, { types: ["weapon"], makeDefault: true });
 
-  Items.registerSheet("sdp", SdpTalentSheet, {
-    types: ["talent"],
-    makeDefault: true
-  });
+foundry.documents.collections.Items.registerSheet("sdp", SdpArmorSheet, { types: ["armor"], makeDefault: true });
 
-  Items.registerSheet("sdp", SdpArmorSheet, {
-    types: ["armor"],
-    makeDefault: true
-  });
+foundry.documents.collections.Items.registerSheet("sdp", SdpTalentSheet, { types: ["talent"], makeDefault: true });
 
-  Items.registerSheet("sdp", SdpInjurySheet, {
-  types: ["injury"],
-  makeDefault: true
-});
+foundry.documents.collections.Items.registerSheet("sdp", SdpSkillSheet, { types: ["skill"], makeDefault: true });
 
-Items.registerSheet("sdp", SdpSkillSheet, {
-    types: ["skill"],
-    makeDefault: true
-  });
+foundry.documents.collections.Items.registerSheet("sdp", SdpInjurySheet, { types: ["injury"], makeDefault: true });
 
-  Items.registerSheet("sdp", SdpSpecieSheet, {
-  types: ["specie"],
-  makeDefault: true
-});
+foundry.documents.collections.Items.registerSheet("sdp", SdpSpecieSheet, { types: ["specie"], makeDefault: true });
 
-Items.registerSheet("sdp", SdpCareerSheet, {
-  types: ["career"],
-  makeDefault: true
-});
+foundry.documents.collections.Items.registerSheet("sdp", SdpCareerSheet, { types: ["career"], makeDefault: true });
 
-Items.registerSheet("sdp", SdpSignSheet, {
-  types: ["sign"],
-  makeDefault: true
-});
+foundry.documents.collections.Items.registerSheet("sdp", SdpSignSheet, { types: ["sign"], makeDefault: true });
 
 Handlebars.registerHelper("gte", function(a, b) {
   return a >= b;

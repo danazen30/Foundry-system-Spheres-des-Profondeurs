@@ -101,14 +101,17 @@ value="{{system.health.value}}">
 
 </div>
 
-<div class="resource-row">
+<div class="mana-container">
 
-<label>Mana</label>
+  <label>Mana</label>
 
-<input
-type="number"
-name="system.resources.mana.value"
-value="{{system.resources.mana.value}}">
+  <input
+    type="number"
+    name="system.resources.mana.value"
+    value="{{system.resources.mana.value}}"
+  />
+
+  <span>/ {{system.resources.mana.max}}</span>
 
 </div>
 
@@ -166,6 +169,7 @@ readonly>
 <th>Characteristic</th>
 <th>Adv</th>
 <th>Value</th>
+<th></th>
 </tr>
 </thead>
 
@@ -174,24 +178,24 @@ readonly>
 {{#each actor.items as |item|}}
 {{#if (eq item.type "skill")}}
 
+
 <tr>
 
 <td>
-
   {{item.name}}
 
   {{#if ../currentCareer}}
     {{#if (includes ../currentCareer.system.skills item.name)}}
       <button
-  data-action="advanceSkill"
-  data-item-id="{{item.id}}"
-  title="Cost: ? XP">
-  {{#if (gte item.system.advances (multiply ../currentCareer.system.level 5))}}
-  ✔
-{{else}}
-  +
-{{/if}}
-</button>
+        data-action="advanceSkill"
+        data-item-id="{{item.id}}"
+        title="Cost: ? XP">
+        {{#if (gte item.system.advances (multiply ../currentCareer.system.level 5))}}
+          ✔
+        {{else}}
+          +
+        {{/if}}
+      </button>
     {{/if}}
   {{/if}}
 
@@ -200,25 +204,33 @@ readonly>
 <td>{{item.system.characteristic}}</td>
 
 <td>
-
-<input
-  type="number"
-  data-action="updateSkillAdv"
-  data-item-id="{{item.id}}"
-  value="{{item.system.advances}}"
-  {{#unless ../user.isGM}}readonly{{/unless}}
->
-
+  <input
+    type="number"
+    data-action="updateSkillAdv"
+    data-item-id="{{item.id}}"
+    value="{{item.system.advances}}"
+    {{#unless ../user.isGM}}readonly{{/unless}}
+  >
 </td>
 
 <td data-action="rollSkill" data-item-id="{{item.id}}">
-{{item.system.value}}
+  {{item.system.value}}
+</td>
+
+<td class="item-actions">
+  <button data-action="editItem" data-item-id="{{item.id}}">✏️</button>
+  <button data-action="deleteItem" data-item-id="{{item.id}}">🗑️</button>
 </td>
 
 </tr>
 
 {{/if}}
 {{/each}}
+
+<td data-action="rollSkill" data-item-id="{{item.id}}">
+{{item.system.value}}
+</td>
+
 
 </tbody>
 
@@ -234,6 +246,7 @@ readonly>
 <th>Name</th>
 <th>Level</th>
 <th>Max</th>
+<th></th>
 </tr>
 </thead>
 
@@ -245,50 +258,49 @@ readonly>
 <tr>
 
 <td>
-
   {{item.name}}
 
   {{#if ../currentCareer}}
     {{#if (includes ../currentCareer.system.talents item.name)}}
       <button
-  data-action="advanceTalent"
-  data-item-id="{{item.id}}"
-  title="Cost: ? XP">
-  +
-</button>
+        data-action="advanceTalent"
+        data-item-id="{{item.id}}"
+        title="Cost: ? XP">
+        +
+      </button>
     {{/if}}
   {{/if}}
-
 </td>
 
 <td>
+  <input
+    type="number"
+    data-action="updateTalentAdv"
+    data-item-id="{{item.id}}"
+    value="{{item.system.advances}}"
+    min="0"
 
-<input
-type="number"
-data-action="updateTalentAdv"
-data-item-id="{{item.id}}"
-value="{{item.system.advances}}"
-min="0"
+    max="{{#if (lookup ../system.attributes item.system.max)}}
+      {{lookup (lookup ../system.attributes item.system.max) "bonus"}}
+    {{else}}
+      {{item.system.max}}
+    {{/if}}"
 
-max="{{#if (lookup ../system.attributes item.system.max)}}
-{{lookup (lookup ../system.attributes item.system.max) "bonus"}}
-{{else}}
-{{item.system.max}}
-{{/if}}"
-
-{{#unless ../user.isGM}}readonly{{/unless}}
->
-
+    {{#unless ../user.isGM}}readonly{{/unless}}
+  >
 </td>
 
 <td>
+  {{#if (lookup ../system.attributes item.system.max)}}
+    {{lookup (lookup ../system.attributes item.system.max) "bonus"}}
+  {{else}}
+    {{item.system.max}}
+  {{/if}}
+</td>
 
-{{#if (lookup ../system.attributes item.system.max)}}
-{{lookup (lookup ../system.attributes item.system.max) "bonus"}}
-{{else}}
-{{item.system.max}}
-{{/if}}
-
+<td class="item-actions">
+  <button data-action="editItem" data-item-id="{{item.id}}">✏️</button>
+  <button data-action="deleteItem" data-item-id="{{item.id}}">🗑️</button>
 </td>
 
 </tr>
@@ -315,6 +327,7 @@ max="{{#if (lookup ../system.attributes item.system.max)}}
 <th>Equipped</th>
 <th>Damage</th>
 <th>Attack</th>
+<th></th>
 </tr>
 </thead>
 
@@ -334,57 +347,56 @@ max="{{#if (lookup ../system.attributes item.system.max)}}
 <td>{{item.system.parryBonus}}</td>
 
 <td>
-<input
-  type="checkbox"
-  data-action="toggleOffhand"
-  data-item-id="{{item.id}}"
-  {{checked item.system.offhand}}>
-</td>
-<td>
-<input type="checkbox"
-  data-action="toggleWeaponEquip"
-  data-item-id="{{item.id}}"
-  {{checked item.system.equipped}}>
+  <input
+    type="checkbox"
+    data-action="toggleOffhand"
+    data-item-id="{{item.id}}"
+    {{checked item.system.offhand}}>
 </td>
 
 <td>
+  <input
+    type="checkbox"
+    data-action="toggleWeaponEquip"
+    data-item-id="{{item.id}}"
+    {{checked item.system.equipped}}>
+</td>
 
-{{!-- SB --}}
-{{#if (includes item.system.damage "SB")}}
-  {{../system.attributes.strength.bonus}}
-{{/if}}
-
-{{!-- base weapon --}}
-{{#if item.system.damage}}
-  {{#unless (includes item.system.damage "SB")}}
-    {{item.system.damage}}
-  {{else}}
-    {{!-- retire SB visuellement --}}
-    {{#if (gt (toNumber (replace item.system.damage "SB" "")) 0)}}
-      + {{replace item.system.damage "SB" ""}}
-    {{/if}}
-  {{/unless}}
-{{/if}}
-
-{{!-- dice --}}
-{{#if item.system.damageDice}}
-  + {{item.system.damageDice}}
-{{/if}}
-
-{{!-- SIGN --}}
-{{#if item.system.usesSB}}
-  {{#if ../signEffects.damageBonus}}
-    + {{../signEffects.damageBonus}}
+<td>
+  {{#if (includes item.system.damage "SB")}}
+    {{../system.attributes.strength.bonus}}
   {{/if}}
-{{/if}}
 
+  {{#if item.system.damage}}
+    {{#unless (includes item.system.damage "SB")}}
+      {{item.system.damage}}
+    {{else}}
+      {{#if (gt (toNumber (replace item.system.damage "SB" "")) 0)}}
+        + {{replace item.system.damage "SB" ""}}
+      {{/if}}
+    {{/unless}}
+  {{/if}}
+
+  {{#if item.system.damageDice}}
+    + {{item.system.damageDice}}
+  {{/if}}
+
+  {{#if item.system.usesSB}}
+    {{#if ../signEffects.damageBonus}}
+      + {{../signEffects.damageBonus}}
+    {{/if}}
+  {{/if}}
 </td>
 
-
 <td>
-<button data-action="weaponAttack" data-item-id="{{item.id}}">
-Attack
-</button>
+  <button data-action="weaponAttack" data-item-id="{{item.id}}">
+    Attack
+  </button>
+</td>
+
+<td class="item-actions">
+  <button data-action="editItem" data-item-id="{{item.id}}">✏️</button>
+  <button data-action="deleteItem" data-item-id="{{item.id}}">🗑️</button>
 </td>
 
 </tr>
@@ -410,6 +422,7 @@ Attack
 <th>L Leg</th>
 <th>R Leg</th>
 <th>Worn</th>
+<th></th>
 </tr>
 </thead>
 
@@ -423,24 +436,25 @@ Attack
 <td>{{item.name}}</td>
 
 <td>{{item.system.AP.head}}</td>
-
 <td>{{item.system.AP.body}}</td>
-
 <td>{{item.system.AP.leftArm}}</td>
-
 <td>{{item.system.AP.rightArm}}</td>
-
 <td>{{item.system.AP.leftLeg}}</td>
-
 <td>{{item.system.AP.rightLeg}}</td>
 
 <td>
-<input
-  type="checkbox"
-  data-action="toggleArmor"
-  data-item-id="{{item.id}}"
-  {{checked item.system.worn.value}}>
+  <input
+    type="checkbox"
+    data-action="toggleArmor"
+    data-item-id="{{item.id}}"
+    {{checked item.system.worn.value}}>
 </td>
+
+<td class="item-actions">
+  <button data-action="editItem" data-item-id="{{item.id}}">✏️</button>
+  <button data-action="deleteItem" data-item-id="{{item.id}}">🗑️</button>
+</td>
+
 </tr>
 
 {{/if}}
@@ -705,10 +719,16 @@ Attack
        {{checked item.system.completed}}>
 </td>
 
-<td>
-<button data-action="deleteItem" data-item-id="{{item.id}}">
-🗑️
-</button>
+<td class="item-actions">
+
+  <button data-action="editItem" data-item-id="{{item.id}}">
+    ✏️
+  </button>
+
+  <button data-action="deleteItem" data-item-id="{{item.id}}">
+    🗑️
+  </button>
+
 </td>
 
 </tr>

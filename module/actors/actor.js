@@ -479,6 +479,29 @@ system.derived.evasion.value = Math.max(finalEvasion, 0);
 
 const sign = this.items.find(i => i.type === "sign");
 
+// =========================
+// MANA CALCULATION
+// =========================
+
+const wpb = this.system.attributes.willpower?.bonus || 0;
+const level = this.system.details?.level || 0;
+
+// table non linéaire
+const manaMultiplier = {
+  0: 3,
+  1: 4,
+  2: 5,
+  3: 6,
+  4: 8,
+  5: 10
+};
+
+// fallback si level > 5
+const multiplier = manaMultiplier[level] ?? 10;
+
+this.system.resources.mana = this.system.resources.mana || {};
+
+this.system.resources.mana.max = wpb * multiplier;
 
   }
 

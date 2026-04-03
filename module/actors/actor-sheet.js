@@ -1,6 +1,7 @@
 import { SdpRoll } from "../rolls/roll.js";
 import { SdpAttack } from "../combat/attack.js";
 import { SDP } from "../system/config.js";
+import { SimpleDialog } from "../apps/simple-dialog.js";
 
 const { ActorSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -1002,82 +1003,76 @@ if (current >= max) {
 
 root.querySelectorAll('[data-action="updateXP"]').forEach(el => {
 
-  el.addEventListener("change", async (event) => {
+el.addEventListener("change", async (event) => {
 
-    if (!game.user.isGM) return;
+  if (!game.user.isGM) return;
 
-    const input = event.currentTarget;
-    const type = input.dataset.type;
+  const input = event.currentTarget;
+  const type = input.dataset.type;
 
-    const newValue = Number(input.value) || 0;
+  const newValue = Number(input.value) || 0;
 
-    const xp = this.document.system.details.experience;
+  const xp = this.document.system.details.experience;
 
-    let oldValue = 0;
+  let oldValue = 0;
 
-    if (type === "total") oldValue = xp.total || 0;
-    if (type === "spent") oldValue = xp.spent || 0;
+  if (type === "total") oldValue = xp.total || 0;
+  if (type === "spent") oldValue = xp.spent || 0;
 
-    const diff = newValue - oldValue;
+  const diff = newValue - oldValue;
 
-    if (diff === 0) return;
+  if (diff === 0) return;
 
-    // =========================
-    // POPUP
-    // =========================
+  // 🔥 IMPORTANT : rollback visuel
+  input.value = oldValue;
 
-    new Dialog({
-      title: "XP Modification",
-      content: `
-        <p>Reason for XP change (${diff > 0 ? "+" : ""}${diff} XP):</p>
-        <input type="text" id="xp-reason" style="width:100%">
-      `,
-      buttons: {
-        ok: {
-          label: "Confirm",
-          callback: async (html) => {
+  new SimpleDialog({
+    title: "XP Change",
+    content: `
+      <p>Change: ${diff > 0 ? "+" : ""}${diff} XP</p>
 
-            const reason = html.find("#xp-reason").val() || "No reason";
+      <label>Reason</label>
+      <input type="text" id="xp-reason" placeholder="Reason..." />
+    `,
+    buttons: {
+      confirm: {
+        label: "Apply",
+        callback: async (app) => {
 
-            // =========================
-            // APPLY
-            // =========================
+          const reason = app.element.querySelector("#xp-reason").value || "";
 
-            if (type === "total") {
-              await this.document.update({
-                "system.details.experience.total": newValue
-              });
-            }
+          const actor = this.document;
 
-            if (type === "spent") {
-              await this.document.update({
-                "system.details.experience.spent": newValue
-              });
-            }
-
-            // =========================
-            // LOG
-            // =========================
-
-            await this._addXPLog({
-              type: diff > 0 ? "spend" : "refund",
-              amount: Math.abs(diff),
-              target: type === "total" ? "XP Total" : "XP Spent",
-              old: oldValue,
-              value: newValue,
-              reason
+          if (type === "total") {
+            await actor.update({
+              "system.details.experience.total": newValue
             });
-
           }
-        },
-        cancel: {
-          label: "Cancel"
+
+          if (type === "spent") {
+            await actor.update({
+              "system.details.experience.spent": newValue
+            });
+          }
+
+          await this._addXPLog({
+            type: diff > 0 ? "gain" : "refund",
+            amount: Math.abs(diff),
+            target: type.toUpperCase(),
+            old: oldValue,
+            value: newValue,
+            reason
+          });
+
         }
       },
-      default: "ok"
-    }).render(true);
+      cancel: {
+        label: "Cancel"
+      }
+    }
+  }).render(true);
 
-  });
+});
 
 });
 

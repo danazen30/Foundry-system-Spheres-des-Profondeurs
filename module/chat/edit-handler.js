@@ -1,50 +1,60 @@
+import { SimpleDialog } from "../apps/simple-dialog.js";
+
 export function registerEditHandlers(html, message) {
 
-html.find(".edit-roll").click(async ev => {
+  // =========================
+  // EDIT ROLL
+  // =========================
 
-  const card = ev.currentTarget.closest(".sdp-roll");
+  html.find(".edit-roll").click(async ev => {
 
-  const currentTarget = Number(card.dataset.target);
-  const currentRoll = Number(card.dataset.roll);
+    const card = ev.currentTarget.closest(".sdp-roll");
 
-  new Dialog({
+    const currentTarget = Number(card.dataset.target);
+    const currentRoll = Number(card.dataset.roll);
 
-    title: "Edit Roll",
+    new SimpleDialog({
 
-    content: `
-      <label>Target</label>
-      <input type="number" name="target" value="${currentTarget}"/>
+      title: "Edit Roll",
 
-      <label>Roll</label>
-      <input type="number" name="roll" value="${currentRoll}"/>
-    `,
+      content: `
+        <label>Target</label>
+        <input type="number" name="target" value="${currentTarget}"/>
 
-    buttons: {
+        <label>Roll</label>
+        <input type="number" name="roll" value="${currentRoll}"/>
+      `,
 
-      apply: {
-        label: "Apply",
-        callback: async (htmlDialog) => {
+      buttons: {
+        apply: {
+          label: "Apply",
+          callback: async (app) => {
 
-          const newTarget = Number(htmlDialog.find('[name="target"]').val());
-          const newRoll = Number(htmlDialog.find('[name="roll"]').val());
+            const newTarget = Number(
+              app.element.querySelector('[name="target"]').value
+            );
 
-          const SL =
-            Math.floor(newTarget / 10) -
-            Math.floor(newRoll / 10);
+            const newRoll = Number(
+              app.element.querySelector('[name="roll"]').value
+            );
 
-          const success = newRoll <= newTarget;
+            const SL =
+              Math.floor(newTarget / 10) -
+              Math.floor(newRoll / 10);
 
-          const message = game.messages.get(
-  ev.currentTarget.closest(".message").dataset.messageId
-);
+            const success = newRoll <= newTarget;
 
-const oldTarget = Number(card.dataset.target);
-const oldRoll = Number(card.dataset.roll);
+            const message = game.messages.get(
+              ev.currentTarget.closest(".message").dataset.messageId
+            );
 
-const actor = game.actors.get(card.dataset.actor);
-const label = card.querySelector("h3")?.textContent || actor.name;
+            const oldTarget = Number(card.dataset.target);
+            const oldRoll = Number(card.dataset.roll);
 
-const newHtml = `
+            const actor = game.actors.get(card.dataset.actor);
+            const label = card.querySelector("h3")?.textContent || actor.name;
+
+            const newHtml = `
 <div class="sdp-roll"
      data-target="${newTarget}"
      data-roll="${newRoll}"
@@ -67,98 +77,101 @@ const newHtml = `
 </div>
 `;
 
-await message.update({ content: newHtml });
+            await message.update({ content: newHtml });
 
+          }
         }
       }
 
-    }
+    }).render(true);
 
-  }).render(true);
+  });
 
-});
+  // =========================
+  // EDIT ATTACK
+  // =========================
 
-html.find(".edit-attack").click(async ev => {
+  html.find(".edit-attack").click(async ev => {
 
-  const card = ev.currentTarget.closest(".sdp-attack");
+    const card = ev.currentTarget.closest(".sdp-attack");
 
-  const oldRoll = Number(card.dataset.roll);
-  const oldAttack = Number(card.dataset.attack);
+    const oldRoll = Number(card.dataset.roll);
+    const oldAttack = Number(card.dataset.attack);
 
-  const roll = Number(card.dataset.roll);
-  const baseAttack = Number(card.dataset.baseattack);
+    const roll = Number(card.dataset.roll);
 
-new Dialog({
+    new SimpleDialog({
 
-  title: "Edit Attack",
+      title: "Edit Attack",
 
-  content: `
-  ${card.dataset.type === "ranged" ? `
-    <label>Target</label>
-    <input type="number" name="target" value="${card.dataset.testtarget || 0}"/>
-  ` : ""}
+      content: `
+      ${card.dataset.type === "ranged" ? `
+        <label>Target</label>
+        <input type="number" name="target" value="${card.dataset.testtarget || 0}"/>
+      ` : ""}
 
-  <label>Roll</label>
-  <input type="number" name="roll" value="${roll}"/>
-`,
+      <label>Roll</label>
+      <input type="number" name="roll" value="${roll}"/>
+      `,
 
-    buttons: {
+      buttons: {
+        apply: {
+          label: "Apply",
+          callback: async (app) => {
 
-      apply: {
-        label: "Apply",
-        callback: async (htmlDialog) => {
+            const type = card.dataset.type;
 
-          const type = card.dataset.type;
+            const newRoll = Number(
+              app.element.querySelector('[name="roll"]').value
+            );
 
-const newRoll = Number(htmlDialog.find('[name="roll"]').val());
+            let target;
 
-let target;
+            if(type === "ranged"){
+              target = Number(
+                app.element.querySelector('[name="target"]').value
+              );
+            } else {
+              target = Number(card.dataset.baseattack);
+            }
 
-if(type === "ranged"){
-  target = Number(htmlDialog.find('[name="target"]').val());
-}else{
-  target = Number(card.dataset.baseattack);
-}
+            let newHtml = "";
 
-let newHtml = "";
+            if(type === "ranged"){
 
-if(type === "ranged"){
+              const SL = Math.floor(target / 10) - Math.floor(newRoll / 10);
+              const success = newRoll <= target;
 
-  const SL = Math.floor(target / 10) - Math.floor(newRoll / 10);
-  const success = newRoll <= target;
+              const actor = game.actors.get(card.dataset.actor);
+              const weapon = actor.items.get(card.dataset.weapon);
 
-  const oldRoll = Number(card.dataset.roll);
+              const crit = {
+                success: newRoll >= 1 && newRoll <= 5,
+                failure: newRoll >= 96
+              };
 
-  const actor = game.actors.get(card.dataset.actor);
-const weapon = actor.items.get(card.dataset.weapon);
+              let critText = "";
+              if(crit.success){
+                critText = `<p><strong>CRITICAL SUCCESS</strong></p>`;
+              }
+              if(crit.failure){
+                critText = `<p><strong>CRITICAL FAILURE</strong></p>`;
+              }
 
-const crit = {
-  success: newRoll >= 1 && newRoll <= 5,
-  failure: newRoll >= 96
-};
+              let damageButton = "";
 
-let critText = "";
-if(crit.success){
-  critText = `<p><strong>CRITICAL SUCCESS</strong></p>`;
-}
-if(crit.failure){
-  critText = `<p><strong>CRITICAL FAILURE</strong></p>`;
-}
+              if(success){
+                damageButton = `
+                <button class="roll-damage"
+                  data-actor="${card.dataset.actor}"
+                  data-weapon="${card.dataset.weapon}"
+                  data-target="${card.dataset.target}">
+                  Roll Damage
+                </button>
+                `;
+              }
 
-let damageButton = "";
-
-if(success){
-  damageButton = `
-  <button class="roll-damage"
-    data-actor="${card.dataset.actor}"
-    data-weapon="${card.dataset.weapon}"
-    data-target="${card.dataset.target}">
-    Roll Damage
-  </button>
-  `;
-}
-
-newHtml = `
+              newHtml = `
 <div class="sdp-attack"
      data-type="ranged"
      data-roll="${newRoll}"
@@ -189,36 +202,33 @@ newHtml = `
 </div>
 `;
 
+            } else {
 
+              const tens = Math.floor(newRoll / 10);
+              const SL = (newRoll === 100) ? 0 : 10 - tens;
 
-}else{
+              const baseAttack = Number(card.dataset.baseattack);
+              const meleeBonus = Number(card.dataset.meleebonus || 0);
 
-  const tens = Math.floor(newRoll / 10);
-const SL = (newRoll === 100) ? 0 : 10 - tens;
+              const attackScore = baseAttack + meleeBonus + SL;
 
-const baseAttack = Number(card.dataset.baseattack);
-const meleeBonus = Number(card.dataset.meleebonus || 0);
+              const actor = game.actors.get(card.dataset.actor);
+              const weapon = actor.items.get(card.dataset.weapon);
 
-const attackScore = baseAttack + meleeBonus + SL;
-const roll = Number(card.dataset.roll);
+              const crit = {
+                success: newRoll >= 1 && newRoll <= 5,
+                failure: newRoll >= 96
+              };
 
-const actor = game.actors.get(card.dataset.actor);
-const weapon = actor.items.get(card.dataset.weapon);
+              let critText = "";
+              if(crit.success){
+                critText = `<p><strong>CRITICAL SUCCESS</strong></p>`;
+              }
+              if(crit.failure){
+                critText = `<p><strong>CRITICAL FAILURE</strong></p>`;
+              }
 
-const crit = {
-  success: newRoll >= 1 && newRoll <= 5,
-  failure: newRoll >= 96
-};
-
-let critText = "";
-if(crit.success){
-  critText = `<p><strong>CRITICAL SUCCESS</strong></p>`;
-}
-if(crit.failure){
-  critText = `<p><strong>CRITICAL FAILURE</strong></p>`;
-}
-
-newHtml = `
+              newHtml = `
 <div class="sdp-attack"
      data-type="melee"
      data-roll="${newRoll}"
@@ -237,28 +247,32 @@ newHtml = `
   <button class="edit-attack">Edit</button>
 
   <p>Roll: ${newRoll} (${oldRoll})</p>
-<p>SL: ${SL}</p>
-<p>Attack Score: ${attackScore} (${oldAttack})</p>
+  <p>SL: ${SL}</p>
+  <p>Attack Score: ${attackScore} (${oldAttack})</p>
 
-<p>Location: ${CONFIG.SDP.hitLocations[card.dataset.location]}</p>
+  <p>Location: ${CONFIG.SDP.hitLocations[card.dataset.location]}</p>
 
-${critText}
+  ${critText}
 
-<button class="apply-defense">Apply Defense</button>
+  <button class="apply-defense">Apply Defense</button>
 
 </div>
 `;
 
-}
+            }
 
-await message.update({ content: newHtml });
+            const message = game.messages.get(
+              ev.currentTarget.closest(".message").dataset.messageId
+            );
 
+            await message.update({ content: newHtml });
+
+          }
         }
       }
 
-    }
+    }).render(true);
 
-  }).render(true);
+  });
 
-});
 }
