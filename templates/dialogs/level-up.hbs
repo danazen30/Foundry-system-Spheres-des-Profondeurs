@@ -1,0 +1,32 @@
+<div class="level-up-container" style="max-height: 350px; overflow-y: auto;">
+
+  <h2>Level Up → {{level}}</h2>
+
+  <p>Health Gain:</p>
+
+  <button data-action="roll">
+    Roll {{dice}}
+  </button>
+
+  <button data-action="average">
+    Take Average ({{average}})
+  </button>
+
+{{#if (ne signDice null)}}
+  <hr>
+
+  <h3>Sign Bonus</h3>
+
+  <p>Dice: {{signDice}}</p>
+
+  <button data-action="sign-roll">Roll Sign</button>
+  <button data-action="sign-average">Average Sign ({{signAverage}})</button>
+{{/if}}
+
+<hr>
+
+<button data-action="confirm">
+  Confirm Level Up
+</button>
+
+</div>

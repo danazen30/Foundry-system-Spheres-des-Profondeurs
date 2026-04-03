@@ -56,6 +56,7 @@ export class SdpActor extends Actor {
     system.health ??= {};
     system.health.value ??= 8;
     system.health.max ??= 8;
+    system.health.levelBonus ??= 0;
 
     // =====================
     // RESOURCES DEFAULT
@@ -81,6 +82,45 @@ export class SdpActor extends Actor {
     system.conditionOverride ??= {};
   }
 
+getSign() {
+  return this.items.find(i => i.type === "sign");
+}
+
+getSignEffects() {
+
+  const sign = this.getSign();
+  if (!sign) return {};
+
+  const level = this.system.details.level || 0;
+  const levels = sign.system.levels || {};
+
+  let effects = {
+  damageBonus: null,
+  inspirationDice: null
+};
+
+  const lvl = levels[level];
+
+if (!lvl) return effects;
+
+// =========================
+// DAMAGE BONUS (OVERRIDE)
+// =========================
+
+if (lvl.damageBonus) {
+  effects.damageBonus = lvl.damageBonus;
+}
+
+// =========================
+// INSPIRATION DICE (OVERRIDE)
+// =========================
+
+if (lvl.inspirationDice) {
+  effects.inspirationDice = lvl.inspirationDice;
+}
+
+  return effects;
+}
 
   // =====================
   // ITEM MODIFIERS (ATTRIBUTES)
@@ -130,6 +170,7 @@ export class SdpActor extends Actor {
     super.prepareDerivedData();
 
 const system = this.system;
+
 
 // =====================
 // CUSTOM MODIFIERS
@@ -209,17 +250,22 @@ for (const key in system.conditions) {
     const SB = system.attributes.strength.bonus;
     const WPB = system.attributes.willpower.bonus;
 
-    const maxHealth = (TB * 2) + SB + WPB;
+    const baseHealth = (TB * 2) + SB + WPB;
 
-    system.health.max = maxHealth;
+// NEW
+const levelBonus = system.health.levelBonus ?? 0;
 
-    if (system.health.value == null) {
-      system.health.value = maxHealth;
-    }
+system.health.max = baseHealth + levelBonus;
 
-    if (system.health.value > maxHealth) {
-      system.health.value = maxHealth;
-    }
+const finalMax = system.health.max;
+
+if (system.health.value == null) {
+  system.health.value = finalMax;
+}
+
+if (system.health.value > finalMax) {
+  system.health.value = finalMax;
+}
 
     // =====================
     // SKILLS
@@ -256,6 +302,8 @@ for (const key in system.conditions) {
     const weapons = this.items.filter(i => i.type === "weapon");
 
     for (let weapon of weapons) {
+
+      weapon.system.usesSB = weapon.system.damage?.includes("SB");
 
       let formula = weapon.system.damage || "0";
       formula = formula.replace("SB", SB_damage);
@@ -428,6 +476,10 @@ system.derived.evasion.value = Math.max(finalEvasion, 0);
     if (currentMove === 0 && slowed > 0) {
       system.conditions.entangled = true;
     }
+
+const sign = this.items.find(i => i.type === "sign");
+
+
   }
 
   // =====================

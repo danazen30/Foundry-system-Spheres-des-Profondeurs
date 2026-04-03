@@ -11,10 +11,15 @@ import { SdpInjurySheet } from "./items/injury-sheet.js";
 import { SdpSkillSheet } from "./items/skill-sheet.js";
 import { SdpCareerSheet } from "./items/career-sheet.js";
 import { SdpSpecieSheet } from "./items/specie-sheet.js";
+import { SdpSignSheet } from "./items/sign-sheet.js";
 import { SdpItem } from "./items/item.js";
 
 import { SdpRoll } from "./rolls/roll.js";
 import { SdpDamage } from "./combat/damage.js";
+
+import { SdpLevelService } from "./services/level-service.js";
+
+import { LevelUpApp } from "./apps/level-up-app.js";
 
 import { SDP } from "./system/config.js";
 import { SdpConditionEngine } from "./system/condition-engine.js";
@@ -101,6 +106,11 @@ Items.registerSheet("sdp", SdpCareerSheet, {
   makeDefault: true
 });
 
+Items.registerSheet("sdp", SdpSignSheet, {
+  types: ["sign"],
+  makeDefault: true
+});
+
 Handlebars.registerHelper("gte", function(a, b) {
   return a >= b;
 });
@@ -169,6 +179,11 @@ Hooks.once("ready", () => {
   game.sdp = game.sdp || {};
   game.sdp.conditions = SdpConditionEngine;
   game.sdp.turn = SdpTurnEngine;
+  game.sdp = {
+  ...game.sdp,
+  level: SdpLevelService
+};
+game.sdp.levelUpApp = LevelUpApp;
 
 });
 

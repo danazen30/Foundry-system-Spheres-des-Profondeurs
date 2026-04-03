@@ -8,7 +8,10 @@ export function registerChatHandlers() {
 
 
 
-Hooks.on("renderChatMessage", (message, html) => {
+Hooks.on("renderChatMessageHTML", (message, html) => {
+
+  // 🔥 compat jQuery TEMPORAIRE
+  html = $(html);
 
   registerDamageHandlers(html, message);
   registerConditionHandlers(html, message);
@@ -101,7 +104,6 @@ html.find(".sdp-stop-opposed").click(ev => {
   ui.notifications.info("Opposition cleared");
 
 });
-
 
 });
 

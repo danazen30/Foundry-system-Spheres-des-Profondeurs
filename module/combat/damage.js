@@ -10,6 +10,7 @@ export class SdpDamage {
 
     const dice = weapon.system.damageDice || "";
 
+
     if(dice){
       return `${baseFormula} + ${dice}`;
     }
@@ -17,6 +18,7 @@ export class SdpDamage {
     return baseFormula;
 
   }
+
 
   static async applyDamage(target, damage){
 
@@ -122,14 +124,36 @@ static async rollDamage({ actor, weapon, target, location, critical, brutal }) {
   // =========================
   // BUILD FORMULA
   // =========================
-  let formula = "";
+let formula = "";
 
-  if (useSB) formula += `${SB}`;
-  if (baseWeapon > 0) formula += (formula ? " + " : "") + baseWeapon;
-  if (diceFormula) formula += (formula ? " + " : "") + diceFormula;
+if (useSB) formula += `${SB}`;
+if (baseWeapon > 0) formula += (formula ? " + " : "") + baseWeapon;
+if (diceFormula) formula += (formula ? " + " : "") + diceFormula;
 
-  const roll = await (new Roll(formula)).roll();
-  let damage = roll.total;
+// =========================
+// SIGN BONUS (AVANT ROLL)
+// =========================
+const signEffects = actor.getSignEffects();
+let bonus = signEffects.damageBonus || null;
+
+if (useSB && bonus) {
+
+  if (typeof bonus === "string" && bonus.includes("d")) {
+    formula += (formula ? " + " : "") + bonus;
+  } else {
+    formula += (formula ? " + " : "") + Number(bonus);
+  }
+
+}
+
+// =========================
+// ROLL FINAL
+// =========================
+const roll = new Roll(formula);
+await roll.evaluate();
+
+let damage = roll.total;
+
 
   // =========================
   // BRUTAL

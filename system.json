@@ -82,6 +82,14 @@
       "system": "sdp",
       "path": "packs/careers",
       "type": "Item"
+    },
+
+    {
+      "name": "sign",
+      "label": "SDP Sign",
+      "system": "sdp",
+      "path": "packs/sign",
+      "type": "Item"
     }
 
   ],
@@ -120,7 +128,8 @@
       "spell": {},
       "injury": {},
       "specie": {},
-      "career": {}
+      "career": {},
+      "sign":{}
     }
   }
 }

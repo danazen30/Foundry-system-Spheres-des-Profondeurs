@@ -349,10 +349,33 @@ max="{{#if (lookup ../system.attributes item.system.max)}}
 
 <td>
 
-{{item.system.finalDamage}}
+{{!-- SB --}}
+{{#if (includes item.system.damage "SB")}}
+  {{../system.attributes.strength.bonus}}
+{{/if}}
 
+{{!-- base weapon --}}
+{{#if item.system.damage}}
+  {{#unless (includes item.system.damage "SB")}}
+    {{item.system.damage}}
+  {{else}}
+    {{!-- retire SB visuellement --}}
+    {{#if (gt (toNumber (replace item.system.damage "SB" "")) 0)}}
+      + {{replace item.system.damage "SB" ""}}
+    {{/if}}
+  {{/unless}}
+{{/if}}
+
+{{!-- dice --}}
 {{#if item.system.damageDice}}
- + {{item.system.damageDice}}
+  + {{item.system.damageDice}}
+{{/if}}
+
+{{!-- SIGN --}}
+{{#if item.system.usesSB}}
+  {{#if ../signEffects.damageBonus}}
+    + {{../signEffects.damageBonus}}
+  {{/if}}
 {{/if}}
 
 </td>
@@ -535,6 +558,37 @@ Attack
     <input type="text" name="system.details.standing.value" value="{{system.details.standing.value}}">
   </div>
 
+  <div>
+  <label>Sign:</label>
+  {{#if sign}}
+  <span>{{sign.name}}</span>
+{{else}}
+  <span>No Sign</span>
+{{/if}}
+</div>
+
+  <div class="level-progression">
+
+  <h3>Level Progression</h3>
+
+  {{#if levelProgression.length}}
+    <ul>
+      {{#each levelProgression}}
+        <li>
+  <strong>Level {{this.level}}</strong> → +{{this.hp}} HP
+
+  {{#if this.description}}
+    <p class="level-desc">{{this.description}}</p>
+  {{/if}}
+</li>
+      {{/each}}
+    </ul>
+  {{else}}
+    <p>No level progression yet</p>
+  {{/if}}
+
+</div>
+
 </div>
 
 <h2>Experience</h2>
@@ -572,7 +626,32 @@ Attack
     >
   </div>
 
+  <div class="xp-bar">
+
+  <div class="xp-label">
+    XP: {{xpBar.value}}
+    {{#if xpBar.nextXP}}
+      / {{xpBar.nextXP}}
+    {{else}}
+      (MAX)
+    {{/if}}
+  </div>
+
+  <div class="xp-bar-bg">
+    <div class="xp-bar-fill" style="width: {{xpBar.percent}}%;"></div>
+  </div>
+
 </div>
+
+</div>
+
+{{#if canLevelUp}}
+  <div class="level-up">
+    <button data-action="levelUp">
+      Level Up Available → {{availableLevel}}
+    </button>
+  </div>
+{{/if}}
 
 <h3>XP Log</h3>
 

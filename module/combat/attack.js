@@ -5,6 +5,7 @@ export class SdpAttack {
 
 static async attackTest(actor, weapon, attackValue){
 const dialogMods = game.sdp?.dialogModifiers || {};
+const inspiration = dialogMods.inspiration || 0;
   // ======================
 // STUNNED CHECK
 // ======================
@@ -168,7 +169,7 @@ if (result === 100) {
 }
 
 // 🎯 attack score final
-const attackScore = baseAttack + meleeBonus + SL + bonus;
+const attackScore = baseAttack + meleeBonus + SL + bonus + inspiration;
 
 
 
@@ -202,6 +203,7 @@ if(crit.failure){
 
   <p>Roll: ${result}</p>
   <p>SL: ${SL}</p>
+  <p>Inspiration: +${inspiration}</p>
   <p>Location: ${CONFIG.SDP.hitLocations[hitLocation.location]} (${hitLocation.roll.total})</p>
   ${critText}
   <p>Attack Score: ${attackScore}</p>

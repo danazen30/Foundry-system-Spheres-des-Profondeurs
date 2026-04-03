@@ -149,9 +149,9 @@
           "label": "Sign",
           "value": ""
         },
-        "affinity": {
+        "ascending": {
           "type": "string",
-          "label": "Affinity",
+          "label": "Ascending",
           "value": ""
         },
         "motivation": {
@@ -745,6 +745,25 @@
       "completed": false,
       "careerGroup": "",
       "standing": ""
+    },
+    "sign": {
+      "templates": [
+        "description",
+        "gmNotes",
+        "playerNotes"
+      ],
+
+      "attribute": {
+        "type": "string",
+        "label": "Attribute",
+        "value": ""
+      },
+
+      "levels": {
+        "type": "object",
+        "value": {},
+        "description": ""
+      }
     }
   }
 }

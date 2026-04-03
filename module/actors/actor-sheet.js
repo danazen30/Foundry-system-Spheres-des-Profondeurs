@@ -67,6 +67,7 @@ _getTalentMax(item) {
 }
 
   async _prepareContext() {
+    const context = {};
     const attributes = SDP.ATTRIBUTE_ORDER.map(key => {
   return {
     key,
@@ -74,7 +75,11 @@ _getTalentMax(item) {
   };
 });
 
+const sign = this.document.getSign();
+const signEffects = this.actor.getSignEffects();
+
 const xp = this.document.system.details?.experience ?? {};
+
 
 const xpData = {
   total: xp.total ?? 0,
@@ -93,6 +98,21 @@ const currentCareer = this.document.items.find(
     i => i.type === "career" && i.system.current
   );
 
+  const xpTotal = xpData.total;
+const currentLevel = this.document.system.details?.level ?? 0;
+
+const nextXP = game.sdp.level.getNextLevelXP(currentLevel);
+const currentLevelXP = game.sdp.level.LEVELS.find(l => l.level === currentLevel)?.xp ?? 0;
+
+let xpProgress = 0;
+
+if (nextXP !== null) {
+  xpProgress = Math.min(
+    100,
+    Math.floor(((xpTotal - currentLevelXP) / (nextXP - currentLevelXP)) * 100)
+  );
+}
+
 return {
   actor: this.document,
   system: this.document.system,
@@ -101,7 +121,18 @@ return {
   currentCareer,
   skillMap,
   user: game.user,
-  xp: xpData
+  xp: xpData,
+  sign,
+  signEffects,
+  canLevelUp: game.sdp.level.canLevelUp(this.actor),
+  availableLevel: game.sdp.level.getAvailableLevel(this.actor),
+  levelProgression: this.document.system.details?.levelProgression ?? [],
+  xpBar: {
+  value: xpTotal,
+  currentLevel,
+  nextXP,
+  percent: xpProgress
+  }
 };
   }
 
@@ -275,31 +306,60 @@ else if (entry.type === "gain") {
     return `sdp-actor-sheet-${this.document.id}`;
   }
 
-  async _onDropItem(event, data) {
+async _onDropItem(event, data) {
 
   const item = await Item.fromDropData(data);
-
-  if (item.type !== "career") return super._onDropItem(event, data);
-
   const actor = this.document;
 
+  console.log("DROP ITEM:", item); // 🔥 debug
+
   // =========================
-  // CREATE CAREER ON ACTOR
+  // SIGN (FIX PRINCIPAL)
+  // =========================
+
+  if (item.type === "sign") {
+
+    // 🔥 supprime ancien sign (optionnel mais recommandé)
+    const existing = actor.items.find(i => i.type === "sign");
+    if (existing) await existing.delete();
+
+    // 🔥 ajoute le sign
+    const created = await actor.createEmbeddedDocuments("Item", [item.toObject()]);
+
+    console.log("SIGN ADDED:", created);
+
+    await this.render();
+
+    return created;
+  }
+
+  // =========================
+  // CAREER (ton code existant)
+  // =========================
+
+  if (item.type === "career") {
+
+    const created = await actor.createEmbeddedDocuments("Item", [item.toObject()]);
+    const career = created[0];
+
+    const hasCurrent = actor.items.some(i => i.type === "career" && i.system.current);
+
+    if (!hasCurrent) {
+      await this._applyCareer(career);
+    }
+
+    await this.render();
+
+    return created;
+  }
+
+  // =========================
+  // AUTRES ITEMS
   // =========================
 
   const created = await actor.createEmbeddedDocuments("Item", [item.toObject()]);
 
-  const career = created[0];
-
-  // =========================
-  // SET AS CURRENT IF NONE
-  // =========================
-
-  const hasCurrent = actor.items.some(i => i.type === "career" && i.system.current);
-
-if (!hasCurrent) {
-  await this._applyCareer(career);
-}
+  await this.render();
 
   return created;
 }
@@ -308,6 +368,7 @@ if (!hasCurrent) {
   super._onRender(context, options);
 
   const root = this.element;
+
 
   // ===== ATTRIBUTES =====
 root.querySelectorAll('[data-action="rollAttribute"]').forEach(el => {
@@ -325,6 +386,8 @@ root.querySelectorAll('[data-action="rollAttribute"]').forEach(el => {
     });
   });
 });
+
+
 
   // ===== SKILLS =====
   root.querySelectorAll('[data-action="rollSkill"]').forEach(el => {
@@ -1055,7 +1118,34 @@ root.querySelectorAll('[data-action="advanceTalent"]').forEach(el => {
   el.title = `Cost: ${cost} XP`;
 });
 
-}}
+// =========================
+// LEVEL UP BUTTON
+// =========================
 
+root.querySelectorAll('[data-action="levelUp"]').forEach(el => {
+
+  el.addEventListener("click", (event) => {
+
+    this._onLevelUp();
+
+  });
+
+});
+
+
+}
+
+_onLevelUp() {
+
+  const actor = this.document;
+
+  const newLevel = game.sdp.level.getAvailableLevel(actor);
+
+  const app = new game.sdp.levelUpApp(actor, newLevel);
+  app.render(true);
+
+}
+
+}
 
 

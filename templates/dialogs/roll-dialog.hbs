@@ -1,4 +1,4 @@
-<div class="sdp-roll-dialog">
+<div class="sdp-roll-dialog" style="overflow-y: auto; max-height: 100%;">
 
 <h2>{{label}}</h2>
 
@@ -47,7 +47,28 @@
 {{/each}}
 
 <!-- ===================== -->
-<!-- COMBAT -->
+<!-- INSPIRATION (GLOBAL) -->
+<!-- ===================== -->
+
+{{#if inspirationDice}}
+<div class="inspiration-block">
+  <h3>Inspiration</h3>
+
+  <p>Dice: {{inspirationDice}}</p>
+
+  <button data-action="rollInspiration">
+    Roll Inspiration
+  </button>
+
+  {{#if inspirationResult}}
+    <p><strong>Bonus SL:</strong> +{{inspirationResult}}</p>
+  {{/if}}
+
+</div>
+{{/if}}
+
+<!-- ===================== -->
+<!-- COMBAT ONLY -->
 <!-- ===================== -->
 
 {{#if isAttack}}
@@ -70,6 +91,10 @@
 
 {{/if}}
 
+<!-- ===================== -->
+<!-- CONDITIONS -->
+<!-- ===================== -->
+
 <h3>Conditions</h3>
 
 <p>Total: {{conditionMod}}</p>
@@ -80,8 +105,6 @@
 {{/each}}
 </ul>
 
-<h3>Situational Conditions</h3>
-
 {{#if actor.system.conditionTotals.deafened}}
 <label>
   <input type="checkbox" name="deafened">
@@ -89,10 +112,20 @@
 </label>
 {{/if}}
 
+<!-- ===================== -->
+<!-- RESULT -->
+<!-- ===================== -->
+
 <h3>Result Preview</h3>
 
 <p>Base: <span id="baseTarget">{{target}}</span></p>
 <p>Modifier: <span id="totalMod">0</span></p>
 <p><strong>Final: <span id="finalTarget">{{target}}</span></strong></p>
+
+<!-- ===================== -->
+<!-- BUTTON (TOUJOURS VISIBLE) -->
+<!-- ===================== -->
+
+<button data-action="roll">Roll</button>
 
 </div>
