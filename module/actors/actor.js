@@ -324,8 +324,10 @@ if (system.health.value > finalMax) {
     // =====================
 
     const equippedWeapons = this.items.filter(
-      i => i.type === "weapon" && i.system.equipped
-    );
+  i => i.type === "weapon" &&
+       i.system.equipped &&
+       i.system.category === "melee"
+);
 
     const OFFHAND_PENALTY = 20;
     const offhandPenalty =
@@ -382,15 +384,11 @@ if (system.health.value > finalMax) {
 
       const values = [];
 
-      for (let weapon of equippedWeapons) {
+     for (let weapon of equippedWeapons) {
 
-        const skill = getSkill(weapon.system.skill);
+  let base;
 
-        let base =
-          weapon.system.category === "ranged"
-            ? (skill?.system.value ?? system.attributes.rangedAbility.value)
-            : (skill?.system.value ?? system.attributes.meleeAbility.value);
-
+base = this._getBestWeaponSkill(weapon);
         let value = base + (Number(weapon.system.attackBonus || 0) * 10);
 
         if (weapon.system.offhand) value -= offhandPenalty;
@@ -531,12 +529,9 @@ getWeaponAttack(weapon) {
   // BASE
   // =========================
 
-  const skill = getSkill(weapon.system.skill);
+ let base;
 
-  let base =
-    weapon.system.category === "ranged"
-      ? (skill?.system.value ?? system.attributes.rangedAbility.value)
-      : (skill?.system.value ?? system.attributes.meleeAbility.value);
+base = this._getBestWeaponSkill(weapon);
 
   let value = base + (Number(weapon.system.attackBonus || 0) * 10);
 
@@ -555,6 +550,80 @@ getWeaponAttack(weapon) {
   }
 
   return value;
+}
+
+_getBestWeaponSkill(weapon) {
+
+  const actor = this;
+
+  let weaponSkills = [];
+
+  if (Array.isArray(weapon.system.skills)) {
+    weaponSkills = weapon.system.skills;
+  }
+  else if (typeof weapon.system.skill === "string") {
+    weaponSkills = weapon.system.skill
+      .split(",")
+      .map(s => s.trim().toLowerCase())
+      .filter(s => s.length > 0);
+  }
+
+  if (!weaponSkills.length) {
+    weaponSkills = [weapon.system.skill];
+  }
+
+  const actorSkills = actor.items.filter(i => i.type === "skill");
+
+  let bestValue = null;
+
+  // =========================
+  // DETERMINE BASE ATTRIBUTE
+  // =========================
+
+  const isRanged = weapon.system.category === "ranged";
+
+  const baseAttribute = isRanged
+    ? actor.system.attributes.rangedAbility.value
+    : actor.system.attributes.meleeAbility.value;
+
+  // =========================
+  // LOOP SKILLS
+  // =========================
+
+  for (const group of weaponSkills) {
+
+    const skill = actorSkills.find(s => {
+
+      const key = (s.system.key || "").trim().toLowerCase();
+      const name = (s.name || "").trim().toLowerCase();
+
+      return key === group || name === group;
+
+    });
+
+    if (!skill) continue;
+
+    const advances = Number(skill.system.advances || 0);
+    const modifier = Number(skill.system.modifier || 0);
+
+    // 🔥 NOUVEAU CALCUL
+    const candidateValue = baseAttribute + advances + modifier;
+
+    if (bestValue === null || candidateValue > bestValue) {
+      bestValue = candidateValue;
+    }
+
+  }
+
+  // =========================
+  // FALLBACK
+  // =========================
+
+  if (bestValue === null) {
+    return baseAttribute;
+  }
+
+  return bestValue;
 }
 
 }

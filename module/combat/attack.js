@@ -52,29 +52,42 @@ if (dialogMods.location) {
 
   if(isRanged){
 
-    const skillKey = weapon.system.skill;
+// =========================
+// BEST SKILL (MULTI SUPPORT)
+// =========================
 
-    const skill = actor.items.find(i =>
-      i.type === "skill" && i.system.key === skillKey
-    );
+const base = actor._getBestWeaponSkill(weapon);
 
-    let targetValue;
+const targetValue = base + (dialogMods.totalMod || 0);
 
-if(skill){
-  targetValue = skill.system.value + (dialogMods.totalMod || 0);
-}else{
-  targetValue = actor.system.attributes.rangedAbility.value + (dialogMods.totalMod || 0);
+// 🔥 juste pour affichage
+let source = "Ranged Ability";
+
+const weaponSkills = (weapon.system.skill || "")
+  .split(",")
+  .map(s => s.trim().toLowerCase());
+
+const actorSkills = actor.items.filter(i => i.type === "skill");
+
+let bestSkill = null;
+
+for (const group of weaponSkills) {
+
+  const skill = actorSkills.find(s =>
+    (s.system.key || "").toLowerCase() === group ||
+    (s.name || "").toLowerCase() === group
+  );
+
+  if (!skill) continue;
+
+  if (!bestSkill || skill.system.value > bestSkill.system.value) {
+    bestSkill = skill;
+  }
 }
 
-
-    let source;
-
-    if(skill){
-      source = skill.name;
-    }else{
-      source = "Ranged Ability";
-    }
-
+if (bestSkill) {
+  source = bestSkill.name;
+}
     const roll = await (new Roll("1d100")).roll();
 
     const result = roll.total;

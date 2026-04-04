@@ -405,28 +405,132 @@ root.querySelectorAll('[data-action="rollAttribute"]').forEach(el => {
   });
 
   // ===== ATTACK =====
-  root.querySelectorAll('[data-action="weaponAttack"]').forEach(el => {
-    el.addEventListener("click", (event) => {
-      const weapon = this.document.items.get(event.currentTarget.dataset.itemId);
-      const attackValue = this.document.system.derived.attack.value;
+root.querySelectorAll('[data-action="weaponAttack"]').forEach(el => {
+  el.addEventListener("click", (event) => {
 
-SdpRoll.openDialog({
-  actor: this.document,
-  type: "attack",
-  label: weapon.name,
-  target: attackValue,
-  weapon: weapon
-});
+    const weapon = this.document.items.get(event.currentTarget.dataset.itemId);
+
+    let target;
+
+    // =========================
+    // RANGED
+    // =========================
+
+    if (weapon.system.category === "ranged") {
+
+      target = this.document._getBestWeaponSkill(weapon);
+
+    }
+
+    // =========================
+    // MELEE
+    // =========================
+
+    else {
+
+      target = this.document.system.derived.attack.value;
+
+    }
+
+    SdpRoll.openDialog({
+      actor: this.document,
+      type: "attack",
+      label: weapon.name,
+      target: target,
+      weapon: weapon
     });
+
   });
+});
 
   // ===== CHECKBOXES =====
-  root.querySelectorAll('[data-action="toggleWeaponEquip"]').forEach(el => {
-    el.addEventListener("click", (event) => {
-      const item = this.document.items.get(event.currentTarget.dataset.itemId);
-      item.update({ "system.equipped": !item.system.equipped });
-    });
+root.querySelectorAll('[data-action="toggleWeaponEquip"]').forEach(el => {
+  el.addEventListener("click", async (event) => {
+
+  event.preventDefault(); // 🔥 bloque le toggle visuel
+  event.stopPropagation(); // 🔥 sécurité
+
+
+    const item = this.document.items.get(event.currentTarget.dataset.itemId);
+    const actor = this.document;
+
+    const isEquipping = !item.system.equipped;
+
+    if (!isEquipping) {
+      await item.update({ "system.equipped": false });
+      return;
+    }
+
+    const equipped = actor.items.filter(i =>
+      i.type === "weapon" &&
+      i.system.equipped &&
+      i.id !== item.id
+    );
+
+    const handed = (item.system.handedness || "").toLowerCase();
+
+    console.log("HAND:", handed);
+    console.log("EQUIPPED:", equipped.map(w => w.system.handedness));
+
+    // =========================
+    // SPECIAL
+    // =========================
+
+    if (handed === "special") {
+      await item.update({ "system.equipped": true });
+      return;
+    }
+
+    // =========================
+    // CHECK 2H EXIST
+    // =========================
+
+    const hasTwoHanded = equipped.some(w =>
+      (w.system.handedness || "").toLowerCase() === "two"
+    );
+
+    if (hasTwoHanded) {
+      ui.notifications.warn("2H weapon already equipped");
+      return;
+    }
+
+    // =========================
+    // EQUIP 2H
+    // =========================
+
+    if (handed === "two") {
+
+      const hasOther = equipped.some(w =>
+        (w.system.handedness || "").toLowerCase() !== "special"
+      );
+
+      if (hasOther) {
+        ui.notifications.warn("Cannot equip 2H with other weapons");
+        return;
+      }
+
+      await item.update({ "system.equipped": true });
+      return;
+    }
+
+    // =========================
+    // ONE HAND LIMIT
+    // =========================
+
+    const oneHandedCount = equipped.filter(w =>
+      (w.system.handedness || "").toLowerCase() === "one"
+    ).length;
+
+    if (oneHandedCount >= 2) {
+      ui.notifications.warn("Max 2 one-hand weapons");
+      return;
+    }
+
+    await item.update({ "system.equipped": true });
+this.render(); // 🔥 refresh UI
+
   });
+});
 
   root.querySelectorAll('[data-action="toggleOffhand"]').forEach(el => {
     el.addEventListener("click", (event) => {
