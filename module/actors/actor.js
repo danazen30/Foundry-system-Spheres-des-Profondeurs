@@ -78,6 +78,7 @@ export class SdpActor extends Actor {
 
     system.custom ??= {};
     system.custom.offhandReduction ??= 0;
+    system.custom.manaMultiplierBonus ??= 0;
 
     system.conditionOverride ??= {};
   }
@@ -170,7 +171,7 @@ if (lvl.inspirationDice) {
     super.prepareDerivedData();
 
 const system = this.system;
-
+system.custom.manaMultiplierBonus = 0;
 
 // =====================
 // CUSTOM MODIFIERS
@@ -199,6 +200,16 @@ for (const item of this.items.contents) {
         system.custom.offhandReduction += base * level * 10;
 
       }
+
+      if (change.key === "system.custom.manaMultiplierBonus") {
+
+  const base = Number(change.value || 0);
+
+  if (level > 0) {
+    system.custom.manaMultiplierBonus += base * level;
+  }
+
+}
 
     }
   }
@@ -484,6 +495,9 @@ const sign = this.items.find(i => i.type === "sign");
 const wpb = this.system.attributes.willpower?.bonus || 0;
 const level = this.system.details?.level || 0;
 
+console.log("Talent level:", level);
+console.log("Mana bonus:", system.custom.manaMultiplierBonus);
+
 // table non linéaire
 const manaMultiplier = {
   0: 3,
@@ -495,7 +509,11 @@ const manaMultiplier = {
 };
 
 // fallback si level > 5
-const multiplier = manaMultiplier[level] ?? 10;
+const baseMultiplier = manaMultiplier[level] ?? 10;
+
+const bonusMultiplier = system.custom.manaMultiplierBonus || 0;
+
+const multiplier = baseMultiplier + Math.max(0, bonusMultiplier);
 
 this.system.resources.mana = this.system.resources.mana || {};
 
