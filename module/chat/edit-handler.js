@@ -179,10 +179,21 @@ if (crit.failure){
     severity = "major";
   }
 
-  const hasDowngradeTalent = actor.items.some(i =>
-    i.type === "talent" &&
-    i.name.toLowerCase().includes("magic control")
+  const selectedTalents = JSON.parse(card.dataset.talents || "[]");
+
+const hasDowngradeTalent = actor.items.some(i => {
+  if (i.type !== "talent") return false;
+
+  // 🔥 IMPORTANT → doit être sélectionné
+  if (!selectedTalents.includes(i.id)) return false;
+
+  return Array.from(i.effects).some(e =>
+    Array.from(e.changes).some(c =>
+      c.key === "magicDowngrade" &&
+      ["true", true, 1, "1"].includes(c.value)
+    )
   );
+});
 
   if (magicType === "advanced" && hasDowngradeTalent){
     severity = "minor";

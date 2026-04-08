@@ -144,6 +144,8 @@ static async cast(actor, spell, baseValue){
 
   const dialogMods = game.sdp?.dialogModifiers || {};
 
+  const selectedTalents = dialogMods.talents || [];
+
     const system = spell.system;
 
   const magicType = system.magicType?.value ?? "minor";
@@ -198,10 +200,21 @@ if (crit.failure){
   // TALENT DOWNGRADE
   // ======================
 
-  const hasDowngradeTalent = actor.items.some(i =>
-    i.type === "talent" &&
-    i.name.toLowerCase().includes("magic control") // ← A ADAPTER
+  const selectedTalents = dialogMods.talents || [];
+
+const hasDowngradeTalent = actor.items.some(i => {
+  if (i.type !== "talent") return false;
+
+  // 🔥 IMPORTANT → doit être sélectionné
+  if (!selectedTalents.includes(i.id)) return false;
+
+  return Array.from(i.effects).some(e =>
+    Array.from(e.changes).some(c =>
+      c.key === "magicDowngrade" &&
+      ["true", true, 1, "1"].includes(c.value)
+    )
   );
+});
 
   if (magicType === "advanced" && hasDowngradeTalent){
     severity = "minor";
@@ -332,7 +345,8 @@ await actor.update({
      data-critical="${crit.success}"
      data-hasskill="${hasSkill}"
      data-weapon="${spell.id}"
-     data-location="${hitLocation.location}">
+     data-location="${hitLocation.location}"
+     data-talents='${JSON.stringify(selectedTalents)}'>
 
   <h3>${actor.name} casts ${spell.name}</h3>
 

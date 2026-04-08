@@ -53,6 +53,8 @@ export class SdpRollApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
     const conditions = this.actor.system.conditionTotals;
 
+  
+
     for (const key in conditions) {
 
       const value = conditions[key];
@@ -162,11 +164,16 @@ const diffValue = Number(difficulty) || 0;
 // SAVE MODIFIERS
 // =========================
 
+const selectedTalents = Array.from(
+  this.element.querySelectorAll('input[name="talent"]:checked')
+).map(el => el.value);
+
 game.sdp.dialogModifiers = {
   totalMod: modValue + diffValue,
   location: this.element.querySelector('[name="location"]')?.value || null,
   brutal: this.element.querySelector('[name="brutal"]')?.checked || false,
-  inspiration: this.inspirationResult
+  inspiration: this.inspirationResult,
+  talents: selectedTalents
 };
 
 // DEBUG
