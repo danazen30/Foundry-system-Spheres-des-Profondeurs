@@ -1,11 +1,12 @@
 import { SdpAttack } from "../combat/attack.js";
+import { SdpSpell } from "../combat/spell.js";
 
 const { ApplicationV2 } = foundry.applications.api;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 
 export class SdpRollApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
-  constructor({ actor, type, label, target, weapon }) {
+  constructor({ actor, type, label, target, weapon, spellData = null }) {
     super();
 
     this.actor = actor;
@@ -13,6 +14,7 @@ export class SdpRollApp extends HandlebarsApplicationMixin(ApplicationV2) {
     this.label = label;
     this.target = target;
     this.weapon = weapon;
+    this.spellData = spellData;
 
     this.inspirationResult = 0;
 
@@ -82,7 +84,8 @@ export class SdpRollApp extends HandlebarsApplicationMixin(ApplicationV2) {
       conditionMod,
       conditionDetails,
       inspirationDice: this.signEffects.inspirationDice,
-      inspirationResult: this.inspirationResult
+      inspirationResult: this.inspirationResult,
+       spellData: this.spellData
     };
   }
 
@@ -94,6 +97,20 @@ export class SdpRollApp extends HandlebarsApplicationMixin(ApplicationV2) {
     // =========================
     // INSPIRATION
     // =========================
+
+    const updatePreview = () => {
+  const mod = Number(root.querySelector('[name="customMod"]')?.value || 0);
+  const diff = Number(root.querySelector('[name="difficulty"]')?.value || 0);
+  const base = this.target || 0;
+
+  root.querySelector('#totalMod').textContent = mod + diff;
+  root.querySelector('#finalTarget').textContent = base + mod + diff;
+};
+
+root.querySelector('[name="customMod"]')?.addEventListener("input", updatePreview);
+root.querySelector('[name="difficulty"]')?.addEventListener("change", updatePreview);
+
+updatePreview();
 
     root.querySelector('[data-action="rollInspiration"]')?.addEventListener("click", async () => {
 
@@ -130,12 +147,30 @@ async _roll() {
 
   game.sdp = game.sdp || {};
 
-  game.sdp.dialogModifiers = {
-    totalMod: 0,
-    location: this.element.querySelector('[name="location"]')?.value || null,
-    brutal: this.element.querySelector('[name="brutal"]')?.checked || false,
-    inspiration: this.inspirationResult
-  };
+  // =========================
+// READ FORM VALUES
+// =========================
+
+const modInput = this.element.querySelector('[name="customMod"]')?.value || 0;
+const difficulty = this.element.querySelector('[name="difficulty"]')?.value || 0;
+
+// 🔥 conversion safe
+const modValue = Number(modInput) || 0;
+const diffValue = Number(difficulty) || 0;
+
+// =========================
+// SAVE MODIFIERS
+// =========================
+
+game.sdp.dialogModifiers = {
+  totalMod: modValue + diffValue,
+  location: this.element.querySelector('[name="location"]')?.value || null,
+  brutal: this.element.querySelector('[name="brutal"]')?.checked || false,
+  inspiration: this.inspirationResult
+};
+
+// DEBUG
+console.log("=== FINAL MODS ===", game.sdp.dialogModifiers);
 
   // =========================
   // ATTACK
@@ -143,13 +178,25 @@ async _roll() {
 
   if (this.type === "attack" && this.weapon) {
 
-    await SdpAttack.attackTest(
+  if (this.weapon.type === "spell") {
+
+    await SdpSpell.cast(
       this.actor,
       this.weapon,
       this.target
     );
 
   } else {
+
+    await SdpAttack.attackTest(
+      this.actor,
+      this.weapon,
+      this.target
+    );
+
+  }
+
+} else {
 
 // =========================
 // SKILL TEST (PROPRE)
@@ -158,7 +205,8 @@ async _roll() {
 const roll = await new Roll("1d100").roll();
 const result = roll.total;
 
-const target = this.target;
+const dialogMods = game.sdp?.dialogModifiers || {};
+const target = (this.target || 0) + (dialogMods.totalMod || 0);
 
 // SL
 let SL =

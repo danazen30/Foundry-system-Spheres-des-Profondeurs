@@ -140,6 +140,7 @@ if(crit.failure){
   <p>Test: ${source}</p>
   <p>Target: ${targetValue}</p>
   <p>Roll: ${result}</p>
+  
   ${critText}
 
   <p>Hit Location: ${CONFIG.SDP.hitLocations[hitLocation.location]} (${hitLocation.roll.total})</p>

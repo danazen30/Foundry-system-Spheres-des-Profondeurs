@@ -1,0 +1,106 @@
+<div class="sdp-item-sheet">
+
+<h1>
+  <input type="text" name="name" value="{{item.name}}" />
+</h1>
+
+<h2>Spell</h2>
+
+<div class="form-group">
+  <label>Magic Type</label>
+  <select name="system.magicType.value">
+  <option value="minor" {{#if (eq system.magicType.value "minor")}}selected{{/if}}>Minor</option>
+  <option value="advanced" {{#if (eq system.magicType.value "advanced")}}selected{{/if}}>Advanced</option>
+  <option value="superior" {{#if (eq system.magicType.value "superior")}}selected{{/if}}>Superior</option>
+</select>
+</div>
+
+<div class="form-group">
+  <label>Power (Mana Cost)</label>
+  <input type="number" name="system.power.value" value="{{system.power.value}}">
+</div>
+
+<div class="form-group">
+  <label>Magic</label>
+  <input type="text" name="system.magic.value" value="{{system.magic.value}}">
+</div>
+
+<div class="form-group">
+  <label>Range (meters)</label>
+  <input type="text" name="system.range.value" value="{{system.range.value}}">
+</div>
+
+<h3>Duration</h3>
+
+<div class="form-group">
+  <label>Concentration</label>
+  <input type="checkbox" name="system.concentration.value" {{checked system.concentration.value}}>
+</div>
+
+{{#unless system.concentration.value}}
+
+<div class="form-group">
+  <label>Value</label>
+  <input type="number" name="system.duration.value" value="{{system.duration.value}}">
+</div>
+
+<div class="form-group">
+  <label>Type</label>
+  <select name="system.duration.type">
+    {{selectOptions durationOptions selected=system.duration.type}}
+  </select>
+</div>
+
+<div class="form-group">
+  <label>Extendable</label>
+  <input type="checkbox" name="system.duration.extendable" {{checked system.duration.extendable}}>
+</div>
+
+{{/unless}}
+
+<h3>Target</h3>
+
+<div class="form-group">
+  <label>Area of Effect</label>
+  <input type="checkbox" name="system.aoe.value" {{checked system.aoe.value}}>
+</div>
+
+{{#if system.aoe.value}}
+
+<div class="form-group">
+  <label>Radius</label>
+  <input type="text" name="system.radius.value" value="{{system.radius.value}}">
+</div>
+
+{{else}}
+
+<div class="form-group">
+  <label>Targets</label>
+  <input type="number" name="system.target.value" value="{{system.target.value}}">
+</div>
+
+{{/if}}
+
+<h3>Damage</h3>
+
+<div class="form-group">
+  <label>Base</label>
+  <input type="number" name="system.damage.base.value" value="{{system.damage.base.value}}">
+</div>
+
+<div class="form-group">
+  <label>Dice</label>
+  <input type="text" name="system.damage.dice.value" value="{{system.damage.dice.value}}">
+</div>
+
+<h3>Advanced</h3>
+
+<div class="form-group">
+  <label>Overcast</label>
+  <input type="checkbox" name="system.overcast.value" {{checked system.overcast.value}}>
+</div>
+
+<h3>Description</h3>
+<textarea name="system.description">{{system.description}}</textarea>
+
+</div>

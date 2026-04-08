@@ -764,6 +764,84 @@
         "value": {},
         "description": ""
       }
+    },
+    "spell": {
+      "templates": [
+        "description",
+        "gmNotes",
+        "playerNotes"
+      ],
+
+      "power": {
+        "type": "number",
+        "label": "Power",
+        "value": 0
+      },
+
+      "magic": {
+        "type": "string",
+        "label": "Magic Type",
+        "value": ""
+      },
+
+      "range": {
+        "type": "number",
+        "label": "Range",
+        "value": 0
+      },
+
+      "duration": {
+        "value": 0,
+        "type": "round",
+        "extendable": false
+      },
+
+      "target": {
+        "type": "number",
+        "label": "Targets",
+        "value": 1
+      },
+
+      "aoe": {
+        "type": "boolean",
+        "value": false
+      },
+
+      "radius": {
+        "type": "number",
+        "value": 0
+      },
+
+      "damage": {
+        "base": {
+          "type": "number",
+          "value": 0
+        },
+        "dice": {
+          "type": "string",
+          "value": ""
+        }
+      },
+
+      "concentration": {
+        "type": "boolean",
+        "value": false
+      },
+
+      "overcast": {
+        "type": "boolean",
+        "value": false
+      },
+
+      "memorized": {
+        "type": "boolean",
+        "value": false
+      },
+      "magicType": {
+        "type": "string",
+        "label": "Magic Type",
+        "value": "minor"
+      }
     }
   }
 }

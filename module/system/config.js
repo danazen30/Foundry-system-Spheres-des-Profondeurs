@@ -53,6 +53,14 @@ SDP.turnConditions = {
 
 };
 
+CONFIG.SDP = CONFIG.SDP || {};
+
+CONFIG.SDP.magicTypes = {
+  minor: "Minor",
+  advanced: "Advanced",
+  superior: "Superior"
+};
+
 SDP.conditionConfig = {
 
   stunned: {

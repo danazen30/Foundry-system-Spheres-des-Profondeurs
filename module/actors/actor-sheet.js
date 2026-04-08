@@ -2,6 +2,7 @@ import { SdpRoll } from "../rolls/roll.js";
 import { SdpAttack } from "../combat/attack.js";
 import { SDP } from "../system/config.js";
 import { SimpleDialog } from "../apps/simple-dialog.js";
+import { SdpSpell } from "../combat/spell.js";
 
 const { ActorSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -114,6 +115,24 @@ if (nextXP !== null) {
   );
 }
 
+// =========================
+// SPELLS SORTING
+// =========================
+
+const spells = this.document.items.filter(i => i.type === "spell");
+
+const spellsMinor = spells.filter(s =>
+  (s.system.magicType?.value || "minor") === "minor"
+);
+
+const spellsAdvanced = spells.filter(s =>
+  (s.system.magicType?.value || "minor") === "advanced"
+);
+
+const spellsSuperior = spells.filter(s =>
+  (s.system.magicType?.value || "minor") === "superior"
+);
+
 return {
   actor: this.document,
   system: this.document.system,
@@ -133,7 +152,10 @@ return {
   currentLevel,
   nextXP,
   percent: xpProgress
-  }
+  },
+  spellsMinor,
+  spellsAdvanced,
+  spellsSuperior
 };
   }
 
@@ -363,6 +385,77 @@ async _onDropItem(event, data) {
   await this.render();
 
   return created;
+}
+
+async _toggleSpellMemory(event) {
+
+  event.preventDefault();
+
+  const itemId = event.currentTarget.dataset.itemId;
+  const item = this.actor.items.get(itemId);
+
+  if (!item) return;
+
+  const current = item.system.memorized?.value ?? false;
+
+  await item.update({
+    "system.memorized.value": !current
+  });
+
+}
+
+async _castSpell(event) {
+
+  event.preventDefault();
+
+  const itemId = event.currentTarget.dataset.itemId;
+  const spell = this.actor.items.get(itemId);
+
+  if (!spell) return;
+
+  const actor = this.actor;
+
+  // =========================
+  // MANA CHECK (simple)
+  // =========================
+
+  const cost = spell.system.power.value || 0;
+  const mana = actor.system.resources.mana.value;
+
+  if (mana < cost) {
+    ui.notifications.warn("Not enough mana");
+    return;
+  }
+
+  // =========================
+  // TARGET VALUE (IMPORTANT)
+  // =========================
+
+const bestSkill = SdpSpell._getBestSpellSkill(actor, spell);
+
+let skillLabel = "Intelligence";
+let skillValue = actor.system.attributes.intelligence.value;
+
+if (bestSkill){
+  skillLabel = bestSkill.name;
+  skillValue = bestSkill.system.value;
+}
+
+SdpRoll.openDialog({
+  actor: actor,
+  type: "attack",
+  label: spell.name,
+  target: skillValue,
+  weapon: spell,
+  isSpell: true,
+
+  // 🔥 AJOUT
+  spellData: {
+    skillLabel,
+    skillValue
+  }
+});
+
 }
 
   _onRender(context, options) {
@@ -727,6 +820,7 @@ root.querySelectorAll('[data-action="editItem"]').forEach(el => {
   });
 });
 
+
 root.querySelectorAll('[data-action="deleteItem"]').forEach(el => {
   el.addEventListener("click", async (event) => {
 
@@ -734,6 +828,24 @@ root.querySelectorAll('[data-action="deleteItem"]').forEach(el => {
 
     await item.delete();
 
+  });
+});
+
+// =========================
+// SPELL MEMORY TOGGLE
+// =========================
+root.querySelectorAll('[data-action="toggleSpellMemory"]').forEach(el => {
+  el.addEventListener("click", (event) => {
+    this._toggleSpellMemory(event);
+  });
+});
+
+// =========================
+// CAST SPELL
+// =========================
+root.querySelectorAll('[data-action="castSpell"]').forEach(el => {
+  el.addEventListener("click", (event) => {
+    this._castSpell(event);
   });
 });
 

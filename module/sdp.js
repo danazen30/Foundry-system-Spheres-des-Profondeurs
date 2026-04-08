@@ -13,6 +13,7 @@ import { SdpCareerSheet } from "./items/career-sheet.js";
 import { SdpSpecieSheet } from "./items/specie-sheet.js";
 import { SdpSignSheet } from "./items/sign-sheet.js";
 import { SdpItem } from "./items/item.js";
+import { SdpSpellSheet } from "./items/spell-sheet.js";
 
 import { SdpRoll } from "./rolls/roll.js";
 import { SdpDamage } from "./combat/damage.js";
@@ -62,6 +63,7 @@ Hooks.once("init", () => {
   CONFIG.Item.documentClass = SdpItem;
 
 
+
 // ACTORS
 foundry.documents.collections.Actors.unregisterSheet("core", foundry.appv1.sheets.ActorSheet);
 
@@ -85,6 +87,8 @@ foundry.documents.collections.Items.registerSheet("sdp", SdpSpecieSheet, { types
 foundry.documents.collections.Items.registerSheet("sdp", SdpCareerSheet, { types: ["career"], makeDefault: true });
 
 foundry.documents.collections.Items.registerSheet("sdp", SdpSignSheet, { types: ["sign"], makeDefault: true });
+
+foundry.documents.collections.Items.registerSheet("sdp", SdpSpellSheet, { types: ["spell"], makeDefault: true });
 
 Handlebars.registerHelper("gte", function(a, b) {
   return a >= b;

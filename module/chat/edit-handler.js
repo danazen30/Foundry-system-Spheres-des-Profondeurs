@@ -1,5 +1,6 @@
 import { SimpleDialog } from "../apps/simple-dialog.js";
 
+
 export function registerEditHandlers(html, message) {
 
   // =========================
@@ -93,7 +94,9 @@ export function registerEditHandlers(html, message) {
 
   html.find(".edit-attack").click(async ev => {
 
-    const card = ev.currentTarget.closest(".sdp-attack");
+  const card =
+    ev.currentTarget.closest(".sdp-attack") ||
+    ev.currentTarget.closest(".sdp-spell");
 
     const oldRoll = Number(card.dataset.roll);
     const oldAttack = Number(card.dataset.attack);
@@ -105,7 +108,7 @@ export function registerEditHandlers(html, message) {
       title: "Edit Attack",
 
       content: `
-      ${card.dataset.type === "ranged" ? `
+      ${(card.dataset.type === "ranged" || card.dataset.type === "spell") ? `
         <label>Target</label>
         <input type="number" name="target" value="${card.dataset.testtarget || 0}"/>
       ` : ""}
@@ -118,6 +121,7 @@ export function registerEditHandlers(html, message) {
         apply: {
           label: "Apply",
           callback: async (app) => {
+            let newHtml = "";
 
             const type = card.dataset.type;
 
@@ -127,6 +131,165 @@ export function registerEditHandlers(html, message) {
 
             let target;
 
+            if(type === "spell"){
+
+  target = Number(
+    app.element.querySelector('[name="target"]').value
+  );
+
+  const SL =
+    Math.floor(target / 10) -
+    Math.floor(newRoll / 10);
+
+  const success = newRoll <= target;
+
+  const actor = game.actors.get(card.dataset.actor);
+if (!actor) return;
+
+const spell = actor.items.get(card.dataset.weapon);
+if (!spell) return;
+
+const hasSkill = card.dataset.hasskill === "true";
+
+const crit = {
+  success: newRoll >= 1 && newRoll <= 5,
+  failure: hasSkill
+    ? newRoll >= 96
+    : newRoll >= 81
+};
+
+// =========================
+// MAGIC CONSEQUENCE
+// =========================
+
+let magicConsequence = null;
+
+if (crit.failure){
+
+  let severity = "minor";
+
+  const magicType =
+    spell.system.magicType?.value || "minor";
+
+  if (magicType === "advanced"){
+    severity = "major";
+  }
+
+  if (magicType === "superior"){
+    severity = "major";
+  }
+
+  const hasDowngradeTalent = actor.items.some(i =>
+    i.type === "talent" &&
+    i.name.toLowerCase().includes("magic control")
+  );
+
+  if (magicType === "advanced" && hasDowngradeTalent){
+    severity = "minor";
+  }
+
+  magicConsequence = severity;
+}
+  // =========================
+  // UPDATE DATASET
+  // =========================
+
+  card.dataset.roll = newRoll;
+  card.dataset.testtarget = target;
+  card.dataset.critical = crit.success;
+
+// =========================
+// UPDATE UI (PROPRE)
+// =========================
+
+const targetEl = card.querySelector(".spell-target");
+if (targetEl){
+  targetEl.innerHTML = `<strong>Target:</strong> ${target}`;
+}
+
+const rollEl = card.querySelector(".spell-roll");
+if (rollEl){
+  rollEl.innerHTML = `<strong>Roll:</strong> ${newRoll}`;
+}
+
+const slEl = card.querySelector(".spell-sl");
+if (slEl){
+  slEl.innerHTML = `<strong>SL:</strong> ${SL}`;
+}
+
+const resultEl = card.querySelector(".spell-result");
+if (resultEl){
+  resultEl.innerHTML = `<strong>${success ? "SUCCESS" : "FAILURE"}</strong>`;
+}
+
+  // =========================
+  // CRIT
+  // =========================
+
+ let critBlock = card.querySelector(".crit-block");
+
+if(!critBlock){
+  critBlock = document.createElement("div");
+  critBlock.classList.add("crit-block");
+  card.querySelector(".spell-sl").after(critBlock);
+}
+
+// =========================
+// CONSEQUENCE UI
+// =========================
+
+let consequenceEl = card.querySelector(".spell-consequence");
+
+if (!consequenceEl){
+  consequenceEl = document.createElement("p");
+  consequenceEl.classList.add("spell-consequence");
+  critBlock.after(consequenceEl);
+}
+
+if (magicConsequence){
+  consequenceEl.innerHTML =
+    `<strong>Magical Consequence:</strong> ${magicConsequence.toUpperCase()}`;
+} else {
+  consequenceEl.innerHTML = "";
+}
+
+if (crit.success){
+  critBlock.innerHTML = `
+    <p>
+      <strong class="spell-crit-success clickable">
+        CRITICAL SUCCESS
+      </strong>
+    </p>`;
+}
+
+else if (crit.failure){
+  critBlock.innerHTML = `
+    <p>
+      <strong class="spell-crit-failure clickable"
+        data-severity="${magicConsequence || "minor"}">
+        CRITICAL FAILURE
+      </strong>
+    </p>`;
+}
+
+else {
+  critBlock.innerHTML = "";
+}
+
+const message = game.messages.get(
+  ev.currentTarget.closest(".message").dataset.messageId
+);
+
+const wrapper = document.createElement("div");
+wrapper.appendChild(card.cloneNode(true));
+
+await message.update({
+  content: wrapper.innerHTML
+});
+
+  return; // 🔥 IMPORTANT → empêche le reste du code
+}
+
             if(type === "ranged"){
               target = Number(
                 app.element.querySelector('[name="target"]').value
@@ -134,8 +297,6 @@ export function registerEditHandlers(html, message) {
             } else {
               target = Number(card.dataset.baseattack);
             }
-
-            let newHtml = "";
 
             if(type === "ranged"){
 

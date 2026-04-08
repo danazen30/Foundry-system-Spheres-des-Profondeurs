@@ -553,6 +553,140 @@ readonly>
 
 </table>
 
+<h2>Spells</h2>
+
+  <h3>Minor</h3>
+
+<table class="spells-table">
+<thead>
+<tr>
+  <th>Name</th>
+  <th>Mana</th>
+  <th>Mem</th>
+  <th>Actions</th>
+</tr>
+</thead>
+
+<tbody>
+{{#each spellsMinor as |spell|}}
+<tr>
+
+<td>{{spell.name}}</td>
+
+<td>
+  {{#if spell.system.memorized.value}}
+    {{spell.system.power.value}}
+  {{else}}
+    {{multiply spell.system.power.value 2}}
+  {{/if}}
+</td>
+
+<td>
+  <input type="checkbox"
+    data-action="toggleSpellMemory"
+    data-item-id="{{spell.id}}"
+    {{checked spell.system.memorized.value}}>
+</td>
+
+<td class="item-actions">
+  <button data-action="castSpell" data-item-id="{{spell.id}}">Cast</button>
+  <button data-action="editItem" data-item-id="{{spell.id}}">✏️</button>
+  <button data-action="deleteItem" data-item-id="{{spell.id}}">🗑️</button>
+</td>
+
+</tr>
+{{/each}}
+</tbody>
+</table>
+
+<h3>Advanced</h3>
+
+<table class="spells-table">
+<thead>
+<tr>
+  <th>Name</th>
+  <th>Mana</th>
+  <th>Mem</th>
+  <th>Actions</th>
+</tr>
+</thead>
+
+<tbody>
+{{#each spellsAdvanced as |spell|}}
+<tr>
+
+<td>{{spell.name}}</td>
+
+<td>
+  {{#if spell.system.memorized.value}}
+    {{spell.system.power.value}}
+  {{else}}
+    {{multiply spell.system.power.value 2}}
+  {{/if}}
+</td>
+
+<td>
+  <input type="checkbox"
+    data-action="toggleSpellMemory"
+    data-item-id="{{spell.id}}"
+    {{checked spell.system.memorized.value}}>
+</td>
+
+<td class="item-actions">
+  <button data-action="castSpell" data-item-id="{{spell.id}}">Cast</button>
+  <button data-action="editItem" data-item-id="{{spell.id}}">✏️</button>
+  <button data-action="deleteItem" data-item-id="{{spell.id}}">🗑️</button>
+</td>
+
+</tr>
+{{/each}}
+</tbody>
+</table>
+
+<h3>Superior</h3>
+
+<table class="spells-table">
+<thead>
+<tr>
+  <th>Name</th>
+  <th>Mana</th>
+  <th>Mem</th>
+  <th>Actions</th>
+</tr>
+</thead>
+
+<tbody>
+{{#each spellsSuperior as |spell|}}
+<tr>
+
+<td>{{spell.name}}</td>
+
+<td>
+  {{#if spell.system.memorized.value}}
+    {{spell.system.power.value}}
+  {{else}}
+    {{multiply spell.system.power.value 2}}
+  {{/if}}
+</td>
+
+<td>
+  <input type="checkbox"
+    data-action="toggleSpellMemory"
+    data-item-id="{{spell.id}}"
+    {{checked spell.system.memorized.value}}>
+</td>
+
+<td class="item-actions">
+  <button data-action="castSpell" data-item-id="{{spell.id}}">Cast</button>
+  <button data-action="editItem" data-item-id="{{spell.id}}">✏️</button>
+  <button data-action="deleteItem" data-item-id="{{spell.id}}">🗑️</button>
+</td>
+
+</tr>
+{{/each}}
+</tbody>
+</table>
+
 <h2>Details</h2>
 
 <div class="details">

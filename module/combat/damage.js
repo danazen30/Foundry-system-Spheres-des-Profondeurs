@@ -96,9 +96,58 @@ static async rollDamage({ actor, weapon, target, location, critical, brutal }) {
 
   const SB = actor.system.attributes.strength.bonus;
 
-  let baseWeapon = 0;
-  let diceFormula = weapon.system.damageDice || "";
-  let baseFormula = weapon.system.damage || "0";
+let baseWeapon = 0;
+// =========================
+// NORMALISATION SPELL / WEAPON
+// =========================
+
+// 🎯 BASE DAMAGE
+let baseFormula = weapon.system.damage || weapon.system.damage_base || "0";
+
+// cas spell structuré
+if (typeof baseFormula === "object") {
+
+  // { base: { value: X } }
+  if (baseFormula.base?.value !== undefined) {
+    baseFormula = baseFormula.base.value;
+  }
+
+  // { value: X }
+  else if (baseFormula.value !== undefined) {
+    baseFormula = baseFormula.value;
+  }
+
+  else {
+    baseFormula = 0;
+  }
+}
+
+// 🎯 DICE
+let diceFormula =
+  weapon.system.damageDice ??
+  weapon.system.damage_dice ??
+  weapon.system.damage?.dice ??
+  "";
+
+// cas spell structuré
+if (typeof diceFormula === "object") {
+
+  // { value: "1d4" }
+  if (diceFormula.value !== undefined) {
+    diceFormula = diceFormula.value;
+  } else {
+    diceFormula = "";
+  }
+}
+
+// array safety
+if (Array.isArray(diceFormula)) {
+  diceFormula = diceFormula.flat().join(" + ");
+}
+
+// final clean
+baseFormula = String(baseFormula).trim();
+diceFormula = String(diceFormula).trim();
 
   let useSB = baseFormula.includes("SB");
 
@@ -149,6 +198,14 @@ if (useSB && bonus) {
 // =========================
 // ROLL FINAL
 // =========================
+
+console.log("=== DAMAGE DEBUG ===");
+console.log("weapon.system.damage:", weapon.system.damage);
+console.log("weapon.system.damageDice:", weapon.system.damageDice);
+console.log("weapon.system.damage?.dice:", weapon.system.damage?.dice);
+console.log("baseFormula:", baseFormula);
+console.log("diceFormula:", diceFormula);
+console.log("FINAL FORMULA:", formula);
 const roll = new Roll(formula);
 await roll.evaluate();
 

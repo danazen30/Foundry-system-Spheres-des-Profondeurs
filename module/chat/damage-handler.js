@@ -6,9 +6,14 @@ export function registerDamageHandlers(html, message) {
   // DAMAGE ROLL
   // ===================
 
-  html.find(".sdp-attack .roll-damage").click(async ev => {
+ html.find(".sdp-attack .roll-damage, .sdp-spell .roll-damage").click(async ev => {
 
-    const card = ev.currentTarget.closest(".sdp-attack");
+const card = ev.currentTarget.closest(".sdp-attack, .sdp-spell");
+
+if (!card) {
+  console.error("No card found for damage button");
+  return;
+}
 
     const actorId = card.dataset.actor;
     const weaponId = card.dataset.weapon;
@@ -75,7 +80,31 @@ export function registerDamageHandlers(html, message) {
 
     }
 
-    if(!targetId) return;
+    // =========================
+// TARGET HANDLING
+// =========================
+
+let targets = [];
+
+if (card.classList.contains("sdp-spell")) {
+
+  // 🔥 SPELL = MULTI TARGET
+  targets = Array.from(game.user.targets);
+
+  if (!targets.length) {
+    ui.notifications.warn("Select at least one target");
+    return;
+  }
+
+} else {
+
+  // 🔥 NORMAL ATTACK
+  if (!targetId) return;
+
+  const token = canvas.tokens.get(targetId);
+  if (token) targets.push(token);
+
+}
 
     ChatMessage.create({
       content: `
@@ -85,7 +114,7 @@ export function registerDamageHandlers(html, message) {
       <p>Armor: ${armor}</p>
       <p>Final Damage: ${finalDamage}</p>
       <button class="apply-damage"
-        data-target="${targetId}"
+        data-target="${card.classList.contains("sdp-spell") ? "" : targetId}"
         data-damage="${finalDamage}"
         data-location="${location}">
         Apply Damage
@@ -103,10 +132,49 @@ export function registerDamageHandlers(html, message) {
   html.find(".apply-damage").click(async ev => {
 
     const button = ev.currentTarget;
-
-    const targetId = button.dataset.target;
-    const damage = Number(button.dataset.damage);
+        const damage = Number(button.dataset.damage);
     const location = button.dataset.location;
+
+    let targetId = button.dataset.target;
+
+// 🔥 SPELL = prend les targets actuelles
+if (!targetId) {
+
+  const targets = Array.from(game.user.targets);
+
+  if (!targets.length) {
+    ui.notifications.warn("Select target(s) before applying damage");
+    return;
+  }
+
+  // ⚠️ pour l’instant : 1 par 1
+for (let token of targets) {
+
+  const result = await SdpDamage.applyFullDamage({
+    actor: token.actor,
+    damage,
+    location
+  });
+
+  const { finalDamage, armor, newHealth, current } = result;
+
+  ChatMessage.create({
+    content: `
+    <div class="sdp-damage-result">
+      <h4>${token.actor.name}</h4>
+      <p>Location: ${CONFIG.SDP.hitLocations[location]}</p>
+      <p>Damage: ${damage}</p>
+      <p>Armor: ${armor}</p>
+      <p><strong>Final: ${finalDamage}</strong></p>
+      <p>HP: ${current} → ${newHealth}</p>
+    </div>
+    `
+  });
+
+}
+
+  return;
+}
 
     const token = canvas.tokens.get(targetId);
     if(!token) return;

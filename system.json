@@ -90,6 +90,14 @@
       "system": "sdp",
       "path": "packs/sign",
       "type": "Item"
+    },
+
+    {
+      "name": "spell",
+      "label": "SDP Spell",
+      "system": "sdp",
+      "path": "packs/spell",
+      "type": "Item"
     }
 
   ],
