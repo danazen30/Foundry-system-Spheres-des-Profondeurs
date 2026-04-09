@@ -230,11 +230,19 @@ const hasDowngradeTalent = actor.items.some(i => {
   // SL
   // ======================
 
-  let SL =
-    Math.floor(targetValue / 10) -
-    Math.floor(result / 10);
+let SL =
+  Math.floor(targetValue / 10) -
+  Math.floor(result / 10);
 
-  SL += dialogMods.inspiration || 0;
+// 🔥 FIX -0
+if (!success && SL === 0) {
+  SL = -1;
+}
+
+SL += dialogMods.inspiration || 0;
+
+// 🔥 APPLY SUCCESS BONUS
+SL = SdpRoll.applySuccessBonus(SL, actor, selectedTalents);
 
   // ======================
   // LOCATION
@@ -357,7 +365,7 @@ await actor.update({
 
   <p class="spell-target"><strong>Target:</strong> ${targetValue}</p>
 <p class="spell-roll"><strong>Roll:</strong> ${result}</p>
-<p class="spell-sl"><strong>SL:</strong> ${SL}</p>
+<p class="spell-sl"><strong>SL:</strong> ${SL} (${game.sdp.Roll.getSLLabel(SL)})</p>
 
 
  <div class="crit-block">

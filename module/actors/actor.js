@@ -172,6 +172,8 @@ if (lvl.inspirationDice) {
 
 const system = this.system;
 system.custom.manaMultiplierBonus = 0;
+system.bonuses = system.bonuses || {};
+system.bonuses.successSL = system.bonuses.successSL || 0;
 
 // =====================
 // CUSTOM MODIFIERS

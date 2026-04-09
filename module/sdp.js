@@ -59,9 +59,11 @@ Hooks.once("init", () => {
 
   CONFIG.SDP = SDP;
 
+  game.sdp = game.sdp || {};
+game.sdp.Roll = SdpRoll;
+
   CONFIG.Actor.documentClass = SdpActor;
   CONFIG.Item.documentClass = SdpItem;
-
 
 
 // ACTORS

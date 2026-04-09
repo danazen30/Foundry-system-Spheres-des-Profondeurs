@@ -96,6 +96,20 @@ if (bestSkill) {
 
     const success = result <= targetValue;
 
+    let SL =
+  Math.floor(targetValue / 10) -
+  Math.floor(result / 10);
+
+// 🔥 FIX -0
+if (!success && SL === 0) {
+  SL = -1;
+}
+
+// 🔥 APPLY SUCCESS BONUS
+const selectedTalents = dialogMods.talents || [];
+
+SL = SdpRoll.applySuccessBonus(SL, actor, selectedTalents);
+
     let critText = "";
 
 if(crit.success){
@@ -131,7 +145,8 @@ if(crit.failure){
      data-brutal="${dialogMods.brutal}"
      data-weapon="${weapon.id}"
      data-target="${targetId ?? ""}"
-     data-location="${hitLocation.location}">
+     data-location="${hitLocation.location}"
+     data-talents='${JSON.stringify(dialogMods.talents || [])}'>
 
   <h3>${actor.name} shoots with ${weapon.name}</h3>
 
@@ -140,6 +155,7 @@ if(crit.failure){
   <p>Test: ${source}</p>
   <p>Target: ${targetValue}</p>
   <p>Roll: ${result}</p>
+  <p>SL: ${SL} (${SdpRoll.getSLLabel(SL)})</p>
   
   ${critText}
 

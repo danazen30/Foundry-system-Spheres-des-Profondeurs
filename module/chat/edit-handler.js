@@ -1,4 +1,5 @@
 import { SimpleDialog } from "../apps/simple-dialog.js";
+import { SdpRoll } from "../rolls/roll.js";
 
 
 export function registerEditHandlers(html, message) {
@@ -39,11 +40,16 @@ export function registerEditHandlers(html, message) {
               app.element.querySelector('[name="roll"]').value
             );
 
-            const SL =
-              Math.floor(newTarget / 10) -
-              Math.floor(newRoll / 10);
+            let SL =
+  Math.floor(newTarget / 10) -
+  Math.floor(newRoll / 10);
 
-            const success = newRoll <= newTarget;
+const success = newRoll <= newTarget;
+
+// 🔥 FIX -0
+if (!success && SL === 0) {
+  SL = -1;
+}
 
             const message = game.messages.get(
               ev.currentTarget.closest(".message").dataset.messageId
@@ -68,7 +74,7 @@ export function registerEditHandlers(html, message) {
 
   <p>Target: ${newTarget} (${oldTarget})</p>
   <p>Roll: ${newRoll} (${oldRoll})</p>
-  <p>SL: ${SL}</p>
+  <p>SL: ${SL} (${game.sdp.Roll.getSLLabel(SL)})</p>
 
   <p><strong>${success ? "SUCCESS" : "FAILURE"}</strong></p>
 
@@ -137,14 +143,23 @@ export function registerEditHandlers(html, message) {
     app.element.querySelector('[name="target"]').value
   );
 
-  const SL =
-    Math.floor(target / 10) -
-    Math.floor(newRoll / 10);
-
-  const success = newRoll <= target;
-
   const actor = game.actors.get(card.dataset.actor);
 if (!actor) return;
+
+let SL =
+  Math.floor(target / 10) -
+  Math.floor(newRoll / 10);
+
+const success = newRoll <= target;
+
+if (!success && SL === 0) {
+  SL = -1;
+}
+
+// 🔥 APPLY SUCCESS BONUS
+const selectedTalents = JSON.parse(card.dataset.talents || "[]");
+
+SL = game.sdp.Roll.applySuccessBonus(SL, actor, selectedTalents);
 
 const spell = actor.items.get(card.dataset.weapon);
 if (!spell) return;
@@ -225,7 +240,7 @@ if (rollEl){
 
 const slEl = card.querySelector(".spell-sl");
 if (slEl){
-  slEl.innerHTML = `<strong>SL:</strong> ${SL}`;
+  slEl.innerHTML = `<strong>SL:</strong> ${SL} (${game.sdp.Roll.getSLLabel(SL)})`;
 }
 
 const resultEl = card.querySelector(".spell-result");
@@ -311,10 +326,24 @@ await message.update({
 
             if(type === "ranged"){
 
-              const SL = Math.floor(target / 10) - Math.floor(newRoll / 10);
-              const success = newRoll <= target;
-
               const actor = game.actors.get(card.dataset.actor);
+if (!actor) return;
+
+let SL =
+  Math.floor(target / 10) -
+  Math.floor(newRoll / 10);
+
+  const success = newRoll <= target;
+
+if (!success && SL === 0) {
+  SL = -1;
+}
+
+// 🔥 APPLY SUCCESS BONUS
+const selectedTalents = JSON.parse(card.dataset.talents || "[]");
+
+SL = game.sdp.Roll.applySuccessBonus(SL, actor, selectedTalents);
+
               const weapon = actor.items.get(card.dataset.weapon);
 
               const crit = {
@@ -361,7 +390,7 @@ await message.update({
 
   <p>Target: ${target}</p>
   <p>Roll: ${newRoll} (${oldRoll})</p>
-  <p>SL: ${SL}</p>
+  <p>SL: ${SL} (${game.sdp.Roll.getSLLabel(SL)})</p>
 
   ${critText}
 

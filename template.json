@@ -234,6 +234,11 @@
           "type": "number",
           "label": "All Tests Modifier",
           "value": 0
+        },
+        "successBonus": {
+          "type": "number",
+          "label": "Success Bonus",
+          "value": 0
         }
       },
       "conditions": {

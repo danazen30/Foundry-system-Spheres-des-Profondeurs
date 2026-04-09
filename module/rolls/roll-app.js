@@ -1,5 +1,6 @@
 import { SdpAttack } from "../combat/attack.js";
 import { SdpSpell } from "../combat/spell.js";
+import { SdpRoll } from "../rolls/roll.js";
 
 const { ApplicationV2 } = foundry.applications.api;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -215,16 +216,26 @@ const result = roll.total;
 const dialogMods = game.sdp?.dialogModifiers || {};
 const target = (this.target || 0) + (dialogMods.totalMod || 0);
 
-// SL
 let SL =
   Math.floor(target / 10) -
   Math.floor(result / 10);
 
-// inspiration
-SL += this.inspirationResult;
-
 // success
 const success = result <= target;
+
+// 🔥 FIX -0
+if (!success && SL === 0) {
+  SL = -1;
+}
+
+SL += this.inspirationResult;
+
+// 🔥 APPLY SUCCESS BONUS
+SL = game.sdp.Roll.applySuccessBonus(
+  SL,
+  this.actor,
+  game.sdp?.dialogModifiers?.talents || []
+);
 
 // crit
 const crit = game.sdp?.roll?.getCritical
@@ -255,7 +266,7 @@ await roll.toMessage({
     <p><strong>Target:</strong> ${target}</p>
     <p><strong>Roll:</strong> ${result}</p>
 
-    <p><strong>SL:</strong> ${SL}</p>
+    <p><strong>SL:</strong> ${SL} (${game.sdp.Roll.getSLLabel(SL)})</p>
 
     <p>
       <strong>Result:</strong> 
