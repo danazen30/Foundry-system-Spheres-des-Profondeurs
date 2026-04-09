@@ -796,9 +796,8 @@
       },
 
       "duration": {
-        "value": 0,
-        "type": "round",
-        "extendable": false
+        "value": "",
+        "type": "round"
       },
 
       "target": {
@@ -846,6 +845,10 @@
         "type": "string",
         "label": "Magic Type",
         "value": "minor"
+      },
+      "overcastSpecialEffects": {
+        "type": "array",
+        "value": []
       }
     }
   }

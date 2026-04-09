@@ -276,7 +276,8 @@ const hasDamage =
 const memorized = system.memorized?.value === true;
 const manaCost = memorized ? power : power * 2;
 
-const duration = system.duration?.value ?? 0;
+const durationRaw = system.duration?.value ?? 0;
+const duration = SdpSpell.resolveFormula(durationRaw, actor);
 const durationType = system.duration?.type ?? "";
 
 const targets = system.target?.value ?? 0;
@@ -285,6 +286,14 @@ const radiusRaw = system.radius?.value ?? 0;
 
 const range = SdpSpell.resolveFormula(rangeRaw, actor);
 const radius = SdpSpell.resolveFormula(radiusRaw, actor);
+
+const overcast = SdpRoll.getOvercast(SL);
+let specialEffects = system.overcastSpecialEffects?.value;
+
+// 🔥 FIX Foundry (object → array)
+if (!Array.isArray(specialEffects)) {
+  specialEffects = Object.values(specialEffects || {});
+}
 
 const isAoE = system.aoe?.value === true;
 
@@ -354,7 +363,10 @@ await actor.update({
      data-hasskill="${hasSkill}"
      data-weapon="${spell.id}"
      data-location="${hitLocation.location}"
-     data-talents='${JSON.stringify(selectedTalents)}'>
+     data-talents='${JSON.stringify(selectedTalents)}'
+     data-overcast="${overcast}"
+     data-overcast="${overcast}"
+     data-overcast-used="0">
 
   <h3>${actor.name} casts ${spell.name}</h3>
 
@@ -365,8 +377,9 @@ await actor.update({
 
   <p class="spell-target"><strong>Target:</strong> ${targetValue}</p>
 <p class="spell-roll"><strong>Roll:</strong> ${result}</p>
-<p class="spell-sl"><strong>SL:</strong> ${SL} (${game.sdp.Roll.getSLLabel(SL)})</p>
-
+<p class="spell-sl">
+  <strong>SL:</strong> ${SL} (${SdpRoll.getSLLabel(SL)})
+</p>
 
  <div class="crit-block">
   ${critText}
@@ -385,15 +398,67 @@ ${concentration ? `<p><strong>Concentration</strong></p>` : ""}
 
 <hr>
 
-  <p><strong>Range:</strong> ${range}m</p>
+${overcast > 0 ? `
+<p class="spell-overcast">
+  <strong>Overcast:</strong> ${overcast}
+</p>
 
+<div class="spell-overcast-controls">
+
+  ${specialEffects.map((e, i) => {
+
+ const base = SdpSpell.resolveFormula(e.value, actor);
+
+return `
+  <button class="overcast-special-btn"
+    data-index="${i}"
+    data-base="${base}"
+    data-value="${base}"
+    data-label="${e.label}">
+    ${e.label}: ${base}
+  </button>
+`;
+
+}).join("")}
+
+    </div>
+  ` : ""}
+
+
+${range > 0 ? `
+  <p class="spell-range overcast-click"
+   data-type="range"
+   data-base="${range}"
+   data-value="${range}"
+   data-unit="m">
+   <strong>Range:</strong> ${range} m
+</p> ` : ""}
+
+${duration > 0 ? `
 ${!concentration ? `
-<p><strong>Duration:</strong> ${duration} ${durationType}</p>
+<p class="spell-duration overcast-click" data-type="duration"
+   data-base="${duration}"
+   data-value="${duration}"
+   data-unit="${durationType}">
+   <strong>Duration:</strong> ${duration} ${durationType}
+</p>
+` : ""}
 ` : ""}
 
+
   ${isAoE
-  ? `<p><strong>Area:</strong> ${radius}m radius</p>`
-  : `<p><strong>Targets:</strong> ${targets}</p>`
+  ? (radius > 0 ? `
+    <p class="spell-radius overcast-click" data-type="aoe"
+       data-base="${radius}"
+       data-value="${radius}">
+       <strong>Radius:</strong> ${radius}
+    </p>` : "")
+  : (targets > 0 ? `
+    <p class="spell-target-count overcast-click" data-type="target"
+       data-base="${targets}"
+       data-value="${targets}">
+       <strong>Targets:</strong> ${targets}
+    </p>` : "")
 }
 
 ${hasSpecialOvercast ? `<p><strong>Special Overcast:</strong> Yes</p>` : ""}

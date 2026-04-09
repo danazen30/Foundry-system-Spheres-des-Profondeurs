@@ -161,6 +161,8 @@ const selectedTalents = JSON.parse(card.dataset.talents || "[]");
 
 SL = game.sdp.Roll.applySuccessBonus(SL, actor, selectedTalents);
 
+const overcast = game.sdp.Roll.getOvercast(SL);
+
 const spell = actor.items.get(card.dataset.weapon);
 if (!spell) return;
 
@@ -240,7 +242,23 @@ if (rollEl){
 
 const slEl = card.querySelector(".spell-sl");
 if (slEl){
-  slEl.innerHTML = `<strong>SL:</strong> ${SL} (${game.sdp.Roll.getSLLabel(SL)})`;
+  slEl.innerHTML =
+    `<strong>SL:</strong> ${SL} (${game.sdp.Roll.getSLLabel(SL)})`;
+}
+
+let overcastEl = card.querySelector(".spell-overcast");
+
+if (!overcastEl && overcast > 0){
+  overcastEl = document.createElement("p");
+  overcastEl.classList.add("spell-overcast");
+  slEl.after(overcastEl);
+}
+
+if (overcastEl){
+  overcastEl.innerHTML =
+    overcast > 0
+      ? `<strong>Overcast:</strong> ${overcast}`
+      : "";
 }
 
 const resultEl = card.querySelector(".spell-result");

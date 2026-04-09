@@ -89,3 +89,158 @@ await table.draw();
   });
 
 }
+
+export function registerOvercastHandlers(html){
+
+  html.find(".overcast-click").click(async ev => {
+
+    const el = ev.currentTarget;
+const card = el.closest(".sdp-spell");
+
+const type = el.dataset.type;
+
+    let overcast = Number(card.dataset.overcast || 0);
+    let used = Number(card.dataset.overcastUsed || 0);
+
+    if (overcast <= 0) return;
+
+    // =========================
+    // APPLY EFFECT
+    // =========================
+
+    const apply = (selector, label) => {
+
+  const el = card.querySelector(selector);
+  if (!el) return;
+
+  const base = Number(el.dataset.base || 0);
+  let current = Number(el.dataset.value || base);
+
+  const newValue = current + base;
+
+  el.dataset.value = newValue;
+
+  // 🔥 récupère unité si présente
+  const unit = el.dataset.unit || "";
+
+  el.innerHTML =
+    `<strong>${label}:</strong> ${newValue} ${unit}`;
+};
+
+    switch(type){
+
+      case "range":
+        apply(".spell-range", "Range");
+        break;
+
+      case "duration":
+        apply(".spell-duration", "Duration");
+        break;
+
+      case "target":
+        apply(".spell-target-count", "Targets");
+        break;
+
+      case "aoe":
+        apply(".spell-radius", "Radius");
+        break;
+
+      case "special":
+        console.log("TODO special overcast");
+        break;
+    }
+
+    // =========================
+    // UPDATE OVERCAST
+    // =========================
+
+    overcast -= 1;
+    used += 1;
+
+    card.dataset.overcast = overcast;
+    card.dataset.overcastUsed = used;
+
+    const overcastEl = card.querySelector(".spell-overcast");
+
+    if (overcastEl){
+      overcastEl.innerHTML =
+        `<strong>Overcast:</strong> ${overcast}`;
+    }
+
+    // =========================
+    // UPDATE MESSAGE
+    // =========================
+
+    const message = game.messages.get(
+      card.closest(".message").dataset.messageId
+    );
+
+    const wrapper = document.createElement("div");
+    wrapper.appendChild(card.cloneNode(true));
+
+    await message.update({
+      content: wrapper.innerHTML
+    });
+
+  });
+
+html.find(".overcast-special-btn").click(async ev => {
+
+  const btn = ev.currentTarget;
+  const card = btn.closest(".sdp-spell");
+
+  let overcast = Number(card.dataset.overcast || 0);
+
+  if (overcast < 1){
+    ui.notifications.warn("Not enough overcast");
+    return;
+  }
+
+  // =========================
+  // APPLY EFFECT
+  // =========================
+
+const base = Number(btn.dataset.base || 0);
+let current = Number(btn.dataset.value || base);
+
+const newValue = current + base;
+
+  btn.dataset.value = newValue;
+
+  const label = btn.dataset.label;
+
+  btn.innerHTML = `${label}: ${newValue}`;
+
+  // =========================
+  // UPDATE OVERCAST
+  // =========================
+
+ overcast -= 1;
+
+  card.dataset.overcast = overcast;
+
+  const overcastEl = card.querySelector(".spell-overcast");
+
+  if (overcastEl){
+    overcastEl.innerHTML =
+      `<strong>Overcast:</strong> ${overcast}`;
+  }
+
+  // =========================
+  // UPDATE MESSAGE
+  // =========================
+
+  const message = game.messages.get(
+    card.closest(".message").dataset.messageId
+  );
+
+  const wrapper = document.createElement("div");
+  wrapper.appendChild(card.cloneNode(true));
+
+  await message.update({
+    content: wrapper.innerHTML
+  });
+
+});
+
+}

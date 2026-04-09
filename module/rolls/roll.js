@@ -73,4 +73,12 @@ if (SL <= -2) return "Failure";
 return "Minor Failure";
 }
 
+static getOvercast(SL){
+
+  if (SL <= 0) return 0;
+
+  return Math.floor(SL / 2);
+
+}
+
 }

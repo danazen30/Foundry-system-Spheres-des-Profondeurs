@@ -41,7 +41,7 @@
 
 <div class="form-group">
   <label>Value</label>
-  <input type="number" name="system.duration.value" value="{{system.duration.value}}">
+  <input type="text" name="system.duration.value" value="{{system.duration.value}}">
 </div>
 
 <div class="form-group">
@@ -93,11 +93,39 @@
   <input type="text" name="system.damage.dice.value" value="{{system.damage.dice.value}}">
 </div>
 
-<h3>Advanced</h3>
+<div class="overcast-special-section">
 
-<div class="form-group">
-  <label>Overcast</label>
-  <input type="checkbox" name="system.overcast.value" {{checked system.overcast.value}}>
+  <h3>Overcast Special</h3>
+
+  <button type="button" class="add-overcast-special">
+    Add Effect
+  </button>
+
+  <div class="overcast-special-list">
+
+    {{#each system.overcastSpecialEffects.value as |effect i|}}
+      <div class="overcast-special-item" data-index="{{i}}">
+
+
+        <input type="text"
+  name="system.overcastSpecialEffects.value.{{@index}}.label"
+  value="{{this.label}}"
+  placeholder="Effect name"/>
+
+<input type="text"
+  name="system.overcastSpecialEffects.value.{{@index}}.value"
+  value="{{this.value}}"
+  placeholder="WP / SB / 10"/>
+
+        <button type="button" class="remove-overcast-special">
+          X
+        </button>
+
+      </div>
+    {{/each}}
+
+  </div>
+
 </div>
 
 <h3>Description</h3>

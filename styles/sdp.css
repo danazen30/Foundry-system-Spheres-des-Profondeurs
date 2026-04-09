@@ -267,3 +267,18 @@ text-align:center;
 .spell-crit-failure:hover {
   background: rgba(255, 0, 0, 0.35);
 }
+
+/* =========================
+   OVERCAST CLICKABLE
+========================= */
+
+.overcast-click {
+  cursor: pointer;
+
+  /* 🎨 visuel */
+  color: #3aa7ff;
+  font-weight: bold;
+
+  /* 🧩 feedback léger */
+  transition: all 0.2s ease;
+}

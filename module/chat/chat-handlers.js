@@ -4,6 +4,7 @@ import { registerAttackHandlers } from "./attack-handler.js";
 import { registerInjuryHandlers } from "./injury-handler.js";
 import { registerEditHandlers } from "./edit-handler.js";
 import { registerSpellHandlers } from "./spell-handler.js";
+import { registerOvercastHandlers } from "./spell-handler.js";
 
 export function registerChatHandlers() {
 
@@ -20,6 +21,7 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
   registerInjuryHandlers(html, message);
   registerEditHandlers(html, message);
   registerSpellHandlers(html, message);
+  registerOvercastHandlers(html, message);
 
   html[0].querySelectorAll(".sdp-attack button").forEach(btn => {
 
