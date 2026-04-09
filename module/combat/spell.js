@@ -407,17 +407,20 @@ ${overcast > 0 ? `
 
   ${specialEffects.map((e, i) => {
 
- const base = SdpSpell.resolveFormula(e.value, actor);
+  const base = SdpSpell.resolveFormula(e.value, actor);
 
-return `
-  <button class="overcast-special-btn"
-    data-index="${i}"
-    data-base="${base}"
-    data-value="${base}"
-    data-label="${e.label}">
-    ${e.label}: ${base}
-  </button>
-`;
+  return `
+    <p class="spell-special overcast-click"
+       data-type="special"
+       data-index="${i}"
+       data-base="${base}"
+       data-value="${base}">
+       
+      <strong>${e.label}:</strong>
+      <span class="value">${base}</span>
+      
+    </p>
+  `;
 
 }).join("")}
 
@@ -431,7 +434,8 @@ ${range > 0 ? `
    data-base="${range}"
    data-value="${range}"
    data-unit="m">
-   <strong>Range:</strong> ${range} m
+   <strong>Range:</strong>
+   <span class="value">${range}</span> m
 </p> ` : ""}
 
 ${duration > 0 ? `
@@ -440,7 +444,8 @@ ${!concentration ? `
    data-base="${duration}"
    data-value="${duration}"
    data-unit="${durationType}">
-   <strong>Duration:</strong> ${duration} ${durationType}
+   <strong>Duration:</strong>
+<span class="value">${duration}</span> ${durationType}
 </p>
 ` : ""}
 ` : ""}
@@ -448,16 +453,20 @@ ${!concentration ? `
 
   ${isAoE
   ? (radius > 0 ? `
-    <p class="spell-radius overcast-click" data-type="aoe"
-       data-base="${radius}"
-       data-value="${radius}">
-       <strong>Radius:</strong> ${radius}
-    </p>` : "")
+    <p class="spell-radius overcast-click"
+   data-type="aoe"
+   data-base="${radius}"
+   data-value="${radius}">
+   <strong>Radius:</strong>
+<span class="value">${radius}</span>
+<button class="place-aoe">📍</button>
+</p>` : "")
   : (targets > 0 ? `
     <p class="spell-target-count overcast-click" data-type="target"
        data-base="${targets}"
        data-value="${targets}">
-       <strong>Targets:</strong> ${targets}
+       <strong>Targets:</strong>
+<span class="value">${targets}</span>
     </p>` : "")
 }
 

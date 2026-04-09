@@ -120,11 +120,12 @@ const type = el.dataset.type;
 
   el.dataset.value = newValue;
 
-  // 🔥 récupère unité si présente
-  const unit = el.dataset.unit || "";
+  // 🔥 IMPORTANT : on ne touche plus au bouton
+  const valueEl = el.querySelector(".value");
 
-  el.innerHTML =
-    `<strong>${label}:</strong> ${newValue} ${unit}`;
+ if (valueEl){
+  valueEl.innerHTML = `${newValue}`;
+}
 };
 
     switch(type){
@@ -145,9 +146,25 @@ const type = el.dataset.type;
         apply(".spell-radius", "Radius");
         break;
 
-      case "special":
-        console.log("TODO special overcast");
-        break;
+      case "special": {
+
+  const el = ev.currentTarget;
+
+  const base = Number(el.dataset.base || 0);
+  let current = Number(el.dataset.value || base);
+
+  const newValue = current + base;
+
+  el.dataset.value = newValue;
+
+  const valueEl = el.querySelector(".value");
+
+  if (valueEl){
+    valueEl.innerHTML = newValue;
+  }
+
+  break;
+}
     }
 
     // =========================
@@ -241,6 +258,47 @@ const newValue = current + base;
     content: wrapper.innerHTML
   });
 
+});
+
+html.find(".place-aoe").click(async ev => {
+
+  ev.preventDefault();
+  ev.stopPropagation();
+
+  const btn = ev.currentTarget;
+
+  // 🔥 VALEUR DYNAMIQUE (overcast inclus)
+  const parent = btn.closest(".spell-radius");
+  const radius = Number(parent?.dataset.value || btn.dataset.radius || 0);
+
+  if (!canvas.scene) return;
+
+  canvas.templates.activate();
+
+  // 🔥 on attend UN clic sur la scène
+  const layer = canvas.templates;
+
+  const handler = async (event) => {
+
+    // position du clic
+    const pos = event.data.getLocalPosition(canvas.stage);
+
+    const templateData = {
+      t: "circle",
+      user: game.user.id,
+      distance: radius,
+      x: pos.x,
+      y: pos.y,
+      fillColor: game.user.color
+    };
+
+    await canvas.scene.createEmbeddedDocuments("MeasuredTemplate", [templateData]);
+
+    // 🔥 IMPORTANT → on enlève le listener après 1 clic
+    layer.off("mousedown", handler);
+  };
+
+  layer.on("mousedown", handler);
 });
 
 }
