@@ -475,6 +475,11 @@
         "value": false
       },
 
+      "isDefenseWeapon": {
+        "type": "Boolean",
+        "default": false
+      },
+
       "durability": {
         "value": {
           "type": "number",

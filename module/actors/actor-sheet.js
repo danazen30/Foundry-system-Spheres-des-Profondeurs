@@ -1501,6 +1501,56 @@ root.querySelectorAll('[data-action="selectAmmo"]').forEach(el => {
 
 });
 
+// =========================
+// DEFENSE WEAPON TOGGLE
+// =========================
+
+root.querySelectorAll('.toggle-defense-weapon').forEach(el => {
+
+  el.addEventListener("change", async (event) => {
+
+    const checkbox = event.currentTarget;
+    const itemId = checkbox.dataset.itemId;
+    const checked = checkbox.checked;
+
+    const item = this.document.items.get(itemId);
+
+    if (!item) return;
+
+    // =========================
+    // OPTION (IMPORTANT)
+    // Une seule arme de défense active
+    // =========================
+
+    if (checked) {
+
+      const current = this.document.items.filter(i =>
+        i.type === "weapon" &&
+        i.system.isDefenseWeapon &&
+        i.id !== item.id
+      );
+
+      for (let w of current) {
+        await w.update({ "system.isDefenseWeapon": false });
+      }
+
+    }
+
+    await item.update({
+      "system.isDefenseWeapon": checked
+    });
+
+    console.log("SDP | Defense weapon toggled", {
+      weapon: item.name,
+      checked
+    });
+
+    this.render(); // refresh UI
+
+  });
+
+});
+
 }
 
 _onLevelUp() {

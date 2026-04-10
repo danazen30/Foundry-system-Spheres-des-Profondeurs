@@ -324,6 +324,7 @@ readonly>
 <th>Damage</th>
 <th>Equip</th>
 <th>Offhand</th>
+<th>Defense</th>
 <th>Attack</th>
 <th>Qty</th>
 <th></th>
@@ -360,6 +361,13 @@ readonly>
     data-item-id="{{item.id}}"
     {{checked item.system.offhand}}
   >
+</td>
+
+<td>
+  <input type="checkbox"
+         class="toggle-defense-weapon"
+         data-item-id="{{item._id}}"
+         {{checked item.system.isDefenseWeapon}}>
 </td>
 
 <td>

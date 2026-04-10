@@ -60,6 +60,15 @@
   <input type="text" name="system.damageDice" value="{{system.damageDice}}">
 </div>
 
+{{#if (eq system.category "melee")}}
+
+<div class="form-group">
+  <label>Defense Weapon</label>
+  <input type="checkbox" name="system.isDefenseWeapon" {{checked system.isDefenseWeapon}}>
+</div>
+
+{{/if}}
+
 {{#if (eq system.category "ranged")}}
 
 <h3>Ranged Settings</h3>

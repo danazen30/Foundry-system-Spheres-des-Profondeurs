@@ -353,40 +353,71 @@ if (system.health.value > finalMax) {
     // PARRY
     // =====================
 
-    let parryBase = 0;
+    // =====================
+// PARRY (DEFENSE WEAPON)
+// =====================
 
-    const meleeWeapons = equippedWeapons.filter(w => w.system.category === "melee");
+let parryBase = 0;
 
-    if (meleeWeapons.length > 0) {
+const meleeWeapons = equippedWeapons.filter(w => w.system.category === "melee");
 
-      const values = [];
+// 🔥 DEFENSE WEAPON PRIORITY
+const defenseWeapon = meleeWeapons.find(w => w.system.isDefenseWeapon);
 
-      for (let weapon of meleeWeapons) {
+if (defenseWeapon) {
 
-        const skill = getSkill(weapon.system.skill);
+  const skill = getSkill(defenseWeapon.system.skill);
 
-        let base = skill
-          ? skill.system.value
-          : system.attributes.meleeAbility.value;
+  let base = skill
+    ? skill.system.value
+    : system.attributes.meleeAbility.value;
 
-        let value = base + (Number(weapon.system.parryBonus || 0) * 10);
+  let value = base + (Number(defenseWeapon.system.parryBonus || 0) * 10);
 
-        if (weapon.system.offhand) value -= offhandPenalty;
+  if (defenseWeapon.system.offhand) value -= offhandPenalty;
 
-        values.push(value);
-      }
+  parryBase = value;
 
-      parryBase = Math.max(...values);
+  console.log("SDP | Parry from defense weapon", {
+    weapon: defenseWeapon.name,
+    value
+  });
 
-    } else {
+}
 
-      const skill = getSkill("brawl");
+// 🔥 FALLBACK NORMAL
+else if (meleeWeapons.length > 0) {
 
-      parryBase = skill
-        ? skill.system.value
-        : system.attributes.meleeAbility.value;
-    }
+  const values = [];
 
+  for (let weapon of meleeWeapons) {
+
+    const skill = getSkill(weapon.system.skill);
+
+    let base = skill
+      ? skill.system.value
+      : system.attributes.meleeAbility.value;
+
+    let value = base + (Number(weapon.system.parryBonus || 0) * 10);
+
+    if (weapon.system.offhand) value -= offhandPenalty;
+
+    values.push(value);
+  }
+
+  parryBase = Math.max(...values);
+
+}
+
+// 🔥 NO WEAPON
+else {
+
+  const skill = getSkill("brawl");
+
+  parryBase = skill
+    ? skill.system.value
+    : system.attributes.meleeAbility.value;
+}
     // =====================
     // ATTACK
     // =====================

@@ -1,77 +1,72 @@
- export function registerAttackHandlers(html, message) {
+export function registerAttackHandlers(html, message) {
 
-
- 
- //================
- // SELECT TARGET
- //================
+  //================
+  // SELECT TARGET
+  //================
 
   html.find(".sdp-attack .select-target").click(async ev => {
 
-  const targets = Array.from(game.user.targets);
+    const targets = Array.from(game.user.targets);
 
-  if(targets.length === 0){
-    ui.notifications.warn("Please target a token first");
-    return;
-  }
+    if(targets.length === 0){
+      ui.notifications.warn("Please target a token first");
+      return;
+    }
 
-  const card = ev.currentTarget.closest(".sdp-attack");
+    const card = ev.currentTarget.closest(".sdp-attack");
 
-  // ✅ ON GARDE TOUT
-  const attackScore = Number(card.dataset.attack);
-  const roll = Number(card.dataset.roll);
-  const baseAttack = Number(card.dataset.baseattack);
-  const meleeBonus = Number(card.dataset.meleebonus || 0);
+    const attackScore = Number(card.dataset.attack);
+    const roll = Number(card.dataset.roll);
+    const baseAttack = Number(card.dataset.baseattack);
+    const meleeBonus = Number(card.dataset.meleebonus || 0);
 
+    const actorId = card.dataset.actor;
+    const weaponId = card.dataset.weapon;
+    const critical = card.dataset.critical;
+    const location = card.dataset.location;
+    const brutal = card.dataset.brutal;
 
-  const actorId = card.dataset.actor;
-  const weaponId = card.dataset.weapon;
-  const critical = card.dataset.critical;
-  const location = card.dataset.location;
-  const brutal = card.dataset.brutal;
+    const targetId = targets[0].id;
 
-  const targetId = targets[0].id;
+    const msg = game.messages.get(
+      ev.currentTarget.closest(".message").dataset.messageId
+    );
 
-  const message = game.messages.get(
-    ev.currentTarget.closest(".message").dataset.messageId
-  );
+    const actor = game.actors.get(actorId);
+    const weapon = actor.items.get(weaponId);
+    const token = canvas.tokens.get(targetId);
 
-  const actor = game.actors.get(actorId);
-const weapon = actor.items.get(weaponId);
-const token = canvas.tokens.get(targetId);
+    const newHtml = `
+    <div class="sdp-attack"
+         data-type="melee"
+         data-roll="${roll}"
+         data-attack="${attackScore}"
+         data-baseattack="${baseAttack}"
+         data-meleebonus="${meleeBonus}"
+         data-critical="${critical}"
+         data-location="${location}"
+         data-brutal="${brutal}"
+         data-actor="${actorId}"
+         data-weapon="${weaponId}"
+         data-target="${targetId}">
 
-const newHtml = `
-<div class="sdp-attack"
-     data-type="melee"
-     data-roll="${roll}"
-     data-attack="${attackScore}"
-     data-baseattack="${baseAttack}"
-     data-meleebonus="${meleeBonus}"
-     data-critical="${critical}"
-     data-location="${location}"
-     data-brutal="${brutal}"
-     data-actor="${actorId}"
-     data-weapon="${weaponId}"
-     data-target="${targetId}">
+      <h3>${actor.name} attacks with ${weapon.name}</h3>
 
-  <h3>${actor.name} attacks with ${weapon.name}</h3>
+      <button class="edit-attack">Edit</button>
 
-  <button class="edit-attack">Edit</button>
+      <p>Roll: ${roll}</p>
+      <p>Attack Score: ${attackScore}</p>
+      <p>Target: ${token.name}</p>
+      <p>Location: ${CONFIG.SDP.hitLocations[location]}</p>
 
-  <p>Roll: ${roll}</p>
-<p>Attack Score: ${attackScore}</p>
-<p>Target: ${token.name}</p>
+      <button class="apply-defense">Apply Defense</button>
 
-<p>Location: ${CONFIG.SDP.hitLocations[location]}</p>
+    </div>
+    `;
 
-  <button class="apply-defense">Apply Defense</button>
+    await msg.update({ content: newHtml });
 
-</div>
-`;
-
-  await message.update({ content: newHtml });
-
-});
+  });
 
 
   //===================
@@ -89,7 +84,201 @@ const newHtml = `
     const location = card.dataset.location;
     const critical = card.dataset.critical;
 
-    const message = game.messages.get(
+    const msg = game.messages.get(
+      ev.currentTarget.closest(".message").dataset.messageId
+    );
+
+    const token = canvas.tokens.get(targetId);
+    const target = token.actor;
+
+    // ======================
+// DEFENSE WEAPON LOGIC
+// ======================
+
+const defenseWeapon = target.items.find(i =>
+  i.type === "weapon" &&
+  i.system.equipped &&
+  i.system.isDefenseWeapon
+);
+
+let parry = target.system.derived.parry.value;
+
+if (defenseWeapon) {
+
+  console.log("SDP | Defense weapon used", defenseWeapon.name);
+
+  // 👉 exemple : base parry + weapon bonus
+  const weaponParry = defenseWeapon.system.parry || 0;
+
+  parry = target.system.derived.parry.value + weaponParry;
+
+  // ======================
+  // OFFHAND PENALTY
+  // ======================
+
+  const isOffhand = defenseWeapon.system.offhand;
+
+  const hasAmbidextrous = target.items.some(i =>
+    i.type === "talent" &&
+    i.name.toLowerCase().includes("ambidextrous")
+  );
+
+  if (isOffhand && !hasAmbidextrous) {
+    parry -= 2;
+
+    console.log("SDP | Offhand penalty applied (-2)");
+  }
+
+}
+
+    const evasion = target.system.derived.evasion.value;
+
+    // ===== SIDESTEP CHECK =====
+    const sidestepTalent = target.items.find(i =>
+      i.type === "talent" &&
+      i.name.toLowerCase().includes("sidestep")
+    );
+
+    const hasSidestep = sidestepTalent && (sidestepTalent.system.advances || 0) > 0;
+
+    // ===== SHIELD CHECK =====
+    const hasShield = target.items.some(i =>
+      i.type === "weapon" &&
+      i.system.equipped &&
+      i.system.weaponGroup === "shield"
+    );
+
+let canChoose = false;
+let forcedChoice = null;
+
+// ======================
+// SMART LOGIC (FINAL FIX)
+// ======================
+
+// CAS 1 — les deux → TOUJOURS choix
+if (hasSidestep && hasShield) {
+  canChoose = true;
+}
+
+// CAS 2 — sidestep dominant → AUTO EVASION
+else if (hasSidestep && evasion >= parry) {
+  forcedChoice = "evasion";
+}
+
+// CAS 3 — shield dominant → AUTO PARRY
+else if (hasShield && parry >= evasion) {
+  forcedChoice = "parry";
+}
+
+// CAS 4 — un seul des deux mais pas dominant → CHOIX
+else if (hasSidestep || hasShield) {
+  canChoose = true;
+}
+
+// CAS 5 — fallback
+else {
+  forcedChoice = parry >= evasion ? "parry" : "evasion";
+}
+
+console.log("SDP | Defense decision (FINAL)", {
+  parry,
+  evasion,
+  hasSidestep,
+  hasShield,
+  forcedChoice,
+  canChoose
+});
+    // ===== CHOICE CARD =====
+    if (canChoose) {
+
+      await ChatMessage.create({
+        content: `
+        <div class="sdp-defense-choice"
+             data-attack="${attackScore}"
+             data-actor="${actorId}"
+             data-weapon="${weaponId}"
+             data-target="${targetId}"
+             data-location="${location}"
+             data-critical="${critical}"
+             data-brutal="${card.dataset.brutal}"
+             data-attack-message-id="${msg.id}">
+
+          <h3>${target.name} chooses defense</h3>
+
+          <p>Parry: ${parry}</p>
+          <p>Evasion: ${evasion}</p>
+
+          <button class="choose-defense" data-defense="parry">Parry</button>
+          <button class="choose-defense" data-defense="evasion">Evasion</button>
+
+        </div>
+        `
+      });
+
+      return;
+    }
+
+    // ===== AUTO DEFENSE =====
+const selected = forcedChoice;
+const defense = selected === "parry" ? parry : evasion;
+const result = attackScore > defense ? "HIT" : "MISS";
+
+// ======================
+// CREATE DEFENSE CARD
+// ======================
+
+await ChatMessage.create({
+  content: `
+    <h3>Defense Resolution</h3>
+
+    <p>Target: ${target.name}</p>
+
+    <p>Parry: ${parry}</p>
+    <p>Evasion: ${evasion}</p>
+
+    <p>Defense Used: ${selected.toUpperCase()}</p>
+
+    <p><strong>${result}</strong></p>
+  `
+});
+
+// ======================
+// UPDATE ATTACK CARD
+// ======================
+
+await updateAttackCard(msg.id, {
+  defense,
+  result,
+  selected,
+  actorId,
+  weaponId,
+  targetId
+});
+
+  });
+
+
+  //===================
+  // CHOOSE DEFENSE
+  //===================
+
+  html.find(".choose-defense").click(async ev => {
+
+    const button = ev.currentTarget;
+    const card = button.closest(".sdp-defense-choice");
+
+    if (!card) return;
+
+    const selected = button.dataset.defense;
+
+    const attackScore = Number(card.dataset.attack);
+    const targetId = card.dataset.target;
+    const actorId = card.dataset.actor;
+    const weaponId = card.dataset.weapon;
+
+    const attackMessageId = card.dataset.attackMessageId;
+
+    const msg = game.messages.get(
       ev.currentTarget.closest(".message").dataset.messageId
     );
 
@@ -99,76 +288,82 @@ const newHtml = `
     const parry = target.system.derived.parry.value;
     const evasion = target.system.derived.evasion.value;
 
-    const defense = Math.max(parry, evasion);
-
+    const defense = selected === "parry" ? parry : evasion;
     const result = attackScore > defense ? "HIT" : "MISS";
 
-ChatMessage.create({
+    console.log("SDP | Defense selected", { selected, defense });
 
+    // ===== UPDATE DEFENSE CARD =====
+    await msg.update({
   content: `
-  <h3>Defense Resolution</h3>
+    <h3>Defense Resolution</h3>
 
-  <p>Target: ${target.name}</p>
+    <p>Target: ${target.name}</p>
 
-  <p>Parry: ${parry}</p>
-  <p>Evasion: ${evasion}</p>
+    <p>Parry: ${parry}</p>
+    <p>Evasion: ${evasion}</p>
 
-  <p><strong>Defense Used: ${defense}</strong></p>
+    <p>Defense Used: ${selected.toUpperCase()}</p>
 
-  <p>Attack Score: ${attackScore}</p>
-
-  <p><strong>${result}</strong></p>
-  `,
-
-  whisper: ChatMessage.getWhisperRecipients("GM")
-
+    <p><strong>${result}</strong></p>
+  `
 });
 
-    const attacker = game.actors.get(actorId);
-    const weapon = attacker.items.get(weaponId);
-
-    let damageButton = "";
-
-    if(result === "HIT"){
-
-      damageButton = `
-      <button
-        class="roll-damage"
-        data-actor="${actorId}"
-        data-weapon="${weaponId}"
-        data-target="${targetId}">
-        Roll Damage
-      </button>
-      `;
-
-    }
-
-    const newHtml = `
- <div class="sdp-attack"
-     data-attack="${attackScore}"
-     data-critical="${critical}"
-     data-actor="${actorId}"
-     data-brutal="${card.dataset.brutal}"
-     data-weapon="${weaponId}"
-     data-target="${targetId}"
-     data-location="${location}">
-
-      <h3>${attacker.name} attacks with ${weapon.name}</h3>
-
-      <p>Attack Score: ${attackScore}</p>
-
-      <p>Location: ${CONFIG.SDP.hitLocations[location]}</p>
-
-      <p><strong>${result}</strong></p>
-
-      ${damageButton}
-
-    </div>
-    `;
-
-    await message.update({
-      content: newHtml
-    }); 
+    // ===== UPDATE ATTACK CARD =====
+    await updateAttackCard(attackMessageId, {
+      defense,
+      result,
+      selected,
+      actorId,
+      weaponId,
+      targetId
+    });
 
   });
+
+}
+
+
+//===================
+// UPDATE ATTACK CARD (PATCH STYLE)
+//===================
+
+async function updateAttackCard(messageId, { defense, result, selected, actorId, weaponId, targetId }) {
+
+  const attackMessage = game.messages.get(messageId);
+  if (!attackMessage) return;
+
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(attackMessage.content, "text/html");
+
+  const card = doc.querySelector(".sdp-attack");
+  if (!card) return;
+
+  // remove old buttons
+  card.querySelector(".edit-attack")?.remove();
+  card.querySelector(".apply-defense")?.remove();
+
+  // add result
+  const resultBlock = document.createElement("div");
+  resultBlock.innerHTML = `
+    <p>Defense Used: ${selected.toUpperCase()}</p>
+    <p><strong>${result}</strong></p>
+  `;
+  card.appendChild(resultBlock);
+
+  // add damage button
+  if (result === "HIT") {
+    const btn = document.createElement("button");
+    btn.classList.add("roll-damage");
+    btn.dataset.actor = actorId;
+    btn.dataset.weapon = weaponId;
+    btn.dataset.target = targetId;
+    btn.innerText = "Roll Damage";
+
+    card.appendChild(btn);
   }
+
+  await attackMessage.update({
+    content: card.outerHTML
+  });
+}
