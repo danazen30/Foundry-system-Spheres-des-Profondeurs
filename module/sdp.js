@@ -14,6 +14,7 @@ import { SdpSpecieSheet } from "./items/specie-sheet.js";
 import { SdpSignSheet } from "./items/sign-sheet.js";
 import { SdpItem } from "./items/item.js";
 import { SdpSpellSheet } from "./items/spell-sheet.js";
+import { SdpAmmunitionSheet } from "./items/ammunition-sheet.js";
 
 import { SdpRoll } from "./rolls/roll.js";
 import { SdpDamage } from "./combat/damage.js";
@@ -91,6 +92,8 @@ foundry.documents.collections.Items.registerSheet("sdp", SdpCareerSheet, { types
 foundry.documents.collections.Items.registerSheet("sdp", SdpSignSheet, { types: ["sign"], makeDefault: true });
 
 foundry.documents.collections.Items.registerSheet("sdp", SdpSpellSheet, { types: ["spell"], makeDefault: true });
+
+foundry.documents.collections.Items.registerSheet("sdp", SdpAmmunitionSheet, { types: ["ammunition"], makeDefault: true });
 
 Handlebars.registerHelper("gte", function(a, b) {
   return a >= b;

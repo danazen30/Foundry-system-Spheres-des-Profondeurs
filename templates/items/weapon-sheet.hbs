@@ -4,6 +4,11 @@
   <input type="text" name="name" value="{{item.name}}" />
 </h1>
 
+<div class="form-group">
+  <label>Quantity</label>
+  <input type="number" name="system.quantity.value" value="{{system.quantity.value}}">
+</div>
+
 <h2>Weapon</h2>
 
 <div class="form-group">
@@ -54,6 +59,27 @@
   <label>Damage Dice</label>
   <input type="text" name="system.damageDice" value="{{system.damageDice}}">
 </div>
+
+{{#if (eq system.category "ranged")}}
+
+<h3>Ranged Settings</h3>
+
+<div class="form-group">
+  <label>Range</label>
+  <input type="number" name="system.range" value="{{system.range}}">
+</div>
+
+<div class="form-group">
+  <label>Ammunition Group</label>
+  <input type="text" name="system.ammunitionGroup" value="{{system.ammunitionGroup}}">
+</div>
+
+<div class="form-group">
+  <label>Consumes Ammo</label>
+  <input type="checkbox" name="system.consumesAmmo" {{checked system.consumesAmmo}}>
+</div>
+
+{{/if}}
 
 <div class="form-group">
   <label>Equipped</label>

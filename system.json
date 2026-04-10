@@ -98,6 +98,14 @@
       "system": "sdp",
       "path": "packs/spell",
       "type": "Item"
+    },
+
+    {
+      "name": "ammunition",
+      "label": "SDP Ammunition",
+      "system": "sdp",
+      "path": "packs/ammunition",
+      "type": "Item"
     }
 
   ],
@@ -137,7 +145,8 @@
       "injury": {},
       "specie": {},
       "career": {},
-      "sign":{}
+      "sign":{},
+      "ammunition": {}
     }
   }
 }

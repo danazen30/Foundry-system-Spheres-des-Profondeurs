@@ -52,13 +52,35 @@ if (dialogMods.location) {
 
   if(isRanged){
 
+
+    // =========================
+// AMMO
+// =========================
+
+let ammo = null;
+
+if (weapon.system.currentAmmo) {
+  ammo = actor.items.get(weapon.system.currentAmmo);
+}
+
+console.log("SDP | Ammo used", {
+  weapon: weapon.name,
+  ammo: ammo?.name
+});
+
 // =========================
 // BEST SKILL (MULTI SUPPORT)
 // =========================
 
 const base = actor._getBestWeaponSkill(weapon);
 
-const targetValue = base + (dialogMods.totalMod || 0);
+let rangeMod = 0;
+
+if (ammo) {
+  rangeMod = Number(ammo.system.rangeModifier) || 0;
+}
+
+const targetValue = base + (dialogMods.totalMod || 0) + rangeMod;
 
 // 🔥 juste pour affichage
 let source = "Ranged Ability";
@@ -128,6 +150,7 @@ if(crit.failure){
       <button type="button" type="button" class="roll-damage"
         data-actor="${actor.id}"
         data-weapon="${weapon.id}"
+        data-ammo="${ammo?.id || ""}"
         data-target="${targetId ?? ""}">
         Roll Damage
       </button>
@@ -138,6 +161,7 @@ if(crit.failure){
     const html = `
 <div class="sdp-attack" data-sdp-safe="true"
      data-actor="${actor.id}"
+     data-ammo="${ammo?.id || ""}"
      data-roll="${result}"
      data-type="ranged"
      data-testtarget="${targetValue}"

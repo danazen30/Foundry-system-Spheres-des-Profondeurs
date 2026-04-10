@@ -364,6 +364,11 @@ SL = game.sdp.Roll.applySuccessBonus(SL, actor, selectedTalents);
 
               const weapon = actor.items.get(card.dataset.weapon);
 
+              const ammoId = card.dataset.ammo;
+const ammo = ammoId ? actor.items.get(ammoId) : null;
+
+console.log("SDP | EDIT Ammo", ammo?.name);
+
               const crit = {
                 success: newRoll >= 1 && newRoll <= 5,
                 failure: newRoll >= 96
@@ -384,6 +389,7 @@ SL = game.sdp.Roll.applySuccessBonus(SL, actor, selectedTalents);
                 <button class="roll-damage"
                   data-actor="${card.dataset.actor}"
                   data-weapon="${card.dataset.weapon}"
+                  data-ammo="${ammoId || ""}"
                   data-target="${card.dataset.target}">
                   Roll Damage
                 </button>
@@ -392,6 +398,7 @@ SL = game.sdp.Roll.applySuccessBonus(SL, actor, selectedTalents);
 
               newHtml = `
 <div class="sdp-attack"
+     data-ammo="${ammoId || ""}"
      data-type="ranged"
      data-roll="${newRoll}"
      data-testtarget="${target}"

@@ -451,6 +451,12 @@
         "value": 0
       },
 
+      "ammunitionGroup": {
+        "type": "string",
+        "label": "Ammunition Group",
+        "value": ""
+      },
+
       "offhand": {
         "type": "boolean",
         "label": "Offhand",
@@ -482,12 +488,6 @@
         }
       },
 
-      "ammunitionGroup": {
-        "type": "string",
-        "label": "Ammunition Group",
-        "value": ""
-      },
-
       "currentAmmo": {
         "type": "string",
         "label": "Current Ammo",
@@ -498,6 +498,18 @@
         "type": "boolean",
         "label": "Consumes Ammo",
         "value": true
+      },
+
+      "traits": {
+        "type": "string",
+        "label": "Traits",
+        "value": ""
+      },
+
+      "flaws": {
+        "type": "string",
+        "label": "Flaws",
+        "value": ""
       }
     },
 
@@ -655,6 +667,53 @@
         "type": "number",
         "label": "Duration",
         "value": 0
+      }
+    },
+    "ammunition": {
+      "templates": [
+        "quantity",
+        "description",
+        "encumbrance",
+        "price",
+        "gmNotes",
+        "playerNotes"
+      ],
+
+      "weaponGroup": {
+        "type": "string",
+        "label": "Weapon Group",
+        "value": ""
+      },
+
+      "damage": {
+        "base": {
+          "type": "number",
+          "label": "Flat Damage",
+          "value": 0
+        },
+        "dice": {
+          "type": "string",
+          "label": "Damage Dice",
+          "value": ""
+        }
+      },
+
+      "rangeModifier": {
+        "type": "number",
+        "label": "Range Modifier",
+        "value": 0
+      },
+
+      "traits": {
+        "type": "string",
+        "label": "Traits",
+        "value": ""
+      },
+
+      "flaws": {
+        "type": "string",
+        "label": "Flaws",
+        "value": ""
       }
     },
     "injury": {

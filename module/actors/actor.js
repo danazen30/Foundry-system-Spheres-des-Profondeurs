@@ -521,6 +521,29 @@ this.system.resources.mana = this.system.resources.mana || {};
 
 this.system.resources.mana.max = wpb * multiplier;
 
+// =========================
+// 🔋 MANA CLAMP (ANTI OVERFLOW)
+// =========================
+
+const mana = system.resources?.mana;
+
+if (mana) {
+
+  const before = mana.value;
+
+  mana.value = Math.min(mana.value, mana.max);
+
+  if (mana.value !== before) {
+    console.log("SDP | Mana clamped", {
+      before,
+      after: mana.value,
+      max: mana.max,
+      actor: this.name
+    });
+  }
+
+}
+
   }
 
   // =====================

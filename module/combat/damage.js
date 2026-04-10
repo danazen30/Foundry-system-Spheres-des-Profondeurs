@@ -83,7 +83,19 @@ static getWoundSeverity(damage, WT) {
   return "instant";
 }
 
-static async rollDamage({ actor, weapon, target, location, critical, brutal }) {
+static async rollDamage({ actor, weapon, target, location, critical, brutal, ammoId }) {
+
+  // =========================
+// AMMO
+// =========================
+
+let ammo = null;
+
+if (ammoId) {
+  ammo = actor.items.get(ammoId);
+}
+
+console.log("SDP | Damage ammo", ammo?.name);
 
   // =========================
   // ARMOR
@@ -149,10 +161,42 @@ if (Array.isArray(diceFormula)) {
 baseFormula = String(baseFormula).trim();
 diceFormula = String(diceFormula).trim();
 
-  let useSB = baseFormula.includes("SB");
+let useSB = baseFormula.includes("SB");
 
-  baseFormula = baseFormula.replace("SB", "").replace("+", "").trim();
-  baseWeapon = Number(baseFormula) || 0;
+// =========================
+// BASE WEAPON
+// =========================
+
+let weaponBase = baseFormula
+  .replace("SB", "")
+  .replace("+", "")
+  .trim();
+
+weaponBase = Number(weaponBase) || 0;
+
+baseWeapon = weaponBase;
+
+// =========================
+// AMMO (BASE + DICE)
+// =========================
+
+if (ammo) {
+
+  const ammoBase = Number(ammo.system.damage?.base?.value || 0);
+  baseWeapon += ammoBase;
+
+  const ammoDice = ammo.system.damage?.dice?.value;
+
+  if (ammoDice) {
+    diceFormula = diceFormula
+      ? `${diceFormula} + ${ammoDice}`
+      : ammoDice;
+  }
+
+}
+
+console.log("SDP | FINAL BASE:", baseWeapon);
+console.log("SDP | FINAL DICE:", diceFormula);
 
   // =========================
   // CRITICAL

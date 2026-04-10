@@ -313,45 +313,35 @@ readonly>
 </table>
 
 
-<h2>Weapons</h2>
+<h2>Melee Weapons</h2>
 
 <table class="weapons-table">
-
 <thead>
 <tr>
 <th>Name</th>
-<th>Skill</th>
 <th>Atk</th>
 <th>Parry</th>
-<th>Offhand</th>
-<th>Equipped</th>
 <th>Damage</th>
+<th>Equip</th>
+<th>Offhand</th>
 <th>Attack</th>
+<th>Qty</th>
 <th></th>
 </tr>
 </thead>
 
 <tbody>
 
-{{#each actor.items as |item|}}
-{{#if (eq item.type "weapon")}}
+{{#each meleeWeapons as |item|}}
 
 <tr>
 
 <td>{{item.name}}</td>
-
-<td>{{item.system.skill}}</td>
-
 <td>{{item.system.attackBonus}}</td>
-
 <td>{{item.system.parryBonus}}</td>
 
 <td>
-  <input
-    type="checkbox"
-    data-action="toggleOffhand"
-    data-item-id="{{item.id}}"
-    {{checked item.system.offhand}}>
+  {{item.system.damage}} + {{item.system.damageDice}}
 </td>
 
 <td>
@@ -359,39 +349,27 @@ readonly>
     type="checkbox"
     data-action="toggleWeaponEquip"
     data-item-id="{{item.id}}"
-    {{checked item.system.equipped}}>
+    {{checked item.system.equipped}}
+  >
 </td>
 
 <td>
-  {{#if (includes item.system.damage "SB")}}
-    {{../system.attributes.strength.bonus}}
-  {{/if}}
-
-  {{#if item.system.damage}}
-    {{#unless (includes item.system.damage "SB")}}
-      {{item.system.damage}}
-    {{else}}
-      {{#if (gt (toNumber (replace item.system.damage "SB" "")) 0)}}
-        + {{replace item.system.damage "SB" ""}}
-      {{/if}}
-    {{/unless}}
-  {{/if}}
-
-  {{#if item.system.damageDice}}
-    + {{item.system.damageDice}}
-  {{/if}}
-
-  {{#if item.system.usesSB}}
-    {{#if ../signEffects.damageBonus}}
-      + {{../signEffects.damageBonus}}
-    {{/if}}
-  {{/if}}
+  <input
+    type="checkbox"
+    data-action="toggleOffhand"
+    data-item-id="{{item.id}}"
+    {{checked item.system.offhand}}
+  >
 </td>
 
 <td>
   <button data-action="weaponAttack" data-item-id="{{item.id}}">
     Attack
   </button>
+</td>
+
+<td>
+  {{item.system.quantity.value}}
 </td>
 
 <td class="item-actions">
@@ -401,11 +379,176 @@ readonly>
 
 </tr>
 
-{{/if}}
 {{/each}}
 
 </tbody>
+</table>
 
+<h2>Ranged Weapons</h2>
+
+<table class="weapons-table">
+<thead>
+<tr>
+<th>Name</th>
+<th>Range</th>
+<th>Ammo</th>
+<th>Damage</th>
+<th>Equip</th>
+<th>Attack</th>
+<th>Qty</th>
+<th></th>
+</tr>
+</thead>
+
+<tbody>
+
+{{#each rangedWeapons as |item|}}
+
+<tr>
+
+<td>{{item.name}}</td>
+
+<td>
+  {{item.system.range}}
+
+  {{#if item.system.currentAmmo}}
+    {{#each item.compatibleAmmo as |ammo|}}
+      {{#if (eq ammo.id item.system.currentAmmo)}}
+        ({{ammo.system.rangeModifier}})
+      {{/if}}
+    {{/each}}
+  {{/if}}
+</td>
+
+<td>
+  <select
+    data-action="selectAmmo"
+    data-item-id="{{item.id}}"
+  >
+
+    <option value="">-- None --</option>
+
+    {{#each item.compatibleAmmo as |ammo|}}
+  <option
+    value="{{ammo.id}}"
+    {{#if (eq ammo.id item.system.currentAmmo)}}
+      selected
+    {{/if}}
+  >
+        {{ammo.name}} ({{ammo.system.quantity.value}})
+      </option>
+    {{/each}}
+
+  </select>
+</td>
+
+<td>
+  {{item.system.damage}}
+  {{#if item.system.damageDice}}
+    + {{item.system.damageDice}}
+  {{/if}}
+
+  {{#if item.system.currentAmmo}}
+    {{#each item.compatibleAmmo as |ammo|}}
+      {{#if (eq ammo.id item.system.currentAmmo)}}
+
+        {{#if ammo.system.damage.base.value}}
+          + {{ammo.system.damage.base.value}}
+        {{/if}}
+
+        {{#if ammo.system.damage.dice.value}}
+          + {{ammo.system.damage.dice.value}}
+        {{/if}}
+
+      {{/if}}
+    {{/each}}
+  {{/if}}
+</td>
+
+<td>
+  <input
+    type="checkbox"
+    data-action="toggleWeaponEquip"
+    data-item-id="{{item.id}}"
+    {{checked item.system.equipped}}
+  >
+</td>
+
+<td>
+  <button data-action="weaponAttack" data-item-id="{{item.id}}">
+    Shoot
+  </button>
+</td>
+
+<td>
+  {{item.system.quantity.value}}
+</td>
+
+<td class="item-actions">
+  <button data-action="editItem" data-item-id="{{item.id}}">✏️</button>
+  <button data-action="deleteItem" data-item-id="{{item.id}}">🗑️</button>
+</td>
+
+</tr>
+
+{{/each}}
+
+</tbody>
+</table>
+
+<h2>Ammunition</h2>
+
+<table class="ammo-table">
+<thead>
+<tr>
+<th>Name</th>
+<th>Group</th>
+<th>Qty</th>
+<th>Damage</th>
+<th>Range Mod</th>
+<th></th>
+</tr>
+</thead>
+
+<tbody>
+
+{{#each ammunition as |item|}}
+
+<tr>
+
+<td>{{item.name}}</td>
+
+<td>{{item.system.weaponGroup}}</td>
+
+<td>
+  <input
+    type="number"
+    data-action="updateAmmoQty"
+    data-item-id="{{item.id}}"
+    value="{{item.system.quantity.value}}"
+    min="0"
+  >
+</td>
+
+<td>
+  {{item.system.damage.base.value}}
+  {{#if item.system.damage.dice.value}}
+    + {{item.system.damage.dice.value}}
+  {{/if}}
+</td>
+
+<td>{{item.system.rangeModifier}}</td>
+
+<td class="item-actions">
+  <button data-action="editItem" data-item-id="{{item.id}}">✏️</button>
+  <button data-action="deleteItem" data-item-id="{{item.id}}">🗑️</button>
+</td>
+
+</tr>
+
+{{/each}}
+
+</tbody>
 </table>
 
 <h2>Armors</h2>

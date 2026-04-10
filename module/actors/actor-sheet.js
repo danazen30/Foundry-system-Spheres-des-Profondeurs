@@ -133,6 +133,41 @@ const spellsSuperior = spells.filter(s =>
   (s.system.magicType?.value || "minor") === "superior"
 );
 
+// =========================
+// WEAPONS SPLIT
+// =========================
+
+const weapons = this.document.items.filter(i => i.type === "weapon");
+const allAmmo = this.document.items.filter(i => i.type === "ammunition");
+
+const meleeWeapons = weapons.filter(w => w.system.category === "melee");
+
+const rangedWeapons = weapons
+  .filter(w => w.system.category === "ranged");
+
+for (let w of rangedWeapons) {
+
+  w.compatibleAmmo = allAmmo.filter(a =>
+    a.system.weaponGroup === w.system.ammunitionGroup
+  );
+
+}
+console.log("SDP | Ammo mapping", {
+  ranged: rangedWeapons.map(w => ({
+    weapon: w.name,
+    ammo: w.compatibleAmmo.map(a => a.name)
+  }))
+});
+
+console.log("SDP | Weapons split", {
+  melee: meleeWeapons.length,
+  ranged: rangedWeapons.length
+});
+
+const ammunition = this.document.items.filter(i => i.type === "ammunition");
+
+console.log("SDP | Ammo count", ammunition.length);
+
 return {
   actor: this.document,
   system: this.document.system,
@@ -155,7 +190,10 @@ return {
   },
   spellsMinor,
   spellsAdvanced,
-  spellsSuperior
+  spellsSuperior,
+  meleeWeapons,
+  rangedWeapons,
+  ammunition
 };
   }
 
@@ -503,17 +541,81 @@ root.querySelectorAll('[data-action="weaponAttack"]').forEach(el => {
 
     const weapon = this.document.items.get(event.currentTarget.dataset.itemId);
 
-    let target;
+if (!weapon) return;
 
-    // =========================
-    // RANGED
-    // =========================
+// =========================
+// WEAPON QUANTITY CHECK
+// =========================
 
-    if (weapon.system.category === "ranged") {
+const weaponQty = weapon.system.quantity?.value;
 
-      target = this.document._getBestWeaponSkill(weapon);
+console.log("SDP | Weapon qty check", {
+  weapon: weapon.name,
+  qty: weaponQty
+});
 
-    }
+// 🔥 uniquement si défini
+if (weaponQty !== undefined && weaponQty !== null && weaponQty <= 0) {
+
+  ui.notifications.warn(`${weapon.name} is depleted`);
+  return;
+
+}
+
+// =========================
+// AMMO CHECK (AVANT DIALOG)
+// =========================
+
+if (weapon.system.category === "ranged" && weapon.system.consumesAmmo) {
+
+  if (!weapon.system.currentAmmo) {
+
+    ui.notifications.warn("No ammunition selected");
+    return;
+
+  }
+
+  const ammo = this.document.items.get(weapon.system.currentAmmo);
+
+  if (!ammo) {
+
+    ui.notifications.warn("Ammunition not found");
+    return;
+
+  }
+
+  const qty = ammo.system.quantity?.value ?? 0;
+
+  console.log("SDP | UI Ammo check", {
+    weapon: weapon.name,
+    ammo: ammo.name,
+    qty
+  });
+
+  if (qty <= 0) {
+
+    ui.notifications.warn("No ammunition left");
+    return;
+
+  }
+
+}
+
+// =========================
+// NORMAL FLOW
+// =========================
+
+let target;
+
+// =========================
+// RANGED
+// =========================
+
+if (weapon.system.category === "ranged") {
+
+  target = this.document._getBestWeaponSkill(weapon);
+
+}
 
     // =========================
     // MELEE
@@ -1343,6 +1445,61 @@ root.querySelectorAll('[data-action="levelUp"]').forEach(el => {
 
 });
 
+// =========================
+// AMMO QUANTITY UPDATE
+// =========================
+
+root.querySelectorAll('[data-action="updateAmmoQty"]').forEach(el => {
+
+  el.addEventListener("change", async (event) => {
+
+    const input = event.currentTarget;
+    const item = this.document.items.get(input.dataset.itemId);
+
+    if (!item) return;
+
+    const value = Math.max(0, Number(input.value) || 0);
+
+    console.log("SDP | Ammo qty update", {
+      item: item.name,
+      value
+    });
+
+    await item.update({
+      "system.quantity.value": value
+    });
+
+  });
+
+});
+
+// =========================
+// SELECT AMMO
+// =========================
+
+root.querySelectorAll('[data-action="selectAmmo"]').forEach(el => {
+
+  el.addEventListener("change", async (event) => {
+
+    const select = event.currentTarget;
+    const weapon = this.document.items.get(select.dataset.itemId);
+
+    if (!weapon) return;
+
+    const ammoId = select.value;
+
+    console.log("SDP | Ammo selected", {
+      weapon: weapon.name,
+      ammoId
+    });
+
+    await weapon.update({
+      "system.currentAmmo": ammoId
+    });
+
+  });
+
+});
 
 }
 
