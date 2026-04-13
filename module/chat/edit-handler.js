@@ -1,5 +1,6 @@
 import { SimpleDialog } from "../apps/simple-dialog.js";
 import { SdpRoll } from "../rolls/roll.js";
+import { WEAPON_TRAITS } from "../system/config.js";
 
 
 export function registerEditHandlers(html, message) {
@@ -46,9 +47,21 @@ export function registerEditHandlers(html, message) {
 
 const success = newRoll <= newTarget;
 
+const crit = SdpRoll.getCritical(newRoll);
+
 // 🔥 FIX -0
 if (!success && SL === 0) {
   SL = -1;
+}
+
+let critText = "";
+
+if (crit.success){
+  critText = `<p style="color:green"><strong>CRITICAL SUCCESS</strong></p>`;
+}
+
+if (crit.failure){
+  critText = `<p style="color:red"><strong>CRITICAL FAILURE</strong></p>`;
 }
 
             const message = game.messages.get(
@@ -77,6 +90,8 @@ if (!success && SL === 0) {
   <p>SL: ${SL} (${game.sdp.Roll.getSLLabel(SL)})</p>
 
   <p><strong>${success ? "SUCCESS" : "FAILURE"}</strong></p>
+
+${critText}
 
   <button class="sdp-opposed">Oppose</button>
   <button class="sdp-stop-opposed">Stop Oppose</button>
@@ -347,11 +362,28 @@ await message.update({
               const actor = game.actors.get(card.dataset.actor);
 if (!actor) return;
 
-let SL =
-  Math.floor(target / 10) -
-  Math.floor(newRoll / 10);
+const rawTraits = JSON.parse(card.dataset.traits || "[]");
 
-  const success = newRoll <= target;
+const traits = rawTraits.map(t => {
+  if (typeof t === "string") {
+    return { key: t };
+  }
+  return t;
+});
+
+let fastBonus = 0;
+
+if (traits.some(t => t.key === "fast")) {
+  fastBonus = 10;
+}
+
+const finalTarget = target + fastBonus;
+
+const success = newRoll <= finalTarget;
+
+let SL =
+  Math.floor(finalTarget / 10) -
+  Math.floor(newRoll / 10);
 
 if (!success && SL === 0) {
   SL = -1;
@@ -369,10 +401,26 @@ const ammo = ammoId ? actor.items.get(ammoId) : null;
 
 console.log("SDP | EDIT Ammo", ammo?.name);
 
-              const crit = {
-                success: newRoll >= 1 && newRoll <= 5,
-                failure: newRoll >= 96
-              };
+let crit = SdpRoll.getCritical(newRoll);
+
+// =========================
+// TRAIT : IMPALING
+// =========================
+
+const traitsData = traits
+  .filter(t => t)
+  .map(t => ({
+    key: t.key,
+label: CONFIG.SDP.WEAPON_TRAITS?.[t.key]?.label || t.key,
+value: t.value
+  }));
+
+const isImpaling = traits.some(t => t.key === "impaling");
+const isRound = newRoll % 10 === 0;
+
+if (isImpaling && isRound && newRoll <= target) {
+  crit.success = true;
+}
 
               let critText = "";
               if(crit.success){
@@ -407,13 +455,27 @@ console.log("SDP | EDIT Ammo", ammo?.name);
      data-target="${card.dataset.target}"
      data-location="${card.dataset.location}"
      data-critical="${crit.success}"
-     data-brutal="${card.dataset.brutal}">
+     data-brutal="${card.dataset.brutal}"
+     data-traits='${JSON.stringify(traits)}'>
 
   <h3>${actor.name} shoots with ${weapon.name}</h3>
 
   <button class="edit-attack">Edit</button>
 
-  <p>Target: ${target}</p>
+  ${traitsData.length ? `
+  <div class="weapon-traits">
+    <strong>Traits:</strong>
+    ${traitsData.map(t => `
+      <span class="trait-tag"
+  data-trait="${t.key}"
+  data-value="${t.value || ""}">
+        ${t.label}${t.value ? ` (${t.value})` : ""}
+      </span>
+    `).join("")}
+  </div>
+` : ""}
+
+  <p>Target: ${finalTarget}</p>
   <p>Roll: ${newRoll} (${oldRoll})</p>
   <p>SL: ${SL} (${game.sdp.Roll.getSLLabel(SL)})</p>
 
@@ -434,17 +496,51 @@ console.log("SDP | EDIT Ammo", ammo?.name);
               const SL = (newRoll === 100) ? 0 : 10 - tens;
 
               const baseAttack = Number(card.dataset.baseattack);
-              const meleeBonus = Number(card.dataset.meleebonus || 0);
+const meleeBonus = Number(card.dataset.meleebonus || 0);
 
-              const attackScore = baseAttack + meleeBonus + SL;
+const rawTraits = JSON.parse(card.dataset.traits || "[]");
 
-              const actor = game.actors.get(card.dataset.actor);
-              const weapon = actor.items.get(card.dataset.weapon);
+const traits = rawTraits.map(t => {
+  if (typeof t === "string") {
+    return { key: t };
+  }
+  return t;
+});
 
-              const crit = {
-                success: newRoll >= 1 && newRoll <= 5,
-                failure: newRoll >= 96
-              };
+// =========================
+// TRAIT : FAST
+// =========================
+let fastBonus = 0;
+
+if (traits.some(t => t.key === "fast")) {
+  fastBonus = 1;
+}
+
+const attackScore = baseAttack + meleeBonus + SL + fastBonus;
+
+const actor = game.actors.get(card.dataset.actor);
+const weapon = actor.items.get(card.dataset.weapon);
+
+let crit = SdpRoll.getCritical(newRoll);
+
+// =========================
+// TRAITS DISPLAY
+// =========================
+const traitsData = traits.map(t => ({
+  key: t.key,
+  label: WEAPON_TRAITS?.[t.key]?.label || t.key,
+  value: t.value
+}));
+
+const isImpaling = traits.some(t => t.key === "impaling");
+const isRound = newRoll % 10 === 0;
+
+// ⚠️ IMPORTANT → condition de succès melee
+const successCheck = newRoll <= (baseAttack * 10);
+
+if (isImpaling && isRound && successCheck) {
+  crit.success = true;
+}
 
               let critText = "";
               if(crit.success){
@@ -466,11 +562,24 @@ console.log("SDP | EDIT Ammo", ammo?.name);
      data-target="${card.dataset.target}"
      data-location="${card.dataset.location}"
      data-critical="${crit.success}"
-     data-brutal="${card.dataset.brutal}">
+     data-brutal="${card.dataset.brutal}"
+     data-traits='${JSON.stringify(traits)}'>
 
   <h3>${actor.name} attacks with ${weapon.name}</h3>
 
   <button class="edit-attack">Edit</button>
+
+  ${traitsData.length ? `
+  <div class="weapon-traits">
+    <strong>Traits:</strong>
+    ${traitsData.map(t => `
+      <span class="trait-tag"
+        data-trait="${t.key}">
+        ${t.label}${t.value ? ` (${t.value})` : ""}
+      </span>
+    `).join("")}
+  </div>
+` : ""}
 
   <p>Roll: ${newRoll} (${oldRoll})</p>
   <p>SL: ${SL}</p>
@@ -500,5 +609,43 @@ console.log("SDP | EDIT Ammo", ammo?.name);
     }).render(true);
 
   });
+
+// =========================
+// TRAIT CLICK
+// =========================
+
+html.on("click", ".trait-tag", async ev => {
+
+  const traitKey = ev.currentTarget.dataset.trait;
+const traitValue = ev.currentTarget.dataset.value;
+
+const trait = WEAPON_TRAITS[traitKey];
+
+  if (!trait) {
+  console.log("SDP | Trait not found", { traitKey });
+  return;
+}
+
+  const content = `
+  <div class="sdp-trait-card">
+    <h3>
+      ${trait.label}
+      ${traitValue ? `(${traitValue})` : ""}
+    </h3>
+
+    ${traitValue ? `
+      <p><strong>Value:</strong> ${traitValue}</p>
+    ` : ""}
+
+    <p>${trait.description}</p>
+  </div>
+`;
+
+  ChatMessage.create({
+    content,
+    speaker: ChatMessage.getSpeaker()
+  });
+
+});
 
 }

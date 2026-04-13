@@ -1,5 +1,7 @@
 import { SdpRoll } from "../rolls/roll.js";
 import { rollHitLocation } from "./hit-location.js";
+import { SdpTraitEngine } from "../system/trait-engine.js";
+import { WEAPON_TRAITS } from "../system/config.js";
 
 export class SdpAttack {
 
@@ -80,7 +82,58 @@ if (ammo) {
   rangeMod = Number(ammo.system.rangeModifier) || 0;
 }
 
-const targetValue = base + (dialogMods.totalMod || 0) + rangeMod;
+// =========================
+// TRAIT : IMPALING
+// =========================
+
+const weaponTraits = weapon.system.traits || [];
+
+let ammoTraits = [];
+
+if (ammo) {
+  ammoTraits = ammo.system.traits || [];
+}
+
+const traits = [...weaponTraits, ...ammoTraits];
+
+const normalizedTraits = traits
+  .filter(t => t) // 🔥 IMPORTANT (enlève null/undefined)
+  .map(t => {
+    if (typeof t === "string") {
+      return { key: t };
+    }
+    return t;
+  });
+
+// =========================
+// TRAITS DISPLAY
+// =========================
+
+const traitsData = normalizedTraits.map(t => ({
+  key: t.key,
+  label: WEAPON_TRAITS?.[t.key]?.label || t.key,
+  value: t.value
+}));
+
+const traitsHTML = traitsData.map(t => {
+  return `<span class="trait-tag"
+    data-trait="${t.key}"
+    data-value="${t.value || ""}">
+    ${t.label}${t.value ? ` (${t.value})` : ""}
+  </span>`;
+}).join("");
+
+// =========================
+// TRAIT : FAST
+// =========================
+
+let fastBonus = 0;
+
+if (normalizedTraits.some(t => t.key === "fast")) {
+  fastBonus = 10;
+}
+
+const targetValue = base + (dialogMods.totalMod || 0) + fastBonus;
 
 // 🔥 juste pour affichage
 let source = "Ranged Ability";
@@ -114,7 +167,15 @@ if (bestSkill) {
 
     const result = roll.total;
 
-    const crit = SdpRoll.getCritical(result);
+    let crit = SdpRoll.getCritical(result);
+
+const isImpaling = normalizedTraits.some(t => t.key === "impaling");
+
+const isRound = result % 10 === 0;
+
+if (isImpaling && isRound && result <= targetValue) {
+  crit.success = true;
+}
 
     const success = result <= targetValue;
 
@@ -170,11 +231,19 @@ if(crit.failure){
      data-weapon="${weapon.id}"
      data-target="${targetId ?? ""}"
      data-location="${hitLocation.location}"
-     data-talents='${JSON.stringify(dialogMods.talents || [])}'>
+     data-talents='${JSON.stringify(dialogMods.talents || [])}'
+     data-traits='${JSON.stringify(normalizedTraits)}'>
 
   <h3>${actor.name} shoots with ${weapon.name}</h3>
 
   <button class="edit-attack">Edit</button>
+
+${traitsData.length ? `
+<div class="weapon-traits">
+  <strong>Traits:</strong>
+  ${traitsHTML}
+</div>
+` : ""}
 
   <p>Test: ${source}</p>
   <p>Target: ${targetValue}</p>
@@ -211,7 +280,45 @@ const baseAttack = actor.getWeaponAttack(weapon) / 10;
 const roll = await (new Roll("1d100")).roll();
 const result = roll.total;
 
-const crit = SdpRoll.getCritical(result);
+let crit = SdpRoll.getCritical(result);
+
+// =========================
+// TRAIT : IMPALING
+// =========================
+
+const traits = weapon.system.traits || [];
+
+const normalizedTraits = traits
+  .filter(t => t) // 🔥 IMPORTANT (enlève null/undefined)
+  .map(t => {
+    if (typeof t === "string") {
+      return { key: t };
+    }
+    return t;
+  });
+
+const traitsData = normalizedTraits.map(t => ({
+  key: t.key,
+  label: WEAPON_TRAITS?.[t.key]?.label || t.key,
+  value: t.value
+}));
+
+let fastBonus = 0;
+
+if (normalizedTraits.some(t => t.key === "fast")) {
+  fastBonus = 1; // ⚠️ ici c’est en "points"
+}
+
+const isImpaling = normalizedTraits.some(t => t.key === "impaling");
+
+// chiffre rond (10,20,...)
+const isRound = result % 10 === 0;
+
+const successCheck = result <= (baseAttack * 10);
+
+if (isImpaling && isRound && successCheck) {
+  crit.success = true;
+}
 
 let SL;
 
@@ -223,9 +330,19 @@ if (result === 100) {
 }
 
 // 🎯 attack score final
-const attackScore = baseAttack + meleeBonus + SL + bonus + inspiration;
+const attackScore = baseAttack + meleeBonus + SL + bonus + inspiration + fastBonus;
 
+let context = {
+  actor,
+  weapon,
+  data: {
+    damage: 0,
+    parry: 0,
+    initiativeBonus: 0
+  }
+};
 
+context = SdpTraitEngine.applyAttackTraits(context);
 
   let critText = "";
 
@@ -249,11 +366,25 @@ if(crit.failure){
      data-target="${targetId ?? ""}"
      data-location="${hitLocation.location}"
      data-critical="${crit.success}"
-     data-brutal="${dialogMods.brutal}">
+     data-brutal="${dialogMods.brutal}"
+     data-traits='${JSON.stringify(normalizedTraits)}'>
 
   <h3>${actor.name} attacks with ${weapon.name}</h3>
 
   <button class="edit-attack">Edit</button>
+
+  ${traitsData.length ? `
+  <div class="weapon-traits">
+    <strong>Traits:</strong>
+    ${traitsData.map(t => `
+      <span class="trait-tag"
+      data-trait="${t.key}"
+      data-value="${t.value || ""}">
+       ${t.label}${t.value ? ` (${t.value})` : ""}
+      </span>
+    `).join("")}
+  </div>
+` : ""}
 
   <p>Roll: ${result}</p>
   <p>SL: ${SL}</p>

@@ -68,12 +68,13 @@ game.sdp.Roll = SdpRoll;
 
 
 // ACTORS
-foundry.documents.collections.Actors.unregisterSheet("core", foundry.appv1.sheets.ActorSheet);
+foundry.documents.collections.Actors.unregisterSheet("core", foundry.applications.sheets.ActorSheetV2);
 
 foundry.documents.collections.Actors.registerSheet("sdp", SdpActorSheet, { makeDefault: true });
 
 // items
-foundry.documents.collections.Items.unregisterSheet("core", foundry.appv1.sheets.ItemSheet);
+// ✅ V13 correct
+foundry.documents.collections.Items.unregisterSheet("core", foundry.applications.sheets.ItemSheetV2);
 
 foundry.documents.collections.Items.registerSheet("sdp", SdpWeaponSheet, { types: ["weapon"], makeDefault: true });
 

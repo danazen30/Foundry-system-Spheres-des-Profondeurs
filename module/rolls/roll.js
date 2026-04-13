@@ -8,14 +8,14 @@ export class SdpRoll {
   }
 
   // 🔥 AJOUT CRITIQUE (MANQUANT)
-  static getCritical(result){
+  static getCritical(result) {
 
-    return {
-      success: result % 11 === 0 && result <= 55,
-      failure: result % 11 === 0 && result >= 66
-    };
+  return {
+    success: result >= 1 && result <= 5,
+    failure: result >= 96 && result <= 100
+  };
 
-  }
+}
 
   // =====================
 // SUCCESS LEVEL BONUS

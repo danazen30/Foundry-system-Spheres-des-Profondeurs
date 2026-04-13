@@ -102,4 +102,27 @@
   <input type="number" name="system.durability.max" value="{{system.durability.max}}">
 </div>
 
+<h3>Traits</h3>
+
+<div class="traits-list">
+  {{#each traits}}
+    <div class="trait-row" title="{{this.description}}">
+
+      <input type="checkbox"
+  name="system.traits.{{this.key}}.selected"
+  {{checked this.checked}} />
+
+        {{this.label}}
+      
+
+      {{#if this.hasValue}}
+        <input type="text"
+          name="system.traits.{{this.key}}.value"
+          value="{{this.value}}" />
+      {{/if}}
+
+    </div>
+  {{/each}}
+</div>
+
 </div>

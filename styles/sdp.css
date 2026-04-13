@@ -282,3 +282,17 @@ text-align:center;
   /* 🧩 feedback léger */
   transition: all 0.2s ease;
 }
+
+.trait-tag {
+  display: inline-block;
+  padding: 2px 6px;
+  margin: 2px;
+  background: #444;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.trait-tag:hover {
+  background: #666;
+}

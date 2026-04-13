@@ -241,8 +241,8 @@ SL = game.sdp.Roll.applySuccessBonus(
 const crit = game.sdp?.roll?.getCritical
   ? game.sdp.roll.getCritical(result)
   : {
-      success: result % 11 === 0 && result <= 55,
-      failure: result % 11 === 0 && result >= 66
+      success: result >= 1 && result <= 5,
+      failure: result >= 96 && result <= 100
     };
 
 

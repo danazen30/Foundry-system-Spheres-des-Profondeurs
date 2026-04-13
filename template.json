@@ -506,9 +506,8 @@
       },
 
       "traits": {
-        "type": "string",
-        "label": "Traits",
-        "value": ""
+        "type": "array",
+        "value": []
       },
 
       "flaws": {

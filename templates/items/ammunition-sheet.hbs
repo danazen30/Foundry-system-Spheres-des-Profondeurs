@@ -58,9 +58,17 @@
 <!-- ===================== -->
 
 <h3>Traits</h3>
-<textarea name="system.traits">{{system.traits}}</textarea>
 
-<h3>Flaws</h3>
-<textarea name="system.flaws">{{system.flaws}}</textarea>
+<div class="traits-list">
+  {{#each traits}}
+    <label title="{{this.description}}">
+      <input type="checkbox"
+             name="system.traits"
+             value="{{this.key}}"
+             {{#if this.checked}}checked{{/if}}>
+      {{this.label}}
+    </label>
+  {{/each}}
+</div>
 
 </div>
