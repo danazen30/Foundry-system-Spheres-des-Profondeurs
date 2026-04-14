@@ -119,21 +119,91 @@ if (weapon.system.category === "ranged") {
 
 }
 
-    const { roll, damage, finalDamage, armor, formula } = result;
+    const { roll, damage, finalDamage, armor, formula, devastating } = result;
 
-    if (!brutal) {
+   if (!brutal) {
 
-      roll.toMessage({
-        speaker: ChatMessage.getSpeaker({actor}),
-        flavor: `
-        <h3>Damage Roll</h3>
-        <p>Attacker: ${actor.name}</p>
-        <p>Weapon: ${weapon.name}</p>
-        <p>Location: ${CONFIG.SDP.hitLocations[location]}</p>
-        `
-      });
+  // =========================
+  // DEVASTATING MODE
+  // =========================
 
-    } else {
+  if (devastating) {
+
+    const dice = [];
+
+for (let d of roll.dice) {
+  for (let r of d.results) {
+    dice.push({
+      result: r.result,
+      faces: d.faces,
+      rerolled: false
+    });
+  }
+}
+
+const diceHTML = dice.map((d, i) => `
+  <button class="reroll-die"
+          data-index="${i}"
+          data-faces="${d.faces}"
+          data-rerolled="false">
+    ${d.result}
+  </button>
+`).join("");
+
+await roll.toMessage({
+  speaker: ChatMessage.getSpeaker({actor}),
+  flavor: `
+    <div class="sdp-damage-roll"
+     data-formula="${formula}"
+     data-dice='${JSON.stringify(dice)}'
+     data-original-dice='${JSON.stringify(
+       roll.dice.map(d => ({
+         faces: d.faces,
+         results: d.results.map(r => r.result)
+       }))
+     )}'
+     data-total="${roll.total}"
+     data-target="${targetId}"
+     data-location="${location}">
+
+      <h3>Damage Roll (Devastating)</h3>
+      <p>Attacker: ${actor.name}</p>
+      <p>Weapon: ${weapon.name}</p>
+
+      <div class="dice-container">
+        ${diceHTML}
+      </div>
+
+      <p class="damage-total"><strong>Total: ${damage}</strong></p>
+
+      <button class="validate-damage">
+        Validate Damage
+      </button>
+
+    </div>
+  `
+});
+
+    return; // 🔥 STOP NORMAL FLOW
+  }
+
+  // =========================
+  // NORMAL FLOW
+  // =========================
+
+  roll.toMessage({
+    speaker: ChatMessage.getSpeaker({actor}),
+    flavor: `
+    <h3>Damage Roll</h3>
+    <p>Attacker: ${actor.name}</p>
+    <p>Weapon: ${weapon.name}</p>
+    <p>Location: ${CONFIG.SDP.hitLocations[location]}</p>
+    `
+  });
+
+}
+    
+    else {
 
       ChatMessage.create({
         speaker: ChatMessage.getSpeaker({actor}),
@@ -316,5 +386,158 @@ if(severity){
     });
 
   });
+
+  // =========================
+// DEVASTATING REROLL
+// =========================
+
+html.on("click", ".reroll-die", async ev => {
+
+  const button = ev.currentTarget;
+  const card = button.closest(".sdp-damage-roll");
+
+  const index = Number(button.dataset.index);
+let dice = [];
+
+try {
+  dice = JSON.parse(card.dataset.dice || "[]");
+} catch (e) {
+  console.error("Invalid dice JSON", card.dataset.dice);
+  return;
+}
+
+  // 🔥 bloque reroll multiple
+  if (dice[index].rerolled) {
+    ui.notifications.warn("This die has already been rerolled");
+    return;
+  }
+
+  const faces = Number(button.dataset.faces);
+
+  const reroll = new Roll(`1d${faces}`);
+  await reroll.evaluate();
+
+  await game.dice3d?.showForRoll(reroll);
+
+  const newValue = reroll.total;
+
+  dice[index].result = newValue;
+  dice[index].rerolled = true;
+
+  console.log("SDP | DEVASTATING REROLL", {
+    index,
+    newValue
+  });
+
+  // =========================
+  // RECALCUL TOTAL
+  // =========================
+
+  const diceTotal = dice.reduce((a, d) => a + d.result, 0);
+
+let originalDice = [];
+
+try {
+  originalDice = JSON.parse(card.dataset.originalDice || "[]");
+} catch (e) {
+  console.error("Invalid originalDice JSON", card.dataset.originalDice);
+  return;
+}
+const originalTotal = Number(card.dataset.total);
+
+// somme des dés d'origine
+const originalDiceTotal = originalDice.reduce((a, d) => {
+  return a + d.results.reduce((s, r) => s + r, 0);
+}, 0);
+
+// base = tout ce qui n'est PAS les dés
+const base = originalTotal - originalDiceTotal;
+
+// nouveau total
+const newTotal = base + diceTotal;
+
+  // =========================
+  // UPDATE UI
+  // =========================
+
+const diceHTML = dice.map((d, i) => `
+  <button class="reroll-die"
+          data-index="${i}"
+          data-faces="${d.faces}"
+          data-rerolled="${d.rerolled}">
+    ${d.result}
+  </button>
+`).join("");
+
+card.dataset.dice = JSON.stringify(dice);
+
+card.querySelector(".dice-container").innerHTML = diceHTML;
+card.querySelector(".damage-total").innerHTML =
+  `<strong>Total: ${newTotal}</strong>`;
+})
+
+html.on("click", ".validate-damage", async ev => {
+
+  const card = ev.currentTarget.closest(".sdp-damage-roll");
+
+  const totalText = card.querySelector(".damage-total").innerText;
+  const damage = Number(totalText.replace(/\D/g, ""));
+
+  const targetId = card.dataset.target;
+  const location = card.dataset.location;
+
+  // =========================
+  // TARGET HANDLING (COPIE SAFE)
+  // =========================
+
+  let targets = [];
+
+  if (!targetId) {
+    targets = Array.from(game.user.targets);
+
+    if (!targets.length) {
+      ui.notifications.warn("Select at least one target");
+      return;
+    }
+
+  } else {
+    const token = canvas.tokens.get(targetId);
+    if (token) targets.push(token);
+  }
+
+  // =========================
+  // ARMOR
+  // =========================
+
+  let armor = 0;
+
+  if (targets.length) {
+    armor = SdpDamage.getArmorValue(targets[0].actor, location);
+  }
+
+  const finalDamage = Math.max(damage - armor, 0);
+
+  // =========================
+  // NORMAL DAMAGE RESOLUTION CARD
+  // =========================
+
+  await ChatMessage.create({
+    content: `
+      <h3>Damage Resolution</h3>
+      <p>Location: ${CONFIG.SDP.hitLocations[location]}</p>
+      <p>Raw Damage: ${damage}</p>
+      <p>Armor: ${armor}</p>
+      <p>Final Damage: ${finalDamage}</p>
+      <button class="apply-damage"
+        data-target="${targetId || ""}"
+        data-damage="${finalDamage}"
+        data-location="${location}">
+        Apply Damage
+      </button>
+    `,
+    whisper: ChatMessage.getWhisperRecipients("GM")
+  });
+
+});
 
 }

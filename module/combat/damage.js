@@ -116,6 +116,17 @@ let impactfulTrait = null;
 
 const traits = weapon.system.traits || [];
 
+let devastating = false;
+
+for (let t of traits) {
+  if (!t) continue;
+
+  if (t.key === "devastating") {
+    devastating = true;
+    break;
+  }
+}
+
 for (let t of traits) {
   if (!t) continue;
 
@@ -319,12 +330,13 @@ let damage = roll.total;
   const finalDamage = Math.max(damage - armor, 0);
 
   return {
-    roll,
-    damage,
-    finalDamage,
-    armor,
-    formula
-  };
+  roll,
+  damage,
+  finalDamage,
+  armor,
+  formula,
+  devastating
+};
 }
 
 static async applyFullDamage({ actor, damage, location }) {

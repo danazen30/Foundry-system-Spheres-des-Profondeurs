@@ -224,6 +224,14 @@ export const WEAPON_TRAITS = {
     Attacks made with this type of weapon impose a -1 penalty to the target’s Parry, as strikes can wrap over shields, around blades, and have an unpredictable reach.`,
     hasValue: false
   },
+
+  devastating: {
+    label: "Devastating",
+    description: `hese weapons generally deal heavy damage when they hit their target.
+    You may reroll one or more damage dice, but you must keep the new results.`,
+    hasValue: false
+  }
+
 };
 
 CONFIG.SDP.WEAPON_TRAITS = WEAPON_TRAITS;
