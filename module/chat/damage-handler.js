@@ -119,7 +119,7 @@ if (weapon.system.category === "ranged") {
 
 }
 
-    const { roll, damage, finalDamage, armor, formula, devastating } = result;
+  const { roll, damage, finalDamage, armor, formula, devastating, weaponDetail, baseWeapon, SB } = result;
 
    if (!brutal) {
 
@@ -205,19 +205,40 @@ await roll.toMessage({
     
     else {
 
-      ChatMessage.create({
-        speaker: ChatMessage.getSpeaker({actor}),
-        content: `
-        <h3>Damage Roll (Brutal Strike)</h3>
-        <p>Attacker: ${actor.name}</p>
-        <p>Weapon: ${weapon.name}</p>
-        <p><strong>Max Damage Applied</strong></p>
-        <p>Formula: ${formula} → MAX</p>
-        <p><strong>Total Damage: ${damage}</strong></p>
-        `
-      });
+  if (roll) {
 
-    }
+  await roll.toMessage({
+    speaker: ChatMessage.getSpeaker({actor}),
+    flavor: `
+      <h3>Damage Roll (Brutal Strike)</h3>
+      <p>Attacker: ${actor.name}</p>
+      <p>Weapon: ${weapon.name}</p>
+      <p><strong>Weapon:</strong> ${weaponDetail || "—"} (MAX)</p>
+      <p><strong>Other damage:</strong>
+  ${SB ? `${SB} (SB)` : ""}
+  ${SB && baseWeapon ? " + " : ""}
+  ${baseWeapon ? `${baseWeapon} (base)` : ""}
+</p>
+    `
+  });
+
+} else {
+
+  // cas sans sign → pas de roll du tout
+  ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({actor}),
+    content: `
+      <h3>Damage Roll (Brutal Strike)</h3>
+      <p>Attacker: ${actor.name}</p>
+      <p>Weapon: ${weapon.name}</p>
+      <p><strong>Weapon Dice: MAX</strong></p>
+      <p><strong>Total Damage: ${damage}</strong></p>
+    `
+  });
+
+}
+
+}
 
     // =========================
 // TARGET HANDLING

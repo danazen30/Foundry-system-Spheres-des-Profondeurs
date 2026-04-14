@@ -168,6 +168,15 @@ let diceFormula =
   weapon.system.damage?.dice ??
   "";
 
+  let weaponDiceFormula = diceFormula; // 🔥 garde les dés de l'arme uniquement
+
+  // 🔥 IMPORTANT : sync avec crit
+if (critical && weaponDiceFormula) {
+  weaponDiceFormula = weaponDiceFormula.replace(/(\d+)d(\d+)/g, (match, diceCount, diceSize) => {
+    return `${Number(diceCount) * 2}d${diceSize}`;
+  });
+}
+
 // cas spell structuré
 if (typeof diceFormula === "object") {
 
@@ -225,18 +234,52 @@ if (ammo) {
 console.log("SDP | FINAL BASE:", baseWeapon);
 console.log("SDP | FINAL DICE:", diceFormula);
 
+
+
+// =========================
+// SIGN BONUS (AVANT ROLL)
+// =========================
+
+const signEffects = actor.getSignEffects();
+let bonus = signEffects.damageBonus || null;
+let signDiceFormula = null;
+
+if (useSB && bonus) {
+
+  if (typeof bonus === "string" && bonus.includes("d")) {
+    signDiceFormula = bonus; // 🎯 on garde pour roll séparé
+  } else {
+    formula += (formula ? " + " : "") + Number(bonus);
+  }
+
+}
+
   // =========================
   // CRITICAL
   // =========================
+
   if (critical) {
-    baseWeapon *= 2;
+  baseWeapon *= 2;
 
-if (diceFormula) {
-
-  diceFormula = diceFormula.replace(/(\d+)d(\d+)/g, (match, diceCount, diceSize) => {
-    return `${Number(diceCount) * 2}d${diceSize}`;
-  });
+  // weapon dice
+  if (diceFormula) {
+    diceFormula = diceFormula.replace(/(\d+)d(\d+)/g, (match, diceCount, diceSize) => {
+      return `${Number(diceCount) * 2}d${diceSize}`;
+    });
+  }
 }
+
+  // =========================
+    // BUILD FORMULA
+  // =========================
+let formula = "";
+
+if (useSB) formula += `${SB}`;
+if (baseWeapon > 0) formula += (formula ? " + " : "") + baseWeapon;
+if (diceFormula) formula += (formula ? " + " : "") + diceFormula;
+
+if (signDiceFormula) {
+  formula += (formula ? " + " : "") + signDiceFormula;
 }
 
   // =========================
@@ -255,31 +298,6 @@ if (impactfulTrait && dialogMods.charge) {
 
     console.log("SDP | IMPACTFUL ADDED:", impactfulValue);
   }
-}
-
-  // =========================
-  // BUILD FORMULA
-  // =========================
-let formula = "";
-
-if (useSB) formula += `${SB}`;
-if (baseWeapon > 0) formula += (formula ? " + " : "") + baseWeapon;
-if (diceFormula) formula += (formula ? " + " : "") + diceFormula;
-
-// =========================
-// SIGN BONUS (AVANT ROLL)
-// =========================
-const signEffects = actor.getSignEffects();
-let bonus = signEffects.damageBonus || null;
-
-if (useSB && bonus) {
-
-  if (typeof bonus === "string" && bonus.includes("d")) {
-    formula += (formula ? " + " : "") + bonus;
-  } else {
-    formula += (formula ? " + " : "") + Number(bonus);
-  }
-
 }
 
 // =========================
@@ -302,21 +320,62 @@ let damage = roll.total;
   // =========================
   // BRUTAL
   // =========================
-  if (brutal) {
+if (brutal) {
 
-    const match = diceFormula.match(/(\d+)d(\d+)/);
+let weaponMax = 0;
+let weaponDetail = [];
 
-    if (match) {
-      const diceCount = Number(match[1]);
-      const diceSize = Number(match[2]);
+  // =========================
+  // WEAPON DICE → MAX (PAS DE ROLL)
+  // =========================
 
-      const maxDice = diceCount * diceSize;
+  if (weaponDiceFormula) {
 
-      damage = maxDice + baseWeapon + (useSB ? SB : 0);
+    const matches = weaponDiceFormula.match(/(\d+)d(\d+)/g) || [];
 
-      if (critical) damage *= 2;
+    for (let m of matches) {
+      const [, count, faces] = m.match(/(\d+)d(\d+)/);
+      const max = Number(count) * Number(faces);
+weaponMax += max;
+weaponDetail.push(`${count}d${faces} → ${max}`);;
     }
   }
+
+  // =========================
+  // SIGN DICE → VRAI ROLL
+  // =========================
+
+  let signRoll = null;
+  let signTotal = 0;
+
+  if (signDiceFormula) {
+    signRoll = new Roll(signDiceFormula);
+    await signRoll.evaluate();
+
+    // 🎲 Dice So Nice
+    await game.dice3d?.showForRoll(signRoll);
+
+    signTotal = signRoll.total;
+  }
+
+  // =========================
+  // TOTAL FINAL
+  // =========================
+
+  damage = weaponMax + signTotal + baseWeapon + (useSB ? SB : 0);
+
+  return {
+  roll: signRoll,
+  damage,
+  finalDamage: Math.max(damage - armor, 0),
+  armor,
+  formula,
+  devastating,
+  weaponDetail: weaponDetail.join(" + "),
+  baseWeapon,
+  SB: useSB ? SB : 0
+};
+}
 
   // =========================
   // LOCATION MULT
