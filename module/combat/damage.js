@@ -85,6 +85,8 @@ static getWoundSeverity(damage, WT) {
 
 static async rollDamage({ actor, weapon, target, location, critical, brutal, ammoId }) {
 
+  const dialogMods = game.sdp?.dialogModifiers || {};
+
   // =========================
 // AMMO
 // =========================
@@ -109,6 +111,20 @@ console.log("SDP | Damage ammo", ammo?.name);
   const SB = actor.system.attributes.strength.bonus;
 
 let baseWeapon = 0;
+
+let impactfulTrait = null;
+
+const traits = weapon.system.traits || [];
+
+for (let t of traits) {
+  if (!t) continue;
+
+  if (t.key === "impactful") {
+    impactfulTrait = t;
+    break;
+  }
+}
+
 // =========================
 // NORMALISATION SPELL / WEAPON
 // =========================
@@ -213,6 +229,24 @@ console.log("SDP | FINAL DICE:", diceFormula);
       }
     }
   }
+
+  // =========================
+// IMPACTFUL (PERCUTANTE)
+// =========================
+
+if (impactfulTrait && dialogMods.charge) {
+
+  const impactfulValue = impactfulTrait.value; // ex: "1d4"
+
+  if (impactfulValue && impactfulValue.includes("d")) {
+
+    diceFormula = diceFormula
+      ? `${diceFormula} + ${impactfulValue}`
+      : impactfulValue;
+
+    console.log("SDP | IMPACTFUL ADDED:", impactfulValue);
+  }
+}
 
   // =========================
   // BUILD FORMULA

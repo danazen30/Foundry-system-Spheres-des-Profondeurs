@@ -173,6 +173,7 @@ game.sdp.dialogModifiers = {
   totalMod: modValue + diffValue,
   location: this.element.querySelector('[name="location"]')?.value || null,
   brutal: this.element.querySelector('[name="brutal"]')?.checked || false,
+  charge: this.element.querySelector('[name="charge"]')?.checked || false,
   inspiration: this.inspirationResult,
   talents: selectedTalents
 };

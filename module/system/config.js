@@ -188,8 +188,42 @@ export const WEAPON_TRAITS = {
     For example, a weapon that uses the Melee (Axe) skill, when wielded with two hands, may also use the Two-Handed Melee skill.
     The value indicated after “Versatile” corresponds to the die used for two-handed damage.`,
     hasValue: true
-  }
+  },
 
+  stunning: {
+    label: "Stunning",
+    description: `Stunning weapons are particularly effective at forcing enemies to submit.
+    The rating corresponds to the bonus you gain when attempting to stun a target.
+    If you strike the head with a stunning weapon, perform an opposed test using the melee skill used, based on Strength, against the target’s Resilience.
+    If you win the test, your opponent gains the Stunned condition (if the degree of success reaches +6, the target falls unconscious).
+    The rating represents any modifiers applied when attempting to stun the target.`,
+    hasValue: true
+  },
+
+  bleeding: {
+    label: "Bleeding",
+    description: `Designed to tear flesh and draw blood, this weapon excels at inflicting open wounds.
+    A weapon with this trait can cause a bleeding effect on the target.
+    The rating indicates the minimum result required on a die roll to trigger this effect, and it can stack if multiple dice are rolled.
+    For versatile weapons, the corresponding value is indicated after it.`,
+    hasValue: true
+  },
+
+  impactful: {
+    label: "Impactful",
+    description: `Some weapons can inflict devastating damage due to their weight or design.
+    The Impact trait only activates on a charge: if you hit, add the die indicated by the rating to the damage.
+    A Harmless weapon can never also be Impact (Harmless takes precedence).
+    Impact applies only to melee weapons.`,
+    hasValue: true
+  },
+
+  entangling: {
+    label: "Entangling",
+    description: `Entangling weapons, often made of long chains ending in weighted heads, are particularly difficult to parry effectively.
+    Attacks made with this type of weapon impose a -1 penalty to the target’s Parry, as strikes can wrap over shields, around blades, and have an unpredictable reach.`,
+    hasValue: false
+  },
 };
 
 CONFIG.SDP.WEAPON_TRAITS = WEAPON_TRAITS;

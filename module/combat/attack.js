@@ -275,6 +275,12 @@ ${traitsData.length ? `
   // ======================
 const meleeBonus = Math.floor((dialogMods.totalMod || 0) / 10);
 
+let chargeBonus = 0;
+
+if (dialogMods.charge) {
+  chargeBonus = 1;
+}
+
 const baseAttack = actor.getWeaponAttack(weapon) / 10;
 
 const roll = await (new Roll("1d100")).roll();
@@ -330,7 +336,7 @@ if (result === 100) {
 }
 
 // 🎯 attack score final
-const attackScore = baseAttack + meleeBonus + SL + bonus + inspiration + fastBonus;
+const attackScore = baseAttack + meleeBonus + SL + bonus + inspiration + fastBonus + chargeBonus;
 
 let context = {
   actor,
@@ -391,6 +397,7 @@ if(crit.failure){
   <p>Inspiration: +${inspiration}</p>
   <p>Location: ${CONFIG.SDP.hitLocations[hitLocation.location]} (${hitLocation.roll.total})</p>
   ${critText}
+  ${dialogMods.charge ? "<p>Charge</p>" : ""}
   <p>Attack Score: ${attackScore}</p>
 
   ${targetId

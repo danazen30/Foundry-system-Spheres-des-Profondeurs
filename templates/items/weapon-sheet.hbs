@@ -108,17 +108,20 @@
   {{#each traits}}
     <div class="trait-row" title="{{this.description}}">
 
-      <input type="checkbox"
-  name="system.traits.{{this.key}}.selected"
-  {{checked this.checked}} />
+      <label class="trait-label">
+        <input type="checkbox"
+          name="system.traits.{{this.key}}.selected"
+          {{checked this.checked}} />
 
-        {{this.label}}
-      
+        <span class="trait-name">{{this.label}}</span>
+      </label>
 
       {{#if this.hasValue}}
         <input type="text"
+          class="trait-value"
           name="system.traits.{{this.key}}.value"
-          value="{{this.value}}" />
+          value="{{this.value}}"
+          placeholder="0" />
       {{/if}}
 
     </div>

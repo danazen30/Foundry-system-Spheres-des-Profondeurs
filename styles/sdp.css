@@ -296,3 +296,31 @@ text-align:center;
 .trait-tag:hover {
   background: #666;
 }
+
+.trait-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.trait-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.trait-name {
+  font-size: 14px;
+}
+
+.trait-value {
+  width: 35px;
+  text-align: center;
+  padding: 2px 4px;
+  border: 1px solid #666;
+  border-radius: 4px;
+  background: #1e1e1e;
+  color: white;
+  margin-left: 6px; /* 👈 colle au texte */
+}

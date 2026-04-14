@@ -76,6 +76,9 @@ export function registerAttackHandlers(html, message) {
   html.find(".sdp-attack .apply-defense").click(async ev => {
 
     const card = ev.currentTarget.closest(".sdp-attack");
+    const traits = JSON.parse(card.dataset.traits || "[]");
+
+let hasEntangling = traits.some(t => t?.key === "entangling");
 
     const attackScore = Number(card.dataset.attack);
     const targetId = card.dataset.target;
@@ -110,24 +113,13 @@ if (defenseWeapon) {
   // 👉 exemple : base parry + weapon bonus
   const weaponParry = defenseWeapon.system.parry || 0;
 
-  parry = target.system.derived.parry.value + weaponParry;
+parry += weaponParry;
 
-  // ======================
-  // OFFHAND PENALTY
-  // ======================
 
-  const isOffhand = defenseWeapon.system.offhand;
-
-  const hasAmbidextrous = target.items.some(i =>
-    i.type === "talent" &&
-    i.name.toLowerCase().includes("ambidextrous")
-  );
-
-  if (isOffhand && !hasAmbidextrous) {
-    parry -= 2;
-
-    console.log("SDP | Offhand penalty applied (-2)");
-  }
+if (hasEntangling) {
+  parry -= 1;
+  console.log("SDP | Entangling applied: -1 Parry");
+}
 
 }
 
@@ -142,11 +134,8 @@ if (defenseWeapon) {
     const hasSidestep = sidestepTalent && (sidestepTalent.system.advances || 0) > 0;
 
     // ===== SHIELD CHECK =====
-    const hasShield = target.items.some(i =>
-      i.type === "weapon" &&
-      i.system.equipped &&
-      i.system.weaponGroup === "shield"
-    );
+    const hasShield = defenseWeapon &&
+  defenseWeapon.system.weaponGroup === "shield";
 
 let canChoose = false;
 let forcedChoice = null;
@@ -267,6 +256,14 @@ await updateAttackCard(msg.id, {
     const button = ev.currentTarget;
     const card = button.closest(".sdp-defense-choice");
 
+    const attackMessage = game.messages.get(card.dataset.attackMessageId);
+const attackCard = new DOMParser()
+  .parseFromString(attackMessage.content, "text/html")
+  .querySelector(".sdp-attack");
+
+const traits = JSON.parse(attackCard.dataset.traits || []);
+const hasEntangling = traits.some(t => t?.key === "entangling");
+
     if (!card) return;
 
     const selected = button.dataset.defense;
@@ -285,7 +282,24 @@ await updateAttackCard(msg.id, {
     const token = canvas.tokens.get(targetId);
     const target = token.actor;
 
-    const parry = target.system.derived.parry.value;
+    let parry = target.system.derived.parry.value;
+
+// defense weapon
+const defenseWeapon = target.items.find(i =>
+  i.type === "weapon" &&
+  i.system.equipped &&
+  i.system.isDefenseWeapon
+);
+
+if (defenseWeapon) {
+  const weaponParry = defenseWeapon.system.parry || 0;
+  parry += weaponParry;
+}
+
+// entangling à la fin
+if (hasEntangling) {
+  parry -= 1;
+}
     const evasion = target.system.derived.evasion.value;
 
     const defense = selected === "parry" ? parry : evasion;
