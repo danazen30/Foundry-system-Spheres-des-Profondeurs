@@ -231,15 +231,13 @@ console.log("SDP | FINAL DICE:", diceFormula);
   if (critical) {
     baseWeapon *= 2;
 
-    if (diceFormula) {
-      const match = diceFormula.match(/(\d+)d(\d+)/);
-      if (match) {
-        const diceCount = Number(match[1]) * 2;
-        const diceSize = match[2];
-        diceFormula = `${diceCount}d${diceSize}`;
-      }
-    }
-  }
+if (diceFormula) {
+
+  diceFormula = diceFormula.replace(/(\d+)d(\d+)/g, (match, diceCount, diceSize) => {
+    return `${Number(diceCount) * 2}d${diceSize}`;
+  });
+}
+}
 
   // =========================
 // IMPACTFUL (PERCUTANTE)
