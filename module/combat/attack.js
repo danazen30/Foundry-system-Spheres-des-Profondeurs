@@ -8,6 +8,7 @@ export class SdpAttack {
 static async attackTest(actor, weapon, attackValue){
 const dialogMods = game.sdp?.dialogModifiers || {};
 const inspiration = dialogMods.inspiration || 0;
+const useFinesse = dialogMods.finesse;
   // ======================
 // STUNNED CHECK
 // ======================
@@ -281,7 +282,41 @@ if (dialogMods.charge) {
   chargeBonus = 1;
 }
 
-const baseAttack = actor.getWeaponAttack(weapon) / 10;
+let baseAttack = actor.getWeaponAttack(weapon) / 10;
+
+// =========================
+// FINESSE OVERRIDE
+// =========================
+
+if (useFinesse && weapon.system.traits?.some(t => t.key === "finesse")) {
+
+  const DEX = actor.system.attributes.dexterity.value;
+
+  const bestSkill = actor.items.find(i =>
+    i.type === "skill" &&
+    weapon.system.skill?.toLowerCase().includes(i.name.toLowerCase())
+  );
+
+  const advances = bestSkill?.system?.advances || 0;
+
+  baseAttack =
+    Math.floor(DEX / 10) +
+    Math.floor(advances / 10);
+}
+
+// =========================
+// WEAPON BONUS (SAFE)
+// =========================
+
+const weaponAttack =
+  Number(weapon.system.attack) ||
+  Number(weapon.system.attackBonus) ||
+  0;
+
+// ⚠️ seulement en finesse (sinon déjà inclus)
+if (useFinesse && weapon.system.traits?.some(t => t.key === "finesse")) {
+  baseAttack += weaponAttack;
+}
 
 const roll = await (new Roll("1d100")).roll();
 const result = roll.total;

@@ -175,7 +175,8 @@ game.sdp.dialogModifiers = {
   brutal: this.element.querySelector('[name="brutal"]')?.checked || false,
   charge: this.element.querySelector('[name="charge"]')?.checked || false,
   inspiration: this.inspirationResult,
-  talents: selectedTalents
+  talents: selectedTalents,
+  finesse: this.element.querySelector('[name="finesse"]')?.checked || false
 };
 
 // DEBUG

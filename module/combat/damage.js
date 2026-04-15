@@ -86,6 +86,7 @@ static getWoundSeverity(damage, WT) {
 static async rollDamage({ actor, weapon, target, location, critical, brutal, ammoId }) {
 
   const dialogMods = game.sdp?.dialogModifiers || {};
+const useFinesse = dialogMods.finesse;
 
   // =========================
 // AMMO
@@ -108,7 +109,10 @@ console.log("SDP | Damage ammo", ammo?.name);
     armor = this.getArmorValue(target, location);
   }
 
-  const SB = actor.system.attributes.strength.bonus;
+ const SB = actor.system.attributes.strength.bonus;
+const DB = actor.system.attributes.dexterity.bonus;
+
+const statBonus = useFinesse ? DB : SB;
 
 let baseWeapon = 0;
 
@@ -274,7 +278,7 @@ if (useSB && bonus) {
   // =========================
 let formula = "";
 
-if (useSB) formula += `${SB}`;
+if (useSB) formula += `${statBonus}`;
 if (baseWeapon > 0) formula += (formula ? " + " : "") + baseWeapon;
 if (diceFormula) formula += (formula ? " + " : "") + diceFormula;
 
@@ -362,7 +366,7 @@ weaponDetail.push(`${count}d${faces} → ${max}`);;
   // TOTAL FINAL
   // =========================
 
-  damage = weaponMax + signTotal + baseWeapon + (useSB ? SB : 0);
+damage = weaponMax + signTotal + baseWeapon + (useSB ? statBonus : 0);
 
   return {
   roll: signRoll,
@@ -373,7 +377,7 @@ weaponDetail.push(`${count}d${faces} → ${max}`);;
   devastating,
   weaponDetail: weaponDetail.join(" + "),
   baseWeapon,
-  SB: useSB ? SB : 0
+  SB: useSB ? statBonus : 0
 };
 }
 

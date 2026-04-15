@@ -346,13 +346,6 @@ if (system.health.value > finalMax) {
     const offhandPenalty =
       Math.max(0, OFFHAND_PENALTY - system.custom.offhandReduction);
 
-      
-
-
-    // =====================
-    // PARRY
-    // =====================
-
     // =====================
 // PARRY (DEFENSE WEAPON)
 // =====================
@@ -362,7 +355,10 @@ let parryBase = 0;
 const meleeWeapons = equippedWeapons.filter(w => w.system.category === "melee");
 
 // 🔥 DEFENSE WEAPON PRIORITY
-const defenseWeapon = meleeWeapons.find(w => w.system.isDefenseWeapon);
+const defenseWeapon = this.items.find(w =>
+  w.type === "weapon" &&
+  w.system.isDefenseWeapon === true
+);
 
 if (defenseWeapon) {
 
@@ -372,11 +368,39 @@ if (defenseWeapon) {
     ? skill.system.value
     : system.attributes.meleeAbility.value;
 
-  let value = base + (Number(defenseWeapon.system.parryBonus || 0) * 10);
+let value = base + (Number(defenseWeapon.system.parryBonus || 0) * 10);
 
-  if (defenseWeapon.system.offhand) value -= offhandPenalty;
+if (defenseWeapon.system.offhand) value -= offhandPenalty;
 
-  parryBase = value;
+// =========================
+// DEFENSIVE TRAIT
+// =========================
+
+const traits = defenseWeapon.system.traits || [];
+
+// =========================
+// CHECK DEFENSIVE TRAIT
+// =========================
+
+const hasDefensive = traits.some(t => t.key === "defensive");
+
+if (hasDefensive) {
+
+  console.log("=== DEFENSIVE APPLIED ===", {
+    weapon: defenseWeapon.name,
+    before: value,
+    traits
+  });
+
+  value += 10;
+
+  console.log("=== DEFENSIVE RESULT ===", {
+    after: value
+  });
+
+}
+
+parryBase = value;
 
   console.log("SDP | Parry from defense weapon", {
     weapon: defenseWeapon.name,

@@ -27,13 +27,32 @@ export class SdpTraitEngine {
 
   const traits = weapon.system.traits || [];
 
-  for (const trait of traits) {
+ for (const trait of traits) {
 
-    switch (trait) {
+  switch (trait.key) {
 
       case "defensive":
-        data.parry += 10;
-        break;
+
+  // =========================
+  // DEFENSIVE BONUS
+  // =========================
+
+  if (weapon.system.isDefenseWeapon) {
+
+    console.log("=== DEFENSIVE TRAIT APPLIED ===", {
+      weapon: weapon.name,
+      parryBefore: data.parry
+    });
+
+    data.parry += 1;
+
+    console.log("=== DEFENSIVE RESULT ===", {
+      parryAfter: data.parry
+    });
+
+  }
+
+  break;
 
     }
 

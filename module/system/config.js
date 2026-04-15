@@ -151,7 +151,9 @@ export const WEAPON_TRAITS = {
 
   defensive: {
     label: "Defensive",
-    description: "Grants a bonus to parry."
+    description: `Designed to intercept blows and protect their wielder, these defensive weapons excel at parrying attacks.
+    If you use such a weapon, you gain a +1 bonus to your Parry.`,
+    hasValue: false
   },
 
   fast: {
@@ -160,7 +162,8 @@ export const WEAPON_TRAITS = {
     The wielder of a Fast weapon may choose to attack outside the normal initiative order, whether to strike first, last, or at a moment of their choosing.
     Additionally, a character attacked by a Fast weapon suffers a -1 penalty to parry and evasion.
     Two opponents equipped with Fast weapons act according to the normal initiative order (relative to each other).
-    A Fast weapon can never be Slow (the Slow property takes precedence).`
+    A Fast weapon can never be Slow (the Slow property takes precedence).`,
+    hasValue: false
   },
 
   impaling: {
@@ -168,17 +171,20 @@ export const WEAPON_TRAITS = {
     description: `Impaling weapons, provided they hit, inflict a critical hit on any result divisible by 10 (for example: 10, 20, 30, etc.).
     If the impalement comes from a ranged weapon, the ammunition used becomes firmly lodged in the target’s body.
     Arrows and bolts require an Intermediate Healing Test to be removed; bullets require a surgeon (see the Surgery Talent).
-    Each arrow or bullet that is not removed prevents the recovery of 1 Wound.`
+    Each arrow or bullet that is not removed prevents the recovery of 1 Wound.`,
+    hasValue: false
   },
 
   light: {
     label: "Light",
-    description: "Light weapons are small and easy to handle, allowing you to attack with another Light weapon during the same turn."
+    description: "Light weapons are small and easy to handle, allowing you to attack with another Light weapon during the same turn.",
+    hasValue: false
   },
 
   semiLight: {
     label: "Semi-Light",
-    description: "Semi-light weapons can only be used to attack alongside a Light weapon during the same turn."
+    description: "Semi-light weapons can only be used to attack alongside a Light weapon during the same turn.",
+    hasValue: false
   },
 
   versatile: {
@@ -229,6 +235,30 @@ export const WEAPON_TRAITS = {
     label: "Devastating",
     description: `hese weapons generally deal heavy damage when they hit their target.
     You may reroll one or more damage dice, but you must keep the new results.`,
+    hasValue: false
+  },
+
+  size: {
+    label: "Size",
+    description: `Forged to split steel and shatter defenses, these cutting weapons slice through armor with terrifying ease.
+    If you hit an opponent, you deal 1 point of damage to the struck piece of armor or shield while also wounding the target.`,
+    hasValue: true
+  },
+
+  finesse: {
+    label: "Finesse",
+    description: `Precise and elegant, these weapons reward skill and agility over sheer brute strength.
+    When making an attack with a finesse weapon, you may choose to apply either your Strength or Dexterity modifier to your attack and damage rolls.
+    The same modifier applies to both rolls.`,
+    hasValue: false
+  },
+
+  antiLarge: {
+    label: "Anti-Large",
+    description: `Designed to keep enemies at bay and break even the fiercest charges, these weapons excel against mounted foes and large creatures.
+    They allow attacks at a range of 4 meters, or even up to 6 meters.
+    They gain a +2 bonus to hit against larger creatures, in addition to the base bonus.
+    When a mounted character charges with such a weapon, its value is doubled (double both the dice and the bonuses; for example, 1d6 +2 becomes 2d6 +4).`,
     hasValue: false
   }
 
