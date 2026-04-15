@@ -134,7 +134,17 @@ if (normalizedTraits.some(t => t.key === "fast")) {
   fastBonus = 10;
 }
 
-const targetValue = base + (dialogMods.totalMod || 0) + fastBonus;
+let targetValue = base + (dialogMods.totalMod || 0) + fastBonus;
+
+// ===== PRECISE TRAIT =====
+if (normalizedTraits.some(t => t.key === "precise")) {
+  targetValue += 10;
+
+  console.log("SDP | PRECISE (RANGED)", {
+    weapon: weapon.name,
+    newTarget: targetValue
+  });
+}
 
 // 🔥 juste pour affichage
 let source = "Ranged Ability";
@@ -371,7 +381,17 @@ if (result === 100) {
 }
 
 // 🎯 attack score final
-const attackScore = baseAttack + meleeBonus + SL + bonus + inspiration + fastBonus + chargeBonus;
+let attackScore = baseAttack + meleeBonus + SL + bonus + inspiration + fastBonus + chargeBonus;
+
+// ===== PRECISE TRAIT =====
+if (normalizedTraits.some(t => t.key === "precise")) {
+  attackScore += 1;
+
+  console.log("SDP | PRECISE (MELEE)", {
+    weapon: weapon.name,
+    newAttack: attackScore
+  });
+}
 
 let context = {
   actor,

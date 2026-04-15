@@ -32,24 +32,6 @@ export class SdpDamage {
 
   }
 
-  static getArmorValue(actor, location){
-
-  let armor = 0;
-
-  const armors = actor.items.filter(
-    i => i.type === "armor" && i.system.worn.value
-  );
-
-  for (let item of armors){
-
-    armor += item.system.AP[location] ?? 0;
-
-  }
-
-  return armor;
-
-}
-
 static async applyDamage(target, damage, location){
 
   const armor = this.getArmorValue(target, location);
@@ -404,8 +386,8 @@ static async applyFullDamage({ actor, damage, location }) {
 
   const WT = actor.system.derived.woundThreshold.value;
 
-  const armor = this.getArmorValue(actor, location);
-  const finalDamage = Math.max(damage - armor, 0);
+  // ⚠️ damage est DÉJÀ FINAL (armor déjà retirée)
+  const finalDamage = damage;
 
   const current = actor.system.health.value;
   const newHealth = current - finalDamage;
@@ -417,13 +399,68 @@ static async applyFullDamage({ actor, damage, location }) {
   const severity = this.getWoundSeverity(finalDamage, WT);
 
   return {
-    armor,
+    armor: 0,
     finalDamage,
     newHealth,
     severity,
     WT,
     current
   };
+}
+
+static getArmorValue(actor, location){
+
+  let armor = 0;
+
+  const armors = actor.items.filter(
+    i => i.type === "armor" && i.system.worn.value
+  );
+
+  for (let item of armors){
+    armor += item.system.AP[location] ?? 0;
+  }
+
+  // =========================
+  // PROTECTRICE TRAIT
+  // =========================
+
+  const defenseWeapon = actor.items.find(i =>
+    i.type === "weapon" &&
+    i.system.equipped &&
+    i.system.isDefenseWeapon
+  );
+
+  if (defenseWeapon) {
+
+    const traits = defenseWeapon.system.traits || [];
+
+    const protectrice = traits.find(t => {
+      const key = (t.key || "")
+        .replace(/([a-z])([A-Z])/g, "$1-$2")
+        .toLowerCase()
+        .replace(/[\s_]/g, "-");
+
+      return key === "protectrice";
+    });
+
+    if (protectrice) {
+
+      const value = Number(protectrice.value || 0);
+
+      armor += value;
+
+      console.log("SDP | PROTECTRICE APPLIED", {
+        weapon: defenseWeapon.name,
+        bonus: value,
+        finalArmor: armor
+      });
+
+    }
+
+  }
+
+  return armor;
+
 }
 
 }

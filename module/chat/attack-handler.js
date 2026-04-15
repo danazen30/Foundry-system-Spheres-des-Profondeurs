@@ -37,18 +37,19 @@ export function registerAttackHandlers(html, message) {
     const token = canvas.tokens.get(targetId);
 
     const newHtml = `
-    <div class="sdp-attack"
-         data-type="melee"
-         data-roll="${roll}"
-         data-attack="${attackScore}"
-         data-baseattack="${baseAttack}"
-         data-meleebonus="${meleeBonus}"
-         data-critical="${critical}"
-         data-location="${location}"
-         data-brutal="${brutal}"
-         data-actor="${actorId}"
-         data-weapon="${weaponId}"
-         data-target="${targetId}">
+<div class="sdp-attack"
+     data-type="melee"
+     data-roll="${roll}"
+     data-attack="${attackScore}"
+     data-baseattack="${baseAttack}"
+     data-meleebonus="${meleeBonus}"
+     data-critical="${critical}"
+     data-location="${location}"
+     data-brutal="${brutal}"
+     data-actor="${actorId}"
+     data-weapon="${weaponId}"
+     data-target="${targetId}"
+     data-traits='${JSON.stringify(weapon.system.traits || [])}'>
 
       <h3>${actor.name} attacks with ${weapon.name}</h3>
 
@@ -77,6 +78,7 @@ export function registerAttackHandlers(html, message) {
 
     const card = ev.currentTarget.closest(".sdp-attack");
     const traits = JSON.parse(card.dataset.traits || "[]");
+    console.log("POINTUE DEBUG - ATTACK TRAITS", traits);
 
 let hasEntangling = traits.some(t => t?.key === "entangling");
 
@@ -133,9 +135,28 @@ if (hasEntangling) {
 
     const hasSidestep = sidestepTalent && (sidestepTalent.system.advances || 0) > 0;
 
-    // ===== SHIELD CHECK =====
-    const hasShield = defenseWeapon &&
+const weaponTraits = defenseWeapon?.system.traits || [];
+console.log("DEFENSE WEAPON TRAITS", {
+  weapon: defenseWeapon?.name,
+  traits: weaponTraits
+});
+
+// shield classique
+const hasShield = defenseWeapon &&
   defenseWeapon.system.weaponGroup === "shield";
+
+// trap blade (NOUVEAU)
+const hasTrapBlade = weaponTraits.some(t => {
+  const key = (t.key || "")
+    .replace(/([a-z])([A-Z])/g, "$1-$2") // camelCase → kebab-case
+    .toLowerCase()
+    .replace(/[\s_]/g, "-");
+
+  return key === "trap-blade";
+});
+
+// fusion logique
+const hasDefenseChoiceWeapon = hasShield || hasTrapBlade;
 
 let canChoose = false;
 let forcedChoice = null;
@@ -145,7 +166,7 @@ let forcedChoice = null;
 // ======================
 
 // CAS 1 — les deux → TOUJOURS choix
-if (hasSidestep && hasShield) {
+if (hasSidestep && hasDefenseChoiceWeapon) {
   canChoose = true;
 }
 
@@ -154,13 +175,13 @@ else if (hasSidestep && evasion >= parry) {
   forcedChoice = "evasion";
 }
 
-// CAS 3 — shield dominant → AUTO PARRY
-else if (hasShield && parry >= evasion) {
+// CAS 3 — weapon défensif dominant → AUTO PARRY
+else if (hasDefenseChoiceWeapon && parry >= evasion) {
   forcedChoice = "parry";
 }
 
 // CAS 4 — un seul des deux mais pas dominant → CHOIX
-else if (hasSidestep || hasShield) {
+else if (hasSidestep || hasDefenseChoiceWeapon) {
   canChoose = true;
 }
 
@@ -174,6 +195,7 @@ console.log("SDP | Defense decision (FINAL)", {
   evasion,
   hasSidestep,
   hasShield,
+  hasTrapBlade,
   forcedChoice,
   canChoose
 });
@@ -207,8 +229,8 @@ console.log("SDP | Defense decision (FINAL)", {
       return;
     }
 
-    // ===== AUTO DEFENSE =====
 const selected = forcedChoice;
+
 const defense = selected === "parry" ? parry : evasion;
 const result = attackScore > defense ? "HIT" : "MISS";
 
@@ -301,9 +323,8 @@ if (hasEntangling) {
   parry -= 1;
 }
     const evasion = target.system.derived.evasion.value;
-
-    const defense = selected === "parry" ? parry : evasion;
-    const result = attackScore > defense ? "HIT" : "MISS";
+const defense = selected === "parry" ? parry : evasion;
+const result = attackScore > defense ? "HIT" : "MISS";
 
     console.log("SDP | Defense selected", { selected, defense });
 
@@ -343,6 +364,42 @@ if (hasEntangling) {
 //===================
 
 async function updateAttackCard(messageId, { defense, result, selected, actorId, weaponId, targetId }) {
+
+  const actor = game.actors.get(actorId);
+const weapon = actor?.items.get(weaponId);
+
+const weaponTraits = weapon?.system?.traits || [];
+
+const hasEntangling = weaponTraits.some(t => {
+  const key = (t.key || "")
+    .replace(/([a-z])([A-Z])/g, "$1-$2")
+    .toLowerCase()
+    .replace(/[\s_]/g, "-");
+
+  return key === "entangling";
+});
+
+
+if (result === "HIT" && hasEntangling) {
+
+  const token = canvas.tokens.get(targetId);
+  const target = token?.actor;
+
+  if (target) {
+
+    const current = target.system.conditions?.entangled || false;
+
+    await target.update({
+      "system.conditions.entangled": true
+    });
+
+    console.log("SDP | Entangled applied", {
+      target: target.name,
+      previous: current
+    });
+
+  }
+}
 
   const attackMessage = game.messages.get(messageId);
   if (!attackMessage) return;

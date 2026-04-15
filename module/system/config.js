@@ -260,7 +260,40 @@ export const WEAPON_TRAITS = {
     They gain a +2 bonus to hit against larger creatures, in addition to the base bonus.
     When a mounted character charges with such a weapon, its value is doubled (double both the dice and the bonuses; for example, 1d6 +2 becomes 2d6 +4).`,
     hasValue: false
-  }
+  },
+
+  trapBlade: {
+    label: "Trap Blade",
+    description: `Each time you defend with such a weapon and the opponent’s attack fails, you may perform an opposed Strength test with a +20 bonus.
+    If the test succeeds, you may either disarm your opponent or remove 1 point of durability from their weapon.
+    On a critical success, you may remove 5 durability points from their weapon or send it flying far away.`,
+    hasValue: false
+  },
+
+  entangling: {
+    label: "Entangling",
+    description: `Flexible and insidious, your weapon coils around its targets to hinder their movements.
+    Any opponent successfully hit by this weapon gains the Entangled condition, with a Strength value equal to your Strength characteristic.
+    While you are entangling an opponent, you cannot use the weapon to make other attacks.
+    You may end this effect at any time.`,
+    hasValue: false
+  },
+
+  precise: {
+    label: "Precise",
+    description: `Deadly accurate, this weapon is designed to strike its target where others would fail.
+    You gain a +1 SL bonus to your attack roll.`,
+    hasValue: false
+  },
+
+  protectrice: {
+    label: "Protectrice",
+    description: `A true barrier between you and danger, this weapon surrounds you with constant protection against incoming attacks.
+    If you use this weapon to defend yourself, you are considered to benefit from its PA rating on all parts of your body.
+    If your weapon has a Protective rating of 2 or higher (for example: Protective 2 or Protective 3), you may also oppose projectiles coming from your line of sight.
+    The attacker must meet or exceed the weapon's Protective rating in DR to successfully hit you.`,
+    hasValue: true
+  },
 
 };
 
