@@ -105,7 +105,9 @@
 <h3>Traits</h3>
 
 <div class="traits-list">
-  {{#each traits}}
+  <h3>Advantages</h3>
+
+{{#each positiveTraits}}
     <div class="trait-row" title="{{this.description}}">
 
       <label class="trait-label">
@@ -126,6 +128,31 @@
 
     </div>
   {{/each}}
+
+<h3>Drawbacks</h3>
+
+{{#each negativeTraits}}
+ <div class="trait-row" title="{{this.description}}">
+
+      <label class="trait-label">
+        <input type="checkbox"
+          name="system.traits.{{this.key}}.selected"
+          {{checked this.checked}} />
+
+        <span class="trait-name">{{this.label}}</span>
+      </label>
+
+      {{#if this.hasValue}}
+        <input type="text"
+          class="trait-value"
+          name="system.traits.{{this.key}}.value"
+          value="{{this.value}}"
+          placeholder="0" />
+      {{/if}}
+
+    </div>
+{{/each}}
+
 </div>
 
 </div>

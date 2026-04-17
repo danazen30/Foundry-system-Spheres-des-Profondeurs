@@ -87,9 +87,33 @@ console.log("SDP | Damage ammo", ammo?.name);
   // =========================
   let armor = 0;
 
-  if (target) {
-    armor = this.getArmorValue(target, location);
-  }
+if (target) {
+  armor = this.getArmorValue(target, location);
+}
+
+// =========================
+// INOFFENSIVE TRAIT
+// =========================
+
+const traits = weapon.system.traits || [];
+
+const hasInoffensive = traits.some(t => {
+  const key = (t.key || "")
+    .replace(/([a-z])([A-Z])/g, "$1-$2")
+    .toLowerCase()
+    .replace(/[\s_]/g, "-");
+
+  return key === "inoffensive";
+});
+
+if (hasInoffensive) {
+  armor *= 2;
+
+  console.log("SDP | INOFFENSIVE APPLIED", {
+    weapon: weapon.name,
+    doubledArmor: armor
+  });
+}
 
  const SB = actor.system.attributes.strength.bonus;
 const DB = actor.system.attributes.dexterity.bonus;
@@ -99,8 +123,6 @@ const statBonus = useFinesse ? DB : SB;
 let baseWeapon = 0;
 
 let impactfulTrait = null;
-
-const traits = weapon.system.traits || [];
 
 let devastating = false;
 

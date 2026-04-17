@@ -146,6 +146,15 @@ if (normalizedTraits.some(t => t.key === "precise")) {
   });
 }
 
+if (normalizedTraits.some(t => t.key === "imprecise")) {
+  targetValue -= 10;
+
+  console.log("SDP | IMPRECISE (RANGED)", {
+    weapon: weapon.name,
+    newTarget: targetValue
+  });
+}
+
 // 🔥 juste pour affichage
 let source = "Ranged Ability";
 
@@ -388,6 +397,25 @@ if (normalizedTraits.some(t => t.key === "precise")) {
   attackScore += 1;
 
   console.log("SDP | PRECISE (MELEE)", {
+    weapon: weapon.name,
+    newAttack: attackScore
+  });
+}
+
+// ===== SLOW TRAIT =====
+if (normalizedTraits.some(t => t.key === "slow")) {
+  attackScore -= 1;
+
+  console.log("SDP | SLOW (MELEE)", {
+    weapon: weapon.name,
+    newAttack: attackScore
+  });
+}
+
+if (normalizedTraits.some(t => t.key === "imprecise")) {
+  attackScore -= 1;
+
+  console.log("SDP | IMPRECISE (MELEE)", {
     weapon: weapon.name,
     newAttack: attackScore
   });

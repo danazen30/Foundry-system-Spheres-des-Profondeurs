@@ -26,28 +26,49 @@ export class SdpWeaponSheet extends SdpItemSheet {
       { value: "special", label: "Special" }
     ],
 
-traits: Object.entries(WEAPON_TRAITS).map(([key, value]) => {
+positiveTraits: Object.entries(WEAPON_TRAITS)
+  .filter(([_, v]) => v.type === "positive")
+  .map(([key, value]) => {
 
-  const traitsArray = this.document.system.traits ?? [];
+    const traitsArray = this.document.system.traits ?? [];
 
-  const existing = traitsArray.find(t => {
-    if (!t) return false;
+    const existing = traitsArray.find(t => {
+      if (!t) return false;
+      if (typeof t === "string") return t === key;
+      return t.key === key;
+    });
 
-    if (typeof t === "string") return t === key;
+    return {
+      key,
+      label: value.label,
+      description: value.description,
+      hasValue: value.hasValue,
+      checked: !!existing,
+      value: existing?.value || ""
+    };
+  }),
 
-    return t.key === key;
-  });
+negativeTraits: Object.entries(WEAPON_TRAITS)
+  .filter(([_, v]) => v.type === "negative")
+  .map(([key, value]) => {
 
-  return {
-    key,
-    label: value.label,
-    description: value.description,
-    hasValue: value.hasValue,
-    checked: !!existing,
-    value: existing?.value || ""
-  };
+    const traitsArray = this.document.system.traits ?? [];
 
-})
+    const existing = traitsArray.find(t => {
+      if (!t) return false;
+      if (typeof t === "string") return t === key;
+      return t.key === key;
+    });
+
+    return {
+      key,
+      label: value.label,
+      description: value.description,
+      hasValue: value.hasValue,
+      checked: !!existing,
+      value: existing?.value || ""
+    };
+  }),
 
   };
 }
