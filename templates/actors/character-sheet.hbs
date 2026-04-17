@@ -429,25 +429,27 @@ readonly>
 </td>
 
 <td>
-  <select
-    data-action="selectAmmo"
-    data-item-id="{{item.id}}"
-  >
+  <div class="ammo-row">
 
-    <option value="">-- None --</option>
+    <select data-action="selectAmmo"
+            data-item-id="{{this._id}}">
+      {{#each this.compatibleAmmo}}
+        <option value="{{this._id}}"
+          {{#if (eq this._id ../system.currentAmmo)}}selected{{/if}}>
+          {{this.name}} ({{this.system.quantity.value}})
+        </option>
+      {{/each}}
+    </select>
 
-    {{#each item.compatibleAmmo as |ammo|}}
-  <option
-    value="{{ammo.id}}"
-    {{#if (eq ammo.id item.system.currentAmmo)}}
-      selected
+    {{#if this.hasReload}}
+      <input type="checkbox"
+             class="reload-checkbox"
+             data-action="toggleLoaded"
+             data-item-id="{{this._id}}"
+             {{checked this.system.loaded}}>
     {{/if}}
-  >
-        {{ammo.name}} ({{ammo.system.quantity.value}})
-      </option>
-    {{/each}}
 
-  </select>
+  </div>
 </td>
 
 <td>

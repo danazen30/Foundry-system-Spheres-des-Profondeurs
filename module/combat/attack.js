@@ -24,7 +24,14 @@ if(stunned > 0){
 
   const isRanged = weapon.system.category === "ranged";
 
+  const weaponTraitsBase = weapon.system.traits || [];
 
+const hasReload = weaponTraitsBase.some(t => t?.key === "reload");
+const forceReload = weapon.system.forceReload;
+
+if (hasReload && !weapon.system.loaded) {
+  return await this.reloadTest(actor, weapon);
+}
 
 const targets = Array.from(game.user.targets);
 let targetId = targets.length ? targets[0].id : null;
@@ -187,7 +194,22 @@ if (bestSkill) {
 
     const result = roll.total;
 
-    let crit = SdpRoll.getCritical(result);
+   let critFailMin = 96;
+
+// ===== DANGEROUS TRAIT =====
+if (normalizedTraits.some(t => t.key === "dangerous")) {
+  critFailMin = 86;
+
+  console.log("SDP | DANGEROUS (RANGED)", {
+    weapon: weapon.name,
+    critFailMin
+  });
+}
+
+let crit = {
+  success: result >= 1 && result <= 5,
+  failure: result >= critFailMin && result <= 100
+};
 
 const isImpaling = normalizedTraits.some(t => t.key === "impaling");
 
@@ -225,7 +247,7 @@ if(crit.failure){
 
     let damageButton = "";
 
-    if(success){
+ if(success){
 
       damageButton = `
       <button type="button" type="button" class="roll-damage"
@@ -238,6 +260,18 @@ if(crit.failure){
       `;
 
     }
+
+    // 🔥 UNLOAD TOUJOURS SI RELOAD (SAFE)
+if (normalizedTraits.some(t => t.key === "reload")) {
+
+  await weapon.update({ "system.loaded": false });
+
+  console.log("SDP | WEAPON UNLOADED (RANGED)", {
+    weapon: weapon.name,
+    success
+  });
+
+}
 
     const html = `
 <div class="sdp-attack" data-sdp-safe="true"
@@ -340,7 +374,21 @@ if (useFinesse && weapon.system.traits?.some(t => t.key === "finesse")) {
 const roll = await (new Roll("1d100")).roll();
 const result = roll.total;
 
-let crit = SdpRoll.getCritical(result);
+let critFailMin = 96;
+
+if (normalizedTraits.some(t => t.key === "dangerous")) {
+  critFailMin = 86;
+
+  console.log("SDP | DANGEROUS (MELEE)", {
+    weapon: weapon.name,
+    critFailMin
+  });
+}
+
+let crit = {
+  success: result >= 1 && result <= 5,
+  failure: result >= critFailMin && result <= 100
+};
 
 // =========================
 // TRAIT : IMPALING
@@ -495,6 +543,110 @@ if(crit.failure){
   speaker: ChatMessage.getSpeaker({actor}),
   content: html
 });
+
+}
+
+static async reloadTest(actor, weapon) {
+
+  const reloadTrait = weapon.system.traits.find(t => t.key === "reload");
+  const target = Number(reloadTrait?.value || 1);
+
+  const roll = await (new Roll("1d100")).roll();
+  const result = roll.total;
+  const traits = weapon.system.traits || [];
+
+let critFailMin = 96;
+
+if (traits.some(t => t.key === "dangerous")) {
+  critFailMin = 86;
+}
+
+let crit = {
+  success: result >= 1 && result <= 5,
+  failure: result >= critFailMin && result <= 100
+};
+
+const base = actor._getBestWeaponSkill(weapon);
+
+let targetValue = base;
+
+const success = result <= targetValue;
+
+let SL =
+  Math.floor(targetValue / 10) -
+  Math.floor(result / 10);
+
+  if (!success && SL === 0) SL = -1;
+
+  // =========================
+// CRITICAL EFFECTS
+// =========================
+
+if (crit.success) {
+  SL += 2;
+
+  console.log("SDP | RELOAD CRIT SUCCESS", {
+    weapon: weapon.name,
+    newSL: SL
+  });
+}
+
+if (crit.failure) {
+  SL = 0;
+
+  console.log("SDP | RELOAD CRIT FAILURE", {
+    weapon: weapon.name
+  });
+}
+
+  const progressGain = Math.max(0, SL);
+const newProgress = weapon.system.reloadProgress + progressGain;
+
+  const loaded = newProgress >= target;
+
+  await weapon.update({
+    "system.reloadProgress": loaded ? 0 : newProgress,
+    "system.loaded": loaded
+  });
+
+  console.log("SDP | RELOAD TEST", {
+    weapon: weapon.name,
+    roll: result,
+    SL,
+    progress: newProgress,
+    target,
+    loaded
+  });
+
+let critText = "";
+
+if (crit.success) {
+  critText = `<p><strong>CRITICAL SUCCESS</strong></p>`;
+}
+
+if (crit.failure) {
+  critText = `<p><strong>CRITICAL FAILURE</strong></p>`;
+}
+
+  const html = `
+<div class="sdp-reload">
+  <h3>${actor.name} reloads ${weapon.name}</h3>
+
+  <p>Target: ${targetValue}</p>
+  <p>Roll: ${result}</p>
+  <p>SL: ${SL}</p>
+${critText}
+
+  <p>Progress: ${newProgress}/${target}</p>
+
+  <p><strong>${loaded ? "RELOADED" : "LOADING..."}</strong></p>
+</div>
+`;
+
+  roll.toMessage({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    content: html
+  });
 
 }
 

@@ -324,3 +324,14 @@ text-align:center;
   color: white;
   margin-left: 6px; /* 👈 colle au texte */
 }
+
+.ammo-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.reload-checkbox {
+  transform: scale(1.2);
+  cursor: pointer;
+}

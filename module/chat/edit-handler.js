@@ -401,7 +401,20 @@ const ammo = ammoId ? actor.items.get(ammoId) : null;
 
 console.log("SDP | EDIT Ammo", ammo?.name);
 
-let crit = SdpRoll.getCritical(newRoll);
+let critFailMin = 96;
+
+if (traits.some(t => t.key === "dangerous")) {
+  critFailMin = 86;
+
+  console.log("SDP | DANGEROUS (EDIT RANGED)", {
+    critFailMin
+  });
+}
+
+let crit = {
+  success: newRoll >= 1 && newRoll <= 5,
+  failure: newRoll >= critFailMin && newRoll <= 100
+};
 
 // =========================
 // TRAIT : IMPALING
@@ -521,7 +534,20 @@ const attackScore = baseAttack + meleeBonus + SL + fastBonus;
 const actor = game.actors.get(card.dataset.actor);
 const weapon = actor.items.get(card.dataset.weapon);
 
-let crit = SdpRoll.getCritical(newRoll);
+let critFailMin = 96;
+
+if (traits.some(t => t.key === "dangerous")) {
+  critFailMin = 86;
+
+  console.log("SDP | DANGEROUS (EDIT MELEE)", {
+    critFailMin
+  });
+}
+
+let crit = {
+  success: newRoll >= 1 && newRoll <= 5,
+  failure: newRoll >= critFailMin && newRoll <= 100
+};
 
 // =========================
 // TRAITS DISPLAY

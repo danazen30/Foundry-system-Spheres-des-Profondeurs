@@ -367,12 +367,21 @@ export const WEAPON_TRAITS = {
 
   reload: {
   label: "Reload",
-  description: `This weapon must be reloaded after use.
-  The rating indicates how many actions are required to reload it.
-  A weapon must be loaded before it can be used to attack.`,
+  description: `Demanding and temperamental, this weapon requires time and precision before it can unleash its power.
+  The weapon must be loaded before it can be fired.
+  An unloaded weapon with this drawback requires an Extended Projectile Test appropriate to its weapon group, and you must reach a total DR equal to its rating to reload it.
+  If you are interrupted while reloading, you must start over from the beginning.`,
   hasValue: true,
   type: "negative"
 },
+
+  dangerous: {
+    label: "Dangerous",
+    description: `Unstable and dangerous, these weapons are as likely to harm their wielder as their enemies.
+    All tests have their critical failure range increased by 10, shifting from 96-100 to 86-100.`,
+    hasValue: false,
+    type: "negative"
+  },
 
 };
 

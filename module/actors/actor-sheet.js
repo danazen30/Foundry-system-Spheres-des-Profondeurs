@@ -145,6 +145,14 @@ const meleeWeapons = weapons.filter(w => w.system.category === "melee");
 const rangedWeapons = weapons
   .filter(w => w.system.category === "ranged");
 
+  for (let w of weapons) {
+
+  const traits = w.system.traits || [];
+
+  w.hasReload = traits.some(t => t?.key === "reload");
+
+}
+
 for (let w of rangedWeapons) {
 
   w.compatibleAmmo = allAmmo.filter(a =>
@@ -1546,6 +1554,30 @@ root.querySelectorAll('.toggle-defense-weapon').forEach(el => {
     });
 
     this.render(); // refresh UI
+
+  });
+
+});
+
+root.querySelectorAll('[data-action="toggleLoaded"]').forEach(el => {
+
+  el.addEventListener("change", async (event) => {
+
+    const item = this.document.items.get(event.currentTarget.dataset.itemId);
+
+    if (!item) return;
+
+    const checked = event.currentTarget.checked;
+
+    await item.update({
+      "system.loaded": checked,
+      "system.reloadProgress": checked ? 0 : item.system.reloadProgress
+    });
+
+    console.log("SDP | TOGGLE LOADED", {
+      weapon: item.name,
+      loaded: checked
+    });
 
   });
 

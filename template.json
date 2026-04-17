@@ -514,6 +514,24 @@
         "type": "string",
         "label": "Flaws",
         "value": ""
+      },
+
+      "loaded": {
+        "type": "boolean",
+        "label": "Loaded",
+        "value": true
+      },
+
+      "reloadProgress": {
+        "type": "number",
+        "label": "Reload Progress",
+        "value": 0
+      },
+
+      "forceReload": {
+        "type": "boolean",
+        "label": "Force Reload",
+        "value": false
       }
     },
 
