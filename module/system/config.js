@@ -26,6 +26,17 @@ SDP.hitLocations = {
 
 };
 
+SDP.hitLocationModifiers = {
+  head: -30,
+  body: -10,
+
+  rightArm: -20,
+  leftArm: -20,
+
+  rightLeg: -20,
+  leftLeg: -20
+};
+
 SDP.conditions = {
 
   staggering: "Staggering",

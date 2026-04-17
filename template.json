@@ -390,6 +390,10 @@
         "type": "string",
         "label": "Player Notes",
         "value": ""
+      },
+      "itemTraits": {
+        "type": "array",
+        "value": []
       }
     },
 
@@ -400,7 +404,8 @@
         "encumbrance",
         "price",
         "gmNotes",
-        "playerNotes"
+        "playerNotes",
+        "itemTraits"
       ],
 
       "category": {
@@ -625,7 +630,8 @@
         "encumbrance",
         "price",
         "gmNotes",
-        "playerNotes"
+        "playerNotes",
+        "itemTraits"
       ],
       "worn": {
         "type": "boolean",
