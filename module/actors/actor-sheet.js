@@ -648,21 +648,26 @@ if (weapon.system.category === "ranged") {
 
   // ===== CHECKBOXES =====
 root.querySelectorAll('[data-action="toggleWeaponEquip"]').forEach(el => {
-  el.addEventListener("click", async (event) => {
+  el.addEventListener("change", async (event) => {
 
-  event.preventDefault(); // 🔥 bloque le toggle visuel
-  event.stopPropagation(); // 🔥 sécurité
-
-
-    const item = this.document.items.get(event.currentTarget.dataset.itemId);
+    const checkbox = event.currentTarget;
+    const item = this.document.items.get(checkbox.dataset.itemId);
     const actor = this.document;
 
-    const isEquipping = !item.system.equipped;
+    const isEquipping = checkbox.checked; // ✅ ON UTILISE LE CHECKBOX
+
+    // =========================
+    // UNEQUIP
+    // =========================
 
     if (!isEquipping) {
       await item.update({ "system.equipped": false });
       return;
     }
+
+    // =========================
+    // LOGIQUE EXISTANTE
+    // =========================
 
     const equipped = actor.items.filter(i =>
       i.type === "weapon" &&
@@ -672,21 +677,10 @@ root.querySelectorAll('[data-action="toggleWeaponEquip"]').forEach(el => {
 
     const handed = (item.system.handedness || "").toLowerCase();
 
-    console.log("HAND:", handed);
-    console.log("EQUIPPED:", equipped.map(w => w.system.handedness));
-
-    // =========================
-    // SPECIAL
-    // =========================
-
     if (handed === "special") {
       await item.update({ "system.equipped": true });
       return;
     }
-
-    // =========================
-    // CHECK 2H EXIST
-    // =========================
 
     const hasTwoHanded = equipped.some(w =>
       (w.system.handedness || "").toLowerCase() === "two"
@@ -694,12 +688,9 @@ root.querySelectorAll('[data-action="toggleWeaponEquip"]').forEach(el => {
 
     if (hasTwoHanded) {
       ui.notifications.warn("2H weapon already equipped");
+      checkbox.checked = false; // 🔥 rollback UI
       return;
     }
-
-    // =========================
-    // EQUIP 2H
-    // =========================
 
     if (handed === "two") {
 
@@ -709,6 +700,7 @@ root.querySelectorAll('[data-action="toggleWeaponEquip"]').forEach(el => {
 
       if (hasOther) {
         ui.notifications.warn("Cannot equip 2H with other weapons");
+        checkbox.checked = false;
         return;
       }
 
@@ -716,21 +708,17 @@ root.querySelectorAll('[data-action="toggleWeaponEquip"]').forEach(el => {
       return;
     }
 
-    // =========================
-    // ONE HAND LIMIT
-    // =========================
-
     const oneHandedCount = equipped.filter(w =>
       (w.system.handedness || "").toLowerCase() === "one"
     ).length;
 
     if (oneHandedCount >= 2) {
       ui.notifications.warn("Max 2 one-hand weapons");
+      checkbox.checked = false;
       return;
     }
 
     await item.update({ "system.equipped": true });
-this.render(); // 🔥 refresh UI
 
   });
 });
@@ -1494,7 +1482,10 @@ root.querySelectorAll('[data-action="selectAmmo"]').forEach(el => {
 
     if (!weapon) return;
 
-    const ammoId = select.value;
+    let ammoId = select.value;
+
+// 🔥 FIX NULL
+if (!ammoId) ammoId = null;
 
     console.log("SDP | Ammo selected", {
       weapon: weapon.name,
@@ -1577,6 +1568,36 @@ root.querySelectorAll('[data-action="toggleLoaded"]').forEach(el => {
     console.log("SDP | TOGGLE LOADED", {
       weapon: item.name,
       loaded: checked
+    });
+
+  });
+
+});
+
+// =========================
+// TOGGLE BOOLEAN (GENERIC)
+// =========================
+
+root.querySelectorAll('[data-action="toggleBoolean"]').forEach(el => {
+
+  el.addEventListener("change", async (event) => {
+
+    const checkbox = event.currentTarget;
+    const item = this.document.items.get(checkbox.dataset.itemId);
+
+    if (!item) return;
+
+    const path = checkbox.dataset.path;
+    const checked = checkbox.checked;
+
+    await item.update({
+      [path]: checked
+    });
+
+    console.log("SDP | TOGGLE BOOLEAN", {
+      item: item.name,
+      path,
+      value: checked
     });
 
   });

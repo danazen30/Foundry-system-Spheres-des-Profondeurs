@@ -71,6 +71,14 @@ let ammo = null;
 
 if (weapon.system.currentAmmo) {
   ammo = actor.items.get(weapon.system.currentAmmo);
+
+  if (!ammo) {
+    ui.notifications.warn("Invalid ammunition selected");
+    return;
+  }
+} else if (weapon.system.consumesAmmo) {
+  ui.notifications.warn("No ammunition selected");
+  return;
 }
 
 console.log("SDP | Ammo used", {

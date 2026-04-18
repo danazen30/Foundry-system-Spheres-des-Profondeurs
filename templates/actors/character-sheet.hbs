@@ -431,15 +431,19 @@ readonly>
 <td>
   <div class="ammo-row">
 
-    <select data-action="selectAmmo"
-            data-item-id="{{this._id}}">
-      {{#each this.compatibleAmmo}}
-        <option value="{{this._id}}"
-          {{#if (eq this._id ../system.currentAmmo)}}selected{{/if}}>
-          {{this.name}} ({{this.system.quantity.value}})
-        </option>
-      {{/each}}
-    </select>
+<select data-action="selectAmmo"
+        data-item-id="{{this._id}}">
+
+  <option value="">-- Aucun --</option>
+
+  {{#each this.compatibleAmmo}}
+    <option value="{{this._id}}"
+      {{#if (eq this._id ../system.currentAmmo)}}selected{{/if}}>
+      {{this.name}} ({{this.system.quantity.value}})
+    </option>
+  {{/each}}
+
+</select>
 
     {{#if this.hasReload}}
       <input type="checkbox"

@@ -103,6 +103,25 @@ _processFormData(event) {
 
   data.system.traits = finalTraits;
 console.log("FINAL TRAITS", finalTraits);
+
+// =========================
+// FIX AMMO NULL
+// =========================
+
+if (data.system.currentAmmo === "") {
+  data.system.currentAmmo = null;
+}
+
+  // =========================
+// FIX CHECKBOXES (CRUCIAL)
+// =========================
+
+data.system.consumesAmmo = !!data.system.consumesAmmo;
+data.system.forceReload = !!data.system.forceReload;
+data.system.equipped = !!data.system.equipped;
+data.system.offhand = !!data.system.offhand;
+data.system.isDefenseWeapon = !!data.system.isDefenseWeapon;
+
   return data;
 }
 
