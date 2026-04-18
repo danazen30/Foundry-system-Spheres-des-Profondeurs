@@ -24,6 +24,21 @@ if(stunned > 0){
 
   const isRanged = weapon.system.category === "ranged";
 
+      // =========================
+// TRAIT : IMPALING
+// =========================
+
+const traits = weapon.system.traits || [];
+
+const normalizedTraits = traits
+  .filter(t => t) // 🔥 IMPORTANT (enlève null/undefined)
+  .map(t => {
+    if (typeof t === "string") {
+      return { key: t };
+    }
+    return t;
+  });
+
   const weaponTraitsBase = weapon.system.traits || [];
 
 const hasReload = weaponTraitsBase.some(t => t?.key === "reload");
@@ -61,7 +76,6 @@ if (dialogMods.location) {
   // ======================
 
   if(isRanged){
-
 
     // =========================
 // AMMO
@@ -149,7 +163,11 @@ if (normalizedTraits.some(t => t.key === "fast")) {
   fastBonus = 10;
 }
 
-let targetValue = base + (dialogMods.totalMod || 0) + fastBonus;
+let targetValue =
+  base +
+  (dialogMods.totalMod || 0) +
+  (dialogMods.conditionMod || 0) + // 🔥 AJOUT
+  fastBonus;
 
 // ===== PRECISE TRAIT =====
 if (normalizedTraits.some(t => t.key === "precise")) {
@@ -398,21 +416,6 @@ let crit = {
   failure: result >= critFailMin && result <= 100
 };
 
-// =========================
-// TRAIT : IMPALING
-// =========================
-
-const traits = weapon.system.traits || [];
-
-const normalizedTraits = traits
-  .filter(t => t) // 🔥 IMPORTANT (enlève null/undefined)
-  .map(t => {
-    if (typeof t === "string") {
-      return { key: t };
-    }
-    return t;
-  });
-
 const traitsData = normalizedTraits.map(t => ({
   key: t.key,
   label: WEAPON_TRAITS?.[t.key]?.label || t.key,
@@ -446,7 +449,15 @@ if (result === 100) {
 }
 
 // 🎯 attack score final
-let attackScore = baseAttack + meleeBonus + SL + bonus + inspiration + fastBonus + chargeBonus;
+let attackScore =
+  baseAttack +
+  meleeBonus +
+  SL +
+  bonus +
+  inspiration +
+  fastBonus +
+  chargeBonus +
+  Math.floor((dialogMods.conditionMod || 0) / 10); // 🔥 AJOUT
 
 // ===== PRECISE TRAIT =====
 if (normalizedTraits.some(t => t.key === "precise")) {
@@ -576,7 +587,12 @@ let crit = {
 
 const base = actor._getBestWeaponSkill(weapon);
 
-let targetValue = base;
+const dialogMods = game.sdp?.dialogModifiers || {};
+
+let targetValue =
+  base +
+  (dialogMods.totalMod || 0) +
+  (dialogMods.conditionMod || 0);
 
 const success = result <= targetValue;
 

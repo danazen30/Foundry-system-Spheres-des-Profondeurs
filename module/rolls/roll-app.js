@@ -171,6 +171,18 @@ const selectedTalents = Array.from(
 
 game.sdp.dialogModifiers = {
   totalMod: modValue + diffValue,
+
+  // 🔥 AJOUT CRITIQUE
+  conditionMod: this.actor.system.conditionTotals
+    ? Object.entries(this.actor.system.conditionTotals).reduce((acc, [key, value]) => {
+        const config = CONFIG.SDP.conditionConfig?.[key];
+        if (!config?.modifier) return acc;
+
+        const stack = value === true ? 1 : value;
+        return acc + (config.modifier * stack);
+      }, 0)
+    : 0,
+
   location: this.element.querySelector('[name="location"]')?.value || null,
   brutal: this.element.querySelector('[name="brutal"]')?.checked || false,
   charge: this.element.querySelector('[name="charge"]')?.checked || false,
@@ -216,7 +228,10 @@ const roll = await new Roll("1d100").roll();
 const result = roll.total;
 
 const dialogMods = game.sdp?.dialogModifiers || {};
-const target = (this.target || 0) + (dialogMods.totalMod || 0);
+const target =
+  (this.target || 0) +
+  (dialogMods.totalMod || 0) +
+  (dialogMods.conditionMod || 0);
 
 let SL =
   Math.floor(target / 10) -
