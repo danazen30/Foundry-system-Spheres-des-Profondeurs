@@ -2,6 +2,7 @@ import { SdpRoll } from "../rolls/roll.js";
 import { rollHitLocation } from "./hit-location.js";
 import { SdpTraitEngine } from "../system/trait-engine.js";
 import { WEAPON_TRAITS } from "../system/config.js";
+import { ITEM_TRAITS } from "../system/config.js";
 
 export class SdpAttack {
 
@@ -23,21 +24,6 @@ if(stunned > 0){
 }
 
   const isRanged = weapon.system.category === "ranged";
-
-      // =========================
-// TRAIT : IMPALING
-// =========================
-
-const traits = weapon.system.traits || [];
-
-const normalizedTraits = traits
-  .filter(t => t) // 🔥 IMPORTANT (enlève null/undefined)
-  .map(t => {
-    if (typeof t === "string") {
-      return { key: t };
-    }
-    return t;
-  });
 
   const weaponTraitsBase = weapon.system.traits || [];
 
@@ -163,7 +149,11 @@ if (normalizedTraits.some(t => t.key === "fast")) {
   fastBonus = 10;
 }
 
-const locationMod = CONFIG.SDP.hitLocationModifiers?.[hitLocation.location] || 0;
+let locationMod = 0;
+
+if (dialogMods.location) {
+  locationMod = CONFIG.SDP.hitLocationModifiers?.[hitLocation.location] || 0;
+}
 
 let targetValue =
   base +
@@ -171,6 +161,12 @@ let targetValue =
   (dialogMods.conditionMod || 0) +
   locationMod + // 🔥 AJOUT
   fastBonus;
+
+  // =========================
+// ITEM TRAITS
+// =========================
+
+const itemTraits = weapon.system.itemTraits || [];
 
 // ===== PRECISE TRAIT =====
 if (normalizedTraits.some(t => t.key === "precise")) {
@@ -353,6 +349,19 @@ ${traitsData.length ? `
 
   }
 
+  // =========================
+// TRAITS (MELEE FIX)
+// =========================
+
+const weaponTraits = weapon.system.traits || [];
+
+const normalizedTraits = weaponTraits
+  .filter(t => t)
+  .map(t => {
+    if (typeof t === "string") return { key: t };
+    return t;
+  });
+
   // ======================
   // MELEE ATTACK
   // ======================
@@ -452,7 +461,11 @@ if (result === 100) {
 }
 
 // 🎯 attack score final
-const locationMod = CONFIG.SDP.hitLocationModifiers?.[hitLocation.location] || 0;
+let locationMod = 0;
+
+if (dialogMods.location) {
+  locationMod = CONFIG.SDP.hitLocationModifiers?.[hitLocation.location] || 0;
+}
 
 let attackScore =
   baseAttack +
@@ -464,6 +477,13 @@ let attackScore =
   chargeBonus +
   Math.floor((dialogMods.conditionMod || 0) / 10) +
   Math.floor(locationMod / 10); // 🔥 AJOUT
+
+  // =========================
+// ITEM TRAITS
+// =========================
+
+const itemTraits = weapon.system.itemTraits || [];
+
 
 // ===== PRECISE TRAIT =====
 if (normalizedTraits.some(t => t.key === "precise")) {

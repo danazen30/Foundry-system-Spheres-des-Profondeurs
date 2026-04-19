@@ -158,5 +158,33 @@
     </div>
 {{/each}}
 
+<h3>Item Traits</h3>
+
+<div class="traits-list">
+
+{{#each itemTraits}}
+
+  <div class="trait-row" title="{{this.description}}">
+
+    <label>
+      <input type="checkbox"
+        name="system.itemTraits.{{this.key}}.selected"
+        {{checked this.checked}}>
+
+      {{this.label}}
+    </label>
+
+    {{#if this.hasValue}}
+      <input type="text"
+        name="system.itemTraits.{{this.key}}.value"
+        value="{{this.value}}">
+    {{/if}}
+
+  </div>
+
+{{/each}}
+
+</div>
+
 
 </div>

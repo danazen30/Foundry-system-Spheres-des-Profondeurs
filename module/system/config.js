@@ -396,4 +396,15 @@ export const WEAPON_TRAITS = {
 
 };
 
+export const ITEM_TRAITS = {
+
+  refined: {
+    label: "Refined",
+    description: "Objet de qualité supérieure, apporte un bonus.",
+    type: "positive",
+    hasValue: true,
+  },
+
+};
+
 CONFIG.SDP.WEAPON_TRAITS = WEAPON_TRAITS;

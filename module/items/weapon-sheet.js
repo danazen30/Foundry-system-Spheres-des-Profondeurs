@@ -10,10 +10,11 @@ export class SdpWeaponSheet extends SdpItemSheet {
   };
 
   async _prepareContext() {
-    console.log("RENDER WEAPON SHEET"); // 👈 TEST 1
+
+  const base = await super._prepareContext(); // 🔥 CRUCIAL
+
   return {
-    item: this.document,
-    system: this.document.system,
+    ...base, // 🔥 garde itemTraits
 
     categoryOptions: [
       { value: "melee", label: "Melee" },
@@ -26,50 +27,47 @@ export class SdpWeaponSheet extends SdpItemSheet {
       { value: "special", label: "Special" }
     ],
 
-positiveTraits: Object.entries(WEAPON_TRAITS)
-  .filter(([_, v]) => v.type === "positive")
-  .map(([key, value]) => {
+    positiveTraits: Object.entries(WEAPON_TRAITS)
+      .filter(([_, v]) => v.type === "positive")
+      .map(([key, value]) => {
+        const traitsArray = this.document.system.traits ?? [];
 
-    const traitsArray = this.document.system.traits ?? [];
+        const existing = traitsArray.find(t => {
+          if (!t) return false;
+          if (typeof t === "string") return t === key;
+          return t.key === key;
+        });
 
-    const existing = traitsArray.find(t => {
-      if (!t) return false;
-      if (typeof t === "string") return t === key;
-      return t.key === key;
-    });
+        return {
+          key,
+          label: value.label,
+          description: value.description,
+          hasValue: value.hasValue,
+          checked: !!existing,
+          value: existing?.value || ""
+        };
+      }),
 
-    return {
-      key,
-      label: value.label,
-      description: value.description,
-      hasValue: value.hasValue,
-      checked: !!existing,
-      value: existing?.value || ""
-    };
-  }),
+    negativeTraits: Object.entries(WEAPON_TRAITS)
+      .filter(([_, v]) => v.type === "negative")
+      .map(([key, value]) => {
+        const traitsArray = this.document.system.traits ?? [];
 
-negativeTraits: Object.entries(WEAPON_TRAITS)
-  .filter(([_, v]) => v.type === "negative")
-  .map(([key, value]) => {
+        const existing = traitsArray.find(t => {
+          if (!t) return false;
+          if (typeof t === "string") return t === key;
+          return t.key === key;
+        });
 
-    const traitsArray = this.document.system.traits ?? [];
-
-    const existing = traitsArray.find(t => {
-      if (!t) return false;
-      if (typeof t === "string") return t === key;
-      return t.key === key;
-    });
-
-    return {
-      key,
-      label: value.label,
-      description: value.description,
-      hasValue: value.hasValue,
-      checked: !!existing,
-      value: existing?.value || ""
-    };
-  }),
-
+        return {
+          key,
+          label: value.label,
+          description: value.description,
+          hasValue: value.hasValue,
+          checked: !!existing,
+          value: existing?.value || ""
+        };
+      }),
   };
 }
 
@@ -121,6 +119,25 @@ data.system.forceReload = !!data.system.forceReload;
 data.system.equipped = !!data.system.equipped;
 data.system.offhand = !!data.system.offhand;
 data.system.isDefenseWeapon = !!data.system.isDefenseWeapon;
+
+// =========================
+// ITEM TRAITS (🔥 AJOUT)
+// =========================
+
+const itemTraitsObj = data.system.itemTraits || {};
+const finalItemTraits = [];
+
+for (const [key, t] of Object.entries(itemTraitsObj)) {
+
+  if (!t?.selected) continue;
+
+  finalItemTraits.push({
+    key,
+    value: t.value ?? ""
+  });
+}
+
+data.system.itemTraits = finalItemTraits;
 
   return data;
 }
