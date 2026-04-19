@@ -168,6 +168,16 @@ let targetValue =
 
 const itemTraits = weapon.system.itemTraits || [];
 
+// ===== PRACTICAL ITEM TRAIT (RANGED) =====
+if (itemTraits.some(t => t.key === "practical")) {
+  targetValue += 10;
+
+  console.log("SDP | PRACTICAL (RANGED)", {
+    weapon: weapon.name,
+    newTarget: targetValue
+  });
+}
+
 // ===== PRECISE TRAIT =====
 if (normalizedTraits.some(t => t.key === "precise")) {
   targetValue += 10;
@@ -484,6 +494,15 @@ let attackScore =
 
 const itemTraits = weapon.system.itemTraits || [];
 
+// ===== PRACTICAL ITEM TRAIT (MELEE) =====
+if (itemTraits.some(t => t.key === "practical")) {
+  attackScore += 1;
+
+  console.log("SDP | PRACTICAL (MELEE)", {
+    weapon: weapon.name,
+    newAttack: attackScore
+  });
+}
 
 // ===== PRECISE TRAIT =====
 if (normalizedTraits.some(t => t.key === "precise")) {
