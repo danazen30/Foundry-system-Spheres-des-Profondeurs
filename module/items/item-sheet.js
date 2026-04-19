@@ -19,31 +19,39 @@ static LAYOUT = {
 
 async _prepareContext() {
 
-  const itemTraits = Object.entries(ITEM_TRAITS).map(([key, value]) => {
+  const traitsArray = this.document.system.itemTraits ?? [];
 
-    const traitsArray = this.document.system.itemTraits ?? [];
+const mapTraits = (type) => {
+  return Object.entries(ITEM_TRAITS)
+    .filter(([_, v]) => v.type === type)
+    .map(([key, value]) => {
 
-    const existing = traitsArray.find(t => {
-      if (!t) return false;
-      if (typeof t === "string") return t === key;
-      return t.key === key;
+      const existing = traitsArray.find(t => {
+        if (!t) return false;
+        if (typeof t === "string") return t === key;
+        return t.key === key;
+      });
+
+      return {
+        key,
+        label: value.label,
+        description: value.description,
+        hasValue: value.hasValue,
+        checked: !!existing,
+        value: existing?.value || ""
+      };
     });
+};
 
-    return {
-      key,
-      label: value.label,
-      description: value.description,
-      hasValue: value.hasValue,
-      checked: !!existing,
-      value: existing?.value || ""
-    };
-  });
+const positiveItemTraits = mapTraits("positive");
+const negativeItemTraits = mapTraits("negative");
 
   return {
-    item: this.document,
-    system: this.document.system,
-    itemTraits // 🔥 IMPORTANT
-  };
+  item: this.document,
+  system: this.document.system,
+  positiveItemTraits,
+  negativeItemTraits
+};
 
 }
 

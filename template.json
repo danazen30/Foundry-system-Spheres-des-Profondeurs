@@ -664,6 +664,19 @@
         "type": "number",
         "label": "Layer",
         "value": 1
+      },
+
+      "durability": {
+        "value": {
+          "type": "number",
+          "label": "Durability",
+          "value": 3
+        },
+        "max": {
+          "type": "number",
+          "label": "Max Durability",
+          "value": 3
+        }
       }
     },
     "condition": {

@@ -416,6 +416,26 @@ let crit = {
   failure: newRoll >= critFailMin && newRoll <= 100
 };
 
+let critText = "";
+              if(crit.success){
+                critText = `<p><strong>CRITICAL SUCCESS</strong></p>`;
+              }
+              if(crit.failure){
+                critText = `<p><strong>CRITICAL FAILURE</strong></p>`;
+              }
+
+const item = actor.items.get(card.dataset.weapon);
+const itemTraits = item.system.itemTraits || [];
+
+if (crit.failure && itemTraits.some(t => t.key === "flawed")) {
+
+  await item.update({
+    "system.durability.value": 0
+  });
+
+  critText += `<p><strong>${item.name} breaks due to its fragility!</strong></p>`;
+}
+
 // =========================
 // TRAIT : IMPALING
 // =========================
@@ -434,14 +454,6 @@ const isRound = newRoll % 10 === 0;
 if (isImpaling && isRound && newRoll <= target) {
   crit.success = true;
 }
-
-              let critText = "";
-              if(crit.success){
-                critText = `<p><strong>CRITICAL SUCCESS</strong></p>`;
-              }
-              if(crit.failure){
-                critText = `<p><strong>CRITICAL FAILURE</strong></p>`;
-              }
 
               let damageButton = "";
 
@@ -549,6 +561,26 @@ let crit = {
   failure: newRoll >= critFailMin && newRoll <= 100
 };
 
+              let critText = "";
+              if(crit.success){
+                critText = `<p><strong>CRITICAL SUCCESS</strong></p>`;
+              }
+              if(crit.failure){
+                critText = `<p><strong>CRITICAL FAILURE</strong></p>`;
+              }
+
+const item = actor.items.get(card.dataset.weapon);
+const itemTraits = item.system.itemTraits || [];
+
+if (crit.failure && itemTraits.some(t => t.key === "flawed")) {
+
+  await item.update({
+    "system.durability.value": 0
+  });
+
+  critText += `<p><strong>${item.name} breaks due to its fragility!</strong></p>`;
+}
+
 // =========================
 // TRAITS DISPLAY
 // =========================
@@ -567,14 +599,6 @@ const successCheck = newRoll <= (baseAttack * 10);
 if (isImpaling && isRound && successCheck) {
   crit.success = true;
 }
-
-              let critText = "";
-              if(crit.success){
-                critText = `<p><strong>CRITICAL SUCCESS</strong></p>`;
-              }
-              if(crit.failure){
-                critText = `<p><strong>CRITICAL FAILURE</strong></p>`;
-              }
 
               newHtml = `
 <div class="sdp-attack"

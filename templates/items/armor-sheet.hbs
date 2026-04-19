@@ -42,6 +42,13 @@ name="system.worn.value"
 
 </div>
 
+<div class="form-group">
+  <label>Durability</label>
+  <input type="number" name="system.durability.value" value="{{system.durability.value}}">
+  /
+  <input type="number" name="system.durability.max" value="{{system.durability.max}}">
+</div>
+
 <h3>Qualities</h3>
 
 <textarea
@@ -53,5 +60,49 @@ rows="2">{{system.qualities.value}}</textarea>
 <textarea
 name="system.flaws.value"
 rows="2">{{system.flaws.value}}</textarea>
+
+<h3>Item Traits</h3>
+
+{{#each positiveItemTraits}}
+  <div class="trait">
+
+    <label>
+      <input type="checkbox"
+             name="system.itemTraits.{{this.key}}.selected"
+             {{#if this.checked}}checked{{/if}}>
+      {{this.label}}
+    </label>
+
+    {{#if this.hasValue}}
+      <input type="text"
+      class="trait-value"
+             name="system.itemTraits.{{this.key}}.value"
+             value="{{this.value}}">
+    {{/if}}
+
+  </div>
+{{/each}}
+
+<h3>Item Flaws</h3>
+
+{{#each negativeItemTraits}}
+  <div class="trait">
+
+    <label>
+      <input type="checkbox"
+             name="system.itemTraits.{{this.key}}.selected"
+             {{#if this.checked}}checked{{/if}}>
+      {{this.label}}
+    </label>
+
+    {{#if this.hasValue}}
+      <input type="text"
+      class="trait-value"
+             name="system.itemTraits.{{this.key}}.value"
+             value="{{this.value}}">
+    {{/if}}
+
+  </div>
+{{/each}}
 
 </div>

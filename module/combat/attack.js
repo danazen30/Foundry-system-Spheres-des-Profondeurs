@@ -246,6 +246,25 @@ let crit = {
   failure: result >= critFailMin && result <= 100
 };
 
+// =========================
+// FLAWED ITEM TRAIT (BREAK)
+// =========================
+
+let breakText = "";
+
+if (crit.failure && itemTraits.some(t => t.key === "flawed")) {
+
+  await weapon.update({
+    "system.durability.value": 0
+  });
+
+  console.log("SDP | WEAPON BROKEN (FLAWED)", {
+    weapon: weapon.name
+  });
+
+  breakText = `<p><strong>${weapon.name} breaks due to its fragility!</strong></p>`;
+}
+
 const isImpaling = normalizedTraits.some(t => t.key === "impaling");
 
 const isRound = result % 10 === 0;
@@ -340,6 +359,7 @@ ${traitsData.length ? `
   <p>SL: ${SL} (${SdpRoll.getSLLabel(SL)})</p>
   
   ${critText}
+  ${breakText}
 
   <p>Hit Location: ${CONFIG.SDP.hitLocations[hitLocation.location]} (${hitLocation.roll.total})</p>
 
@@ -438,6 +458,26 @@ let crit = {
   failure: result >= critFailMin && result <= 100
 };
 
+// =========================
+// FLAWED ITEM TRAIT (BREAK)
+// =========================
+
+let breakText = "";
+
+const itemTraits = weapon.system.itemTraits || [];
+
+if (crit.failure && itemTraits.some(t => t.key === "flawed")) {
+
+  await weapon.update({
+    "system.durability.value": 0
+  });
+
+  console.log("SDP | WEAPON BROKEN (FLAWED)", {
+    weapon: weapon.name
+  });
+
+  breakText = `<p><strong>${weapon.name} breaks due to its fragility!</strong></p>`;
+}
 const traitsData = normalizedTraits.map(t => ({
   key: t.key,
   label: WEAPON_TRAITS?.[t.key]?.label || t.key,
@@ -491,8 +531,6 @@ let attackScore =
   // =========================
 // ITEM TRAITS
 // =========================
-
-const itemTraits = weapon.system.itemTraits || [];
 
 // ===== PRACTICAL ITEM TRAIT (MELEE) =====
 if (itemTraits.some(t => t.key === "practical")) {
@@ -592,6 +630,7 @@ if(crit.failure){
   <p>Inspiration: +${inspiration}</p>
   <p>Location: ${CONFIG.SDP.hitLocations[hitLocation.location]} (${hitLocation.roll.total})</p>
   ${critText}
+  ${breakText}
   ${dialogMods.charge ? "<p>Charge</p>" : ""}
   <p>Attack Score: ${attackScore}</p>
 

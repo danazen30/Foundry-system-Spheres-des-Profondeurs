@@ -404,6 +404,7 @@ export const ITEM_TRAITS = {
     This trait is a symbol of social status and may be taken multiple times.
     The higher its quality, the more impressive the result.`,
     type: "positive",
+    type: "positive",
     hasValue: true,
   },
 
@@ -411,6 +412,7 @@ export const ITEM_TRAITS = {
     label: "Lightweight",
     description: `Ingeniously designed to combine efficiency and lightness, this item seems to defy the limits of its material.
     Its weight is reduced by half.`,
+    type: "positive",
     hasValue: false
   },
 
@@ -419,6 +421,7 @@ export const ITEM_TRAITS = {
     description: `Crafted with exceptional expertise, this item combines efficiency and handling without compromise.
     Any test made using this item gains a +10 bonus.
     If it is plate or mail armor, its stealth penalties are reduced.`,
+    type: "positive",
     hasValue: false
   },
 
@@ -426,8 +429,18 @@ export const ITEM_TRAITS = {
     label: "Durable",
     description: `Reinforced with ingenuity and built to endure, this item withstands even the harshest trials.
     It gains additional durability equal to its rating.`,
+    type: "positive",
     hasValue: false
   },
+
+  flawed: {
+    label: "Flawed",
+    description: `Poorly made and hastily assembled, this item bears the mark of an amateur… or a careless fraud.
+    The item breaks when used during any critical failure.
+    Likewise, a Makeshift armor breaks if a Critical Hit is suffered on the location it protects.`,
+    type: "negative",
+    hasValue: false
+  }
 
 };
 
