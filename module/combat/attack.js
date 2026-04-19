@@ -178,6 +178,10 @@ if (itemTraits.some(t => t.key === "practical")) {
   });
 }
 
+if (itemTraits.some(t => t.key === "impractical")) {
+  targetValue -= 10;
+}
+
 // ===== PRECISE TRAIT =====
 if (normalizedTraits.some(t => t.key === "precise")) {
   targetValue += 10;
@@ -540,6 +544,10 @@ if (itemTraits.some(t => t.key === "practical")) {
     weapon: weapon.name,
     newAttack: attackScore
   });
+}
+
+if (itemTraits.some(t => t.key === "impractical")) {
+  attackScore -= 1;
 }
 
 // ===== PRECISE TRAIT =====

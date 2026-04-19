@@ -440,6 +440,29 @@ export const ITEM_TRAITS = {
     Likewise, a Makeshift armor breaks if a Critical Hit is suffered on the location it protects.`,
     type: "negative",
     hasValue: false
+  },
+
+  laid: {
+    label: "Ugly",
+    description: `Lacking any sense of aesthetics, this item offends the eye and reflects its maker's poor taste.
+    Ugly items draw negative attention, and related Social tests may suffer a -10 penalty.`,
+    type: "negative"
+  },
+
+  impractical: {
+    label: "Impractical",
+    description: `Poorly designed and awkward to use, this item hinders its wielder more than it helps.
+    A failed test using this poorly made item suffers a -10 penalty.
+    Additionally, penalties from wearing Unreliable armor are doubled.`,
+    type: "negative"
+  },
+
+  bulky: {
+    label: "Bulky",
+    description: `Cumbersome and difficult to carry, this item makes its presence known as much as it slows its wielder.
+    The item's weight is increased by 1.5x (small trinkets generally cannot have this drawback).`,
+    type: "negative",
+    hasValue: false
   }
 
 };
