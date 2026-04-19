@@ -163,10 +163,13 @@ if (normalizedTraits.some(t => t.key === "fast")) {
   fastBonus = 10;
 }
 
+const locationMod = CONFIG.SDP.hitLocationModifiers?.[hitLocation.location] || 0;
+
 let targetValue =
   base +
   (dialogMods.totalMod || 0) +
-  (dialogMods.conditionMod || 0) + // 🔥 AJOUT
+  (dialogMods.conditionMod || 0) +
+  locationMod + // 🔥 AJOUT
   fastBonus;
 
 // ===== PRECISE TRAIT =====
@@ -449,6 +452,8 @@ if (result === 100) {
 }
 
 // 🎯 attack score final
+const locationMod = CONFIG.SDP.hitLocationModifiers?.[hitLocation.location] || 0;
+
 let attackScore =
   baseAttack +
   meleeBonus +
@@ -457,7 +462,8 @@ let attackScore =
   inspiration +
   fastBonus +
   chargeBonus +
-  Math.floor((dialogMods.conditionMod || 0) / 10); // 🔥 AJOUT
+  Math.floor((dialogMods.conditionMod || 0) / 10) +
+  Math.floor(locationMod / 10); // 🔥 AJOUT
 
 // ===== PRECISE TRAIT =====
 if (normalizedTraits.some(t => t.key === "precise")) {
