@@ -467,4 +467,18 @@ export const ITEM_TRAITS = {
 
 };
 
+export const ARMOR_TRAITS = {
+
+  flexible: {
+    label: "Flexible",
+    type: "positive",
+    description: `Flexible and discreet, this armor conforms to the body’s movements and can be worn beneath heavier protection.
+    A Flexible armor can be worn under a layer of non-Flexible armor if you wish.
+    In that case, you gain the benefits of both.`,
+    hasValue: false
+  }
+
+};
+
 CONFIG.SDP.WEAPON_TRAITS = WEAPON_TRAITS;
+SDP.ARMOR_TRAITS = ARMOR_TRAITS;

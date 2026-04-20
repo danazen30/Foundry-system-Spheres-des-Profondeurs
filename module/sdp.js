@@ -207,21 +207,21 @@ Hooks.on("updateCombat", async (combat, changed) => {
 });
 Hooks.on("createItem", async (item) => {
 
-  if (item.type !== "injury") return;
-
   const actor = item.parent;
   if (!actor) return;
 
-  // 🔥 récupérer ton paramètre depuis l’item
+  // =========================
+  // 🩸 INJURY (TON CODE EXISTANT)
+  // =========================
+
+  if (item.type !== "injury") return;
+
   const removeOnDelete = item.system.removeOnDelete ?? true;
 
   for (const effect of item.effects) {
 
     for (const change of effect.changes) {
 
-      // =========================
-      // TON CODE EXISTANT
-      // =========================
       if (!change.key?.startsWith("system.custom.conditionEffects")) continue;
 
       const key = change.key.split(".").pop();

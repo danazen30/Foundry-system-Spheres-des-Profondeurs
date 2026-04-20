@@ -676,7 +676,11 @@
           "type": "number",
           "label": "Max Durability",
           "value": 3
-        }
+        }      
+      },
+      "armorTraits": {
+        "type": "array",
+        "value": []
       }
     },
     "condition": {

@@ -49,17 +49,26 @@ name="system.worn.value"
   <input type="number" name="system.durability.max" value="{{system.durability.max}}">
 </div>
 
-<h3>Qualities</h3>
+<h3>Armor Traits</h3>
 
-<textarea
-name="system.qualities.value"
-rows="2">{{system.qualities.value}}</textarea>
+<div class="traits">
 
-<h3>Flaws</h3>
+  {{#each armorTraits}}
+    <label>
+      <input type="checkbox"
+       name="system.armorTraits.{{key}}.selected"
+       {{#if checked}}checked{{/if}} />
 
-<textarea
-name="system.flaws.value"
-rows="2">{{system.flaws.value}}</textarea>
+      {{label}}
+
+      {{#if hasValue}}
+        <input type="text" name="system.armorTraits.{{key}}.value" value="{{value}}" />
+      {{/if}}
+
+    </label>
+  {{/each}}
+
+</div>
 
 <h3>Item Traits</h3>
 
@@ -104,5 +113,19 @@ rows="2">{{system.flaws.value}}</textarea>
 
   </div>
 {{/each}}
+
+<h3>Effects</h3>
+
+<ul>
+  {{#each effects}}
+    <li class="effect" data-effect-id="{{this.id}}">
+      {{this.name}}
+      <button data-action="edit-effect">Edit</button>
+      <button data-action="delete-effect">Delete</button>
+    </li>
+  {{/each}}
+</ul>
+
+<button data-action="create-effect">Add Effect</button>
 
 </div>
