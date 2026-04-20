@@ -77,29 +77,37 @@ async _prepareContext() {
 
   const traitsArray = this.document.system.armorTraits ?? [];
 
-  const armorTraits = Object.entries(ARMOR_TRAITS).map(([key, value]) => {
+  const mapTraits = (type) => {
+  return Object.entries(ARMOR_TRAITS)
+    .filter(([_, v]) => v.type === type)
+    .map(([key, value]) => {
 
-    const existing = traitsArray.find(t => {
-      if (!t) return false;
-      if (typeof t === "string") return t === key;
-      return t.key === key;
+      const existing = traitsArray.find(t => {
+        if (!t) return false;
+        if (typeof t === "string") return t === key;
+        return t.key === key;
+      });
+
+      return {
+        key,
+        label: value.label,
+        description: value.description,
+        hasValue: value.hasValue,
+        checked: !!existing,
+        value: existing?.value || ""
+      };
     });
+};
 
-    return {
-      key,
-      label: value.label,
-      description: value.description,
-      hasValue: value.hasValue,
-      checked: !!existing,
-      value: existing?.value || ""
-    };
-  });
+const positiveArmorTraits = mapTraits("positive");
+const negativeArmorTraits = mapTraits("negative");
 
   return {
-    ...base,
-    armorTraits,
-    effects: this.document.effects // 🔥 CRUCIAL
-  };
+  ...base,
+  positiveArmorTraits,
+  negativeArmorTraits,
+  effects: this.document.effects
+};
 
 }
 

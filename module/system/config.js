@@ -13,6 +13,13 @@ ATTRIBUTE_ORDER: [
     "charisma"
   ]
 }
+
+export const DAMAGE_TYPES = {
+  slashing: "Slashing",
+  piercing: "Piercing",
+  bludgeoning: "Bludgeoning"
+};
+
 SDP.hitLocations = {
 
   head: "Head",
@@ -472,11 +479,94 @@ export const ARMOR_TRAITS = {
   flexible: {
     label: "Flexible",
     type: "positive",
-    description: `Flexible and discreet, this armor conforms to the body’s movements and can be worn beneath heavier protection.
+    description: `Flexible and discreet, this armor conforms to the body's movements and can be worn beneath heavier protection.
     A Flexible armor can be worn under a layer of non-Flexible armor if you wish.
     In that case, you gain the benefits of both.`,
     hasValue: false
-  }
+  },
+
+  padded: {
+    label: "Padded",
+    description: `Designed to absorb the most violent impacts, this padding dampens blunt blows at the cost of increased weight.
+    It reduces blunt damage by an amount equal to 2x the armor's AP.
+    However, the armor's weight is increased by 2 kilograms.`,
+    hasValue: false
+  },
+
+  dense: {
+    label: "Dense",
+    type: "positive",
+    description: `Thick and rigid, this armor offers formidable resistance to blades, dulling even the deepest cuts.
+    Slashing damage is reduced by an amount equal to 2x the armor's AP (before or after AP is applied).
+    However, the armor's weight is increased by 1.5x.`,
+    hasValue: false
+  },
+
+  layered: {
+    label: "Layered",
+    type: "positive",
+    description: `Made of carefully stacked layers, this armor disperses impact force and effectively resists piercing attacks.
+    Piercing damage is reduced by an amount equal to 2x the armor's AP.
+    However, the armor's weight is increased by 1.5x.`,
+    hasValue: false
+  },
+
+  robust: {
+    label: "Robust",
+    type: "positive",
+    description: `Built to endure the harshest trials, this item withstands the first blows without faltering.
+    It ignores the first loss of durability or AP.
+    However, maintenance is required to regain this benefit once it has been used.`,
+    hasValue: false
+  },
+
+  encumbering: {
+    label: "Encumbering",
+    type: "negative",
+    description: `Heavy and rigid, these greaves hinder movement and weigh down every step.
+    You suffer a -1 penalty to your movement.`,
+    hasValue: false
+  },
+
+  defective: {
+    label: "Defective",
+    type: "negative",
+    description: `Poorly crafted, weakened, or poorly maintained, this armor reveals weaknesses that enemies can ruthlessly exploit.
+    It suffers a -1 AP penalty per rating on all locations.`,
+    hasValue: true
+  },
+
+  restrictive: {
+    label: "Restrictive",
+    type: "negative",
+    description: `Rigid and constraining, these bracers hinder fluid movement and limit the wearer’s dexterity.
+    You suffer a -10 penalty to Dexterity.`,
+    hasValue: false
+  },
+
+  heavy: {
+    label: "Heavy",
+    type: "negative",
+    description: `Massive and burdensome, this item weighs heavily on your body and hinders your every movement.
+    For every 20 kilograms, you suffer a -10 penalty to Agility.`,
+    hasValue: true
+  },
+
+  conspicuous: {
+    label: "Conspicuous",
+    type: "negative",
+    description: `Noisy and imposing, this armor betrays your every movement with the clatter of metal and its lack of subtlety.
+    You suffer a -10 penalty to Stealth.`,
+    hasValue: false
+  },
+
+  limitedVision: {
+    label: "Limited Vision",
+    type: "negative",
+    description: `Narrow and restrictive, this piece limits your vision and reduces your awareness of the environment.
+    You suffer a -10 penalty to Perception.`,
+    hasValue: false
+  },
 
 };
 

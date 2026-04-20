@@ -1,45 +1,49 @@
 <div class="sdp-item-sheet">
 
-<h2>{{item.name}}</h2>
+<h1>
+  <input type="text" name="name" value="{{item.name}}" />
+</h1>
 
-<div class="armor-main">
-
-<label>Armor Type</label>
-<input
-type="text"
-name="system.armorType.value"
-value="{{system.armorType.value}}">
-
-<label>Worn</label>
-<input
-type="checkbox"
-name="system.worn.value"
-{{checked system.worn.value}}>
-
+<div class="form-group">
+  <label>Quantity</label>
+  <input type="number" name="system.quantity.value" value="{{system.quantity.value}}">
 </div>
 
-<h3>Armor Points</h3>
+<div class="form-group">
+  <label>Worn</label>
+  <input type="checkbox" name="system.worn.value" {{checked system.worn.value}}>
+</div>
 
-<div class="armor-grid">
+<h2>Armor Points</h2>
 
-<label>Head</label>
-<input type="number" name="system.AP.head" value="{{system.AP.head}}">
+<div class="form-group">
+  <label>Head</label>
+  <input type="number" name="system.AP.head" value="{{system.AP.head}}">
+</div>
 
-<label>Body</label>
-<input type="number" name="system.AP.body" value="{{system.AP.body}}">
+<div class="form-group">
+  <label>Body</label>
+  <input type="number" name="system.AP.body" value="{{system.AP.body}}">
+</div>
 
-<label>Left Arm</label>
-<input type="number" name="system.AP.leftArm" value="{{system.AP.leftArm}}">
+<div class="form-group">
+  <label>Left Arm</label>
+  <input type="number" name="system.AP.leftArm" value="{{system.AP.leftArm}}">
+</div>
 
-<label>Right Arm</label>
-<input type="number" name="system.AP.rightArm" value="{{system.AP.rightArm}}">
+<div class="form-group">
+  <label>Right Arm</label>
+  <input type="number" name="system.AP.rightArm" value="{{system.AP.rightArm}}">
+</div>
 
-<label>Left Leg</label>
-<input type="number" name="system.AP.leftLeg" value="{{system.AP.leftLeg}}">
+<div class="form-group">
+  <label>Left Leg</label>
+  <input type="number" name="system.AP.leftLeg" value="{{system.AP.leftLeg}}">
+</div>
 
-<label>Right Leg</label>
-<input type="number" name="system.AP.rightLeg" value="{{system.AP.rightLeg}}">
-
+<div class="form-group">
+  <label>Right Leg</label>
+  <input type="number" name="system.AP.rightLeg" value="{{system.AP.rightLeg}}">
 </div>
 
 <div class="form-group">
@@ -49,83 +53,152 @@ name="system.worn.value"
   <input type="number" name="system.durability.max" value="{{system.durability.max}}">
 </div>
 
-<h3>Armor Traits</h3>
+<!-- ===================== -->
+<!-- ARMOR TRAITS -->
+<!-- ===================== -->
 
-<div class="traits">
+<h2>Armor Traits</h2>
 
-  {{#each armorTraits}}
+<div class="traits-list">
+
+  <h3>Advantages</h3>
+
+  {{#each positiveArmorTraits}}
+  <div class="trait-row" title="{{this.description}}">
+
     <label>
       <input type="checkbox"
-       name="system.armorTraits.{{key}}.selected"
-       {{#if checked}}checked{{/if}} />
+        name="system.armorTraits.{{this.key}}.selected"
+        {{checked this.checked}}>
 
-      {{label}}
-
-      {{#if hasValue}}
-        <input type="text" name="system.armorTraits.{{key}}.value" value="{{value}}" />
-      {{/if}}
-
+      {{this.label}}
     </label>
+
+    {{#if this.hasValue}}
+      <input type="text"
+        class="trait-value"
+        name="system.armorTraits.{{this.key}}.value"
+        value="{{this.value}}">
+    {{/if}}
+
+  </div>
+  {{/each}}
+
+  <h3>Drawbacks</h3>
+
+  {{#each negativeArmorTraits}}
+  <div class="trait-row" title="{{this.description}}">
+
+    <label>
+      <input type="checkbox"
+        name="system.armorTraits.{{this.key}}.selected"
+        {{checked this.checked}}>
+
+      {{this.label}}
+    </label>
+
+    {{#if this.hasValue}}
+      <input type="text"
+        class="trait-value"
+        name="system.armorTraits.{{this.key}}.value"
+        value="{{this.value}}">
+    {{/if}}
+
+  </div>
   {{/each}}
 
 </div>
 
-<h3>Item Traits</h3>
+<!-- ===================== -->
+<!-- ITEM TRAITS (GLOBAL) -->
+<!-- ===================== -->
 
-{{#each positiveItemTraits}}
-  <div class="trait">
+<h2>Item Traits</h2>
+
+<div class="traits-list">
+
+  <h3>Advantages</h3>
+
+  {{#each positiveItemTraits}}
+  <div class="trait-row" title="{{this.description}}">
 
     <label>
       <input type="checkbox"
-             name="system.itemTraits.{{this.key}}.selected"
-             {{#if this.checked}}checked{{/if}}>
+        name="system.itemTraits.{{this.key}}.selected"
+        {{checked this.checked}}>
+
       {{this.label}}
     </label>
 
     {{#if this.hasValue}}
       <input type="text"
-      class="trait-value"
-             name="system.itemTraits.{{this.key}}.value"
-             value="{{this.value}}">
+        class="trait-value"
+        name="system.itemTraits.{{this.key}}.value"
+        value="{{this.value}}">
     {{/if}}
 
   </div>
-{{/each}}
-
-<h3>Item Flaws</h3>
-
-{{#each negativeItemTraits}}
-  <div class="trait">
-
-    <label>
-      <input type="checkbox"
-             name="system.itemTraits.{{this.key}}.selected"
-             {{#if this.checked}}checked{{/if}}>
-      {{this.label}}
-    </label>
-
-    {{#if this.hasValue}}
-      <input type="text"
-      class="trait-value"
-             name="system.itemTraits.{{this.key}}.value"
-             value="{{this.value}}">
-    {{/if}}
-
-  </div>
-{{/each}}
-
-<h3>Effects</h3>
-
-<ul>
-  {{#each effects}}
-    <li class="effect" data-effect-id="{{this.id}}">
-      {{this.name}}
-      <button data-action="edit-effect">Edit</button>
-      <button data-action="delete-effect">Delete</button>
-    </li>
   {{/each}}
-</ul>
 
-<button data-action="create-effect">Add Effect</button>
+  <h3>Drawbacks</h3>
+
+  {{#each negativeItemTraits}}
+  <div class="trait-row" title="{{this.description}}">
+
+    <label>
+      <input type="checkbox"
+        name="system.itemTraits.{{this.key}}.selected"
+        {{checked this.checked}}>
+
+      {{this.label}}
+    </label>
+
+    {{#if this.hasValue}}
+      <input type="text"
+        class="trait-value"
+        name="system.itemTraits.{{this.key}}.value"
+        value="{{this.value}}">
+    {{/if}}
+
+  </div>
+  {{/each}}
+
+</div>
+
+<!-- ===================== -->
+<!-- EFFECTS -->
+<!-- ===================== -->
+
+<h2>Effects</h2>
+
+<button type="button" data-action="create-effect">
+  ➕ Add Effect
+</button>
+
+<ol class="effects-list">
+
+  {{#each effects}}
+  <li class="effect flexrow" data-effect-id="{{this.id}}">
+
+    <div class="effect-name">
+      {{this.name}}
+    </div>
+
+    <div class="effect-controls">
+
+      <button type="button" data-action="edit-effect">
+        ✏️
+      </button>
+
+      <button type="button" data-action="delete-effect">
+        🗑️
+      </button>
+
+    </div>
+
+  </li>
+  {{/each}}
+
+</ol>
 
 </div>

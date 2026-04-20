@@ -88,7 +88,9 @@ console.log("SDP | Damage ammo", ammo?.name);
   let armor = 0;
 
 if (target) {
-  armor = this.getArmorValue(target, location);
+  const damageType = weapon.system.damageType;
+
+armor = this.getArmorValue(target, location, damageType);
 }
 
 // =========================
@@ -430,7 +432,7 @@ static async applyFullDamage({ actor, damage, location }) {
   };
 }
 
-static getArmorValue(actor, location){
+static getArmorValue(actor, location, damageType = null){
 
   let armor = 0;
 
@@ -438,9 +440,55 @@ static getArmorValue(actor, location){
     i => i.type === "armor" && i.system.worn.value
   );
 
-  for (let item of armors){
-    armor += item.system.AP[location] ?? 0;
-  }
+for (let item of armors){
+
+  let ap = Number(item.system.AP[location] ?? 0);
+
+  // =========================
+  // PADDED (REMBOURRÉ)
+  // =========================
+
+const traits = item.system.armorTraits || [];
+
+const hasPadded = traits.some(t => (t.key || "").toLowerCase() === "padded");
+const hasDense = traits.some(t => (t.key || "").toLowerCase() === "dense");
+const hasLayered = traits.some(t => (t.key || "").toLowerCase() === "layered");
+
+// PADDED → BLUDGEONING
+if (hasPadded && damageType === "bludgeoning") {
+  ap *= 2;
+
+  console.log("SDP | PADDED APPLIED", {
+    armor: item.name,
+    location,
+    finalAP: ap
+  });
+}
+
+// DENSE → SLASHING
+if (hasDense && damageType === "slashing") {
+  ap *= 2;
+
+  console.log("SDP | DENSE APPLIED", {
+    armor: item.name,
+    location,
+    finalAP: ap
+  });
+}
+
+// LAYERED → PIERCING
+if (hasLayered && damageType === "piercing") {
+  ap *= 2;
+
+  console.log("SDP | LAYERED APPLIED", {
+    armor: item.name,
+    location,
+    finalAP: ap
+  });
+}
+
+  armor += ap;
+}
 
   // =========================
   // PROTECTRICE TRAIT

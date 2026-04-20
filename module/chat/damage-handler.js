@@ -21,6 +21,7 @@ if (!card) {
     const weaponId = card.dataset.weapon;
     const targetId = card.dataset.target;
     const location = card.dataset.location;
+    const damageType = card.dataset.damagetype || "slashing";
     const critical = String(card.dataset.critical) === "true";
 
     const actor = game.actors.get(actorId);
@@ -52,7 +53,8 @@ const result = await SdpDamage.rollDamage({
   location,
   critical,
   brutal,
-  ammoId
+  ammoId,
+  damageType // 🔥 AJOUT
 });
 
 // =========================
@@ -310,32 +312,24 @@ if (isCrit && targetId) {
 
   if (actorTarget) {
 
-    const armors = actorTarget.items.filter(i =>
+const armors = actorTarget.items.filter(i =>
   i.type === "armor" && i.system.worn?.value
-);
+) || [];
 
 for (const armor of armors) {
 
   const itemTraits = armor.system.itemTraits || [];
 
-  // check flawed
   if (!itemTraits.some(t => t.key === "flawed")) continue;
 
   const AP = armor.system.AP || {};
 
-  // check localisation
   const protectsLocation = (AP[location] ?? 0) > 0;
 
   if (!protectsLocation) continue;
 
-  // BREAK
   await armor.update({
     "system.durability.value": 0
-  });
-
-  console.log("SDP | ARMOR BROKEN (FLAWED)", {
-    armor: armor.name,
-    location
   });
 
   ChatMessage.create({

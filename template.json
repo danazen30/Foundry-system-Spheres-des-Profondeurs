@@ -450,6 +450,12 @@
         "value": "1d4"
       },
 
+      "damageType": {
+        "type": "string",
+        "label": "Damage Type",
+        "value": "slashing"
+      },
+
       "range": {
         "type": "number",
         "label": "Range",

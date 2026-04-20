@@ -16,6 +16,12 @@ export class SdpWeaponSheet extends SdpItemSheet {
   return {
     ...base, // 🔥 garde itemTraits
 
+    damageTypeOptions: [
+  { value: "slashing", label: "Slashing" },
+  { value: "piercing", label: "Piercing" },
+  { value: "bludgeoning", label: "Bludgeoning" }
+],
+
     categoryOptions: [
       { value: "melee", label: "Melee" },
       { value: "ranged", label: "Ranged" }

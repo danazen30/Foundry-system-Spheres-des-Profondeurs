@@ -344,7 +344,8 @@ if (normalizedTraits.some(t => t.key === "reload")) {
      data-target="${targetId ?? ""}"
      data-location="${hitLocation.location}"
      data-talents='${JSON.stringify(dialogMods.talents || [])}'
-     data-traits='${JSON.stringify(normalizedTraits)}'>
+     data-traits='${JSON.stringify(normalizedTraits)}'
+     data-damagetype="${weapon.system.damageType || "slashing"}">
 
   <h3>${actor.name} shoots with ${weapon.name}</h3>
 
@@ -614,7 +615,8 @@ if(crit.failure){
      data-location="${hitLocation.location}"
      data-critical="${crit.success}"
      data-brutal="${dialogMods.brutal}"
-     data-traits='${JSON.stringify(normalizedTraits)}'>
+     data-traits='${JSON.stringify(normalizedTraits)}'
+     data-damagetype="${weapon.system.damageType || "slashing"}">
 
   <h3>${actor.name} attacks with ${weapon.name}</h3>
 
