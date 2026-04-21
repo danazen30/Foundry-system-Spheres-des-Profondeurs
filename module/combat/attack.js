@@ -86,10 +86,6 @@ console.log("SDP | Ammo used", {
   ammo: ammo?.name
 });
 
-// =========================
-// BEST SKILL (MULTI SUPPORT)
-// =========================
-
 const base = actor._getBestWeaponSkill(weapon);
 
 let rangeMod = 0;
@@ -113,13 +109,57 @@ if (ammo) {
 const traits = [...weaponTraits, ...ammoTraits];
 
 const normalizedTraits = traits
-  .filter(t => t) // 🔥 IMPORTANT (enlève null/undefined)
+  .filter(t => t)
   .map(t => {
-    if (typeof t === "string") {
-      return { key: t };
-    }
+    if (typeof t === "string") return { key: t };
     return t;
   });
+
+// =========================
+// SPLIT TRAITS (IMPORTANT)
+// =========================
+
+const positiveTraits = normalizedTraits.filter(t =>
+  WEAPON_TRAITS?.[t.key]?.type === "positive"
+);
+
+const negativeTraits = normalizedTraits.filter(t =>
+  WEAPON_TRAITS?.[t.key]?.type === "negative"
+);
+
+// =========================
+// SKILL CHECK
+// =========================
+
+const weaponSkills = (weapon.system.skill || "")
+  .split(",")
+  .map(s => s.trim().toLowerCase());
+
+const actorSkills = actor.items.filter(i => i.type === "skill");
+
+let bestSkill = null;
+
+for (const group of weaponSkills) {
+  const skill = actorSkills.find(s =>
+    (s.system.key || "").toLowerCase() === group ||
+    (s.name || "").toLowerCase() === group
+  );
+
+  if (!skill) continue;
+
+  if (!bestSkill || skill.system.value > bestSkill.system.value) {
+    bestSkill = skill;
+  }
+}
+
+const hasValidSkill = !!bestSkill;
+
+// =========================
+// FINAL TRAITS
+// =========================
+
+const activePositiveTraits = hasValidSkill ? positiveTraits : [];
+const finalTraits = [...activePositiveTraits, ...negativeTraits];
 
 // =========================
 // TRAITS DISPLAY
@@ -145,7 +185,7 @@ const traitsHTML = traitsData.map(t => {
 
 let fastBonus = 0;
 
-if (normalizedTraits.some(t => t.key === "fast")) {
+if (finalTraits.some(t => t.key === "fast")) {
   fastBonus = 10;
 }
 
@@ -183,7 +223,7 @@ if (itemTraits.some(t => t.key === "impractical")) {
 }
 
 // ===== PRECISE TRAIT =====
-if (normalizedTraits.some(t => t.key === "precise")) {
+if (finalTraits.some(t => t.key === "precise")) {
   targetValue += 10;
 
   console.log("SDP | PRECISE (RANGED)", {
@@ -192,7 +232,7 @@ if (normalizedTraits.some(t => t.key === "precise")) {
   });
 }
 
-if (normalizedTraits.some(t => t.key === "imprecise")) {
+if (finalTraits.some(t => t.key === "imprecise")) {
   targetValue -= 10;
 
   console.log("SDP | IMPRECISE (RANGED)", {
@@ -204,28 +244,6 @@ if (normalizedTraits.some(t => t.key === "imprecise")) {
 // 🔥 juste pour affichage
 let source = "Ranged Ability";
 
-const weaponSkills = (weapon.system.skill || "")
-  .split(",")
-  .map(s => s.trim().toLowerCase());
-
-const actorSkills = actor.items.filter(i => i.type === "skill");
-
-let bestSkill = null;
-
-for (const group of weaponSkills) {
-
-  const skill = actorSkills.find(s =>
-    (s.system.key || "").toLowerCase() === group ||
-    (s.name || "").toLowerCase() === group
-  );
-
-  if (!skill) continue;
-
-  if (!bestSkill || skill.system.value > bestSkill.system.value) {
-    bestSkill = skill;
-  }
-}
-
 if (bestSkill) {
   source = bestSkill.name;
 }
@@ -236,7 +254,7 @@ if (bestSkill) {
    let critFailMin = 96;
 
 // ===== DANGEROUS TRAIT =====
-if (normalizedTraits.some(t => t.key === "dangerous")) {
+if (finalTraits.some(t => t.key === "dangerous")) {
   critFailMin = 86;
 
   console.log("SDP | DANGEROUS (RANGED)", {
@@ -269,7 +287,7 @@ if (crit.failure && itemTraits.some(t => t.key === "flawed")) {
   breakText = `<p><strong>${weapon.name} breaks due to its fragility!</strong></p>`;
 }
 
-const isImpaling = normalizedTraits.some(t => t.key === "impaling");
+const isImpaling = finalTraits.some(t => t.key === "impaling");
 
 const isRound = result % 10 === 0;
 
@@ -320,7 +338,7 @@ if(crit.failure){
     }
 
     // 🔥 UNLOAD TOUJOURS SI RELOAD (SAFE)
-if (normalizedTraits.some(t => t.key === "reload")) {
+if (finalTraits.some(t => t.key === "reload")) {
 
   await weapon.update({ "system.loaded": false });
 
@@ -397,6 +415,52 @@ const normalizedTraits = weaponTraits
     return t;
   });
 
+// =========================
+// SPLIT TRAITS
+// =========================
+
+const positiveTraits = normalizedTraits.filter(t =>
+  WEAPON_TRAITS?.[t.key]?.type === "positive"
+);
+
+const negativeTraits = normalizedTraits.filter(t =>
+  WEAPON_TRAITS?.[t.key]?.type === "negative"
+);
+
+// =========================
+// SKILL CHECK
+// =========================
+
+const weaponSkills = (weapon.system.skill || "")
+  .split(",")
+  .map(s => s.trim().toLowerCase());
+
+const actorSkills = actor.items.filter(i => i.type === "skill");
+
+let bestSkill = null;
+
+for (const group of weaponSkills) {
+  const skill = actorSkills.find(s =>
+    (s.system.key || "").toLowerCase() === group ||
+    (s.name || "").toLowerCase() === group
+  );
+
+  if (!skill) continue;
+
+  if (!bestSkill || skill.system.value > bestSkill.system.value) {
+    bestSkill = skill;
+  }
+}
+
+const hasValidSkill = !!bestSkill;
+
+// =========================
+// FINAL TRAITS
+// =========================
+
+const activePositiveTraits = hasValidSkill ? positiveTraits : [];
+const finalTraits = [...activePositiveTraits, ...negativeTraits];
+
   // ======================
   // MELEE ATTACK
   // ======================
@@ -449,7 +513,7 @@ const result = roll.total;
 
 let critFailMin = 96;
 
-if (normalizedTraits.some(t => t.key === "dangerous")) {
+if (finalTraits.some(t => t.key === "dangerous")) {
   critFailMin = 86;
 
   console.log("SDP | DANGEROUS (MELEE)", {
@@ -491,11 +555,11 @@ const traitsData = normalizedTraits.map(t => ({
 
 let fastBonus = 0;
 
-if (normalizedTraits.some(t => t.key === "fast")) {
+if (finalTraits.some(t => t.key === "fast")) {
   fastBonus = 1; // ⚠️ ici c’est en "points"
 }
 
-const isImpaling = normalizedTraits.some(t => t.key === "impaling");
+const isImpaling = finalTraits.some(t => t.key === "impaling");
 
 // chiffre rond (10,20,...)
 const isRound = result % 10 === 0;
@@ -552,7 +616,7 @@ if (itemTraits.some(t => t.key === "impractical")) {
 }
 
 // ===== PRECISE TRAIT =====
-if (normalizedTraits.some(t => t.key === "precise")) {
+if (finalTraits.some(t => t.key === "precise")) {
   attackScore += 1;
 
   console.log("SDP | PRECISE (MELEE)", {
@@ -562,7 +626,7 @@ if (normalizedTraits.some(t => t.key === "precise")) {
 }
 
 // ===== SLOW TRAIT =====
-if (normalizedTraits.some(t => t.key === "slow")) {
+if (finalTraits.some(t => t.key === "slow")) {
   attackScore -= 1;
 
   console.log("SDP | SLOW (MELEE)", {
@@ -571,7 +635,7 @@ if (normalizedTraits.some(t => t.key === "slow")) {
   });
 }
 
-if (normalizedTraits.some(t => t.key === "imprecise")) {
+if (finalTraits.some(t => t.key === "imprecise")) {
   attackScore -= 1;
 
   console.log("SDP | IMPRECISE (MELEE)", {

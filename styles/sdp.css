@@ -335,3 +335,8 @@ text-align:center;
   transform: scale(1.2);
   cursor: pointer;
 }
+
+.trait-disabled {
+  text-decoration: line-through;
+  opacity: 0.5;
+}

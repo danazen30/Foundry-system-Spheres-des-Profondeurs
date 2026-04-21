@@ -3,6 +3,7 @@ import { SdpAttack } from "../combat/attack.js";
 import { SDP } from "../system/config.js";
 import { SimpleDialog } from "../apps/simple-dialog.js";
 import { SdpSpell } from "../combat/spell.js";
+import { WEAPON_TRAITS } from "../system/config.js";
 
 const { ActorSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -171,6 +172,117 @@ console.log("SDP | Weapons split", {
   melee: meleeWeapons.length,
   ranged: rangedWeapons.length
 });
+
+for (let w of weapons) {
+
+  const traits = w.system.traits || [];
+
+  const normalized = traits
+    .filter(t => t)
+    .map(t => typeof t === "string" ? { key: t } : t);
+
+  const positive = normalized.filter(t =>
+    SDP.WEAPON_TRAITS?.[t.key]?.type === "positive"
+  );
+
+  const negative = normalized.filter(t =>
+    SDP.WEAPON_TRAITS?.[t.key]?.type === "negative"
+  );
+
+  // =========================
+  // SKILL CHECK (UI)
+  // =========================
+
+  const weaponSkills = (w.system.skill || "")
+  .split(",")
+  .map(s => s.trim().toLowerCase())
+  .filter(s => s); // 🔥 IMPORTANT
+
+  const actorSkills = this.document.items.filter(i => i.type === "skill");
+
+  let bestSkill = null;
+
+  for (const group of weaponSkills) {
+    const skill = actorSkills.find(s =>
+      (s.system.key || "").toLowerCase() === group ||
+      (s.name || "").toLowerCase() === group
+    );
+
+    if (!skill) continue;
+
+    if (!bestSkill || skill.system.value > bestSkill.system.value) {
+      bestSkill = skill;
+    }
+  }
+
+const actorSkillNames = actorSkills.map(s =>
+  (s.name || "").toLowerCase().trim()
+);
+
+const hasValidSkill = weaponSkills.some(group => {
+
+  const g = group.toLowerCase().trim();
+
+  return actorSkillNames.includes(g);
+
+});
+
+// DEBUG (EN DEHORS)
+console.log("CHECK SKILL", {
+  weapon: w.name,
+  weaponSkills,
+  actorSkillNames,
+  hasValidSkill
+});
+  // =========================
+  // UI TRAITS
+  // =========================
+
+w.displayTraits = normalized.map(t => {
+
+  const traitConfig = SDP.WEAPON_TRAITS?.[t.key];
+
+  const isPositive = traitConfig?.type === "positive";
+
+  console.log("TRAIT DEBUG", {
+    weapon: w.name,
+    trait: t.key,
+    config: traitConfig,
+    isPositive,
+    hasValidSkill
+  });
+
+  return {
+    key: t.key,
+    label: traitConfig?.label || t.key,
+    value: t.value,
+    disabled: isPositive && !hasValidSkill
+  };
+});
+
+// =========================
+// DISPLAY SKILLS (ALL, EVEN IF MISSING)
+// =========================
+
+const displaySkills = weaponSkills.map(group => {
+
+  const skill = actorSkills.find(s =>
+    (s.system.key || "").toLowerCase() === group ||
+    (s.name || "").toLowerCase() === group
+  );
+
+  // 🔥 si le skill existe → nom réel
+  if (skill) return skill.name;
+
+  // 🔥 sinon → afficher le nom brut (capitalisé)
+  return group.charAt(0).toUpperCase() + group.slice(1);
+
+});
+
+w.displaySkill = displaySkills.length
+  ? displaySkills.join(", ")
+  : "No skill";
+}
 
 const ammunition = this.document.items.filter(i => i.type === "ammunition");
 

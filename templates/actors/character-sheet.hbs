@@ -319,8 +319,8 @@ readonly>
 <thead>
 <tr>
 <th>Name</th>
-<th>Atk</th>
-<th>Parry</th>
+<th>Skill</th>
+<th>Traits</th>
 <th>Damage</th>
 <th>Equip</th>
 <th>Offhand</th>
@@ -338,8 +338,15 @@ readonly>
 <tr>
 
 <td>{{item.name}}</td>
-<td>{{item.system.attackBonus}}</td>
-<td>{{item.system.parryBonus}}</td>
+<td>{{item.displaySkill}}</td>
+
+<td>
+{{#each item.displayTraits}}
+  <span class="trait-tag {{#if this.disabled}}trait-disabled{{/if}}">
+    {{this.label}}
+  </span>
+{{/each}}
+</td>
 
 <td>
   {{item.system.damage}} + {{item.system.damageDice}}
