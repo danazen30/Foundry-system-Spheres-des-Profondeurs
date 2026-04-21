@@ -12,6 +12,14 @@ const card = ev.currentTarget.closest(".sdp-attack, .sdp-spell");
 const button = ev.currentTarget;
 const dataset = button.dataset;
 
+// =========================
+// GET TRAITS FROM ATTACK
+// =========================
+
+const traits = JSON.parse(button.dataset.traits || "[]");
+
+console.log("TAILLE DEBUG (DAMAGE)", traits);
+
 if (!card) {
   console.error("No card found for damage button");
   return;
@@ -270,6 +278,8 @@ if (card.classList.contains("sdp-spell")) {
 
     ChatMessage.create({
       content: `
+            <div class="damage-card"
+           data-traits='${button.dataset.traits}'>
       <h3>Damage Resolution</h3>
       <p>Location: ${CONFIG.SDP.hitLocations[location]}</p>
       <p>Raw Damage: ${damage}</p>
@@ -282,6 +292,7 @@ if (card.classList.contains("sdp-spell")) {
         data-critical="${critical}">
         Apply Damage
       </button>
+      </div>
       `,
       whisper: ChatMessage.getWhisperRecipients("GM")
     });
@@ -354,6 +365,69 @@ if (!targetId) {
   // ⚠️ pour l’instant : 1 par 1
 for (let token of targets) {
 
+  // =========================
+// TRAIT TAILLE (ARMOR DAMAGE)
+// =========================
+
+const attackCard = button.closest(".sdp-attack");
+const traits = JSON.parse(attackCard?.dataset?.traits || "[]");
+
+const hasTaille = traits.some(t => t?.key === "size");
+
+if (hasTaille) {
+
+  const armorLogs = [];
+  const actorTarget = token?.actor;
+
+  if (actorTarget) {
+
+    const armors = actorTarget.items.filter(i =>
+      i.type === "armor" &&
+      i.system.worn?.value &&
+      (i.system.AP?.[location] ?? 0) > 0
+    );
+
+    for (const armor of armors) {
+
+      const currentAP = armor.system.AP?.[location] ?? 0;
+      const newAP = Math.max(currentAP - 1, 0);
+
+      await armor.update({
+        [`system.AP.${location}`]: newAP
+      });
+
+      armorLogs.push({
+        name: armor.name,
+        before: currentAP,
+        after: newAP
+      });
+
+      console.log("SDP | TAILLE ARMOR DAMAGE", {
+        armor: armor.name,
+        before: currentAP,
+        after: newAP
+      });
+    }
+
+    if (armorLogs.length) {
+
+      ChatMessage.create({
+        content: `
+          <div class="sdp-armor-damage">
+            <h4>Armor Damaged</h4>
+            ${armorLogs.map(a => `
+              <p>${a.name} : ${a.before} → ${a.after}</p>
+            `).join("")}
+          </div>
+        `
+      });
+
+    }
+
+  }
+
+}
+
   const result = await SdpDamage.applyFullDamage({
     actor: token.actor,
     damage,
@@ -378,6 +452,72 @@ for (let token of targets) {
 }
 
   return;
+}
+
+// =========================
+// TRAIT TAILLE (ARMOR DAMAGE) — SINGLE TARGET
+// =========================
+
+const card = button.closest(".damage-card");
+
+const traits = JSON.parse(card?.dataset?.traits || "[]");
+
+console.log("TAILLE DEBUG FINAL", {
+  card,
+  traits
+});
+
+const hasTaille = traits.some(t => t?.key === "size");
+if (hasTaille && targetId) {
+
+  const token = canvas.tokens.get(targetId);
+  if (!token) return;
+
+  const actorTarget = token.actor;
+  const armorLogs = [];
+
+  if (actorTarget) {
+
+    const armors = actorTarget.items.filter(i =>
+      i.type === "armor" &&
+      i.system.worn?.value &&
+      (i.system.AP?.[location] ?? 0) > 0
+    );
+
+    for (const armor of armors) {
+
+      const currentAP = armor.system.AP?.[location] ?? 0;
+      const newAP = Math.max(currentAP - 1, 0);
+
+      await armor.update({
+        [`system.AP.${location}`]: newAP
+      });
+
+      armorLogs.push({
+        name: armor.name,
+        before: currentAP,
+        after: newAP
+      });
+
+    }
+
+    if (armorLogs.length) {
+
+      ChatMessage.create({
+        content: `
+          <div class="sdp-armor-damage">
+            <h4>Armor Damaged</h4>
+            ${armorLogs.map(a => `
+              <p>${a.name} : ${a.before} → ${a.after}</p>
+            `).join("")}
+          </div>
+        `
+      });
+
+    }
+
+  }
+
 }
 
     const token = canvas.tokens.get(targetId);

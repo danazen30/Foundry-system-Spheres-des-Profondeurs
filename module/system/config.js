@@ -272,7 +272,7 @@ export const WEAPON_TRAITS = {
     type: "positive",
     description: `Forged to split steel and shatter defenses, these cutting weapons slice through armor with terrifying ease.
     If you hit an opponent, you deal 1 point of damage to the struck piece of armor or shield while also wounding the target.`,
-    hasValue: true
+    hasValue: false
   },
 
   finesse: {

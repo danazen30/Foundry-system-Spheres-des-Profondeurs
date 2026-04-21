@@ -49,7 +49,10 @@ export function registerAttackHandlers(html, message) {
      data-actor="${actorId}"
      data-weapon="${weaponId}"
      data-target="${targetId}"
-     data-traits='${JSON.stringify(weapon.system.traits || [])}'>
+     data-traits='${JSON.stringify([
+  ...(weapon.system.traits || []),
+  ...(weapon.system.itemTraits || [])
+])}'>
 
       <h3>${actor.name} attacks with ${weapon.name}</h3>
 
@@ -408,6 +411,58 @@ if (result === "HIT" && hasEntangling) {
   const doc = parser.parseFromString(attackMessage.content, "text/html");
 
   const card = doc.querySelector(".sdp-attack");
+const traits = card.dataset.traits;
+// =========================
+// SHIELD DAMAGE (TAILLE)
+// =========================
+
+const attackTraits = JSON.parse(card.dataset.traits || "[]");
+
+const hasTaille = attackTraits.some(t => t?.key === "size");
+
+if (hasTaille && selected === "parry" && targetId) {
+
+  const token = canvas.tokens.get(targetId);
+  const target = token?.actor;
+
+  if (target) {
+
+    const shield = target.items.find(i =>
+      i.type === "weapon" &&
+      i.system.equipped &&
+      i.system.isDefenseWeapon &&
+      i.system.weaponGroup === "shield"
+    );
+
+    if (shield) {
+
+      const current = shield.system.durability?.value ?? 0;
+      const newValue = Math.max(current - 1, 0);
+
+      await shield.update({
+        "system.durability.value": newValue
+      });
+
+      ChatMessage.create({
+  content: `
+    <div class="sdp-armor-damage">
+      <h4>Shield Damaged</h4>
+      <p>${shield.name} : ${current} → ${newValue}</p>
+    </div>
+  `
+});
+
+      console.log("SDP | SHIELD DAMAGED (TAILLE)", {
+        shield: shield.name,
+        before: current,
+        after: newValue
+      });
+
+    }
+
+  }
+}
+
   if (!card) return;
 
   // remove old buttons
@@ -429,6 +484,7 @@ if (result === "HIT" && hasEntangling) {
     btn.dataset.actor = actorId;
     btn.dataset.weapon = weaponId;
     btn.dataset.target = targetId;
+    btn.dataset.traits = traits;
     btn.innerText = "Roll Damage";
 
     card.appendChild(btn);
