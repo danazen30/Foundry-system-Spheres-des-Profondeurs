@@ -175,11 +175,15 @@ console.log("SDP | Weapons split", {
 
 for (let w of weapons) {
 
-  const traits = w.system.traits || [];
+  const weaponTraits = w.system.traits || [];
+const itemTraits = w.system.itemTraits || [];
 
-  const normalized = traits
-    .filter(t => t)
-    .map(t => typeof t === "string" ? { key: t } : t);
+const traits = [...weaponTraits, ...itemTraits];
+
+const normalized = [
+  ...weaponTraits.map(t => ({ ...(typeof t === "string" ? { key: t } : t), source: "weapon" })),
+  ...itemTraits.map(t => ({ ...(typeof t === "string" ? { key: t } : t), source: "item" }))
+];
 
   const positive = normalized.filter(t =>
     SDP.WEAPON_TRAITS?.[t.key]?.type === "positive"
@@ -240,7 +244,9 @@ console.log("CHECK SKILL", {
 
 w.displayTraits = normalized.map(t => {
 
-  const traitConfig = SDP.WEAPON_TRAITS?.[t.key];
+  const traitConfig =
+  SDP.WEAPON_TRAITS?.[t.key] ||
+  SDP.ITEM_TRAITS?.[t.key];
 
   const isPositive = traitConfig?.type === "positive";
 
@@ -253,11 +259,12 @@ w.displayTraits = normalized.map(t => {
   });
 
   return {
-    key: t.key,
-    label: traitConfig?.label || t.key,
-    value: t.value,
-    disabled: isPositive && !hasValidSkill
-  };
+  key: t.key,
+  label: traitConfig?.label || t.key,
+  value: t.value,
+  type: traitConfig?.type || "neutral",
+  disabled: t.source === "weapon" && isPositive && !hasValidSkill
+};
 });
 
 // =========================

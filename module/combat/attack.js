@@ -99,6 +99,9 @@ if (ammo) {
 // =========================
 
 const weaponTraits = weapon.system.traits || [];
+const itemTraits = weapon.system.itemTraits || [];
+
+const allTraits = [...weaponTraits, ...itemTraits];
 
 let ammoTraits = [];
 
@@ -106,7 +109,7 @@ if (ammo) {
   ammoTraits = ammo.system.traits || [];
 }
 
-const traits = [...weaponTraits, ...ammoTraits];
+const traits = [...weaponTraits, ...itemTraits, ...ammoTraits];
 
 const normalizedTraits = traits
   .filter(t => t)
@@ -119,12 +122,15 @@ const normalizedTraits = traits
 // SPLIT TRAITS (IMPORTANT)
 // =========================
 
+const getTraitConfig = (key) =>
+  WEAPON_TRAITS?.[key] || ITEM_TRAITS?.[key];
+
 const positiveTraits = normalizedTraits.filter(t =>
-  WEAPON_TRAITS?.[t.key]?.type === "positive"
+  getTraitConfig(t.key)?.type === "positive"
 );
 
 const negativeTraits = normalizedTraits.filter(t =>
-  WEAPON_TRAITS?.[t.key]?.type === "negative"
+  getTraitConfig(t.key)?.type === "negative"
 );
 
 // =========================
@@ -165,13 +171,20 @@ const finalTraits = [...activePositiveTraits, ...negativeTraits];
 // TRAITS DISPLAY
 // =========================
 
-const traitsData = normalizedTraits.map(t => ({
-  key: t.key,
-  label: WEAPON_TRAITS?.[t.key]?.label || t.key,
-  value: t.value
-}));
+const displayTraits = [
+  ...activePositiveTraits.map(t => ({
+    ...t,
+    label: getTraitConfig(t.key)?.label || t.key,
+    type: "positive"
+  })),
+  ...negativeTraits.map(t => ({
+    ...t,
+    label: getTraitConfig(t.key)?.label || t.key,
+    type: "negative"
+  }))
+];
 
-const traitsHTML = traitsData.map(t => {
+const traitsHTML = displayTraits.map(t => {
   return `<span class="trait-tag"
     data-trait="${t.key}"
     data-value="${t.value || ""}">
@@ -205,8 +218,6 @@ let targetValue =
   // =========================
 // ITEM TRAITS
 // =========================
-
-const itemTraits = weapon.system.itemTraits || [];
 
 // ===== PRACTICAL ITEM TRAIT (RANGED) =====
 if (itemTraits.some(t => t.key === "practical")) {
@@ -369,10 +380,27 @@ if (finalTraits.some(t => t.key === "reload")) {
 
   <button class="edit-attack">Edit</button>
 
-${traitsData.length ? `
+${displayTraits.length ? `
 <div class="weapon-traits">
-  <strong>Traits:</strong>
-  ${traitsHTML}
+
+  ${displayTraits.some(t => t.type === "positive") ? `
+    <div><strong>Advantages:</strong>
+      ${displayTraits
+        .filter(t => t.type === "positive")
+        .map(t => `<span class="trait-tag">${t.label}</span>`)
+        .join("")}
+    </div>
+  ` : ""}
+
+  ${displayTraits.some(t => t.type === "negative") ? `
+    <div><strong>Drawbacks:</strong>
+      ${displayTraits
+        .filter(t => t.type === "negative")
+        .map(t => `<span class="trait-tag negative">${t.label}</span>`)
+        .join("")}
+    </div>
+  ` : ""}
+
 </div>
 ` : ""}
 
@@ -407,8 +435,11 @@ ${traitsData.length ? `
 // =========================
 
 const weaponTraits = weapon.system.traits || [];
+const itemTraits = weapon.system.itemTraits || [];
 
-const normalizedTraits = weaponTraits
+const allTraits = [...weaponTraits, ...itemTraits];
+
+const normalizedTraits = allTraits
   .filter(t => t)
   .map(t => {
     if (typeof t === "string") return { key: t };
@@ -532,8 +563,6 @@ let crit = {
 // =========================
 
 let breakText = "";
-
-const itemTraits = weapon.system.itemTraits || [];
 
 if (crit.failure && itemTraits.some(t => t.key === "flawed")) {
 

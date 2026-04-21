@@ -451,18 +451,51 @@ else {
     if (equippedWeapons.length > 0) {
 
       const values = [];
+      const actorSkills = this.items.filter(i => i.type === "skill");
 
-     for (let weapon of equippedWeapons) {
+const actorSkillNames = actorSkills.map(s =>
+  (s.name || "").toLowerCase().trim()
+);
 
-  let base;
+    for (let weapon of equippedWeapons) {
 
-base = this._getBestWeaponSkill(weapon);
-        let value = base + (Number(weapon.system.attackBonus || 0) * 10);
+  let base = this._getBestWeaponSkill(weapon);
 
-        if (weapon.system.offhand) value -= offhandPenalty;
+  // =========================
+  // SKILL CHECK
+  // =========================
 
-        values.push(value);
-      }
+  const weaponSkills = (weapon.system.skill || "")
+    .split(",")
+    .map(s => s.trim().toLowerCase())
+    .filter(s => s);
+
+  const hasValidSkill = weaponSkills.some(group =>
+    actorSkillNames.includes(group)
+  );
+
+  // =========================
+  // BASE VALUE
+  // =========================
+
+  let value = base + (Number(weapon.system.attackBonus || 0) * 10);
+
+  // =========================
+  // TRAITS BONUS
+  // =========================
+
+  const traitBonus = this._getWeaponTraitAttackBonus(weapon, hasValidSkill);
+
+  value += traitBonus;
+
+  // =========================
+  // OFFHAND
+  // =========================
+
+  if (weapon.system.offhand) value -= offhandPenalty;
+
+  values.push(value);
+}
 
       attackBase = Math.max(...values);
 
@@ -600,6 +633,45 @@ if (mana) {
 }
 
   }
+
+  _getWeaponTraitAttackBonus(weapon, hasValidSkill) {
+
+  let bonus = 0;
+
+  const traits = weapon.system.traits || [];
+  const itemTraits = weapon.system.itemTraits || [];
+
+  const normalized = traits
+    .filter(t => t)
+    .map(t => typeof t === "string" ? { key: t } : t);
+
+  // =========================
+  // POSITIVE TRAITS (ONLY IF SKILL)
+  // =========================
+
+  if (hasValidSkill) {
+
+    if (normalized.some(t => t.key === "fast")) bonus += 10;
+    if (normalized.some(t => t.key === "precise")) bonus += 10;
+
+  }
+
+  // =========================
+  // NEGATIVE TRAITS (ALWAYS)
+  // =========================
+
+  if (normalized.some(t => t.key === "slow")) bonus -= 10;
+  if (normalized.some(t => t.key === "imprecise")) bonus -= 10;
+
+  // =========================
+  // ITEM TRAITS
+  // =========================
+
+  if (itemTraits.some(t => t.key === "practical")) bonus += 10;
+  if (itemTraits.some(t => t.key === "impractical")) bonus -= 10;
+
+  return bonus;
+}
 
   // =====================
   // TALENT MAX

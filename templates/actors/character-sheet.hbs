@@ -341,11 +341,33 @@ readonly>
 <td>{{item.displaySkill}}</td>
 
 <td>
-{{#each item.displayTraits}}
-  <span class="trait-tag {{#if this.disabled}}trait-disabled{{/if}}">
-    {{this.label}}
-  </span>
-{{/each}}
+
+<div class="trait-groups">
+
+  <!-- POSITIFS -->
+  <div class="trait-positive">
+    {{#each item.displayTraits}}
+      {{#if (eq this.type "positive")}}
+        <span class="trait-tag positive {{#if this.disabled}}trait-disabled{{/if}}">
+          {{this.label}}
+        </span>
+      {{/if}}
+    {{/each}}
+  </div>
+
+  <!-- NEGATIFS -->
+  <div class="trait-negative">
+    {{#each item.displayTraits}}
+      {{#if (eq this.type "negative")}}
+        <span class="trait-tag negative">
+          {{this.label}}
+        </span>
+      {{/if}}
+    {{/each}}
+  </div>
+
+</div>
+
 </td>
 
 <td>
