@@ -263,7 +263,12 @@ w.displayTraits = normalized.map(t => {
   label: traitConfig?.label || t.key,
   value: t.value,
   type: traitConfig?.type || "neutral",
-  disabled: t.source === "weapon" && isPositive && !hasValidSkill
+  disabled: (
+  t.key !== "protectrice" &&
+  t.source === "weapon" &&
+  isPositive &&
+  !hasValidSkill
+)
 };
 });
 

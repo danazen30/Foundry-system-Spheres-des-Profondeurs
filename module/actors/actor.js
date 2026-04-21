@@ -384,22 +384,32 @@ const traits = defenseWeapon.system.traits || [];
 
 const hasDefensive = traits.some(t => t.key === "defensive");
 
-if (hasDefensive) {
+// =========================
+// SKILL CHECK
+// =========================
 
-  console.log("=== DEFENSIVE APPLIED ===", {
-    weapon: defenseWeapon.name,
-    before: value,
-    traits
-  });
+const actorSkills = this.items.filter(i => i.type === "skill");
 
-  value += 10;
+const actorSkillNames = actorSkills.map(s =>
+  (s.name || "").toLowerCase().trim()
+);
 
-  console.log("=== DEFENSIVE RESULT ===", {
-    after: value
-  });
+const weaponSkills = (defenseWeapon.system.skill || "")
+  .split(",")
+  .map(s => s.trim().toLowerCase())
+  .filter(s => s);
 
-}
+const hasValidSkill = weaponSkills.some(group =>
+  actorSkillNames.includes(group)
+);
 
+// =========================
+// TRAIT BONUS (PROPRE)
+// =========================
+
+const traitBonus = this._getWeaponTraitParryBonus(defenseWeapon, hasValidSkill);
+
+value += traitBonus;
 parryBase = value;
 
   console.log("SDP | Parry from defense weapon", {
@@ -414,20 +424,39 @@ else if (meleeWeapons.length > 0) {
 
   const values = [];
 
-  for (let weapon of meleeWeapons) {
+for (let weapon of meleeWeapons) {
 
-    const skill = getSkill(weapon.system.skill);
+  const actorSkills = this.items.filter(i => i.type === "skill");
 
-    let base = skill
-      ? skill.system.value
-      : system.attributes.meleeAbility.value;
+  const actorSkillNames = actorSkills.map(s =>
+    (s.name || "").toLowerCase().trim()
+  );
 
-    let value = base + (Number(weapon.system.parryBonus || 0) * 10);
+  const weaponSkills = (weapon.system.skill || "")
+    .split(",")
+    .map(s => s.trim().toLowerCase())
+    .filter(s => s);
 
-    if (weapon.system.offhand) value -= offhandPenalty;
+  const hasValidSkill = weaponSkills.some(group =>
+    actorSkillNames.includes(group)
+  );
 
-    values.push(value);
-  }
+  const skill = getSkill(weapon.system.skill);
+
+  let base = skill
+    ? skill.system.value
+    : system.attributes.meleeAbility.value;
+
+  let value = base + (Number(weapon.system.parryBonus || 0) * 10);
+
+  // ✅ BON ENDROIT
+  const traitBonus = this._getWeaponTraitParryBonus(weapon, hasValidSkill);
+  value += traitBonus;
+
+  if (weapon.system.offhand) value -= offhandPenalty;
+
+  values.push(value);
+}
 
   parryBase = Math.max(...values);
 
@@ -669,6 +698,42 @@ if (mana) {
 
   if (itemTraits.some(t => t.key === "practical")) bonus += 10;
   if (itemTraits.some(t => t.key === "impractical")) bonus -= 10;
+
+  return bonus;
+}
+
+_getWeaponTraitParryBonus(weapon, hasValidSkill) {
+
+  let bonus = 0;
+
+  const traits = weapon.system.traits || [];
+  const itemTraits = weapon.system.itemTraits || [];
+
+  const normalized = traits
+    .filter(t => t)
+    .map(t => typeof t === "string" ? { key: t } : t);
+
+  // =========================
+  // POSITIVE TRAITS (ONLY IF SKILL)
+  // =========================
+
+  if (hasValidSkill) {
+
+    if (normalized.some(t => t.key === "defensive")) bonus += 10;
+
+  }
+
+  // =========================
+  // NEGATIVE TRAITS (si un jour)
+  // =========================
+
+  // (tu peux en ajouter ici plus tard)
+
+  // =========================
+  // ITEM TRAITS (TOUJOURS ACTIFS)
+  // =========================
+
+  // (si tu ajoutes des bonus parry objet)
 
   return bonus;
 }
