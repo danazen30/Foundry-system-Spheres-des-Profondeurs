@@ -37,7 +37,20 @@ if (!card) {
 
     const actorId = card.dataset.actor;
     const weaponId = card.dataset.weapon;
-    const targetId = card.dataset.target;
+    let targetId = card.dataset.target;
+
+// 🔥 NOUVEAU : inject target si absent
+if (!targetId) {
+
+  const targets = Array.from(game.user.targets);
+
+  if (targets.length === 1) {
+    targetId = targets[0].id;
+
+    // 🔥 IMPORTANT → on injecte dans la card pour la suite
+    card.dataset.target = targetId;
+  }
+}
     const location = card.dataset.location;
     const damageType = card.dataset.damagetype || "slashing";
     const critical = String(card.dataset.critical) === "true";
@@ -278,11 +291,24 @@ if (card.classList.contains("sdp-spell")) {
 
 } else {
 
-  // 🔥 NORMAL ATTACK
-  if (!targetId) return;
+  // 🔥 NORMAL ATTACK (NEW LOGIC)
 
-  const token = canvas.tokens.get(targetId);
-  if (token) targets.push(token);
+  if (targetId) {
+
+    const token = canvas.tokens.get(targetId);
+    if (token) targets.push(token);
+
+  } else {
+
+    // 🔥 fallback = target sélectionné maintenant
+    targets = Array.from(game.user.targets);
+
+    if (!targets.length) {
+      ui.notifications.warn("Select a target before applying damage");
+      return;
+    }
+
+  }
 
 }
 

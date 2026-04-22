@@ -1,78 +1,5 @@
 export function registerAttackHandlers(html, message) {
 
-  //================
-  // SELECT TARGET
-  //================
-
-  html.find(".sdp-attack .select-target").click(async ev => {
-
-    const targets = Array.from(game.user.targets);
-
-    if(targets.length === 0){
-      ui.notifications.warn("Please target a token first");
-      return;
-    }
-
-    const card = ev.currentTarget.closest(".sdp-attack");
-
-    const attackScore = Number(card.dataset.attack);
-    const roll = Number(card.dataset.roll);
-    const baseAttack = Number(card.dataset.baseattack);
-    const meleeBonus = Number(card.dataset.meleebonus || 0);
-
-    const actorId = card.dataset.actor;
-    const weaponId = card.dataset.weapon;
-    const critical = card.dataset.critical;
-    const location = card.dataset.location;
-    const brutal = card.dataset.brutal;
-
-    const targetId = targets[0].id;
-
-    const msg = game.messages.get(
-      ev.currentTarget.closest(".message").dataset.messageId
-    );
-
-    const actor = game.actors.get(actorId);
-    const weapon = actor.items.get(weaponId);
-    const token = canvas.tokens.get(targetId);
-
-    const newHtml = `
-<div class="sdp-attack"
-     data-type="melee"
-     data-roll="${roll}"
-     data-attack="${attackScore}"
-     data-baseattack="${baseAttack}"
-     data-meleebonus="${meleeBonus}"
-     data-critical="${critical}"
-     data-location="${location}"
-     data-brutal="${brutal}"
-     data-actor="${actorId}"
-     data-weapon="${weaponId}"
-     data-target="${targetId}"
-     data-traits='${JSON.stringify([
-  ...(weapon.system.traits || []),
-  ...(weapon.system.itemTraits || [])
-])}'>
-
-      <h3>${actor.name} attacks with ${weapon.name}</h3>
-
-      <button class="edit-attack">Edit</button>
-
-      <p>Roll: ${roll}</p>
-      <p>Attack Score: ${attackScore}</p>
-      <p>Target: ${token.name}</p>
-      <p>Location: ${CONFIG.SDP.hitLocations[location]}</p>
-
-      <button class="apply-defense">Apply Defense</button>
-
-    </div>
-    `;
-
-    await msg.update({ content: newHtml });
-
-  });
-
-
   //===================
   // APPLY DEFENSE
   //===================
@@ -85,19 +12,27 @@ export function registerAttackHandlers(html, message) {
 
 let hasEntangling = traits.some(t => t?.key === "entangling");
 
-    const attackScore = Number(card.dataset.attack);
-    const targetId = card.dataset.target;
-    const actorId = card.dataset.actor;
-    const weaponId = card.dataset.weapon;
-    const location = card.dataset.location;
-    const critical = card.dataset.critical;
+const attackScore = Number(card.dataset.attack);
+const actorId = card.dataset.actor;
+const weaponId = card.dataset.weapon;
+const location = card.dataset.location;
+const critical = card.dataset.critical;
 
-    const msg = game.messages.get(
-      ev.currentTarget.closest(".message").dataset.messageId
-    );
+const msg = game.messages.get(
+  ev.currentTarget.closest(".message").dataset.messageId
+);
 
-    const token = canvas.tokens.get(targetId);
-    const target = token.actor;
+// 🔥 NOUVEAU SYSTEME TARGET
+const targets = Array.from(game.user.targets);
+
+if (!targets.length) {
+  ui.notifications.warn("Select a target before defense");
+  return;
+}
+
+const token = targets[0];
+const targetId = token.id;
+const target = token.actor;
 
     // ======================
 // DEFENSE WEAPON LOGIC
@@ -211,7 +146,7 @@ console.log("SDP | Defense decision (FINAL)", {
              data-attack="${attackScore}"
              data-actor="${actorId}"
              data-weapon="${weaponId}"
-             data-target="${targetId}"
+             data-target=""
              data-location="${location}"
              data-critical="${critical}"
              data-brutal="${card.dataset.brutal}"
@@ -294,7 +229,17 @@ const hasEntangling = traits.some(t => t?.key === "entangling");
     const selected = button.dataset.defense;
 
     const attackScore = Number(card.dataset.attack);
-    const targetId = card.dataset.target;
+    const targets = Array.from(game.user.targets);
+
+if (!targets.length) {
+  ui.notifications.warn("Select a target before defense");
+  return;
+}
+
+const token = targets[0];
+const targetId = token.id;
+const target = token.actor;
+
     const actorId = card.dataset.actor;
     const weaponId = card.dataset.weapon;
 
@@ -303,9 +248,6 @@ const hasEntangling = traits.some(t => t?.key === "entangling");
     const msg = game.messages.get(
       ev.currentTarget.closest(".message").dataset.messageId
     );
-
-    const token = canvas.tokens.get(targetId);
-    const target = token.actor;
 
     let parry = target.system.derived.parry.value;
 

@@ -609,7 +609,7 @@ if (isImpaling && isRound && successCheck) {
      data-meleebonus="${meleeBonus}"
      data-actor="${card.dataset.actor}"
      data-weapon="${card.dataset.weapon}"
-     data-target="${card.dataset.target}"
+     data-target=""
      data-location="${card.dataset.location}"
      data-critical="${crit.success}"
      data-brutal="${card.dataset.brutal}"

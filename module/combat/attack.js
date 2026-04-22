@@ -737,10 +737,7 @@ if(crit.failure){
   ${dialogMods.charge ? "<p>Charge</p>" : ""}
   <p>Attack Score: ${attackScore}</p>
 
-  ${targetId
-    ? `<button class="apply-defense">Apply Defense</button>`
-    : `<button class="select-target">Select Target</button>`
-  }
+ <button class="apply-defense">Apply Defense</button>
 
 </div>
 `;
