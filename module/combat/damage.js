@@ -65,7 +65,7 @@ static getWoundSeverity(damage, WT) {
   return "instant";
 }
 
-static async rollDamage({ actor, weapon, target, location, critical, brutal, ammoId }) {
+static async rollDamage({ actor, weapon, target, location, critical, brutal, ammoId, defenseType }) {
 
   const dialogMods = game.sdp?.dialogModifiers || {};
 const useFinesse = dialogMods.finesse;
@@ -90,7 +90,7 @@ console.log("SDP | Damage ammo", ammo?.name);
 if (target) {
   const damageType = weapon.system.damageType;
 
-armor = this.getArmorValue(target, location, damageType);
+armor = this.getArmorValue(target, location, damageType, defenseType);
 }
 
 // =========================
@@ -432,7 +432,7 @@ static async applyFullDamage({ actor, damage, location }) {
   };
 }
 
-static getArmorValue(actor, location, damageType = null){
+static getArmorValue(actor, location, damageType = null, defenseType = null){
 
   let armor = 0;
 
@@ -490,9 +490,11 @@ if (hasLayered && damageType === "piercing") {
   armor += ap;
 }
 
-  // =========================
-  // PROTECTRICE TRAIT
-  // =========================
+// =========================
+// PROTECTRICE TRAIT (PARRY ONLY)
+// =========================
+
+if (defenseType === "parry") {
 
   const defenseWeapon = actor.items.find(i =>
     i.type === "weapon" &&
@@ -519,7 +521,7 @@ if (hasLayered && damageType === "piercing") {
 
       armor += value;
 
-      console.log("SDP | PROTECTRICE APPLIED", {
+      console.log("SDP | PROTECTRICE APPLIED (PARRY)", {
         weapon: defenseWeapon.name,
         bonus: value,
         finalArmor: armor
@@ -528,6 +530,8 @@ if (hasLayered && damageType === "piercing") {
     }
 
   }
+
+}
 
   return armor;
 

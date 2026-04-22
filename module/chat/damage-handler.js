@@ -36,6 +36,7 @@ if (!card) {
 }
 
     const actorId = card.dataset.actor;
+    const defenseType = button.dataset.defenseType;
     const weaponId = card.dataset.weapon;
     let targetId = card.dataset.target;
 
@@ -85,7 +86,8 @@ const result = await SdpDamage.rollDamage({
   critical,
   brutal,
   ammoId,
-  damageType // 🔥 AJOUT
+  damageType,
+  defenseType
 });
 
 // =========================

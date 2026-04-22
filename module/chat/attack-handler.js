@@ -426,6 +426,7 @@ if (hasTaille && selected === "parry" && targetId) {
     btn.dataset.actor = actorId;
     btn.dataset.weapon = weaponId;
     btn.dataset.target = targetId;
+    btn.dataset.defenseType = selected; // 🔥 IMPORTANT
     btn.dataset.traits = traits;
     btn.innerText = "Roll Damage";
 
