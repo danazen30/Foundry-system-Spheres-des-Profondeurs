@@ -16,7 +16,17 @@ const dataset = button.dataset;
 // GET TRAITS FROM ATTACK
 // =========================
 
-const traits = JSON.parse(button.dataset.traits || "[]");
+const rawTraits = button.dataset.traits;
+
+let traits = [];
+
+if (rawTraits && rawTraits !== "undefined") {
+  try {
+    traits = JSON.parse(rawTraits);
+  } catch (e) {
+    console.warn("TRAITS PARSE ERROR (TOP)", rawTraits);
+  }
+}
 
 console.log("TAILLE DEBUG (DAMAGE)", traits);
 
@@ -279,7 +289,7 @@ if (card.classList.contains("sdp-spell")) {
     ChatMessage.create({
       content: `
             <div class="damage-card"
-           data-traits='${button.dataset.traits}'>
+           data-traits='${card.dataset.traits || "[]"}'>
       <h3>Damage Resolution</h3>
       <p>Location: ${CONFIG.SDP.hitLocations[location]}</p>
       <p>Raw Damage: ${damage}</p>
@@ -460,12 +470,17 @@ if (hasTaille) {
 
 const card = button.closest(".damage-card");
 
-const traits = JSON.parse(card?.dataset?.traits || "[]");
+const rawTraits = button.dataset.traits;
 
-console.log("TAILLE DEBUG FINAL", {
-  card,
-  traits
-});
+let traits = [];
+
+if (rawTraits && rawTraits !== "undefined") {
+  try {
+    traits = JSON.parse(rawTraits);
+  } catch (e) {
+    console.warn("TRAITS PARSE ERROR", rawTraits);
+  }
+}
 
 const hasTaille = traits.some(t => t?.key === "size");
 if (hasTaille && targetId) {
