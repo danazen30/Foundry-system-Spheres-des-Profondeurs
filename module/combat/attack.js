@@ -7,6 +7,7 @@ import { ITEM_TRAITS } from "../system/config.js";
 export class SdpAttack {
 
 static async attackTest(actor, weapon, attackValue){
+
 const dialogMods = game.sdp?.dialogModifiers || {};
 const inspiration = dialogMods.inspiration || 0;
 const useFinesse = dialogMods.finesse;

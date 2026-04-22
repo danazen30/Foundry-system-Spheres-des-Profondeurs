@@ -676,6 +676,15 @@ root.querySelectorAll('[data-action="weaponAttack"]').forEach(el => {
 if (!weapon) return;
 
 // =========================
+// EQUIPPED CHECK
+// =========================
+
+if (!weapon.system.equipped) {
+  ui.notifications.warn(`${weapon.name} is not equipped`);
+  return;
+}
+
+// =========================
 // WEAPON QUANTITY CHECK
 // =========================
 
@@ -785,9 +794,27 @@ root.querySelectorAll('[data-action="toggleWeaponEquip"]').forEach(el => {
     // =========================
 
     if (!isEquipping) {
-      await item.update({ "system.equipped": false });
-      return;
-    }
+
+  await item.update({
+    "system.equipped": false,
+    "system.offhand": false,
+    "system.isDefenseWeapon": false
+  });
+
+  // 🔥 reassigne defense si besoin
+  const remaining = actor.items.find(i =>
+    i.type === "weapon" &&
+    i.system.equipped
+  );
+
+  if (remaining) {
+    await remaining.update({
+      "system.isDefenseWeapon": true
+    });
+  }
+
+  return;
+}
 
     // =========================
     // LOGIQUE EXISTANTE
@@ -802,9 +829,27 @@ root.querySelectorAll('[data-action="toggleWeaponEquip"]').forEach(el => {
     const handed = (item.system.handedness || "").toLowerCase();
 
     if (handed === "special") {
-      await item.update({ "system.equipped": true });
-      return;
-    }
+
+  await item.update({ "system.equipped": true });
+
+  // =========================
+  // AUTO DEFENSE (SPECIAL)
+  // =========================
+
+  const hasDefense = actor.items.some(i =>
+    i.type === "weapon" &&
+    i.system.equipped &&
+    i.system.isDefenseWeapon
+  );
+
+  if (!hasDefense) {
+    await item.update({
+      "system.isDefenseWeapon": true
+    });
+  }
+
+  return;
+}
 
     const hasTwoHanded = equipped.some(w =>
       (w.system.handedness || "").toLowerCase() === "two"
@@ -844,15 +889,121 @@ root.querySelectorAll('[data-action="toggleWeaponEquip"]').forEach(el => {
 
     await item.update({ "system.equipped": true });
 
+    // =========================
+// AUTO OFFHAND
+// =========================
+
+const oneHanded = actor.items.filter(i =>
+  i.type === "weapon" &&
+  i.system.equipped &&
+  (i.system.handedness || "").toLowerCase() === "one"
+);
+
+if (oneHanded.length === 2) {
+
+  // si aucune offhand → on en assigne une
+  const hasOffhand = oneHanded.some(w => w.system.offhand);
+
+  if (!hasOffhand) {
+
+    // 👉 la nouvelle arme devient offhand
+    await item.update({
+      "system.offhand": true
+    });
+
+  }
+
+}
+
+// =========================
+// AUTO DEFENSE WEAPON
+// =========================
+
+const hasDefense = actor.items.some(i =>
+  i.type === "weapon" &&
+  i.system.equipped &&
+  i.system.isDefenseWeapon &&
+  (
+    i.system.category === "melee" ||
+    (i.system.handedness || "").toLowerCase() === "special"
+  )
+);
+
+if (!hasDefense) {
+
+  // =========================
+// DEFENSE ELIGIBILITY
+// =========================
+
+const isMelee = item.system.category === "melee";
+const isSpecial = (item.system.handedness || "").toLowerCase() === "special";
+
+if (isMelee || isSpecial) {
+
+  await item.update({
+    "system.isDefenseWeapon": true
+  });
+
+}
+
+}
+
   });
 });
 
-  root.querySelectorAll('[data-action="toggleOffhand"]').forEach(el => {
-    el.addEventListener("click", (event) => {
-      const item = this.document.items.get(event.currentTarget.dataset.itemId);
-      item.update({ "system.offhand": !item.system.offhand });
+root.querySelectorAll('[data-action="toggleOffhand"]').forEach(el => {
+  el.addEventListener("click", async (event) => {
+
+    event.preventDefault(); // 🔥 IMPORTANT
+
+    const checkbox = event.currentTarget;
+    const item = this.document.items.get(checkbox.dataset.itemId);
+    const actor = this.document;
+
+    // =========================
+    // EQUIPPED CHECK
+    // =========================
+
+    if (!item || !item.system.equipped) {
+      ui.notifications.warn("Weapon must be equipped");
+
+      checkbox.checked = false; // 🔥 rollback visuel
+      return;
+    }
+
+    const isOffhand = !item.system.offhand;
+    const isSpecial = (item.system.handedness || "").toLowerCase() === "special";
+
+    // =========================
+    // SI ON ACTIVE
+    // =========================
+
+    if (isOffhand) {
+
+      // 👉 UNIQUEMENT si PAS special
+      if (!isSpecial) {
+
+        const others = actor.items.filter(i =>
+          i.type === "weapon" &&
+          i.system.offhand &&
+          i.id !== item.id &&
+          (i.system.handedness || "").toLowerCase() !== "special"
+        );
+
+        for (let w of others) {
+          await w.update({ "system.offhand": false });
+        }
+
+      }
+
+    }
+
+    await item.update({
+      "system.offhand": isOffhand
     });
+
   });
+});
 
   root.querySelectorAll('[data-action="toggleArmor"]').forEach(el => {
     el.addEventListener("click", (event) => {
@@ -1639,6 +1790,16 @@ root.querySelectorAll('.toggle-defense-weapon').forEach(el => {
     const item = this.document.items.get(itemId);
 
     if (!item) return;
+
+// =========================
+// EQUIPPED CHECK
+// =========================
+
+if (!item.system.equipped) {
+  ui.notifications.warn("Weapon must be equipped");
+  event.currentTarget.checked = false;
+  return;
+}
 
     // =========================
     // OPTION (IMPORTANT)
