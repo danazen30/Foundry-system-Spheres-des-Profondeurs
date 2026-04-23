@@ -36,6 +36,26 @@
 
 </div>
 
+{{#if (and (eq type "skill") (not isAttribute))}}
+
+<h3>Attribute</h3>
+
+<select name="attributeOverride">
+  <option value="">Default</option>
+  <option value="meleeAbility">Melee Ability</option>
+  <option value="rangedAbility">Ranged Ability</option>
+  <option value="strength">Strength</option>
+  <option value="toughness">Toughness</option>
+  <option value="initiative">Initiative</option>
+  <option value="agility">Agility</option>
+  <option value="dexterity">Dexterity</option>
+  <option value="intelligence">Intelligence</option>
+  <option value="willpower">Willpower</option>
+  <option value="charisma">Charisma</option>
+</select>
+
+{{/if}}
+
 <h3>Talents</h3>
 
 {{#each talents}}

@@ -643,11 +643,11 @@ root.querySelectorAll('[data-action="rollAttribute"]').forEach(el => {
     const value = attrData.value;
 
     SdpRoll.openDialog({
-      actor: this.document,
-      type: "skill",
-      label: attrData.name || attrData.label,
-      target: value
-    });
+  actor: this.document,
+  type: "attribute", // ✅ FIX
+  label: attrData.name || attrData.label,
+  target: value
+});
   });
 });
 

@@ -134,7 +134,18 @@ if (this.weapon) {
   }
 }
   this._modifiers = modifiers;
-  return {
+
+// 🔥 AJOUT ICI (JUSTE AVANT RETURN)
+const isAttribute =
+  this.type === "attribute" ||
+  (
+    this.type !== "attack" &&
+    this.type !== "skill" &&
+    !this.weapon &&
+    !this.spellData
+  );
+
+return {
     actor: this.actor,
     label: this.label,
     target: this.target,
@@ -146,7 +157,9 @@ if (this.weapon) {
     modifiers,
     inspirationDice: this.signEffects.inspirationDice,
     inspirationResult: this.inspirationResult,
-    spellData: this.spellData
+    spellData: this.spellData,
+    type: this.type,
+    isAttribute
   };
 }
 
@@ -276,6 +289,7 @@ if (!root) return;
 
 const modValue = Number(root.querySelector('[name="customMod"]')?.value || 0);
 const diffValue = Number(root.querySelector('[name="difficulty"]')?.value || 0);
+const attributeOverride = root.querySelector('[name="attributeOverride"]')?.value || null;
 
 // talents
 const selectedTalents = Array.from(
@@ -310,7 +324,8 @@ game.sdp.dialogModifiers = {
   charge,
   finesse,
   talents: selectedTalents,
-  inspiration: this.inspirationResult
+  inspiration: this.inspirationResult,
+  attributeOverride
 };
 
 // DEBUG
@@ -350,8 +365,48 @@ const roll = await new Roll("1d100").roll();
 const result = roll.total;
 
 const dialogMods = game.sdp?.dialogModifiers || {};
+let baseTarget = this.target || 0;
+
+// =========================
+// ATTRIBUTE OVERRIDE (SKILL ONLY)
+// =========================
+
+if (this.type === "skill" && dialogMods.attributeOverride) {
+
+  const attr = dialogMods.attributeOverride;
+
+  const attrValue =
+    this.actor.system.attributes?.[attr]?.value || 0;
+
+  // 👉 advances = target - caractéristique ORIGINALE
+  // MAIS il faut connaître la stat de base utilisée
+
+  const skill = this.actor.items.find(i =>
+    i.type === "skill" && i.name === this.label
+  );
+
+  let advances = 0;
+
+  if (skill) {
+    advances = Number(skill.system.advances || 0);
+  }
+
+  baseTarget = attrValue + advances;
+
+  console.log("ATTRIBUTE OVERRIDE FIX", {
+    attr,
+    attrValue,
+    advances,
+    final: baseTarget
+  });
+}
+
+// =========================
+// FINAL TARGET
+// =========================
+
 const target =
-  (this.target || 0) +
+  baseTarget +
   (dialogMods.totalMod || 0) +
   (dialogMods.conditionMod || 0);
 
