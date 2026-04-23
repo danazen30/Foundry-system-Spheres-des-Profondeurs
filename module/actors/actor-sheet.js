@@ -4,6 +4,7 @@ import { SDP } from "../system/config.js";
 import { SimpleDialog } from "../apps/simple-dialog.js";
 import { SdpSpell } from "../combat/spell.js";
 import { WEAPON_TRAITS } from "../system/config.js";
+import { SdpConditionEngine } from "../system/condition-engine.js";
 
 const { ActorSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -1033,7 +1034,6 @@ root.querySelectorAll('[data-action="updateSkillAdv"]').forEach(el => {
 
 });
 
-
 root.querySelectorAll('.condition-input').forEach(el => {
 
   el.addEventListener("change", async (event) => {
@@ -1044,23 +1044,23 @@ root.querySelectorAll('.condition-input').forEach(el => {
 
     const actor = this.document;
 
-    // valeur actuelle (affichée)
     const previous = actor.system.conditions?.[key] ?? 0;
 
-await actor.update({
-  [`system.conditions.${key}`]: value
-});
+    // ✅ PAS DE RESET
+    if (value > 0) {
+      await SdpConditionEngine.add(actor, key, value - previous);
+    } else {
+      await SdpConditionEngine.clear(actor, key);
+    }
 
-if (
-  (key === "stunned" || key === "poisoned" || key === "bleeding") &&
-  previous > 0 &&
-  value === 0
-) {
-  await actor.update({
-    "system.conditions.exhausted":
-      (actor.system.conditions.exhausted || 0) + 1
-  });
-}
+    // fatigue on recovery
+    if (
+      (key === "stunned" || key === "poisoned" || key === "bleeding") &&
+      previous > 0 &&
+      value === 0
+    ) {
+      await SdpConditionEngine.add(actor, "exhausted", 1);
+    }
 
   });
 
@@ -1107,10 +1107,7 @@ root.querySelectorAll('[data-action="updateConditionState"]').forEach(el => {
 
     if (key === "shaken" && previous === true && checked === false) {
 
-      await actor.update({
-        "system.conditions.exhausted":
-          (actor.system.conditions.exhausted || 0) + 1
-      });
+      await SdpConditionEngine.add(actor, "exhausted", 1);
 
     }
 

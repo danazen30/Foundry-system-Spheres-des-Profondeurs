@@ -275,18 +275,6 @@ Hooks.on("updateActor", async (actor, changes) => {
   const cond = changes.system?.conditions;
   if (!cond) return;
 
-  const exhausted = actor.system.conditions?.exhausted ?? 0;
-  const TB = actor.system.attributes.toughness.bonus;
-
-  if(exhausted >= TB){
-    if(!actor.system.conditions.unconscious){
-      await actor.update({
-        "system.conditions.unconscious": true,
-        "system.conditions.prone": true
-      });
-    }
-  }
-
   if (cond.dying === true) {
     await actor.update({
       "system.conditions.unconscious": true,

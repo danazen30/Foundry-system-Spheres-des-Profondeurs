@@ -875,5 +875,4 @@ _getBestWeaponSkill(weapon) {
 
   return bestValue;
 }
-
 }

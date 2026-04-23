@@ -6,64 +6,81 @@ export class SdpConditionEngine {
     return actor.system.conditions?.[key] ?? 0;
   }
 
-  static async add(actor, key, value = 1){
+static async add(actor, key, value = 1){
+ console.log("🔥 CONDITION ADD CALLED", { key, value });
+  const config = SDP.conditionConfig[key];
 
-    const config = SDP.conditionConfig[key];
+  // =====================
+  // FRIGHTENED OVERRIDE
+  // =====================
 
-    // =====================
-    // FRIGHTENED OVERRIDE
-    // =====================
+  if(key === "frightened"){
+    await actor.update({
+      "system.conditions.shaken": false
+    });
+  }
 
-    if(key === "frightened"){
-      await actor.update({
-        "system.conditions.shaken": false
-      });
-    }
+  // =====================
+  // STATE CONDITIONS
+  // =====================
 
-    // =====================
-    // STATE CONDITIONS
-    // =====================
-
-    if(config?.type === "state"){
-
-      await actor.update({
-        [`system.conditions.${key}`]: true
-      });
-
-      return;
-    }
-
-    // =====================
-    // STACK CONDITIONS
-    // =====================
-
-    const current = this.get(actor, key);
-    const newValue = current + value;
+  if(config?.type === "state"){
 
     await actor.update({
-      [`system.conditions.${key}`]: newValue
+      [`system.conditions.${key}`]: true
     });
 
-    // =====================
-    // EXHAUSTION LIMIT
-    // =====================
+    return;
+  }
 
-    if(key === "exhausted"){
+  // =====================
+  // STACK CONDITIONS
+  // =====================
 
-      const TB = actor.system.attributes.toughness.bonus;
+  const current = this.get(actor, key);
+  const newValue = current + value;
 
-      if(newValue >= TB){
+  // 🔥 UN SEUL UPDATE
+  await actor.update({
+    [`system.conditions.${key}`]: newValue
+  });
 
-        await actor.update({
-          "system.conditions.unconscious": true,
-          "system.conditions.prone": true
-        });
+  // =====================
+  // EXHAUSTION LIMIT
+  // =====================
 
-      }
+  if (key === "exhausted") {
 
-    }
+    // 🔥 DEBUG (OBLIGATOIRE)
+    console.log("EXHAUST BEFORE PREPARE", {
+      newValue,
+      thresholdBefore: actor.system.derived?.woundThreshold?.value
+    });
+
+// 🔥 FORCE RECALCUL PROPRE
+await actor.prepareData();
+
+const threshold = actor.system.derived?.woundThreshold?.value || 0;
+
+console.log("EXHAUST CHECK FINAL", {
+  newValue,
+  threshold
+});
+
+if (newValue >= threshold && threshold > 0) {
+
+  console.log("🔥 TRIGGER UNCONSCIOUS");
+
+  await actor.update({
+    "system.conditions.unconscious": true,
+    "system.conditions.prone": true
+  });
+
+}
 
   }
+
+}
 
   static async remove(actor, key, value = 1){
 
@@ -104,10 +121,7 @@ export class SdpConditionEngine {
 ){
 
       const exhausted = actor.system.conditions.exhausted ?? 0;
-
-      await actor.update({
-        "system.conditions.exhausted": exhausted + 1
-      });
+await this.add(actor, "exhausted", 1);
 
     }
 

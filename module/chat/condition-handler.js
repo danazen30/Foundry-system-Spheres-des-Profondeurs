@@ -58,13 +58,7 @@ await actor.update({
 // =========================
 
 if(newStack === 0){
-
-  await actor.update({
-  "system.conditions.exhausted":
-    (actor.system.conditions.exhausted || 0) + 1,
-  "system.conditionOverride.-=exhausted": null
-});
-
+  await SdpConditionEngine.add(actor, "exhausted", 1);
 }
 
 });
@@ -132,11 +126,8 @@ await actor.update({
 });
 
   if(newTotal === 0){
-    await actor.update({
-      "system.conditions.exhausted":
-        (actor.system.conditions.exhausted || 0) + 1
-    });
-  }
+  await SdpConditionEngine.add(actor, "exhausted", 1);
+}
 
 });
 
