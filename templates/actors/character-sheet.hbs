@@ -148,17 +148,29 @@ readonly>
 
 </div>
 
-<div class="resource-row">
+<div class="resource-row encumbrance-line">
 
   <label>Encumbrance</label>
 
-  <input
-    type="number"
-    value="{{system.resources.encumbrance.value}}"
-    readonly
-  >
+  <!-- 🔥 CADRE -->
+  <div class="encumbrance-box">
 
-  <span>/ {{system.derived.carryingCapacity.value}}</span>
+    <input
+      type="number"
+      value="{{system.resources.encumbrance.value}}"
+      readonly
+    >
+
+    <span>/ {{system.resources.encumbrance.max}}</span>
+
+  </div>
+
+  <!-- 🔥 TEXTE SUR LA MEME LIGNE -->
+  {{#if system.resources.encumbrance.state.label}}
+    <span class="encumbrance-warning">
+      {{system.resources.encumbrance.state.label}}
+    </span>
+  {{/if}}
 
 </div>
 

@@ -361,3 +361,43 @@ text-align:center;
 .modifier-box:hover .modifier-tooltip {
   display: block;
 }
+
+.encumbrance-container {
+  margin-top: 10px;
+}
+
+.encumbrance-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.encumbrance-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.encumbrance-warning {
+  color: #ff6b6b;
+  font-weight: bold;
+  margin-left: 10px;
+  white-space: nowrap;
+}
+
+.encumbrance-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 4px 8px;
+  border: 1px solid #444;
+  border-radius: 6px;
+
+  width: fit-content;
+}
+
+.encumbrance-box input {
+  width: 50px;
+  text-align: center;
+}

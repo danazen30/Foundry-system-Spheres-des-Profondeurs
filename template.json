@@ -372,7 +372,11 @@
       "encumbrance": {
         "type": "number",
         "label": "Encumbrance",
-        "value": 0
+        "value": 0,
+        "state": {
+          "level": 0,
+          "label": ""
+        }
       },
       "price": {
         "type": "string",
