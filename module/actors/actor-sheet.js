@@ -1886,6 +1886,28 @@ root.querySelectorAll('[data-action="toggleBoolean"]').forEach(el => {
 
 });
 
+// =========================
+// TOGGLE WEAPON DETAILS
+// =========================
+
+root.querySelectorAll('.weapon-toggle').forEach(el => {
+
+  el.addEventListener("click", (event) => {
+
+    const itemId = event.currentTarget.dataset.itemId;
+
+    const details = root.querySelector(`.weapon-details[data-details="${itemId}"]`);
+
+    if (!details) return;
+
+    const isHidden = details.style.display === "none";
+
+    details.style.display = isHidden ? "table-row" : "none";
+
+  });
+
+});
+
 }
 
 _onLevelUp() {

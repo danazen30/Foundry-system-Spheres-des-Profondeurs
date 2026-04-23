@@ -401,3 +401,42 @@ text-align:center;
   width: 50px;
   text-align: center;
 }
+
+.weapon-details-content {
+  padding: 6px 10px;
+  font-size: 14px;
+  text-align: center;
+}
+
+/* 🔥 LIGNE PRINCIPALE */
+.weapon-line.main-line {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 40px;         /* espace entre blocs */
+  flex-wrap: wrap;   /* évite débordement */
+
+  margin-bottom: 6px;
+}
+
+/* blocs internes */
+.weapon-line.main-line > div {
+  min-width: 140px;
+}
+
+/* traits inline */
+.traits-inline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* description */
+.weapon-desc {
+  margin-top: 4px;
+  font-style: italic;
+  opacity: 0.8;
+}

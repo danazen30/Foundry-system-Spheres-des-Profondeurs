@@ -234,6 +234,29 @@ for (const key in system.conditions) {
 
 }
 
+
+// =====================
+// ENCUMBRANCE MALUS
+// =====================
+
+const enc = system.resources.encumbrance?.state?.level ?? 0;
+
+let agiPenalty = 0;
+let movePenalty = 0;
+
+if (enc === 1) {
+  agiPenalty = -10;
+  movePenalty = -1;
+}
+else if (enc === 2) {
+  agiPenalty = -20;
+  movePenalty = -2;
+}
+else if (enc >= 3) {
+  agiPenalty = 50; // immobilisé
+  movePenalty = -10;
+}
+
     // =====================
     // ATTRIBUTES
     // =====================
@@ -244,18 +267,26 @@ for (const key in system.conditions) {
       const manualMod = Number(attr.modifier || 0);
 
       attr.itemModifier = itemMod;
-      attr.totalModifier = manualMod + itemMod;
+      // 👉 ENCUMBRANCE MODIFIER
+let encMod = 0;
 
-      attr.value =
-        Number(attr.initial || 0) +
-        Number(attr.advances || 0) +
-        attr.totalModifier +
-        Number(attr.levelBonus || 0);
+if (key === "agility") {
+  encMod = agiPenalty;
+}
 
-      attr.bonus = Math.floor(attr.value / 10);
+attr.encumbranceModifier = encMod; // 🔥 DEBUG / UI POSSIBLE
+
+attr.totalModifier = manualMod + itemMod + encMod;
+
+let baseValue =
+  Number(attr.initial || 0) +
+  Number(attr.advances || 0) +
+  attr.totalModifier +
+  Number(attr.levelBonus || 0);
+
+attr.value = baseValue;
+attr.bonus = Math.floor(attr.value / 10);
     }
-
-
 
     // =====================
     // HEALTH
@@ -593,17 +624,28 @@ system.derived.evasion.value = Math.max(finalEvasion, 0);
     // =====================
 
     const baseMove = system.resources.movement.value ?? 0;
-    const slowed = system.conditionTotals?.slowed ?? 0;
+const slowed = system.conditionTotals?.slowed ?? 0;
 
-    const currentMove = Math.max(baseMove - slowed, 0);
+let currentMove = baseMove - slowed;
 
-    system.resources.movement.current = currentMove;
-    system.resources.movement.walk = currentMove * 2;
-    system.resources.movement.run = currentMove * 4;
+// 👉 ENCUMBRANCE
+currentMove += movePenalty;
 
-    if (currentMove === 0 && slowed > 0) {
-      system.conditions.entangled = true;
-    }
+// clamp
+currentMove = Math.max(currentMove, 0);
+
+// immobilisé
+if (enc >= 3) {
+  currentMove = 0;
+}
+
+system.resources.movement.current = currentMove;
+system.resources.movement.walk = currentMove * 2;
+system.resources.movement.run = currentMove * 4;
+
+if (currentMove === 0 && (slowed > 0 || enc >= 3)) {
+  system.conditions.entangled = true;
+}
 
 const sign = this.items.find(i => i.type === "sign");
 
