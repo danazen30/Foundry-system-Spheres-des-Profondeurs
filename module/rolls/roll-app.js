@@ -282,15 +282,13 @@ await roll.toMessage({
 
     <p><strong>Target:</strong> ${target}</p>
     <p><strong>Roll:</strong> ${result}</p>
-
+    ${this.inspirationResult ? `<p>Inspiration: +${this.inspirationResult}</p>` : ""}
     <p><strong>SL:</strong> ${SL} (${game.sdp.Roll.getSLLabel(SL)})</p>
 
     <p>
       <strong>Result:</strong> 
       ${success ? "SUCCESS" : "FAILURE"}
     </p>
-
-    ${this.inspirationResult ? `<p>Inspiration: +${this.inspirationResult}</p>` : ""}
 
     ${crit.success ? "<p style='color:green'>CRITICAL SUCCESS</p>" : ""}
     ${crit.failure ? "<p style='color:red'>CRITICAL FAILURE</p>" : ""}

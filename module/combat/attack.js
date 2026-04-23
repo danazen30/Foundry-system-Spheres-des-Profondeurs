@@ -213,8 +213,30 @@ let targetValue =
   base +
   (dialogMods.totalMod || 0) +
   (dialogMods.conditionMod || 0) +
-  locationMod + // 🔥 AJOUT
+  locationMod +
   fastBonus;
+
+  // =========================
+// OFFHAND (RANGED)
+// =========================
+
+if (weapon.system.offhand) {
+
+  const reduction = actor.system.custom.offhandReduction || 0;
+
+  const OFFHAND_PENALTY = 20;
+
+  const penalty = Math.max(0, OFFHAND_PENALTY - reduction);
+
+  targetValue -= penalty;
+
+  console.log("SDP | OFFHAND RANGED", {
+    penalty,
+    reduction,
+    finalTarget: targetValue
+  });
+
+}
 
   // =========================
 // ITEM TRAITS
@@ -313,6 +335,19 @@ if (isImpaling && isRound && result <= targetValue) {
   Math.floor(targetValue / 10) -
   Math.floor(result / 10);
 
+  // =========================
+// INSPIRATION → SL BONUS
+// =========================
+
+const inspiration = dialogMods.inspiration || 0;
+
+SL += inspiration;
+
+console.log("SDP | INSPIRATION APPLIED (RANGED)", {
+  inspiration,
+  finalSL: SL
+});
+
 // 🔥 FIX -0
 if (!success && SL === 0) {
   SL = -1;
@@ -408,6 +443,7 @@ ${displayTraits.length ? `
   <p>Test: ${source}</p>
   <p>Target: ${targetValue}</p>
   <p>Roll: ${result}</p>
+  ${inspiration > 0 ? `<p>Inspiration: +${inspiration}</p>` : ""}
   <p>SL: ${SL} (${SdpRoll.getSLLabel(SL)})</p>
   
   ${critText}
@@ -627,6 +663,7 @@ let attackScore =
   Math.floor((dialogMods.conditionMod || 0) / 10) +
   Math.floor(locationMod / 10); // 🔥 AJOUT
 
+
   // =========================
 // ITEM TRAITS
 // =========================
@@ -731,7 +768,7 @@ if(crit.failure){
 
   <p>Roll: ${result}</p>
   <p>SL: ${SL}</p>
-  <p>Inspiration: +${inspiration}</p>
+  ${inspiration > 0 ? `<p>Inspiration: +${inspiration}</p>` : ""}
   <p>Location: ${CONFIG.SDP.hitLocations[hitLocation.location]} (${hitLocation.roll.total})</p>
   ${critText}
   ${breakText}
