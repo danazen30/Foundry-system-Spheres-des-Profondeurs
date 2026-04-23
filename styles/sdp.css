@@ -340,3 +340,24 @@ text-align:center;
   text-decoration: line-through;
   opacity: 0.5;
 }
+
+.modifier-box {
+  position: relative;
+  cursor: pointer;
+}
+
+.modifier-tooltip {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: black;
+  color: white;
+  padding: 6px;
+  z-index: 100;
+  min-width: 150px;
+}
+
+.modifier-box:hover .modifier-tooltip {
+  display: block;
+}

@@ -23,16 +23,18 @@ export class SdpRollApp extends HandlebarsApplicationMixin(ApplicationV2) {
   }
 
   static DEFAULT_OPTIONS = {
-    id: "sdp-roll-app",
-    window: {
-      title: "Roll",
-      resizable: true
-    },
-    position: {
-      width: 400,
-      height: 500
-    }
-  };
+  id: "sdp-roll-app",
+  window: {
+    title: "Roll",
+    resizable: true
+  },
+  position: {
+    width: 400,
+    height: "auto",
+    top: null,
+left: null
+  }
+};
 
   static PARTS = {
     main: {
@@ -45,73 +47,188 @@ export class SdpRollApp extends HandlebarsApplicationMixin(ApplicationV2) {
     parts: ["main"]
   };
 
-  async _prepareContext() {
+async _prepareContext() {
 
-    const talents = this.actor.items.filter(i => i.type === "talent");
+  const talents = this.actor.items.filter(i => i.type === "talent");
 
-    let conditionMod = 0;
-    let conditionDetails = [];
+  let conditionMod = 0;
+  let conditionDetails = [];
+  const conditions = this.actor.system.conditionTotals;
 
-    const conditions = this.actor.system.conditionTotals;
+  // =========================
+  // CONDITIONS (FIX)
+  // =========================
 
-  
+  for (const key in conditions) {
 
-    for (const key in conditions) {
+    const value = conditions[key];
+    if (!value) continue;
 
-      const value = conditions[key];
-      if (!value) continue;
+    if (key === "deafened") continue;
 
-      if (key === "deafened") continue;
+    const stack = value === true ? 1 : value;
+    const config = CONFIG.SDP.conditionConfig?.[key];
+    if (!config?.modifier) continue;
 
-      const stack = value === true ? 1 : value;
-      const config = CONFIG.SDP.conditionConfig?.[key];
-      if (!config?.modifier) continue;
+    const mod = config.modifier * stack;
 
-      const mod = config.modifier * stack;
+    conditionMod += mod;
 
-      conditionMod += mod;
-
-      conditionDetails.push({
-        name: key,
-        value: mod
-      });
-    }
-
-    return {
-      actor: this.actor,
-      label: this.label,
-      target: this.target,
-      isAttack: this.type === "attack",
-      talents,
-      effects: this.actor.effects.contents,
-      conditionMod,
-      conditionDetails,
-      inspirationDice: this.signEffects.inspirationDice,
-      inspirationResult: this.inspirationResult,
-       spellData: this.spellData
-    };
+    conditionDetails.push({
+      name: key,
+      value: mod
+    });
   }
 
-  _onRender(context, options) {
-    super._onRender(context, options);
+  // =========================
+  // MODIFIERS (APRES CALCUL)
+  // =========================
 
-    const root = this.element;
+  const modifiers = [];
+  this._conditionMod = conditionMod;
+  // custom / difficulty (placeholder UI)
+  modifiers.push({ label: "Custom", value: 0 });
+  modifiers.push({ label: "Difficulty", value: 0 });
 
-    // =========================
-    // INSPIRATION
-    // =========================
+  // conditions réelles
+  for (const c of conditionDetails) {
+    modifiers.push({
+      label: c.name,
+      value: c.value
+    });
+  }
 
-    const updatePreview = () => {
+  // =========================
+// WEAPON TRAITS → MODIFIERS
+// =========================
+
+if (this.weapon) {
+
+  const weaponTraits = this.weapon.system.traits || [];
+  const itemTraits = this.weapon.system.itemTraits || [];
+
+  const allTraits = [...weaponTraits, ...itemTraits];
+
+  for (const t of allTraits) {
+
+    if (!t || !t.key) continue;
+
+    const key = t.key;
+
+    if (key === "precise") {
+      modifiers.push({ label: "Precise", value: 10 });
+    }
+
+    if (key === "imprecise") {
+      modifiers.push({ label: "Imprecise", value: -10 });
+    }
+
+    if (key === "practical") {
+      modifiers.push({ label: "Practical", value: 10 });
+    }
+
+    if (key === "impractical") {
+      modifiers.push({ label: "Impractical", value: -10 });
+    }
+
+  }
+}
+  this._modifiers = modifiers;
+  return {
+    actor: this.actor,
+    label: this.label,
+    target: this.target,
+    isAttack: this.type === "attack",
+    talents,
+    effects: this.actor.effects.contents,
+    conditionMod,
+    conditionDetails,
+    modifiers,
+    inspirationDice: this.signEffects.inspirationDice,
+    inspirationResult: this.inspirationResult,
+    spellData: this.spellData
+  };
+}
+
+ _onRender(context, options) {
+  super._onRender(context, options);
+
+  // 🔥 récup safe DOM (V2)
+const root = this.element?.querySelector(".sdp-roll-dialog");
+if (!root) return;
+
+setTimeout(() => {
+  this.setPosition({ left: null, top: null });
+}, 10);
+
+const updatePreview = () => {
   const mod = Number(root.querySelector('[name="customMod"]')?.value || 0);
   const diff = Number(root.querySelector('[name="difficulty"]')?.value || 0);
-  const base = this.target || 0;
 
-  root.querySelector('#totalMod').textContent = mod + diff;
-  root.querySelector('#finalTarget').textContent = base + mod + diff;
+  let total = mod + diff;
+
+  if (this.weapon) {
+
+  const weaponTraits = this.weapon.system.traits || [];
+  const itemTraits = this.weapon.system.itemTraits || [];
+
+  const allTraits = [...weaponTraits, ...itemTraits];
+
+  for (const t of allTraits) {
+
+    const key = t?.key;
+    if (!key) continue;
+
+    if (key === "precise") total += 10;
+    if (key === "imprecise") total -= 10;
+    if (key === "practical") total += 10;
+    if (key === "impractical") total -= 10;
+  }
+}
+
+  const conditions = this.actor.system.conditionTotals || {};
+
+  for (const key in conditions) {
+    const value = conditions[key];
+    if (!value) continue;
+
+    const stack = value === true ? 1 : value;
+    const config = CONFIG.SDP.conditionConfig?.[key];
+    if (!config?.modifier) continue;
+
+    total += config.modifier * stack;
+  }
+
+  if (this.weapon) {
+    for (const t of this.weapon.system.traits || []) {
+      const key = (t.key || "").toLowerCase();
+      if (key === "unbalanced") total -= 10;
+      if (key === "accurate") total += 10;
+    }
+  }
+
+  const el = root.querySelector('#totalModifier');
+  if (el) el.textContent = total;
 };
 
-root.querySelector('[name="customMod"]')?.addEventListener("input", updatePreview);
-root.querySelector('[name="difficulty"]')?.addEventListener("change", updatePreview);
+root.addEventListener("input", (ev) => {
+  if (ev.target.name === "customMod") updatePreview();
+});
+
+root.addEventListener("change", (ev) => {
+  if (ev.target.name === "difficulty") updatePreview();
+});
+
+// 🔥 CRUCIAL
+setTimeout(() => updatePreview(), 0);
+
+root.addEventListener("input", (ev) => {
+  if (ev.target.name === "customMod") updatePreview();
+});
+
+root.addEventListener("change", (ev) => {
+  if (ev.target.name === "difficulty") updatePreview();
+});
 
 updatePreview();
 
@@ -150,29 +267,34 @@ async _roll() {
 
   game.sdp = game.sdp || {};
 
-  // =========================
+// =========================
 // READ FORM VALUES
 // =========================
 
-const modInput = this.element.querySelector('[name="customMod"]')?.value || 0;
-const difficulty = this.element.querySelector('[name="difficulty"]')?.value || 0;
+const root = this.element?.querySelector(".window-content");
+if (!root) return;
 
-// 🔥 conversion safe
-const modValue = Number(modInput) || 0;
-const diffValue = Number(difficulty) || 0;
+const modValue = Number(root.querySelector('[name="customMod"]')?.value || 0);
+const diffValue = Number(root.querySelector('[name="difficulty"]')?.value || 0);
+
+// talents
+const selectedTalents = Array.from(
+  root.querySelectorAll('input[name="talent"]:checked')
+).map(el => el.value);
+
+// autres inputs
+const location = root.querySelector('[name="location"]')?.value || null;
+const brutal = root.querySelector('[name="brutal"]')?.checked || false;
+const charge = root.querySelector('[name="charge"]')?.checked || false;
+const finesse = root.querySelector('[name="finesse"]')?.checked || false;
 
 // =========================
 // SAVE MODIFIERS
 // =========================
 
-const selectedTalents = Array.from(
-  this.element.querySelectorAll('input[name="talent"]:checked')
-).map(el => el.value);
-
 game.sdp.dialogModifiers = {
   totalMod: modValue + diffValue,
 
-  // 🔥 AJOUT CRITIQUE
   conditionMod: this.actor.system.conditionTotals
     ? Object.entries(this.actor.system.conditionTotals).reduce((acc, [key, value]) => {
         const config = CONFIG.SDP.conditionConfig?.[key];
@@ -183,12 +305,12 @@ game.sdp.dialogModifiers = {
       }, 0)
     : 0,
 
-  location: this.element.querySelector('[name="location"]')?.value || null,
-  brutal: this.element.querySelector('[name="brutal"]')?.checked || false,
-  charge: this.element.querySelector('[name="charge"]')?.checked || false,
-  inspiration: this.inspirationResult,
+  location,
+  brutal,
+  charge,
+  finesse,
   talents: selectedTalents,
-  finesse: this.element.querySelector('[name="finesse"]')?.checked || false
+  inspiration: this.inspirationResult
 };
 
 // DEBUG
