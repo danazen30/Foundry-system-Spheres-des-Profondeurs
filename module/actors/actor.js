@@ -1,3 +1,5 @@
+import { SdpActorInventory } from "./actor-inventory.js";
+
 export class SdpActor extends Actor {
 
   prepareBaseData() {
@@ -581,8 +583,6 @@ system.derived.evasion.value = Math.max(finalEvasion, 0);
     // CONDITIONS EFFECTS
     // =====================
 
- 
-
     const finalAttack = Math.max(attackBase, 0);
 
    system.derived.attack.value = finalAttack/10;
@@ -660,6 +660,21 @@ if (mana) {
   }
 
 }
+
+// =========================
+// CARRYING CAPACITY (ENCUMBRANCE)
+// =========================
+
+const STR = system.attributes.strength.value;
+const TGH = system.attributes.toughness.value;
+
+const avg = Math.floor((STR + TGH) / 2);
+
+system.derived.carryingCapacity = {
+  value: avg
+};
+
+SdpActorInventory.applyEncumbrance(this);
 
   }
 
