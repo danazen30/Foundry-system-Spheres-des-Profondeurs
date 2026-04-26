@@ -128,17 +128,7 @@ console.log("Checking key:", key, "=>", skill);
   return best;
 }
 
-static getSpellCritical(result, hasSkill){
 
-  return {
-    success: result >= 1 && result <= 5,
-
-    failure: hasSkill
-      ? result >= 96
-      : result >= 81
-  };
-
-}
 
 static async cast(actor, spell, baseValue){
 
@@ -175,8 +165,37 @@ const targetValue =
 
   const hasSkill = bestSkill !== null && bestSkill !== undefined;
 
-const crit = SdpSpell.getSpellCritical(result, hasSkill);
-  const success = result <= targetValue;
+let success;
+
+if (result === 100) {
+  success = false;
+} else {
+  success =
+  result <= targetValue ||
+  (targetValue <= 5 && result <= 5);
+}
+
+let SL =
+  Math.floor(targetValue / 10) -
+  Math.floor(result / 10);
+
+// 🔥 APPLY RULE
+const adjusted = SdpRoll.applyDynamicResult(result, targetValue, success, SL);
+success = adjusted.success;
+SL = adjusted.SL;
+
+const critFailBase = hasSkill ? 96 : 81;
+
+const crit = SdpRoll.getCritical(result, targetValue, {
+  critFailBase
+});
+
+// 🔥 HARD OVERRIDE
+if (result === 100) {
+  success = false;
+  crit.success = false;
+  crit.failure = true;
+}
 
  let magicConsequence = null;
 
@@ -229,15 +248,6 @@ const hasDowngradeTalent = actor.items.some(i => {
   // ======================
   // SL
   // ======================
-
-let SL =
-  Math.floor(targetValue / 10) -
-  Math.floor(result / 10);
-
-// 🔥 FIX -0
-if (!success && SL === 0) {
-  SL = -1;
-}
 
 SL += dialogMods.inspiration || 0;
 

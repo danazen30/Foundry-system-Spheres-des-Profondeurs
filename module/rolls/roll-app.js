@@ -410,17 +410,18 @@ const target =
   (dialogMods.totalMod || 0) +
   (dialogMods.conditionMod || 0);
 
+let success =
+  result <= target ||
+  (target <= 0 && result <= 5);
+
 let SL =
   Math.floor(target / 10) -
   Math.floor(result / 10);
 
-// success
-const success = result <= target;
-
-// 🔥 FIX -0
-if (!success && SL === 0) {
-  SL = -1;
-}
+// 🔥 APPLY RULE
+const adjusted = SdpRoll.applyDynamicResult(result, target, success, SL);
+success = adjusted.success;
+SL = adjusted.SL;
 
 SL += this.inspirationResult;
 
@@ -431,14 +432,14 @@ SL = game.sdp.Roll.applySuccessBonus(
   game.sdp?.dialogModifiers?.talents || []
 );
 
-// crit
-const crit = game.sdp?.roll?.getCritical
-  ? game.sdp.roll.getCritical(result)
-  : {
-      success: result >= 1 && result <= 5,
-      failure: result >= 96 && result <= 100
-    };
+const crit = SdpRoll.getCritical(result, target);
 
+// 🔥 HARD OVERRIDE
+if (result === 100) {
+  success = false;
+  crit.success = false;
+  crit.failure = true;
+}
 
 // =========================
 // CHAT CARD PROPRE

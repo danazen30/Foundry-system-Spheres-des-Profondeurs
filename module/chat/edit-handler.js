@@ -45,13 +45,22 @@ export function registerEditHandlers(html, message) {
   Math.floor(newTarget / 10) -
   Math.floor(newRoll / 10);
 
-const success = newRoll <= newTarget;
+let success =
+  newRoll <= newTarget ||
+  (newTarget <= 5 && newRoll <= 5);
 
-const crit = SdpRoll.getCritical(newRoll);
+// 🔥 APPLY RULE
+const adjusted = SdpRoll.applyDynamicResult(newRoll, newTarget, success, SL);
+success = adjusted.success;
+SL = adjusted.SL;
 
-// 🔥 FIX -0
-if (!success && SL === 0) {
-  SL = -1;
+const crit = SdpRoll.getCritical(newRoll, newTarget);
+
+// 🔥 HARD OVERRIDE
+if (newRoll === 100) {
+  success = false;
+  crit.success = false;
+  crit.failure = true;
 }
 
 let critText = "";
@@ -161,15 +170,18 @@ ${critText}
   const actor = game.actors.get(card.dataset.actor);
 if (!actor) return;
 
+let success =
+  newRoll <= target ||
+  (target <= 5 && newRoll <= 5);
+
 let SL =
   Math.floor(target / 10) -
   Math.floor(newRoll / 10);
 
-const success = newRoll <= target;
+const adjusted = SdpRoll.applyDynamicResult(newRoll, target, success, SL);
+success = adjusted.success;
+SL = adjusted.SL;
 
-if (!success && SL === 0) {
-  SL = -1;
-}
 
 // 🔥 APPLY SUCCESS BONUS
 const selectedTalents = JSON.parse(card.dataset.talents || "[]");
@@ -183,13 +195,18 @@ if (!spell) return;
 
 const hasSkill = card.dataset.hasskill === "true";
 
-const crit = {
-  success: newRoll >= 1 && newRoll <= 5,
-  failure: hasSkill
-    ? newRoll >= 96
-    : newRoll >= 81
-};
+const critFailBase = hasSkill ? 96 : 81;
 
+const crit = SdpRoll.getCritical(newRoll, target, {
+  critFailBase
+});
+
+// 🔥 HARD OVERRIDE
+if (newRoll === 100) {
+  success = false;
+  crit.success = false;
+  crit.failure = true;
+}
 // =========================
 // MAGIC CONSEQUENCE
 // =========================
@@ -379,15 +396,18 @@ if (traits.some(t => t.key === "fast")) {
 
 const finalTarget = target + fastBonus;
 
-const success = newRoll <= finalTarget;
+let success =
+  newRoll <= finalTarget ||
+  (finalTarget <= 5 && newRoll <= 5);
 
 let SL =
   Math.floor(finalTarget / 10) -
   Math.floor(newRoll / 10);
 
-if (!success && SL === 0) {
-  SL = -1;
-}
+  const adjusted = SdpRoll.applyDynamicResult(newRoll, finalTarget, success, SL);
+success = adjusted.success;
+SL = adjusted.SL;
+
 
 // 🔥 APPLY SUCCESS BONUS
 const selectedTalents = JSON.parse(card.dataset.talents || "[]");
@@ -411,10 +431,21 @@ if (traits.some(t => t.key === "dangerous")) {
   });
 }
 
-let crit = {
-  success: newRoll >= 1 && newRoll <= 5,
-  failure: newRoll >= critFailMin && newRoll <= 100
-};
+let critFailBase = 96;
+
+if (traits.some(t => t.key === "dangerous")) {
+  critFailBase = 86;
+}
+const crit = SdpRoll.getCritical(newRoll, target, {
+  critFailBase
+});
+
+// 🔥 HARD OVERRIDE
+if (newRoll === 100) {
+  success = false;
+  crit.success = false;
+  crit.failure = true;
+}
 
 let critText = "";
               if(crit.success){

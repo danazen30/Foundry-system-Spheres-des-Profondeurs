@@ -285,22 +285,25 @@ if (bestSkill) {
 
     const result = roll.total;
 
-   let critFailMin = 96;
+let critFailBase = 96;
 
-// ===== DANGEROUS TRAIT =====
+// trait dangerous
 if (finalTraits.some(t => t.key === "dangerous")) {
-  critFailMin = 86;
-
-  console.log("SDP | DANGEROUS (RANGED)", {
-    weapon: weapon.name,
-    critFailMin
-  });
+  critFailBase = 86;
 }
 
-let crit = {
-  success: result >= 1 && result <= 5,
-  failure: result >= critFailMin && result <= 100
-};
+    let success =
+  result <= targetValue ||
+  (targetValue <= 5 && result <= 5)
+
+const crit = SdpRoll.getCritical(result, targetValue);
+
+// 🔥 HARD OVERRIDE
+if (result === 100) {
+  success = false;
+  crit.success = false;
+  crit.failure = true;
+}
 
 // =========================
 // FLAWED ITEM TRAIT (BREAK)
@@ -329,11 +332,13 @@ if (isImpaling && isRound && result <= targetValue) {
   crit.success = true;
 }
 
-    const success = result <= targetValue;
-
     let SL =
   Math.floor(targetValue / 10) -
   Math.floor(result / 10);
+
+  const adjusted = SdpRoll.applyDynamicResult(result, targetValue, success, SL);
+success = adjusted.success;
+SL = adjusted.SL;
 
   // =========================
 // INSPIRATION → SL BONUS
@@ -347,11 +352,6 @@ console.log("SDP | INSPIRATION APPLIED (RANGED)", {
   inspiration,
   finalSL: SL
 });
-
-// 🔥 FIX -0
-if (!success && SL === 0) {
-  SL = -1;
-}
 
 // 🔥 APPLY SUCCESS BONUS
 const selectedTalents = dialogMods.talents || [];
@@ -532,6 +532,8 @@ const finalTraits = [...activePositiveTraits, ...negativeTraits];
   // ======================
   // MELEE ATTACK
   // ======================
+
+  const isMelee = true;
 const meleeBonus = Math.floor((dialogMods.totalMod || 0) / 10);
 
 let chargeBonus = 0;
@@ -590,10 +592,21 @@ if (finalTraits.some(t => t.key === "dangerous")) {
   });
 }
 
-let crit = {
-  success: result >= 1 && result <= 5,
-  failure: result >= critFailMin && result <= 100
-};
+let crit;
+
+if (isMelee) {
+  crit = { success: false, failure: false };
+} else {
+  let critFailBase = 96;
+
+  if (finalTraits.some(t => t.key === "dangerous")) {
+    critFailBase = 86;
+  }
+
+  crit = SdpRoll.getCritical(result, targetValue, {
+    critFailBase
+  });
+}
 
 // =========================
 // FLAWED ITEM TRAIT (BREAK)
@@ -802,10 +815,9 @@ if (traits.some(t => t.key === "dangerous")) {
   critFailMin = 86;
 }
 
-let crit = {
-  success: result >= 1 && result <= 5,
-  failure: result >= critFailMin && result <= 100
-};
+const crit = SdpRoll.getCritical(result, targetValue, {
+  critFailBase: critFailMin
+});
 
 const base = actor._getBestWeaponSkill(weapon);
 
@@ -816,13 +828,24 @@ let targetValue =
   (dialogMods.totalMod || 0) +
   (dialogMods.conditionMod || 0);
 
-const success = result <= targetValue;
+let success;
+
+if (result === 100) {
+  success = false;
+} else {
+  success =
+  result <= targetValue ||
+  (targetValue <= 0 && result <= 5);
+}
 
 let SL =
   Math.floor(targetValue / 10) -
   Math.floor(result / 10);
 
-  if (!success && SL === 0) SL = -1;
+// 🔥 APPLY RULE
+const adjusted = SdpRoll.applyDynamicResult(result, targetValue, success, SL);
+success = adjusted.success;
+SL = adjusted.SL;
 
   // =========================
 // CRITICAL EFFECTS

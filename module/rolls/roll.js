@@ -8,13 +8,61 @@ export class SdpRoll {
   }
 
   // 🔥 AJOUT CRITIQUE (MANQUANT)
-  static getCritical(result) {
+static getCritical(result, target, options = {}) {
+
+  const {
+    critFailBase = 96,
+    critFailMax = 100,
+    critSuccessBase = 5
+  } = options;
+
+  // =========================
+  // 🔥 HARD RULE
+  // =========================
+
+  if (result === 100) {
+    return {
+      success: false,
+      failure: true
+    };
+  }
+
+  // =========================
+  // FAILURE
+  // =========================
+
+  let critFailMin;
+
+  if (target >= critFailMax) {
+    critFailMin = critFailMax;
+  }
+  else if (target >= critFailBase) {
+    critFailMin = target + 1;
+  }
+  else {
+    critFailMin = critFailBase;
+  }
+
+  // =========================
+  // SUCCESS
+  // =========================
+
+  let critSuccessMax;
+
+  if (target <= 5) {
+  critSuccessMax = target;
+}
+  else if (target <= critSuccessBase) {
+    critSuccessMax = target;
+  }
+  else {
+    critSuccessMax = critSuccessBase;
+  }
 
   return {
-    success: result >= 1 && result <= 5,
-    failure: result >= 96 && result <= 100
+    success: result >= 1 && result <= critSuccessMax,
+    failure: result >= critFailMin && result <= critFailMax
   };
-
 }
 
   // =====================
@@ -79,6 +127,46 @@ static getOvercast(SL){
 
   return Math.floor(SL / 2);
 
+}
+
+static applyDynamicResult(result, target, success, SL){
+
+  // =========================
+  // HIGH TARGET (>=100)
+  // =========================
+ const critFailBase = 96;
+
+if (target >= critFailBase && result >= critFailBase){
+
+  if (result < 100){
+    return {
+      success: false,
+      SL: 0
+    };
+  }
+}
+
+  // =========================
+  // LOW TARGET (<=0)
+  // =========================
+  if (target <= 0){
+
+    if (result >= 2 && result <= 5){
+      return {
+        success: true,
+        SL: 0
+      };
+    }
+
+    if (result === 1){
+      return {
+        success: true,
+        SL: 1 // crit → SL positif
+      };
+    }
+  }
+
+  return { success, SL };
 }
 
 }
