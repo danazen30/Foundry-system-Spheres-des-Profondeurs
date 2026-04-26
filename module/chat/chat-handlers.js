@@ -109,6 +109,46 @@ html.find(".sdp-stop-opposed").click(ev => {
 
 });
 
+html.find(".apply-rest").click(async ev => {
+
+  const button = ev.currentTarget;
+
+  // 🔒 STOP double click
+  if (button.disabled) return;
+  button.disabled = true;
+
+  const card = ev.currentTarget.closest(".sdp-rest");
+
+  // 🔒 déjà utilisé ?
+  if (card.dataset.used === "true") return;
+  card.dataset.used = "true";
+
+  const actorId = card.dataset.actor;
+  const hp = Number(card.dataset.hp);
+  const mana = Number(card.dataset.mana);
+
+  const actor = game.actors.get(actorId);
+  if (!actor) return;
+
+  const currentHP = actor.system.health.value;
+  const maxHP = actor.system.health.max;
+
+  const currentMana = actor.system.resources.mana.value;
+  const maxMana = actor.system.resources.mana.max;
+
+  await actor.update({
+    "system.health.value": Math.min(currentHP + hp, maxHP),
+    "system.resources.mana.value": Math.min(currentMana + mana, maxMana)
+  });
+
+  // 💬 feedback visuel
+  button.innerText = "Applied";
+  button.style.opacity = "0.5";
+
+  ui.notifications.info(`${actor.name} recovered resources`);
+
+});
+
 });
 
 }

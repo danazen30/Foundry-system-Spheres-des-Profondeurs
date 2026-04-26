@@ -1908,6 +1908,22 @@ root.querySelectorAll('.weapon-toggle').forEach(el => {
 
 });
 
+// =========================
+// REST SYSTEM
+// =========================
+
+root.querySelectorAll('[data-action="shortRest"]').forEach(el => {
+  el.addEventListener("click", async () => {
+    await this._doRest("short");
+  });
+});
+
+root.querySelectorAll('[data-action="longRest"]').forEach(el => {
+  el.addEventListener("click", async () => {
+    await this._doRest("long");
+  });
+});
+
 }
 
 _onLevelUp() {
@@ -1918,6 +1934,74 @@ _onLevelUp() {
 
   const app = new game.sdp.levelUpApp(actor, newLevel);
   app.render(true);
+
+}
+
+async _doRest(type) {
+
+  const actor = this.document;
+
+  let hpRoll, manaRoll;
+
+  if (type === "short") {
+
+    hpRoll = new Roll("1d4");
+    manaRoll = new Roll("1d4");
+
+  } else {
+
+    const TB = actor.system.attributes.toughness.bonus;
+    const WPB = actor.system.attributes.willpower.bonus;
+
+    hpRoll = new Roll(`${TB}d4`);
+    manaRoll = new Roll(`${WPB}d4`);
+
+  }
+
+  // 🎲 ÉVALUATION ASYNC (OBLIGATOIRE V12)
+await hpRoll.evaluate();
+await manaRoll.evaluate();
+
+// 🎲 Animation + son SANS créer de message
+if (game.dice3d) {
+  await game.dice3d.showForRoll(hpRoll);
+  await game.dice3d.showForRoll(manaRoll);
+} else {
+  foundry.audio.AudioHelper.play({ src: CONFIG.sounds.dice }, true);
+}
+
+  const hp = hpRoll.total;
+  const mana = manaRoll.total;
+
+  const hpHTML = await hpRoll.render();
+  const manaHTML = await manaRoll.render();
+
+  await ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    content: `
+    <div class="sdp-rest"
+         data-actor="${actor.id}"
+         data-hp="${hp}"
+         data-mana="${mana}"
+         data-used="false">
+
+      <h3>${type === "short" ? "Short Rest" : "Long Rest"}</h3>
+
+      <div class="dice-block">
+        <p><strong>HP:</strong></p>
+        ${hpHTML}
+
+        <p><strong>Mana:</strong></p>
+        ${manaHTML}
+      </div>
+
+      <button class="apply-rest">
+        Apply Rest
+      </button>
+
+    </div>
+    `
+  });
 
 }
 
