@@ -696,7 +696,7 @@ readonly>
 
 {{#each ammunition as |item|}}
 
-<tr>
+<tr class="item-row" data-item-id="{{item.id}}">
 
 <td>{{item.name}}</td>
 
@@ -753,10 +753,9 @@ readonly>
 
 <tbody>
 
-{{#each actor.items as |item|}}
-{{#if (eq item.type "armor")}}
+{{#each armors as |item|}}
 
-<tr>
+<tr class="item-row" data-item-id="{{item.id}}">
 
 <td>{{item.name}}</td>
 
@@ -782,7 +781,6 @@ readonly>
 
 </tr>
 
-{{/if}}
 {{/each}}
 
 </tbody>
@@ -794,7 +792,7 @@ readonly>
 <div class="item-list">
 
   {{#each clothing}}
-    <div class="item-row">
+    <div class="item-row" data-item-id="{{this.id}}">
 
       <input type="checkbox"
              data-item-id="{{this._id}}"
@@ -822,25 +820,128 @@ readonly>
   </tr>
 
   {{#each possessions as |item|}}
-  <tr>
-    <td>{{item.name}}</td>
+<tr class="item-row" data-item-id="{{item.id}}">
 
-    <td>
-      <input type="number"
-             value="{{item.system.quantity.value}}"
-             data-item-id="{{item.id}}"
-             data-action="updateItemQty">
-    </td>
+  <td class="item-name">
+    {{item.name}}
+  </td>
 
-    <td>{{item.system.weight.value}}</td>
+  <td>
+    <input type="number"
+           value="{{item.system.quantity.value}}"
+           data-item-id="{{item.id}}"
+           data-action="updateItemQty"
+           min="0">
+  </td>
 
-    <td>
-      <a data-action="editItem" data-item-id="{{item.id}}">✏️</a>
-      <a data-action="deleteItem" data-item-id="{{item.id}}">🗑️</a>
-    </td>
-  </tr>
+  <td>
+    {{item.system.weight.value}}
+  </td>
+
+  <td>
+    <a data-action="editItem" data-item-id="{{item.id}}">✏️</a>
+    <a data-action="deleteItem" data-item-id="{{item.id}}">🗑️</a>
+  </td>
+
+</tr>
   {{/each}}
 </table>
+
+<h2>Containers</h2>
+
+{{#each containers as |container|}}
+
+<div class="container-block" data-container-id="{{container.id}}">
+
+  <!-- HEADER -->
+<div class="container-header">
+
+  <button data-action="toggleContainer">▶</button>
+
+  <strong>{{container.name}}</strong>
+
+  <span class="container-meta">
+    ({{container.system.quantity.value}}) — {{container.system.encumbrance.value}} kg
+  </span>
+
+  <!-- 🔥 CAPACITÉ -->
+  <div class="container-capacity">
+
+    {{#with (lookup ../containerLoad container.id) as |load|}}
+
+      {{#if container.system.capacity.value}}
+
+        <span class="capacity-value">
+          {{load}} / {{container.system.capacity.value}} kg
+        </span>
+
+        {{#if (gt load container.system.capacity.value)}}
+          <span class="capacity-warning">⚠ Overloaded</span>
+        {{/if}}
+
+      {{else}}
+
+        <span class="capacity-value">
+          {{load}} kg
+        </span>
+
+      {{/if}}
+
+    {{/with}}
+
+  </div>
+
+  <button data-action="editItem" data-item-id="{{container.id}}">Edit</button>
+  <button data-action="deleteItem" data-item-id="{{container.id}}">X</button>
+
+</div>
+
+  <!-- CONTENT -->
+  <div class="container-content">
+
+    <table class="container-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Qty</th>
+          <th>Weight</th>
+          <th>Type</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        {{#each (lookup ../containerMap container.id) as |item|}}
+        <tr class="item-row"
+            draggable="true"
+            data-item-id="{{item.id}}">
+
+          <td>{{item.name}}</td>
+
+          <td>{{item.system.quantity.value}}</td>
+
+          <td>{{item.system.encumbrance.value}}</td>
+
+          <td>{{item.type}}</td>
+
+          <td>
+            <button data-action="editItem" data-item-id="{{item.id}}">Edit</button>
+            <button data-action="removeFromContainer" data-item-id="{{item.id}}">↩</button>
+            <button data-action="deleteItem" data-item-id="{{item.id}}">X</button>
+          </td>
+
+        </tr>
+        {{/each}}
+
+      </tbody>
+    </table>
+
+  </div>
+
+</div>
+
+{{/each}}
 
 <h2>Conditions</h2>
 

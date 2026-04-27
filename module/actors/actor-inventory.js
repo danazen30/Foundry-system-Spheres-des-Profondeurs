@@ -2,33 +2,47 @@ export class SdpActorInventory {
 
   static getTotalEncumbrance(actor) {
 
-    let total = 0;
+  let total = 0;
 
-    for (const item of actor.items.contents) {
+  for (const item of actor.items.contents) {
 
-      const enc = Number(item.system.encumbrance?.value || 0);
-      const qty = Number(item.system.quantity?.value || 1);
+    const enc = Number(item.system.encumbrance?.value || 0);
+    const qty = Number(item.system.quantity?.value || 1);
 
-      total += enc * qty;
+    let weight = enc * qty;
+
+    // 🔥 SI DANS CONTAINER → poids réduit
+    if (item.system.containerId) {
+      weight *= 0.5;
     }
 
-    return total;
+    total += weight;
   }
+
+  return total;
+}
 
 static async applyEncumbrance(actor) {
 
   let total = 0;
 
-  for (let item of actor.items) {
+for (let item of actor.items) {
 
-    const enc = Number(item.system.encumbrance?.value || 0);
-    if (!enc) continue;
+  const enc = Number(item.system.encumbrance?.value || 0);
+  if (!enc) continue;
 
-    const qty = Number(item.system.quantity?.value ?? 1);
+  const qty = Number(item.system.quantity?.value ?? 1);
 
-    total += enc * qty;
+  let weight = enc * qty;
 
+  // 🔥 container logic
+  if (item.system.containerId) {
+    weight *= 0.5;
   }
+
+  total += weight;
+
+}
 
     const STR = actor.system.attributes.strength.value || 0;
 const TGH = actor.system.attributes.toughness.value || 0;

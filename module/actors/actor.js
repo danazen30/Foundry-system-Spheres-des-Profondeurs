@@ -156,7 +156,8 @@ _getItemModifiers(targetKey) {
   item.type !== "trait" &&
   item.type !== "disease" &&
   item.type !== "weapon" &&
-  item.type !== "clothing"
+  item.type !== "clothing" &&
+  item.type !== "container"
 ) continue;
 
     // 🔥 ARMOR ACTIVE SEULEMENT SI ÉQUIPÉE
@@ -350,7 +351,8 @@ if (
   item.type !== "trait" &&
   item.type !== "disease" &&
   item.type !== "weapon" &&
-  item.type !== "clothing"
+  item.type !== "clothing" &&
+  item.type !== "container"
 ) continue;
 
   // 👉 armor seulement si équipée

@@ -19,6 +19,7 @@ import { SdpPossessionSheet } from "./items/possession-sheet.js";
 import { SdpDiseaseSheet } from "./items/disease-sheet.js";
 import { SdpTraitSheet } from "./items/trait-sheet.js";
 import { SdpClothingSheet } from "./items/clothing-sheet.js";
+import { SdpContainerSheet } from "./items/container-sheet.js";
 
 import { SdpRoll } from "./rolls/roll.js";
 import { SdpDamage } from "./combat/damage.js";
@@ -107,6 +108,8 @@ foundry.documents.collections.Items.registerSheet("sdp", SdpDiseaseSheet, { type
 foundry.documents.collections.Items.registerSheet("sdp", SdpTraitSheet, { types: ["trait"], makeDefault: true });
 
 foundry.documents.collections.Items.registerSheet("sdp", SdpClothingSheet, { types: ["clothing"], makeDefault: true});
+
+foundry.documents.collections.Items.registerSheet("sdp", SdpContainerSheet, { types: ["container"], makeDefault: true });
 
 Handlebars.registerHelper("gte", function(a, b) {
   return a >= b;

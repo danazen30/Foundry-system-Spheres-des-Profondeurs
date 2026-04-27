@@ -37,10 +37,10 @@
     },
 
     {
-      "name": "traits",
-      "label": "SDP Traits",
+      "name": "trait",
+      "label": "SDP Trait",
       "system": "sdp",
-      "path": "packs/traits",
+      "path": "packs/trait",
       "type": "Item"
     },
 
@@ -126,17 +126,9 @@
 
     {
       "name": "disease",
-      "label": "SDP Diseasen",
+      "label": "SDP Disease",
       "system": "sdp",
       "path": "packs/disease",
-      "type": "Item"
-    },
-
-    {
-      "name": "trait",
-      "label": "SDP Trait",
-      "system": "sdp",
-      "path": "packs/trait",
       "type": "Item"
     },
 
@@ -145,6 +137,14 @@
       "label": "SDP Clothing",
       "system": "sdp",
       "path": "packs/clothing",
+      "type": "Item"
+    },
+
+    {
+      "name": "container",
+      "label": "SDP Container",
+      "system": "sdp",
+      "path": "packs/container",
       "type": "Item"
     }
 
@@ -190,7 +190,8 @@
       "possession": {},
       "disease": {},
       "trait": {},
-      "clothing": {}
+      "clothing": {},
+      "container": {}
     }
   }
 }

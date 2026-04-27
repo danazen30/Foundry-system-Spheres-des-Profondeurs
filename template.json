@@ -1007,6 +1007,35 @@
         "label": "Equipped",
         "value": false
       }
+    },
+
+    "container": {
+      "templates": [
+        "quantity",
+        "description",
+        "encumbrance",
+        "price",
+        "gmNotes",
+        "playerNotes",
+        "itemTraits"
+      ],
+
+      "capacity": {
+        "type": "number",
+        "label": "Capacity",
+        "value": 0
+      },
+
+      "reduction": {
+        "type": "number",
+        "label": "Weight Reduction",
+        "value": 0.5
+      },
+
+      "contents": {
+        "type": "array",
+        "value": []
+      }
     }
   }
 }

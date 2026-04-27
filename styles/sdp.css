@@ -475,3 +475,24 @@ text-align:center;
   width: 30px;
   text-align: center;
 }
+
+.container-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.container-meta {
+  opacity: 0.7;
+}
+
+.container-capacity {
+  margin-left: auto;
+  font-weight: bold;
+}
+
+.capacity-warning {
+  color: #ff6b6b;
+  margin-left: 5px;
+}

@@ -139,7 +139,9 @@ const spellsSuperior = spells.filter(s =>
 // WEAPONS SPLIT
 // =========================
 
-const weapons = this.document.items.filter(i => i.type === "weapon");
+const weapons = this.document.items.filter(i =>
+  i.type === "weapon" && !i.system.containerId
+);
 const allAmmo = this.document.items.filter(i => i.type === "ammunition");
 
 const meleeWeapons = weapons.filter(w => w.system.category === "melee");
@@ -297,11 +299,51 @@ w.displaySkill = displaySkills.length
   : "No skill";
 }
 
-const ammunition = this.document.items.filter(i => i.type === "ammunition");
-const possessions = this.document.items.filter(i => i.type === "possession");
+const ammunition = this.document.items.filter(i =>
+  i.type === "ammunition" && !i.system.containerId
+);
+const possessions = this.document.items.filter(i =>
+  i.type === "possession" && !i.system.containerId
+);
 const traits = this.actor.items.filter(i => i.type === "trait");
 const diseases = this.actor.items.filter(i => i.type === "disease");
-const clothing = this.document.items.filter(i => i.type === "clothing");
+const clothing = this.document.items.filter(i =>
+  i.type === "clothing" && !i.system.containerId
+);
+const armors = this.document.items.filter(i =>
+  i.type === "armor" && !i.system.containerId
+);
+const containers = this.document.items.filter(i => i.type === "container");
+
+  const allItems = this.document.items;
+
+// items dans container
+const containedItems = allItems.filter(i => i.system.containerId);
+
+// items hors container
+const rootItems = allItems.filter(i => !i.system.containerId);
+
+// group par container
+const containerMap = {};
+
+for (let item of containedItems) {
+  const cid = item.system.containerId;
+  if (!containerMap[cid]) containerMap[cid] = [];
+  containerMap[cid].push(item);
+}
+
+const containerLoad = {};
+
+for (let container of containers) {
+
+  const items = containerMap[container.id] || [];
+
+  const total = items.reduce((sum, i) => {
+    return sum + ((i.system.encumbrance?.value || 0) * (i.system.quantity?.value || 1));
+  }, 0);
+
+  containerLoad[container.id] = total;
+}
 
 console.log("SDP | Ammo count", ammunition.length);
 
@@ -334,6 +376,11 @@ return {
   ammunition,
   traits,
   clothing,
+  containers,
+  containerMap,
+  armors,
+  containerLoad,
+  rootItems,
   diseases
 };
   }
@@ -510,58 +557,36 @@ else if (entry.type === "gain") {
 
 async _onDropItem(event, data) {
 
-  const item = await Item.fromDropData(data);
   const actor = this.document;
 
-  console.log("DROP ITEM:", item); // 🔥 debug
+  // 🔥 IMPORTANT : si drop sur container → on laisse le handler container gérer
+  if (event.target.closest(".container-block")) {
+    return super._onDropItem(event, data);
+  }
+
+  const item = await Item.fromDropData(data);
 
   // =========================
-  // SIGN (FIX PRINCIPAL)
+  // SI ITEM DEJA DANS ACTOR
   // =========================
 
-  if (item.type === "sign") {
+  const existing = actor.items.get(item.id);
 
-    // 🔥 supprime ancien sign (optionnel mais recommandé)
-    const existing = actor.items.find(i => i.type === "sign");
-    if (existing) await existing.delete();
-
-    // 🔥 ajoute le sign
-    const created = await actor.createEmbeddedDocuments("Item", [item.toObject()]);
-
-    console.log("SIGN ADDED:", created);
-
-    await this.render();
-
-    return created;
+  if (existing) {
+    // 👉 on enlève du container
+    await existing.update({
+      "system.containerId": null
+    });
+    return;
   }
 
   // =========================
-  // CAREER (ton code existant)
+  // SINON → CREATE
   // =========================
 
-  if (item.type === "career") {
-
-    const created = await actor.createEmbeddedDocuments("Item", [item.toObject()]);
-    const career = created[0];
-
-    const hasCurrent = actor.items.some(i => i.type === "career" && i.system.current);
-
-    if (!hasCurrent) {
-      await this._applyCareer(career);
-    }
-
-    await this.render();
-
-    return created;
-  }
-
-  // =========================
-  // AUTRES ITEMS
-  // =========================
-
-  const created = await actor.createEmbeddedDocuments("Item", [item.toObject()]);
-
-  await this.render();
+  const created = await actor.createEmbeddedDocuments("Item", [
+    item.toObject()
+  ]);
 
   return created;
 }
@@ -1762,6 +1787,33 @@ root.querySelectorAll('[data-action="updateAmmoQty"]').forEach(el => {
 });
 
 // =========================
+// UPDATE ITEM QTY (POSSESSIONS)
+// =========================
+root.querySelectorAll('[data-action="updateItemQty"]').forEach(el => {
+
+  el.addEventListener("change", async (event) => {
+
+    const input = event.currentTarget;
+    const item = this.document.items.get(input.dataset.itemId);
+
+    if (!item) return;
+
+    const value = Math.max(0, Number(input.value) || 0);
+
+    console.log("SDP | Item qty update", {
+      item: item.name,
+      value
+    });
+
+    await item.update({
+      "system.quantity.value": value
+    });
+
+  });
+
+});
+
+// =========================
 // SELECT AMMO
 // =========================
 
@@ -1956,6 +2008,137 @@ root.querySelectorAll('[data-action="toggleClothing"]').forEach(el => {
     });
 
   });
+});
+
+// =========================
+// CONTAINER DROP
+// =========================
+
+root.querySelectorAll(".container-block").forEach(el => {
+
+  el.addEventListener("dragover", e => e.preventDefault());
+
+  el.addEventListener("drop", async (event) => {
+
+    event.preventDefault();
+
+    const data = foundry.applications.ux.TextEditor.getDragEventData(event);
+
+    if (!data.uuid) return;
+
+    const item = await fromUuid(data.uuid);
+
+    if (!item) return;
+
+    const actor = this.document;
+
+    let actorItem = actor.items.get(item.id);
+
+    // =========================
+    // SI ITEM EXISTE → MOVE
+    // =========================
+
+    if (actorItem) {
+
+      await actorItem.update({
+        "system.containerId": el.dataset.containerId
+      });
+
+      return;
+    }
+
+    // =========================
+    // SINON → IMPORT + SET
+    // =========================
+
+    const created = await actor.createEmbeddedDocuments("Item", [{
+      ...item.toObject(),
+      system: {
+        ...item.system,
+        containerId: el.dataset.containerId
+      }
+    }]);
+
+  });
+
+});
+
+root.querySelectorAll('[data-action="removeFromContainer"]').forEach(el => {
+
+  el.addEventListener("click", async (event) => {
+
+    const item = this.document.items.get(event.currentTarget.dataset.itemId);
+
+    await item.update({
+      "system.containerId": null
+    });
+
+  });
+
+});
+
+root.querySelectorAll('[data-action="toggleContainer"]').forEach(el => {
+
+  el.addEventListener("click", (event) => {
+
+    const parent = event.currentTarget.closest(".container-block");
+    const content = parent.querySelector(".container-content");
+
+    const open = content.style.display !== "none";
+    content.style.display = open ? "none" : "block";
+
+  });
+
+});
+
+// =========================
+// ITEM DRAG START
+// =========================
+
+root.querySelectorAll('[data-item-id]').forEach(el => {
+
+el.setAttribute("draggable", true);
+
+el.addEventListener("dragstart", (event) => {
+
+  const itemId = el.dataset.itemId;
+  const item = this.document.items.get(itemId);
+
+  if (!item) return;
+
+  // =========================
+  // 🚫 BLOCK DRAG IF EQUIPPED
+  // =========================
+
+  // weapon
+  if (item.type === "weapon" && item.system.equipped) {
+    event.preventDefault();
+    return;
+  }
+
+  // armor
+  if (item.type === "armor" && item.system.worn?.value) {
+    event.preventDefault();
+    return;
+  }
+
+  // clothing
+  if (item.type === "clothing" && item.system.equipped) {
+    event.preventDefault();
+    return;
+  }
+
+  // =========================
+  // ✅ NORMAL DRAG
+  // =========================
+
+  event.dataTransfer.setData("text/plain", JSON.stringify({
+    type: "Item",
+    uuid: item.uuid
+  }));
+
+});
+
 });
 
 }
