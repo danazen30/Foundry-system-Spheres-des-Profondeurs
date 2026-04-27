@@ -106,6 +106,46 @@
       "system": "sdp",
       "path": "packs/ammunition",
       "type": "Item"
+    },
+
+    {
+      "name": "armor",
+      "label": "SDP Armor",
+      "system": "sdp",
+      "path": "packs/armor",
+      "type": "Item"
+    },
+
+    {
+      "name": "possession",
+      "label": "SDP Possession",
+      "system": "sdp",
+      "path": "packs/possession",
+      "type": "Item"
+    },
+
+    {
+      "name": "disease",
+      "label": "SDP Diseasen",
+      "system": "sdp",
+      "path": "packs/disease",
+      "type": "Item"
+    },
+
+    {
+      "name": "trait",
+      "label": "SDP Trait",
+      "system": "sdp",
+      "path": "packs/trait",
+      "type": "Item"
+    },
+
+    {
+      "name": "clothing",
+      "label": "SDP Clothing",
+      "system": "sdp",
+      "path": "packs/clothing",
+      "type": "Item"
     }
 
   ],
@@ -146,7 +186,11 @@
       "specie": {},
       "career": {},
       "sign":{},
-      "ammunition": {}
+      "ammunition": {},
+      "possession": {},
+      "disease": {},
+      "trait": {},
+      "clothing": {}
     }
   }
 }

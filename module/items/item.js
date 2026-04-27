@@ -23,6 +23,10 @@ _onCreate(data, options, userId) {
   if (this.type === "armor") {
     this._syncArmorEffects();
   }
+
+if (this.type === "clothing") {
+  this._syncClothingEffects();
+}
 }
 
 async _syncArmorEffects() {
@@ -41,9 +45,29 @@ async _syncArmorEffects() {
 
 }
 
+async _syncClothingEffects() {
+
+  if (this.type !== "clothing") return;
+
+  const isEquipped = this.system.equipped;
+
+  for (const effect of this.effects) {
+
+    await effect.update({
+      disabled: !isEquipped
+    });
+
+  }
+
+}
+
 async update(data, options) {
 
   const result = await super.update(data, options);
+
+  // =========================
+  // ARMOR
+  // =========================
 
   if (this.type === "armor") {
 
@@ -51,6 +75,20 @@ async update(data, options) {
 
     if (wornChanged) {
       await this._syncArmorEffects();
+    }
+
+  }
+
+  // =========================
+  // CLOTHING
+  // =========================
+
+  if (this.type === "clothing") {
+
+    const equippedChanged = foundry.utils.hasProperty(data, "system.equipped");
+
+    if (equippedChanged) {
+      await this._syncClothingEffects();
     }
 
   }

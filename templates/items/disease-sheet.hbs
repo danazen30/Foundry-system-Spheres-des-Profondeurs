@@ -1,0 +1,27 @@
+<div class="sdp-item-sheet">
+
+  <h2>{{item.name}}</h2>
+
+  <label>Description</label>
+  <textarea name="system.description.value">
+    {{system.description.value}}
+  </textarea>
+
+  <hr>
+
+  <h3>Effects</h3>
+
+  <button data-action="create-effect">Add Effect</button>
+
+  <div class="effects">
+    {{#each effects}}
+      <div class="effect" data-effect-id="{{this.id}}">
+        <span>{{this.name}}</span>
+
+        <button data-action="edit-effect">Edit</button>
+        <button data-action="delete-effect">Delete</button>
+      </div>
+    {{/each}}
+  </div>
+
+</div>

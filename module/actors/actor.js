@@ -85,8 +85,15 @@ export class SdpActor extends Actor {
     system.conditionOverride ??= {};
 
 for (const item of this.items) {
+
   if (item.type === "armor") {
     item.system.worn ??= { value: false };
+  }
+
+  // 🔥 FIX POSSESSION
+  if (item.type === "possession") {
+    item.system.encumbrance ??= { value: 0 };
+    item.system.quantity ??= { value: 1 };
   }
 }
 
@@ -142,10 +149,19 @@ _getItemModifiers(targetKey) {
 
   for (const item of this.items.contents) {
 
-    if (item.type !== "injury" && item.type !== "armor") continue;
+  if (
+  item.type !== "injury" &&
+  item.type !== "armor" &&
+  item.type !== "possession" &&
+  item.type !== "trait" &&
+  item.type !== "disease" &&
+  item.type !== "weapon" &&
+  item.type !== "clothing"
+) continue;
 
     // 🔥 ARMOR ACTIVE SEULEMENT SI ÉQUIPÉE
     if (item.type === "armor" && !item.system?.worn?.value) continue;
+    if (item.type === "clothing" && !item.system?.equipped) continue;
 
     for (const effect of item.effects) {
 
@@ -327,10 +343,19 @@ system.skillModifiers = {};
 
 for (const item of this.items.contents) {
 
-  if (item.type !== "armor" && item.type !== "injury") continue;
+if (
+  item.type !== "armor" &&
+  item.type !== "injury" &&
+  item.type !== "possession" &&
+  item.type !== "trait" &&
+  item.type !== "disease" &&
+  item.type !== "weapon" &&
+  item.type !== "clothing"
+) continue;
 
   // 👉 armor seulement si équipée
   if (item.type === "armor" && !item.system?.worn?.value) continue;
+  if (item.type === "clothing" && !item.system?.equipped) continue;
 
   for (const effect of item.effects) {
 

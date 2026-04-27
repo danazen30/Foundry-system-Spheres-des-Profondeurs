@@ -964,6 +964,49 @@
         "type": "array",
         "value": []
       }
+    },
+    "possession": {
+      "templates": [
+        "quantity",
+        "description",
+        "encumbrance",
+        "price",
+        "gmNotes",
+        "playerNotes",
+        "itemTraits"
+      ]
+    },
+    "disease": {
+      "templates": [
+        "description",
+        "gmNotes",
+        "playerNotes"
+      ]
+    },
+
+    "trait": {
+      "templates": [
+        "description",
+        "gmNotes",
+        "playerNotes"
+      ]
+    },
+    "clothing": {
+      "templates": [
+        "quantity",
+        "description",
+        "encumbrance",
+        "price",
+        "gmNotes",
+        "playerNotes",
+        "itemTraits"
+      ],
+
+      "equipped": {
+        "type": "boolean",
+        "label": "Equipped",
+        "value": false
+      }
     }
   }
 }

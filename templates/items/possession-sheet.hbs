@@ -1,0 +1,46 @@
+<div class="sdp-item-sheet">
+
+  <h2>{{item.name}}</h2>
+
+  <label>Quantity</label>
+  <input type="number" name="system.quantity.value" value="{{system.quantity.value}}" />
+
+  <label>Weight</label>
+  <input type="number" name="system.encumbrance.value" value="{{system.encumbrance.value}}" />
+
+  <label>Description</label>
+  <textarea name="system.description.value">{{system.description.value}}</textarea>
+
+  <label>GM Notes</label>
+  <textarea name="system.gmNotes.value">{{system.gmNotes.value}}</textarea>
+
+  <label>Player Notes</label>
+  <textarea name="system.playerNotes.value">{{system.playerNotes.value}}</textarea>
+
+  <hr>
+
+<h3>Effects</h3>
+
+<ul class="effects-list">
+  {{#each effects as |effect|}}
+    <li class="effect" data-effect-id="{{effect.id}}">
+
+      <span>{{effect.name}}</span>
+
+      <button type="button" data-action="edit-effect">
+        Edit
+      </button>
+
+      <button type="button" data-action="delete-effect">
+        Delete
+      </button>
+
+    </li>
+  {{/each}}
+</ul>
+
+<button type="button" data-action="create-effect">
+  Add Effect
+</button>
+
+</div>

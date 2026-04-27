@@ -1,0 +1,47 @@
+<div class="sdp-item-sheet">
+
+  <label>Name</label>
+  <input type="text" name="name" value="{{item.name}}" />
+
+  <label>Equipped</label>
+  <input type="checkbox" name="system.equipped" {{checked system.equipped}} />
+
+  <label>Quantity</label>
+  <input type="number" name="system.quantity.value" value="{{system.quantity.value}}" />
+
+  <label>Weight</label>
+  <input type="number" name="system.encumbrance.value" value="{{system.encumbrance.value}}" />
+
+  <label>Price</label>
+  <input type="number" name="system.price.po" value="{{system.price.po}}" />
+
+  <label>Description</label>
+  <textarea name="system.description.value">{{system.description.value}}</textarea>
+
+  <hr>
+
+<h3>Active Effects</h3>
+
+<div class="effects-list">
+  {{#each item.effects as |effect|}}
+    <div class="effect-row" data-effect-id="{{effect.id}}">
+
+      <input type="text" value="{{effect.name}}" disabled />
+
+      <button type="button" data-action="editEffect" data-effect-id="{{effect.id}}">
+        Edit
+      </button>
+
+      <button type="button" data-action="deleteEffect" data-effect-id="{{effect.id}}">
+        Delete
+      </button>
+
+    </div>
+  {{/each}}
+</div>
+
+<button type="button" data-action="createEffect">
+  Add Effect
+</button>
+
+</div>

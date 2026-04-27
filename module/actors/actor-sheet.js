@@ -298,6 +298,10 @@ w.displaySkill = displaySkills.length
 }
 
 const ammunition = this.document.items.filter(i => i.type === "ammunition");
+const possessions = this.document.items.filter(i => i.type === "possession");
+const traits = this.actor.items.filter(i => i.type === "trait");
+const diseases = this.actor.items.filter(i => i.type === "disease");
+const clothing = this.document.items.filter(i => i.type === "clothing");
 
 console.log("SDP | Ammo count", ammunition.length);
 
@@ -326,7 +330,11 @@ return {
   spellsSuperior,
   meleeWeapons,
   rangedWeapons,
-  ammunition
+  possessions,
+  ammunition,
+  traits,
+  clothing,
+  diseases
 };
   }
 
@@ -1933,6 +1941,20 @@ root.querySelectorAll('[data-action="shortRest"]').forEach(el => {
 root.querySelectorAll('[data-action="longRest"]').forEach(el => {
   el.addEventListener("click", async () => {
     await this._doRest("long");
+  });
+});
+
+root.querySelectorAll('[data-action="toggleClothing"]').forEach(el => {
+  el.addEventListener("click", async (event) => {
+
+    const item = this.document.items.get(event.currentTarget.dataset.itemId);
+
+    const current = item.system?.equipped ?? false;
+
+    await item.update({
+      "system.equipped": !current
+    });
+
   });
 });
 
