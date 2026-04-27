@@ -83,6 +83,13 @@ export class SdpActor extends Actor {
     system.custom.manaMultiplierBonus ??= 0;
 
     system.conditionOverride ??= {};
+
+for (const item of this.items) {
+  if (item.type === "armor") {
+    item.system.worn ??= { value: false };
+  }
+}
+
   }
 
 getSign() {
@@ -129,38 +136,37 @@ if (lvl.inspirationDice) {
   // ITEM MODIFIERS (ATTRIBUTES)
   // =====================
 
-  _getItemModifiers(targetKey) {
+_getItemModifiers(targetKey) {
 
-    let total = 0;
+  let total = 0;
 
-    for (const item of this.items.contents) {
+  for (const item of this.items.contents) {
 
-      if (item.type !== "injury") continue;
+    if (item.type !== "injury" && item.type !== "armor") continue;
 
-      for (const effect of item.effects) {
+    // 🔥 ARMOR ACTIVE SEULEMENT SI ÉQUIPÉE
+    if (item.type === "armor" && !item.system?.worn?.value) continue;
 
-        if (effect.disabled) continue;
+    for (const effect of item.effects) {
 
-        for (const change of effect.changes) {
+      if (effect.disabled) continue;
 
-          if (!change.key) continue;
+      for (const change of effect.changes) {
 
-          // ❌ ignore conditions
-          if (change.key.startsWith("system.conditions")) continue;
+        if (!change.key) continue;
 
-          // ❌ ignore modifier (avoid double)
-          if (change.key.endsWith(".modifier")) continue;
+        if (change.key.startsWith("system.conditions")) continue;
+        if (change.key.endsWith(".modifier")) continue;
 
-          // ✔ match attribute
-          if (!change.key.startsWith(`system.attributes.${targetKey}`)) continue;
+        if (!change.key.startsWith(`system.attributes.${targetKey}`)) continue;
 
-          total += Number(change.value || 0);
-        }
+        total += Number(change.value || 0);
       }
     }
-
-    return total;
   }
+
+  return total;
+}
 
 
   // =====================
@@ -317,27 +323,65 @@ if (system.health.value > finalMax) {
     // SKILLS
     // =====================
 
-    const skills = this.items.filter(i => i.type === "skill");
+system.skillModifiers = {};
 
-    for (let skill of skills) {
+for (const item of this.items.contents) {
 
-      const attribute =
-        system.attributes[skill.system.characteristic]?.value ?? 0;
+  if (item.type !== "armor" && item.type !== "injury") continue;
 
-      skill.system.value =
-        attribute +
-        Number(skill.system.advances || 0) +
-        Number(skill.system.modifier || 0);
+  // 👉 armor seulement si équipée
+  if (item.type === "armor" && !item.system?.worn?.value) continue;
 
-      skill.system.bonus =
-        Math.floor(skill.system.value / 10);
+  for (const effect of item.effects) {
+
+    if (effect.disabled) continue;
+
+    for (const change of effect.changes) {
+
+      if (!change.key) continue;
+
+      // 👉 ON VEUT UNIQUEMENT LES SKILLS
+      if (!change.key.startsWith("system.skillModifiers.")) continue;
+
+      const key = change.key.split(".").pop();
+
+      if (!system.skillModifiers[key]) {
+        system.skillModifiers[key] = 0;
+      }
+
+      system.skillModifiers[key] += Number(change.value || 0);
+
     }
+  }
+}
+
+    const skills = this.items.filter(i => i.type === "skill");
 
     const getSkill = (key) => skills.find(s => s.system.key === key);
 
     const resistance = getSkill("resistance");
     const dodge = getSkill("dodge");
     const brawl = getSkill("brawl");
+
+console.log("MODIFIERS:", system.skillModifiers);
+
+for (let skill of skills) {
+  console.log("SKILL KEY:", skill.system.key);
+
+  const attribute =
+    system.attributes[skill.system.characteristic]?.value ?? 0;
+
+ const key = (skill.system.key || "").toLowerCase().trim();
+
+const extraMod =
+  system.skillModifiers?.[key] || 0;
+
+  skill.system.value =
+    attribute +
+    Number(skill.system.advances || 0) +
+    Number(skill.system.modifier || 0) +
+    extraMod;
+}
 
     // =====================
     // WEAPON DAMAGE
@@ -600,7 +644,10 @@ if (cond.frightened) conditionPenalty -= 3;
 // =====================
 
 const finalParry = (parryBase / 10 + 5) + conditionPenalty;
-system.derived.parry.value = Math.max(finalParry, 0);
+system.derived.parry.value = Math.max(
+  Math.round(finalParry * 10) / 10,
+  0
+);
 
 const evasionBase =
   dodge?.system.value ??
@@ -608,7 +655,10 @@ const evasionBase =
   0;
 
 const finalEvasion = (evasionBase / 10 + 5) + conditionPenalty;
-system.derived.evasion.value = Math.max(finalEvasion, 0);
+system.derived.evasion.value = Math.max(
+  Math.round(finalEvasion * 10) / 10,
+  0
+);
 
     // =====================
     // CONDITIONS EFFECTS
@@ -616,8 +666,7 @@ system.derived.evasion.value = Math.max(finalEvasion, 0);
 
     const finalAttack = Math.max(attackBase, 0);
 
-   system.derived.attack.value = finalAttack/10;
-  //Math.round((finalAttack / 10) * 10) / 10;
+   system.derived.attack.value = Math.round((finalAttack / 10) * 10) / 10;
 
     // =====================
     // MOVEMENT

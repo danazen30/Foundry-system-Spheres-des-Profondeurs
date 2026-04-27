@@ -1006,12 +1006,24 @@ root.querySelectorAll('[data-action="toggleOffhand"]').forEach(el => {
   });
 });
 
-  root.querySelectorAll('[data-action="toggleArmor"]').forEach(el => {
-    el.addEventListener("click", (event) => {
-      const item = this.document.items.get(event.currentTarget.dataset.itemId);
-      item.update({ "system.worn.value": !item.system.worn.value });
+root.querySelectorAll('[data-action="toggleArmor"]').forEach(el => {
+  el.addEventListener("click", async (event) => {
+
+    const item = this.document.items.get(event.currentTarget.dataset.itemId);
+
+    if (!item) {
+      console.error("ARMOR TOGGLE ERROR: item not found");
+      return;
+    }
+
+    const current = item.system?.worn?.value ?? false;
+
+    await item.update({
+      "system.worn.value": !current
     });
+
   });
+});
 
 // =========================
 // SKILL ADV INPUT (GM)
