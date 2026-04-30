@@ -59,9 +59,20 @@ async function getInjuryFromPack(location, severity, isConsequence = false) {
 /* INIT                                      */
 /* ========================================= */
 
-Hooks.once("init", () => {
+  Hooks.once("init", async () => {
 
   console.log("SDP | Initializing Spheres of the Depths system");
+
+  await foundry.applications.handlebars.loadTemplates([
+    "systems/sdp/templates/partials/header.hbs",
+    "systems/sdp/templates/partials/attributes.hbs",
+    "systems/sdp/templates/partials/skills.hbs",
+    "systems/sdp/templates/partials/talents.hbs",
+    "systems/sdp/templates/partials/magic.hbs",
+    "systems/sdp/templates/partials/inventory.hbs",
+    "systems/sdp/templates/partials/effects.hbs",
+    "systems/sdp/templates/partials/info.hbs"
+  ]);
 
   CONFIG.SDP = SDP;
 
@@ -117,6 +128,11 @@ Handlebars.registerHelper("gte", function(a, b) {
 
 Handlebars.registerHelper("multiply", function(a, b) {
   return a * b;
+});
+
+Handlebars.registerHelper("divide", function(a, b) {
+  if (b === 0) return 0;
+  return a / b;
 });
 
 Handlebars.registerHelper("includes", function(value, key) {

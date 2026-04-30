@@ -1,54 +1,5 @@
-.attributes-grid{
-display:grid;
-grid-template-columns:80px repeat(10,60px);
-gap:4px;
-align-items:center;
-text-align:center;
-margin-bottom:10px;
-}
-
-.attr-header{
-font-weight:bold;
-}
-
-.attr-row{
-font-weight:bold;
-background:#ddd;
-padding:4px;
-}
-
-.attributes-grid input{
-width:50px;
-text-align:center;
-}
-
-.resource-row{
-display:flex;
-align-items:center;
-gap:10px;
-margin-bottom:5px;
-}
-
 .derived{
 margin-top:10px;
-}
-
-.skills-table{
-width:100%;
-border-collapse:collapse;
-margin-top:10px;
-}
-
-.skills-table th,
-.skills-table td{
-border:1px solid #444;
-padding:4px;
-text-align:center;
-}
-
-.skills-table input{
-width:50px;
-text-align:center;
 }
 
 .weapons-table{
@@ -167,11 +118,6 @@ text-align:center;
   display: flex;
   flex-direction: column;
   height: 100%;
-}
-
-/* ZONE SCROLLABLE (IMPORTANT) */
-.application.sdp.sheet.actor .window-content {
-  overflow-y: auto;
 }
 
 .sdp-item-sheet {

@@ -1,0 +1,76 @@
+<div class="tab-talents">
+
+  <table class="talents-table">
+
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Level</th>
+        <th>Max</th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      {{#each actor.items as |item|}}
+      {{#if (eq item.type "talent")}}
+
+      <tr>
+
+        <td>
+          {{item.name}}
+
+          {{#if ../currentCareer}}
+            {{#if (includes ../currentCareer.system.talents item.name)}}
+              <button
+                data-action="advanceTalent"
+                data-item-id="{{item.id}}">
+                +
+              </button>
+            {{/if}}
+          {{/if}}
+
+        </td>
+
+        <td>
+          <input
+            type="number"
+            data-action="updateTalentAdv"
+            data-item-id="{{item.id}}"
+            value="{{item.system.advances}}"
+            min="0"
+
+            max="{{#if (lookup ../system.attributes item.system.max)}}
+              {{lookup (lookup ../system.attributes item.system.max) "bonus"}}
+            {{else}}
+              {{item.system.max}}
+            {{/if}}"
+
+            {{#unless ../user.isGM}}readonly{{/unless}}
+          >
+        </td>
+
+        <td>
+          {{#if (lookup ../system.attributes item.system.max)}}
+            {{lookup (lookup ../system.attributes item.system.max) "bonus"}}
+          {{else}}
+            {{item.system.max}}
+          {{/if}}
+        </td>
+
+        <td class="item-actions">
+          <button data-action="editItem" data-item-id="{{item.id}}">✏️</button>
+          <button data-action="deleteItem" data-item-id="{{item.id}}">🗑️</button>
+        </td>
+
+      </tr>
+
+      {{/if}}
+      {{/each}}
+
+    </tbody>
+
+  </table>
+
+</div>

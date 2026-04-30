@@ -1,0 +1,169 @@
+<div class="sdp-header">
+
+  <!-- 🔥 TOP LINE -->
+  <div class="header-top">
+
+    <!-- LEFT -->
+    <div class="header-left">
+      <input
+        type="text"
+        name="name"
+        value="{{actor.name}}"
+        class="actor-name"
+      >
+    </div>
+
+    <!-- RIGHT -->
+    <div class="header-right">
+      <div class="header-right-stack">
+
+        <!-- ⚖️ ENCUMBRANCE -->
+        <div class="encumbrance">
+          <span>
+            ⚖️ Encumbrance
+            {{system.resources.encumbrance.value}} /
+            {{system.resources.encumbrance.max}}
+          </span>
+
+          {{#if system.resources.encumbrance.state.label}}
+            <span class="encumbrance-warning">
+              {{system.resources.encumbrance.state.label}}
+            </span>
+          {{/if}}
+        </div>
+
+        <!-- LEVEL + MOVE + REST -->
+        <div class="header-stats-line">
+
+          <!-- LEVEL -->
+          <div class="level-block">
+            <div class="level-label">
+              Level {{system.details.level.value}}
+            </div>
+
+            <div class="level-bar">
+              <div class="level-fill"
+                   style="width: {{xpBar.percent}}%;"></div>
+            </div>
+
+            <div class="level-xp">
+              {{xpBar.value}} / {{xpBar.nextXP}}
+            </div>
+          </div>
+
+          <!-- MOVE -->
+          <div class="movement-header-box">
+            <div class="movement-grid">
+
+              <div class="movement-header">Move</div>
+              <div class="movement-header">Walk</div>
+              <div class="movement-header">Run</div>
+
+              <input type="number" class="movement-value" value="{{system.resources.movement.current}}">
+              <div class="movement-value">{{system.resources.movement.walk}}</div>
+              <div class="movement-value">{{system.resources.movement.run}}</div>
+
+            </div>
+          </div>
+
+          <!-- REST -->
+          <div class="rest-inline">
+            <button class="rest-btn short-rest" data-action="shortRest">🥪</button>
+            <button class="rest-btn long-rest" data-action="longRest">🌙</button>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 🔥 SECOND LINE -->
+  <div class="header-resources">
+
+    <!-- ❤️ HEALTH + MANA -->
+    <div class="resource-group">
+
+      <div class="resource-box resource-bar">
+        <div class="resource-top">
+          <div class="resource-label">❤️ Health :</div>
+          <div class="resource-values">
+            <input type="number" name="system.health.value" value="{{system.health.value}}">
+            <span>/ {{system.health.max}}</span>
+          </div>
+        </div>
+
+        <div class="bar">
+          <div class="bar-fill health-fill"
+               style="width: {{multiply (divide system.health.value system.health.max) 100}}%;">
+          </div>
+        </div>
+      </div>
+
+      <div class="resource-box resource-bar">
+        <div class="resource-top">
+          <div class="resource-label">🔵 Mana :</div>
+          <div class="resource-values">
+            <input type="number" name="system.resources.mana.value" value="{{system.resources.mana.value}}">
+            <span>/ {{system.resources.mana.max}}</span>
+          </div>
+        </div>
+
+        <div class="bar">
+          <div class="bar-fill mana-fill"
+               style="width: {{multiply (divide system.resources.mana.value system.resources.mana.max) 100}}%;">
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- DERIVED -->
+    <div class="resource-box derived-grid">
+      <div class="derived-cell">
+        <label>⚔️ Attack</label>
+        <span>{{system.derived.attack.value}}</span>
+      </div>
+
+      <div class="derived-cell">
+        <label>🌀 Evasion</label>
+        <span>{{system.derived.evasion.value}}</span>
+      </div>
+
+      <div class="derived-cell">
+        <label>🛡️ Parry</label>
+        <span>{{system.derived.parry.value}}</span>
+      </div>
+
+      <div class="derived-cell">
+        <label>💢 Wound</label>
+        <span>{{system.derived.woundThreshold.value}}</span>
+      </div>
+    </div>
+
+    <!-- SECONDARY -->
+    <div class="resource-box secondary-box">
+      <div class="secondary-item">
+        <label>Fortune</label>
+        <input type="number" name="system.resources.fortune.value" value="{{system.resources.fortune.value}}">
+      </div>
+
+      <div class="secondary-item">
+        <label>Resolve</label>
+        <input type="number" name="system.resources.resolve.value" value="{{system.resources.resolve.value}}">
+      </div>
+
+      <div class="secondary-item">
+        <label>Fate</label>
+        <input type="number" name="system.resources.fate.value" value="{{system.resources.fate.value}}">
+      </div>
+
+      <div class="secondary-item">
+        <label>Resilience</label>
+        <input type="number" name="system.resources.resilience.value" value="{{system.resources.resilience.value}}">
+      </div>
+    </div>
+
+  </div>
+
+</div>

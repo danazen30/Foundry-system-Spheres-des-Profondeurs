@@ -11,6 +11,12 @@ const { HandlebarsApplicationMixin } = foundry.applications.api;
 
 export class SdpActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 
+constructor(...args) {
+    super(...args);
+
+    this.activeTab = "competence"; // 🔥 TAB PAR DEFAUT
+  }
+
   static DEFAULT_OPTIONS = {
     classes: ["sdp", "sheet", "actor"],
     position: { width: 800, height: 900 },
@@ -381,7 +387,8 @@ return {
   armors,
   containerLoad,
   rootItems,
-  diseases
+  diseases,
+  activeTab: this.activeTab
 };
   }
 
@@ -2138,6 +2145,40 @@ el.addEventListener("dragstart", (event) => {
   }));
 
 });
+
+});
+
+this.element.querySelectorAll("[data-tab]").forEach(btn => {
+
+  // ACTIVE VISUEL
+  if (btn.dataset.tab === this.activeTab) {
+    btn.classList.add("active");
+  } else {
+    btn.classList.remove("active");
+  }
+
+  btn.addEventListener("click", () => {
+    this.activeTab = btn.dataset.tab;
+    this.render();
+  });
+
+});
+
+// =========================
+// PORTRAIT CLICK
+// =========================
+
+this.element.querySelector(".character-portrait img")?.addEventListener("click", async () => {
+
+  const fp = new FilePicker({
+    type: "image",
+    current: this.document.img,
+    callback: async (path) => {
+      await this.document.update({ img: path });
+    }
+  });
+
+  fp.render(true);
 
 });
 

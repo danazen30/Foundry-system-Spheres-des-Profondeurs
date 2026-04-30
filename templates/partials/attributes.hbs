@@ -1,0 +1,65 @@
+<table class="attributes-table">
+
+  <thead>
+    <tr>
+      <th></th>
+      {{#each attributes as |attr|}}
+        <th>{{attr.label}}</th>
+      {{/each}}
+    </tr>
+  </thead>
+
+  <tbody>
+
+    <!-- INIT -->
+    <tr>
+      <td><strong>Init</strong></td>
+      {{#each attributes as |attr|}}
+        <td>
+          <input type="number"
+                 value="{{attr.initial}}"
+                 name="system.attributes.{{attr.key}}.initial">
+        </td>
+      {{/each}}
+    </tr>
+
+    <!-- ADV -->
+    <tr>
+      <td><strong>Adv</strong></td>
+      {{#each attributes as |attr|}}
+        <td>
+          <input type="number"
+                 value="{{attr.advances}}"
+                 name="system.attributes.{{attr.key}}.advances">
+        </td>
+      {{/each}}
+    </tr>
+
+    <!-- MOD -->
+    <tr>
+      <td><strong>Mod</strong></td>
+      {{#each attributes as |attr|}}
+        <td>
+          <input type="number"
+                 value="{{attr.modifier}}">
+        </td>
+      {{/each}}
+    </tr>
+
+    <!-- FINAL -->
+    <tr>
+      <td><strong>Final</strong></td>
+      {{#each attributes as |attr|}}
+        <td>
+          <input type="number"
+                 value="{{attr.value}}"
+                 readonly
+                 data-action="rollAttribute"
+                 data-attr="{{attr.key}}">
+        </td>
+      {{/each}}
+    </tr>
+
+  </tbody>
+
+</table>

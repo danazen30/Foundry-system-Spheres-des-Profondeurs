@@ -1,0 +1,880 @@
+/* =========================
+   HEADER
+========================= */
+
+.sdp-header {
+  background: #0f0f0f;
+  border-bottom: 1px solid #333;
+  box-shadow: none;
+
+  padding: 6px; /* 🔥 AJOUT */
+}
+
+/* =========================
+   HEADER TOP (NEW LAYOUT)
+========================= */
+
+.header-top {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 30px;
+}
+
+/* LEFT */
+.header-left {
+  display: flex;
+  flex-direction: column;
+}
+
+/* CENTER (encumbrance) */
+.header-center {
+  text-align: center;
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+/* RIGHT */
+.header-right {
+  display: flex;
+  justify-content: flex-end; /* 🔥 PUSH GLOBAL */
+  align-items: flex-start;
+
+  width: 100%; /* 🔥 CRUCIAL */
+}
+
+.header-right-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px; /* 🔥 IMPORTANT */
+}
+
+/* nom */
+.header-left h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.header-left p {
+  margin: 0;
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.header-stats-line {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 18px; /* 🔥 plus respirant */
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sdp-sidebar {
+  grid-area: sidebar;
+  background: #1e1e1e;
+  color: white;
+  padding: 10px;
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.sdp-content {
+  grid-area: content;
+  background: #2c1f1f;
+  color: white;
+  padding: 10px;
+
+  display: block;
+}
+
+/* =========================
+   TABS
+========================= */
+
+.sdp-tabs {
+  position: absolute;
+  top: 120px; 
+  right: -35px; 
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  z-index: 10;
+}
+
+.sdp-tabs button {
+  padding: 6px;
+  border: 1px solid #666;
+  background: #222;
+  color: white;
+  cursor: pointer;
+}
+
+.sdp-tabs button:hover {
+  background: #444;
+}
+
+.sdp-tabs button.active {
+  background: #666;
+  font-weight: bold;
+}
+
+/* =========================
+   SKILLS TAB
+========================= */
+
+.tab-skills {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.tab-skills > * {
+  width: 100%;
+}
+
+/* =========================
+   ATTRIBUTES
+========================= */
+
+.attributes-grid {
+  display: grid;
+  grid-template-columns: 80px repeat(10, 1fr);
+  gap: 4px;
+  align-items: center;
+  text-align: center;
+}
+
+.attributes-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.attributes-table th,
+.attributes-table td {
+  border: 1px solid #444;
+  padding: 4px;
+}
+
+.attributes-table th {
+  background: #222;
+}
+
+.attr-header {
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* =========================
+   SKILLS GRID (FIX CLEAN)
+========================= */
+
+.skills-wrapper {
+  width: 100%;
+}
+
+.skills-container {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  width: 100%;
+}
+
+.skills-block {
+  min-width: 0;
+}
+
+/* =========================
+   SKILLS TABLE
+========================= */
+
+.skills-table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+/* =========================
+   MAIN LAYOUT (NEW)
+========================= */
+
+/* BODY = sidebar + content */
+.sdp-body {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  min-height: 0; /* 🔥 CRUCIAL */
+  overflow: hidden;
+}
+
+.sdp-content {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+
+display: flex;          /* 🔥 IMPORTANT */
+  flex-direction: column; /* 🔥 IMPORTANT */
+
+  overflow: hidden;
+}
+
+.sdp-content-inner {
+  flex: 1;
+  min-height: 0; /* 🔥 C’EST ÇA QUI MANQUE CHEZ TOI */
+
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* SIDEBAR */
+.sdp-sidebar {
+  width: 200px;          /* 🔥 moins large */
+  min-width: 160px;      /* sécurité */
+  max-width: 240px;      /* évite qu’elle regrossisse */
+
+  background: #1e1e1e;
+  padding: 10px;
+
+  display: flex;
+  flex-direction: column;
+
+  height: 100%;
+}
+
+/* =========================
+   FLOATING TABS (DnD STYLE)
+========================= */
+
+.sdp-sheet {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* boutons */
+.sdp-tabs button {
+  width: 50px;
+  height: 50px;
+
+  border: 1px solid #666;
+  background: #222;
+  color: white;
+
+  cursor: pointer;
+
+  border-radius: 8px;
+
+  font-size: 20px;
+
+  transition: all 0.2s ease;
+}
+
+.sdp-tabs button:hover {
+  background: #444;
+  transform: scale(1.1);
+}
+
+.sdp-tabs button.active {
+  background: #a33;
+  border-color: #fff;
+}
+
+.application.sdp.sheet.actor {
+  overflow: visible;
+}
+
+.application.sdp.sheet.actor .window-content {
+  overflow: visible;
+}
+
+.character-silhouette {
+  flex: 1;            /* 🔥 prend tout l'espace restant */
+  min-height: 0;      /* 🔥 CRUCIAL pour éviter le blocage */
+
+  display: flex;
+  justify-content: center;
+  align-items: stretch; /* 🔥 permet de monter */
+}
+
+.silhouette-wrapper {
+  position: relative;
+
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: center; /* 🔥 mieux que stretch ici */
+}
+
+.silhouette-wrapper img {
+  height: 100%;
+  width: 100%;
+  object-fit: fill; /* 🔥 C’EST ÇA LE FIX */
+  display: block;
+  transform: scaleX(1.5) scaleY(1.25) translateY(2%); /* 🔥 on enlève le décalage vertical */
+}
+
+
+.slot {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+
+  border: 1px solid #999;
+  background: rgba(0,0,0,0.5);
+
+  transform: translate(-50%, -50%); /* 🔥 ULTRA IMPORTANT */
+}
+
+
+/* tête */
+.slot.head {
+  top: 5%;
+  left: 50%;
+}
+
+/* torse (un peu plus bas) */
+.slot.chest {
+  top: 22%;
+  left: 50%;
+}
+
+/* bras gauche (un peu plus haut et plus proche) */
+.slot.left-arm {
+  top: 33%;
+  left: 15%;
+}
+
+/* bras droit */
+.slot.right-arm {
+  top: 33%;
+  left: 85%;
+}
+
+/* jambes (remontées) */
+.slot.left-legs {
+  top: 70%;
+  left: 26%;
+}
+
+.slot.right-legs {
+  top: 70%;
+  left: 74%;
+}
+
+.sdp-body {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+
+  height: 100%; /* 🔥 IMPORTANT */
+}
+
+/* 🔥 CHAÎNE DE HAUTEUR COMPLÈTE */
+
+.application.sdp.sheet.actor,
+.application.sdp.sheet.actor .window-content,
+.sdp-sheet,
+.sdp-body {
+  height: 100%;
+}
+
+.application.sdp.sheet.actor .window-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0; /* 🔥 LE TRUC QUI MANQUE */
+  padding: 0; /* 🔥 FULL EDGE TO EDGE */
+}
+
+/* =========================
+   RESOURCES GRID
+========================= */
+
+.header-resources {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1fr;
+
+  gap: 6px; /* 🔥 AVANT 14 → réduit */
+  padding: 0 6px; /* 🔥 AJOUT pour coller aux bords */
+}
+
+.resource-box {
+  padding: 6px;
+
+  background: #111;
+  border: 1px solid #444;
+  border-radius: 10px;
+
+  box-shadow: none;
+
+  width: 100%; /* 🔥 AJOUT important */
+}
+
+/* inputs compacts */
+.resource-box input {
+  width: 40px;
+  text-align: center;
+}
+
+/* =========================
+   GROUPES SPÉCIAUX
+========================= */
+
+/* HP + Mana stack */
+.resource-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* movement */
+.movement-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  padding: 6px 0;
+}
+
+/* derived */
+.derived-box {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: flex-start;
+}
+
+/* secondary */
+.secondary-inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+/* boutons rest */
+.rest-box {
+  display: flex;
+  gap: 4px;
+}
+
+.rest-box button {
+  font-size: 10px;
+  padding: 2px 4px;
+}
+
+/* =========================
+   RESOURCE BARS
+========================= */
+
+.resource-bar {
+  min-height: 42px;   /* 🔥 AVANT 85 */
+  gap: 4px;           /* 🔥 AVANT 8 */
+  padding: 4px;       /* 🔥 plus compact */
+}
+
+/* ligne label + value */
+.resource-bar .resource-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* label */
+.resource-bar .resource-label {
+  font-size: 14px;
+}
+
+/* valeur */
+.resource-bar .resource-values {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.resource-bar span {
+  font-size: 10px;
+}
+
+.resource-values input {
+  height: 18px;
+  font-size: 14px;
+}
+
+.bar {
+  height: 6px;        /* 🔥 AVANT 8 */
+}
+
+.bar-fill {
+  height: 100%; /* 🔥 parfois oublié */
+}
+
+/* couleurs */
+.health-fill {
+  background: #c0392b;
+}
+
+.mana-fill {
+  background: #3498db;
+}
+
+/* =========================
+   SECONDARY GRID
+========================= */
+
+.secondary-box {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px;
+
+  align-content: stretch; /* 🔥 au lieu de center */
+}
+
+.secondary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 100%;
+  height: 100%;
+
+  padding: 4px 6px;
+
+  background: #111;
+  border: 1px solid #444;
+  border-radius: 8px;
+
+  box-sizing: border-box;
+}
+
+.secondary-item label {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.secondary-item input {
+  height: 18px;
+  font-size: 14px;
+  width: 28px;      /* 🔥 ajuste ici (24–30 selon ton goût) */
+  min-width: 0;     /* 🔥 évite les contraintes flex */
+  flex-shrink: 0;
+
+  text-align: right; /* 🔥 valeur alignée à droite */
+}
+
+/* =========================
+   MOVEMENT CLEAN
+========================= */
+
+.movement-box {
+  padding: 4px 0; /* 🔥 réduit */
+  gap: 2px;
+}
+
+.movement-line {
+  padding: 1px 0;
+  font-size: 12px;
+}
+
+.movement-line input {
+  height: 20px;
+  font-size: 12px;
+}
+
+.movement-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 40px); /* 🔥 colonnes fixes */
+  gap: 6px 20px;
+  justify-content: center;
+}
+
+.movement-header {
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+.movement-value {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.movement-value input,
+input.movement-value {
+  width: 36px;
+  height: 20px;
+
+  font-size: 14px;
+  text-align: center;
+
+  padding: 0;
+  margin: 0;
+
+  line-height: 20px; /* 🔥 CRUCIAL → centre vertical */
+
+  box-sizing: border-box; /* 🔥 évite l’écrasement */
+
+  appearance: textfield;
+}
+
+.movement-header-box {
+  background: #111;
+  border: 1px solid #444;
+  border-radius: 10px;
+
+  padding: 6px 8px;
+}
+
+/* =========================
+   REST ICONS (TOP RIGHT)
+========================= */
+
+.rest-icons {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+
+  display: flex;
+  gap: 6px;
+
+  z-index: 20;
+}
+
+.rest-btn {
+  width: 30px;
+  height: 26px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 18px;
+
+  background: #222;
+  border: 1px solid #555;
+  border-radius: 8px;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.rest-btn:hover {
+  background: #444;
+  transform: scale(1.1);
+}
+
+.rest-inline {
+  display: flex;
+  gap: 6px;
+}
+
+/* spécifique */
+
+.short-rest {
+  color: #f1c40f; /* jaune snack */
+}
+
+.long-rest {
+  color: #ecf0f1; /* blanc lune */
+}
+
+/* =========================
+   DERIVED INLINE TOP RIGHT
+========================= */
+
+.derived-inline {
+  display: flex;
+  gap: 12px;
+}
+
+.derived-item {
+  width: 75px;
+  height: 65px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  background: #111;
+  border: 1px solid #444;
+  border-radius: 10px;
+
+  box-shadow: none;
+}
+
+.derived-item div {
+  font-size: 16px;
+}
+
+.derived-item label {
+  font-size: 9px;
+  opacity: 0.6;
+}
+
+.derived-item span {
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.encumbrance {
+  font-size: 13px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.encumbrance-warning {
+  color: #e74c3c;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.header-derived-line {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 6px;
+}
+
+.derived-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px;
+
+  padding: 4px;
+}
+
+.derived-cell {
+  background: #111;
+  border: 1px solid #444;
+  border-radius: 8px;
+
+  padding: 4px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.derived-cell label {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.derived-cell span {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+
+.actor-name {
+  font-size: 28px; /* 🔥 plus gros */
+  font-weight: bold;
+
+  background: transparent;
+  border: none;
+  color: white;
+
+  outline: none;
+}
+
+.actor-name:focus {
+  border-bottom: 1px solid #666;
+}
+
+.header-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.level-block {
+  width: 140px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 🔥 centre tout */
+}
+
+.level-label,
+.level-xp {
+  text-align: center;
+  width: 100%;
+}
+
+.level-label {
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+.level-bar {
+  width: 100%; /* 🔥 CRUCIAL (c’est ça ton bug) */
+  height: 6px;
+  background: #222;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.level-fill {
+  height: 100%;
+  background: #27ae60;
+}
+
+.level-xp {
+  font-size: 10px;
+  opacity: 0.7;
+}
+
+/* =========================
+   PORTRAIT
+========================= */
+
+.character-portrait {
+  width: 100%;
+  aspect-ratio: 1 / 1; /* carré propre */
+  
+  margin-bottom: 10px;
+
+  border: 1px solid #444;
+  border-radius: 10px;
+
+  overflow: hidden;
+  background: #111;
+
+  flex-shrink: 0; /* 🔥 évite qu’il se fasse écraser */
+}
+
+.character-portrait img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover; /* 🔥 important pour éviter déformation */
+  display: block;
+}
+
+.character-portrait img {
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.character-portrait img:hover {
+  opacity: 0.8;
+}

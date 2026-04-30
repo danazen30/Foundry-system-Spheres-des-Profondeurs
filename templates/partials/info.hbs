@@ -1,0 +1,190 @@
+<div class="tab-info">
+
+  <!-- DETAILS -->
+  <h3>Details</h3>
+
+  <div class="details">
+
+    <div class="resource-row">
+      <label>Career</label>
+      <input type="text" name="system.details.career.value" value="{{system.details.career.value}}">
+    </div>
+
+    <div class="resource-row">
+      <label>Career Group</label>
+      <input type="text" name="system.details.careerGroup.value" value="{{system.details.careerGroup.value}}">
+    </div>
+
+    <div class="resource-row">
+      <label>Standing</label>
+      <input type="text" name="system.details.standing.value" value="{{system.details.standing.value}}">
+    </div>
+
+    <div>
+      <label>Sign:</label>
+      {{#if sign}}
+        <span>{{sign.name}}</span>
+      {{else}}
+        <span>No Sign</span>
+      {{/if}}
+    </div>
+
+  </div>
+
+
+  <!-- LEVEL PROGRESSION -->
+  <h3>Level Progression</h3>
+
+  <div class="level-progression">
+
+    {{#if levelProgression.length}}
+      <ul>
+        {{#each levelProgression}}
+          <li>
+            <strong>Level {{this.level}}</strong> → +{{this.hp}} HP
+
+            {{#if this.description}}
+              <p class="level-desc">{{this.description}}</p>
+            {{/if}}
+          </li>
+        {{/each}}
+      </ul>
+    {{else}}
+      <p>No level progression yet</p>
+    {{/if}}
+
+  </div>
+
+
+  <!-- EXPERIENCE -->
+  <h3>Experience</h3>
+
+  <div class="xp-container">
+
+    <div class="resource-row">
+      <label>Total</label>
+      <input
+        type="number"
+        value="{{xp.total}}"
+        data-action="updateXP"
+        data-type="total"
+        {{#unless user.isGM}}readonly{{/unless}}>
+    </div>
+
+    <div class="resource-row">
+      <label>Spent</label>
+      <input
+        type="number"
+        value="{{xp.spent}}"
+        data-action="updateXP"
+        data-type="spent"
+        {{#unless user.isGM}}readonly{{/unless}}>
+    </div>
+
+    <div class="resource-row">
+      <label>Available</label>
+      <input
+        type="number"
+        value="{{xp.available}}"
+        readonly>
+    </div>
+
+    <div class="xp-bar">
+
+      <div class="xp-label">
+        XP: {{xpBar.value}}
+        {{#if xpBar.nextXP}}
+          / {{xpBar.nextXP}}
+        {{else}}
+          (MAX)
+        {{/if}}
+      </div>
+
+      <div class="xp-bar-bg">
+        <div class="xp-bar-fill" style="width: {{xpBar.percent}}%;"></div>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  {{#if canLevelUp}}
+    <div class="level-up">
+      <button data-action="levelUp">
+        Level Up Available → {{availableLevel}}
+      </button>
+    </div>
+  {{/if}}
+
+
+  <!-- XP LOG -->
+  <h4>XP Log</h4>
+
+  <ul class="xp-log">
+
+    {{#if xp.log.length}}
+      {{#each xp.log}}
+        <li class="xp-entry">
+          {{this.label}}
+        </li>
+      {{/each}}
+    {{else}}
+      <li>No XP activity</li>
+    {{/if}}
+
+  </ul>
+
+
+  <!-- CAREERS -->
+  <h3>Careers</h3>
+
+  <table class="careers-table">
+
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Current</th>
+        <th>Completed</th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      {{#each actor.items as |item|}}
+      {{#if (eq item.type "career")}}
+
+      <tr>
+
+        <td>{{item.name}}</td>
+
+        <td>
+          <input type="checkbox"
+            data-action="toggleCareerCurrent"
+            data-item-id="{{item.id}}"
+            {{checked item.system.current}}>
+        </td>
+
+        <td>
+          <input type="checkbox"
+            data-action="toggleCareerCompleted"
+            data-item-id="{{item.id}}"
+            {{checked item.system.completed}}>
+        </td>
+
+        <td class="item-actions">
+          <button data-action="editItem" data-item-id="{{item.id}}">✏️</button>
+          <button data-action="deleteItem" data-item-id="{{item.id}}">🗑️</button>
+        </td>
+
+      </tr>
+
+      {{/if}}
+      {{/each}}
+
+    </tbody>
+
+  </table>
+
+</div>

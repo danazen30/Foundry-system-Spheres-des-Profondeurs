@@ -1,0 +1,324 @@
+<div class="tab-inventory">
+
+  <!-- MELEE WEAPONS -->
+  <h3>Melee Weapons</h3>
+
+  <table class="weapons-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Equip</th>
+        <th>Offhand</th>
+        <th>Defense</th>
+        <th>Qty</th>
+        <th>Weight</th>
+        <th>Attack</th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {{#each meleeWeapons as |item|}}
+
+      <tr class="weapon-row" data-item-id="{{item.id}}">
+        <td class="weapon-toggle">▶ {{item.name}}</td>
+
+        <td><input type="checkbox" data-action="toggleWeaponEquip" data-item-id="{{item.id}}" {{checked item.system.equipped}}></td>
+
+        <td><input type="checkbox" data-action="toggleOffhand" data-item-id="{{item.id}}" {{checked item.system.offhand}}></td>
+
+        <td><input type="checkbox" data-item-id="{{item._id}}" {{checked item.system.isDefenseWeapon}}></td>
+
+        <td>{{item.system.quantity.value}}</td>
+        <td>{{item.system.encumbrance.value}}</td>
+
+        <td>
+          <button data-action="weaponAttack" data-item-id="{{item.id}}">
+            Attack
+          </button>
+        </td>
+
+        <td class="item-actions">
+          <button data-action="editItem" data-item-id="{{item.id}}">✏️</button>
+          <button data-action="deleteItem" data-item-id="{{item.id}}">🗑️</button>
+        </td>
+      </tr>
+
+      {{/each}}
+    </tbody>
+  </table>
+
+
+  <!-- RANGED WEAPONS -->
+  <h3>Ranged Weapons</h3>
+
+  <table class="weapons-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Ammo</th>
+        <th>Equip</th>
+        <th>Offhand</th>
+        <th>Qty</th>
+        <th>Weight</th>
+        <th>Shoot</th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {{#each rangedWeapons as |item|}}
+
+      <tr class="weapon-row">
+
+        <td>▶ {{item.name}}</td>
+
+        <td>
+          <select data-action="selectAmmo" data-item-id="{{item._id}}">
+            <option value="">-- None --</option>
+
+            {{#each item.compatibleAmmo}}
+              <option value="{{this._id}}">
+                {{this.name}} ({{this.system.quantity.value}})
+              </option>
+            {{/each}}
+          </select>
+        </td>
+
+        <td><input type="checkbox" data-action="toggleWeaponEquip" data-item-id="{{item.id}}" {{checked item.system.equipped}}></td>
+
+        <td><input type="checkbox" data-action="toggleOffhand" data-item-id="{{item.id}}" {{checked item.system.offhand}}></td>
+
+        <td>{{item.system.quantity.value}}</td>
+        <td>{{item.system.encumbrance.value}}</td>
+
+        <td>
+          <button data-action="weaponAttack" data-item-id="{{item.id}}">
+            Shoot
+          </button>
+        </td>
+
+        <td class="item-actions">
+          <button data-action="editItem">✏️</button>
+          <button data-action="deleteItem">🗑️</button>
+        </td>
+
+      </tr>
+
+      {{/each}}
+    </tbody>
+  </table>
+
+
+  <!-- AMMO -->
+  <h3>Ammunition</h3>
+
+  <table class="ammo-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Group</th>
+        <th>Qty</th>
+        <th>Damage</th>
+        <th>Range Mod</th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {{#each ammunition as |item|}}
+      <tr>
+
+        <td>{{item.name}}</td>
+        <td>{{item.system.weaponGroup}}</td>
+
+        <td>
+          <input type="number"
+            data-action="updateAmmoQty"
+            data-item-id="{{item.id}}"
+            value="{{item.system.quantity.value}}">
+        </td>
+
+        <td>{{item.system.damage.base.value}}</td>
+        <td>{{item.system.rangeModifier}}</td>
+
+        <td class="item-actions">
+          <button data-action="editItem">✏️</button>
+          <button data-action="deleteItem">🗑️</button>
+        </td>
+
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+
+  <!-- ARMORS -->
+  <h3>Armors</h3>
+
+  <table class="armors-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Head</th>
+        <th>Body</th>
+        <th>L Arm</th>
+        <th>R Arm</th>
+        <th>L Leg</th>
+        <th>R Leg</th>
+        <th>Worn</th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {{#each armors as |item|}}
+      <tr>
+
+        <td>{{item.name}}</td>
+
+        <td>{{item.system.AP.head}}</td>
+        <td>{{item.system.AP.body}}</td>
+
+        <td>{{item.system.AP.leftArm}}</td>
+        <td>{{item.system.AP.rightArm}}</td>
+
+        <td>{{item.system.AP.leftLeg}}</td>
+        <td>{{item.system.AP.rightLeg}}</td>
+
+        <td>
+          <input type="checkbox"
+            data-action="toggleArmor"
+            data-item-id="{{item.id}}"
+            {{checked item.system.worn.value}}>
+        </td>
+
+        <td class="item-actions">
+          <button data-action="editItem">✏️</button>
+          <button data-action="deleteItem">🗑️</button>
+        </td>
+
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+
+  <!-- CLOTHING -->
+  <h3>Clothing & Accessories</h3>
+
+  <div class="item-list">
+    {{#each clothing}}
+      <div class="item-row">
+        <input type="checkbox"
+          data-action="toggleClothing"
+          data-item-id="{{this._id}}"
+          {{checked this.system.equipped}}>
+
+        <span>{{this.name}}</span>
+
+        <button data-action="editItem">Edit</button>
+        <button data-action="deleteItem">Delete</button>
+      </div>
+    {{/each}}
+  </div>
+
+
+  <!-- POSSESSIONS -->
+  <h3>Possessions</h3>
+
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>Qty</th>
+      <th>Weight</th>
+      <th></th>
+    </tr>
+
+    {{#each possessions as |item|}}
+    <tr>
+
+      <td>{{item.name}}</td>
+
+      <td>
+        <input type="number"
+          data-action="updateItemQty"
+          data-item-id="{{item.id}}"
+          value="{{item.system.quantity.value}}">
+      </td>
+
+      <td>{{item.system.weight.value}}</td>
+
+      <td>
+        <button data-action="editItem">✏️</button>
+        <button data-action="deleteItem">🗑️</button>
+      </td>
+
+    </tr>
+    {{/each}}
+  </table>
+
+
+  <!-- CONTAINERS -->
+  <h3>Containers</h3>
+
+  {{#each containers as |container|}}
+
+  <div class="container-block">
+
+    <div class="container-header">
+
+      <button data-action="toggleContainer">▶</button>
+
+      <strong>{{container.name}}</strong>
+
+      <span>
+        ({{container.system.quantity.value}})
+        — {{container.system.encumbrance.value}} kg
+      </span>
+
+      <button data-action="editItem">Edit</button>
+      <button data-action="deleteItem">X</button>
+
+    </div>
+
+    <div class="container-content">
+
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Qty</th>
+            <th>Weight</th>
+            <th>Type</th>
+            <th></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {{#each (lookup ../containerMap container.id) as |item|}}
+          <tr>
+
+            <td>{{item.name}}</td>
+            <td>{{item.system.quantity.value}}</td>
+            <td>{{item.system.encumbrance.value}}</td>
+            <td>{{item.type}}</td>
+
+            <td>
+              <button data-action="editItem">Edit</button>
+              <button data-action="deleteItem">X</button>
+            </td>
+
+          </tr>
+          {{/each}}
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+  {{/each}}
+
+</div>

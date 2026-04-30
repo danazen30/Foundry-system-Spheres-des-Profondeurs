@@ -1,0 +1,106 @@
+<div class="tab-effects">
+
+  <!-- CONDITIONS -->
+  <h3>Conditions</h3>
+
+  <ul class="conditions-list">
+    {{#each system.conditions as |value key|}}
+
+    <li class="condition">
+
+      <span>{{key}}</span>
+
+      {{#if (eq (lookup (lookup ../config.conditionConfig key) "type") "state")}}
+
+        <input type="checkbox"
+          data-action="updateConditionState"
+          data-key="{{key}}"
+          {{checked value}}>
+
+      {{else}}
+
+        <input type="number"
+          data-key="{{key}}"
+          value="{{lookup ../system.conditionTotals key}}"
+          min="0">
+
+      {{/if}}
+
+    </li>
+
+    {{/each}}
+  </ul>
+
+
+  <!-- INJURIES -->
+  <h3>Injuries</h3>
+
+  <table class="injuries-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Severity</th>
+        <th>Location</th>
+        <th>Duration</th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {{#each actor.items as |item|}}
+      {{#if (eq item.type "injury")}}
+
+      <tr>
+
+        <td>{{item.name}}</td>
+        <td>{{item.system.severity}}</td>
+        <td>{{item.system.location}}</td>
+        <td>{{item.system.duration}}</td>
+
+        <td class="item-actions">
+          <button data-action="editItem" data-item-id="{{item.id}}">✏️</button>
+          <button data-action="deleteItem" data-item-id="{{item.id}}">🗑️</button>
+        </td>
+
+      </tr>
+
+      {{/if}}
+      {{/each}}
+    </tbody>
+  </table>
+
+
+  <!-- TRAITS -->
+  <h3>Traits</h3>
+
+  <div class="effects-block">
+    {{#each traits}}
+      <div class="item">
+
+        <span>{{this.name}}</span>
+
+        <button data-action="editItem" data-item-id="{{this.id}}">Edit</button>
+        <button data-action="deleteItem" data-item-id="{{this.id}}">Delete</button>
+
+      </div>
+    {{/each}}
+  </div>
+
+
+  <!-- DISEASES -->
+  <h3>Diseases</h3>
+
+  <div class="effects-block">
+    {{#each diseases}}
+      <div class="item">
+
+        <span>{{this.name}}</span>
+
+        <button data-action="editItem" data-item-id="{{this.id}}">Edit</button>
+        <button data-action="deleteItem" data-item-id="{{this.id}}">Delete</button>
+
+      </div>
+    {{/each}}
+  </div>
+
+</div>

@@ -19,8 +19,17 @@
 </div>
 
 <div class="form-group">
-  <label>Advances</label>
-  <input type="number" name="system.advances" value="{{system.advances}}">
+  <label>Type</label>
+
+  <select name="system.advanced">
+    <option value="false" {{#unless system.advanced}}selected{{/unless}}>
+      Basic
+    </option>
+
+    <option value="true" {{#if system.advanced}}selected{{/if}}>
+      Advanced
+    </option>
+  </select>
 </div>
 
 <div class="form-group">
