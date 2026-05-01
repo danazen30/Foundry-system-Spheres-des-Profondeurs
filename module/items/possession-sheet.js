@@ -52,6 +52,26 @@ _onRender(context, options) {
 
   });
 
+  // =========================
+// IMAGE PICKER
+// =========================
+
+const img = root.querySelector(".possession-img img");
+
+if (img) {
+  img.addEventListener("click", () => {
+
+    new FilePicker({
+      type: "image",
+      current: this.document.img,
+      callback: async (path) => {
+        await this.document.update({ img: path });
+      }
+    }).render(true);
+
+  });
+}
+
 }
 
 async _createEffect() {

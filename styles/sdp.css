@@ -2,18 +2,7 @@
 margin-top:10px;
 }
 
-.weapons-table{
-width:100%;
-border-collapse:collapse;
-margin-top:10px;
-}
 
-.weapons-table th,
-.weapons-table td{
-border:1px solid #444;
-padding:4px;
-text-align:center;
-}
 
 .roll-attribute,
 .roll-skill {
@@ -307,44 +296,7 @@ text-align:center;
   text-align: center;
 }
 
-.weapon-details-content {
-  padding: 6px 10px;
-  font-size: 14px;
-  text-align: center;
-}
 
-/* 🔥 LIGNE PRINCIPALE */
-.weapon-line.main-line {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  gap: 40px;         /* espace entre blocs */
-  flex-wrap: wrap;   /* évite débordement */
-
-  margin-bottom: 6px;
-}
-
-/* blocs internes */
-.weapon-line.main-line > div {
-  min-width: 140px;
-}
-
-/* traits inline */
-.traits-inline {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-/* description */
-.weapon-desc {
-  margin-top: 4px;
-  font-style: italic;
-  opacity: 0.8;
-}
 
 .secondary-resources {
   margin-top: 10px;

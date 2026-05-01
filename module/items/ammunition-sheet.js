@@ -21,17 +21,49 @@ export class SdpAmmunitionSheet extends SdpItemSheet {
       checked: this.document.system.traits?.includes(key)
     }))
     };
+
   }
 
 async _updateObject(event, formData) {
 
   const data = foundry.utils.expandObject(formData);
 
+  // 🔥 FIX IMAGE → on la garde
+  if (formData.img) {
+    data.img = formData.img;
+  }
+
   if (data.system.traits && !Array.isArray(data.system.traits)) {
     data.system.traits = [data.system.traits];
   }
 
   return super._updateObject(event, data);
+}
+
+_onRender(context, options) {
+  super._onRender(context, options);
+
+  const html = this.element;
+
+  // =========================
+  // IMAGE PICKER
+  // =========================
+
+  const img = html.querySelector(".ammo-img img");
+
+  if (img) {
+    img.addEventListener("click", () => {
+
+      new FilePicker({
+        type: "image",
+        current: this.document.img,
+        callback: async (path) => {
+          await this.document.update({ img: path });
+        }
+      }).render(true);
+
+    });
+  }
 }
 
 }

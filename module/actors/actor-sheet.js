@@ -1985,7 +1985,50 @@ root.querySelectorAll('[data-action="toggleBoolean"]').forEach(el => {
 
 root.querySelectorAll('.weapon-toggle').forEach(el => {
 
-  el.addEventListener("click", (event) => {
+el.addEventListener("click", (event) => {
+
+  const itemId = event.currentTarget.dataset.itemId;
+  const weapon = this.document.items.get(itemId);
+
+  if (!weapon) return;
+
+  if (!weapon.system.equipped) {
+    ui.notifications.warn(`${weapon.name} is not equipped`);
+    return;
+  }
+
+  let target;
+
+  // 🔥 RANGED
+  if (weapon.system.category === "ranged") {
+
+    target = this.document._getBestWeaponSkill(weapon);
+
+  }
+
+  // 🔥 MELEE
+  else {
+
+    target = this.document.system.derived.attack.value;
+
+  }
+
+  SdpRoll.openDialog({
+    actor: this.document,
+    type: "attack",
+    label: weapon.name,
+    target: target,
+    weapon: weapon
+  });
+
+});
+
+  // =========================
+  // CLICK DROIT = TOGGLE DETAILS
+  // =========================
+  el.addEventListener("contextmenu", (event) => {
+
+    event.preventDefault();
 
     const itemId = event.currentTarget.dataset.itemId;
 
@@ -2363,5 +2406,3 @@ if (game.dice3d) {
 }
 
 }
-
-

@@ -11,4 +11,31 @@ export class SdpContainerSheet extends SdpItemSheet {
       template: "systems/sdp/templates/items/container-sheet.hbs"
     }
   };
+
+_onRender(context, options) {
+  super._onRender(context, options);
+
+  const root = this.element;
+
+  // =========================
+  // IMAGE PICKER
+  // =========================
+
+  const img = root.querySelector(".container-img img");
+
+  if (img) {
+    img.addEventListener("click", () => {
+
+      new FilePicker({
+        type: "image",
+        current: this.document.img,
+        callback: async (path) => {
+          await this.document.update({ img: path });
+        }
+      }).render(true);
+
+    });
+  }
+}
+
 }

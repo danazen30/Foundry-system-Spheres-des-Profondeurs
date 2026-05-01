@@ -148,4 +148,30 @@ data.system.itemTraits = finalItemTraits;
   return data;
 }
 
+_onRender(context, options) {
+  super._onRender(context, options);
+
+  const root = this.element;
+
+  // =========================
+  // IMAGE PICKER
+  // =========================
+
+  const img = root.querySelector(".weapon-img img");
+
+  if (img) {
+    img.addEventListener("click", () => {
+
+      new FilePicker({
+        type: "image",
+        current: this.document.img,
+        callback: async (path) => {
+          await this.document.update({ img: path });
+        }
+      }).render(true);
+
+    });
+  }
+}
+
 }

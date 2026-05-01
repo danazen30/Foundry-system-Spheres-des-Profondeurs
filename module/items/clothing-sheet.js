@@ -18,6 +18,26 @@ _onRender(context, options) {
   const root = this.element;
 
   // =========================
+// IMAGE PICKER
+// =========================
+
+const img = root.querySelector(".clothing-img img");
+
+if (img) {
+  img.addEventListener("click", () => {
+
+    new FilePicker({
+      type: "image",
+      current: this.document.img,
+      callback: async (path) => {
+        await this.document.update({ img: path });
+      }
+    }).render(true);
+
+  });
+}
+
+  // =========================
   // CREATE EFFECT
   // =========================
   root.querySelectorAll('[data-action="createEffect"]').forEach(el => {
