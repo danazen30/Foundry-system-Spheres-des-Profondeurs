@@ -98,17 +98,22 @@
   <!-- ========================= -->
   <!-- OVERCAST SPECIAL -->
   <!-- ========================= -->
-  {{#if spell.system.overcastSpecialEffects.value.length}}
-    <p><strong>Overcast Special:</strong></p>
-
-    <ul>
-      {{#each spell.system.overcastSpecialEffects.value as |effect|}}
-        <li>
-          <strong>{{effect.label}}</strong> : {{effect.value}}
-        </li>
-      {{/each}}
-    </ul>
+{{#each spell.system.overcastSpecialEffects.value as |effect|}}
+  {{#if @first}}
+    <div class="overcast-line">
+      <strong>Overcast Special:</strong>
+      <ul>
   {{/if}}
+
+  <li>
+    <strong>{{effect.label}}</strong> : {{effect.value}}
+  </li>
+
+  {{#if @last}}
+      </ul>
+    </div>
+  {{/if}}
+{{/each}}
 
   <!-- ========================= -->
   <!-- DESCRIPTION -->
@@ -225,17 +230,22 @@
   <!-- ========================= -->
   <!-- OVERCAST SPECIAL -->
   <!-- ========================= -->
-  {{#if spell.system.overcastSpecialEffects.value.length}}
-    <p><strong>Overcast Special:</strong></p>
-
-    <ul>
-      {{#each spell.system.overcastSpecialEffects.value as |effect|}}
-        <li>
-          <strong>{{effect.label}}</strong> : {{effect.value}}
-        </li>
-      {{/each}}
-    </ul>
+{{#each spell.system.overcastSpecialEffects.value as |effect|}}
+  {{#if @first}}
+    <div class="overcast-line">
+      <strong>Overcast Special:</strong>
+      <ul>
   {{/if}}
+
+  <li>
+    <strong>{{effect.label}}</strong> : {{effect.value}}
+  </li>
+
+  {{#if @last}}
+      </ul>
+    </div>
+  {{/if}}
+{{/each}}
 
   <!-- ========================= -->
   <!-- DESCRIPTION -->
@@ -353,18 +363,22 @@
   <!-- ========================= -->
   <!-- OVERCAST SPECIAL -->
   <!-- ========================= -->
-  {{#if spell.system.overcastSpecialEffects.value.length}}
-    <p><strong>Overcast Special:</strong></p>
-
-    <ul>
-      {{#each spell.system.overcastSpecialEffects.value as |effect|}}
-        <li>
-          <strong>{{effect.label}}</strong> : {{effect.value}}
-        </li>
-      {{/each}}
-    </ul>
+{{#each spell.system.overcastSpecialEffects.value as |effect|}}
+  {{#if @first}}
+    <div class="overcast-line">
+      <strong>Overcast Special:</strong>
+      <ul>
   {{/if}}
 
+  <li>
+    <strong>{{effect.label}}</strong> : {{effect.value}}
+  </li>
+
+  {{#if @last}}
+      </ul>
+    </div>
+  {{/if}}
+{{/each}}
   <!-- ========================= -->
   <!-- DESCRIPTION -->
   <!-- ========================= -->

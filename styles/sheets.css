@@ -1529,19 +1529,34 @@ input.movement-value {
 }
 
 /* =========================
-   FULL WIDTH BLOCKS
+   OVERCAST INLINE CLEAN
 ========================= */
 
-/* Overcast title */
-.spell-detail-box p:has(+ ul) {
-  grid-column: 1 / -1;
+.overcast-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
 }
 
-/* liste */
-.spell-detail-box ul {
-  grid-column: 1 / -1;
-  margin: 4px 0;
-  padding-left: 16px;
+/* liste inline */
+.overcast-line ul {
+  display: inline;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+/* items */
+.overcast-line li {
+  display: inline;
+  color: #5dade2;
+}
+
+/* séparateur */
+.overcast-line li:not(:last-child)::after {
+  content: " / ";
+  color: #888;
 }
 
 /* =========================
@@ -1565,15 +1580,6 @@ input.movement-value {
 
   font-style: italic;
   opacity: 0.9;
-}
-
-/* =========================
-   LIST STYLE
-========================= */
-
-.spell-detail-box li {
-  margin-bottom: 2px;
-  color: #5dade2;
 }
 
 /* =========================
