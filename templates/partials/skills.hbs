@@ -28,7 +28,11 @@
             <!-- 🔥 NAME + CAREER BUTTON -->
             <td class="skill-name-cell">
   <div class="skill-name-inner">
-    <span>{{item.name}}</span>
+    <span class="roll-skill-name"
+      data-action="rollSkill"
+      data-item-id="{{item.id}}">
+  {{item.name}}
+</span>
 
     {{#if ../currentCareer}}
       {{#if (includes ../currentCareer.system.skills item.name)}}
@@ -73,7 +77,6 @@
             <!-- ACTIONS -->
             <td class="item-actions">
               <div class="actions-wrapper">
-                <button data-action="editItem" data-item-id="{{item.id}}">✏️</button>
                 <button data-action="deleteItem" data-item-id="{{item.id}}">🗑️</button>
               </div>
             </td>
@@ -163,7 +166,6 @@
             <!-- ACTIONS -->
             <td class="item-actions">
               <div class="actions-wrapper">
-                <button data-action="editItem" data-item-id="{{item.id}}">✏️</button>
                 <button data-action="deleteItem" data-item-id="{{item.id}}">🗑️</button>
               </div>
             </td>

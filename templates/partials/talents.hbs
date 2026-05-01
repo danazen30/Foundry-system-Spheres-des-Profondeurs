@@ -16,62 +16,64 @@
       {{#each actor.items as |item|}}
       {{#if (eq item.type "talent")}}
 
-      <tr>
+      <tr class="talent-row" data-item-id="{{item.id}}">
 
-       <td>
-  <div class="talent-name-line">
+  <td>
+    <div class="talent-name-line">
+      <span class="talent-name">
+        {{item.name}}
+      </span>
 
-    <span class="talent-name">
-      {{item.name}}
-    </span>
-
-    {{#if ../currentCareer}}
-      {{#if (includes ../currentCareer.system.talents item.name)}}
-        <button
-          data-action="advanceTalent"
-          data-item-id="{{item.id}}">
-          +
-        </button>
+      {{#if ../currentCareer}}
+        {{#if (includes ../currentCareer.system.talents item.name)}}
+          <button
+            data-action="advanceTalent"
+            data-item-id="{{item.id}}">
+            +
+          </button>
+        {{/if}}
       {{/if}}
+    </div>
+  </td>
+
+  <td>
+    <input
+      type="number"
+      data-action="updateTalentAdv"
+      data-item-id="{{item.id}}"
+      value="{{item.system.advances}}"
+      min="0"
+      max="{{#if (lookup ../system.attributes item.system.max)}}
+        {{lookup (lookup ../system.attributes item.system.max) "bonus"}}
+      {{else}}
+        {{item.system.max}}
+      {{/if}}"
+      {{#unless ../user.isGM}}readonly{{/unless}}
+    >
+  </td>
+
+  <td>
+    {{#if (lookup ../system.attributes item.system.max)}}
+      {{lookup (lookup ../system.attributes item.system.max) "bonus"}}
+    {{else}}
+      {{item.system.max}}
     {{/if}}
+  </td>
 
-  </div>
-</td>
+  <td class="item-actions">
+    <div class="actions-wrapper">
+      <button data-action="deleteItem" data-item-id="{{item.id}}">🗑️</button>
+    </div>
+  </td>
 
-        <td>
-          <input
-            type="number"
-            data-action="updateTalentAdv"
-            data-item-id="{{item.id}}"
-            value="{{item.system.advances}}"
-            min="0"
+</tr>
 
-            max="{{#if (lookup ../system.attributes item.system.max)}}
-              {{lookup (lookup ../system.attributes item.system.max) "bonus"}}
-            {{else}}
-              {{item.system.max}}
-            {{/if}}"
-
-            {{#unless ../user.isGM}}readonly{{/unless}}
-          >
-        </td>
-
-        <td>
-          {{#if (lookup ../system.attributes item.system.max)}}
-            {{lookup (lookup ../system.attributes item.system.max) "bonus"}}
-          {{else}}
-            {{item.system.max}}
-          {{/if}}
-        </td>
-
-        <td class="item-actions">
-              <div class="actions-wrapper">
-                <button data-action="editItem" data-item-id="{{item.id}}">✏️</button>
-                <button data-action="deleteItem" data-item-id="{{item.id}}">🗑️</button>
-              </div>
-            </td>
-
-      </tr>
+<!-- 🔽 DESCRIPTION ROW -->
+<tr class="talent-description" data-details="{{item.id}}" style="display: none;">
+  <td colspan="4">
+    {{item.system.description}}
+  </td>
+</tr>
 
       {{/if}}
       {{/each}}

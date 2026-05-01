@@ -708,6 +708,20 @@ root.querySelectorAll('[data-action="rollAttribute"]').forEach(el => {
     });
   });
 
+  root.querySelectorAll('[data-action="rollSkill"]').forEach(el => {
+  el.addEventListener("contextmenu", (event) => {
+
+    event.preventDefault(); // 🔥 CRUCIAL
+
+    const item = this.document.items.get(event.currentTarget.dataset.itemId);
+
+    if (!item) return;
+
+    item.sheet.render(true);
+
+  });
+});
+
   // ===== ATTACK =====
 root.querySelectorAll('[data-action="weaponAttack"]').forEach(el => {
   el.addEventListener("click", (event) => {
@@ -2179,6 +2193,91 @@ this.element.querySelector(".character-portrait img")?.addEventListener("click",
   });
 
   fp.render(true);
+
+});
+
+// =========================
+// TALENT TOGGLE + OPEN
+// =========================
+
+root.querySelectorAll(".talent-row").forEach(row => {
+
+  // CLICK GAUCHE → toggle description
+  row.addEventListener("click", (event) => {
+
+    // 🔥 ignore si on clique sur un bouton ou input
+    if (event.target.closest("button, input")) return;
+
+    const itemId = row.dataset.itemId;
+
+    const details = root.querySelector(
+      `.talent-description[data-details="${itemId}"]`
+    );
+
+    if (!details) return;
+
+    const isHidden = details.style.display === "none";
+
+    details.style.display = isHidden ? "table-row" : "none";
+
+  });
+
+  // CLICK DROIT → ouvrir item
+  row.addEventListener("contextmenu", (event) => {
+
+    event.preventDefault();
+
+    const item = this.document.items.get(row.dataset.itemId);
+
+    if (!item) return;
+
+    item.sheet.render(true);
+
+  });
+
+});
+
+// =========================
+// SPELL CLICK GAUCHE = CAST
+// =========================
+root.querySelectorAll('[data-action="rollSpell"]').forEach(el => {
+
+  el.addEventListener("click", (event) => {
+
+    const spell = this.document.items.get(event.currentTarget.dataset.itemId);
+    if (!spell) return;
+
+    this._castSpell({
+      preventDefault: () => {},
+      currentTarget: {
+        dataset: {
+          itemId: spell.id
+        }
+      }
+    });
+
+  });
+
+  // =========================
+  // CLICK DROIT = TOGGLE DETAILS
+  // =========================
+  el.addEventListener("contextmenu", (event) => {
+
+    event.preventDefault();
+
+    const itemId = event.currentTarget.dataset.itemId;
+
+    const details = root.querySelector(
+      `.spell-details[data-details="${itemId}"]`
+    );
+
+    if (!details) return;
+
+    const isHidden = details.style.display === "none";
+
+    details.style.display = isHidden ? "table-row" : "none";
+
+  });
 
 });
 

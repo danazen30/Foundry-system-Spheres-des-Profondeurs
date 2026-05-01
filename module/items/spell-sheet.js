@@ -87,6 +87,26 @@ effects = foundry.utils.duplicate(effects);
 
   });
 
+  // =========================
+// IMAGE PICKER
+// =========================
+
+const img = html.querySelector(".spell-img img");
+
+if (img) {
+  img.addEventListener("click", () => {
+
+    new FilePicker({
+      type: "image",
+      current: this.document.img,
+      callback: async (path) => {
+        await this.document.update({ img: path });
+      }
+    }).render(true);
+
+  });
+}
+
 }
 
 }

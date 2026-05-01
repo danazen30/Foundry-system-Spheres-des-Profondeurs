@@ -6,6 +6,7 @@
   <table class="spells-table">
     <thead>
       <tr>
+        <th></th>
         <th>Name</th>
         <th>Mana</th>
         <th>Mem</th>
@@ -15,32 +16,111 @@
 
     <tbody>
       {{#each spellsMinor as |spell|}}
-      <tr>
+<tr class="spell-row" data-item-id="{{spell.id}}">
 
-        <td>{{spell.name}}</td>
+  <td class="spell-img-cell">
+  <img src="{{spell.img}}" title="{{spell.name}}">
+</td>
 
-        <td>
-          {{#if spell.system.memorized.value}}
-            {{spell.system.power.value}}
-          {{else}}
-            {{multiply spell.system.power.value 2}}
-          {{/if}}
-        </td>
+  <td 
+    class="spell-name roll-spell-name" 
+    data-action="rollSpell"
+    data-item-id="{{spell.id}}"
+  >
+    {{spell.name}}
+  </td>
 
-        <td>
-          <input type="checkbox"
-            data-action="toggleSpellMemory"
-            data-item-id="{{spell.id}}"
-            {{checked spell.system.memorized.value}}>
-        </td>
+  <td>
+    {{#if spell.system.memorized.value}}
+      {{spell.system.power.value}}
+    {{else}}
+      {{multiply spell.system.power.value 2}}
+    {{/if}}
+  </td>
 
-        <td class="item-actions">
-          <button data-action="castSpell" data-item-id="{{spell.id}}">Cast</button>
-          <button data-action="editItem" data-item-id="{{spell.id}}">✏️</button>
-          <button data-action="deleteItem" data-item-id="{{spell.id}}">🗑️</button>
-        </td>
+  <td>
+    <input type="checkbox"
+      data-action="toggleSpellMemory"
+      data-item-id="{{spell.id}}"
+      {{checked spell.system.memorized.value}}>
+  </td>
 
-      </tr>
+  <td class="item-actions">
+    <button data-action="editItem" data-item-id="{{spell.id}}">✏️</button>
+    <button data-action="deleteItem" data-item-id="{{spell.id}}">🗑️</button>
+  </td>
+
+</tr>
+
+<!-- 🔽 DEPLIANT -->
+<tr class="spell-details" data-details="{{spell.id}}" style="display:none;">
+  <td colspan="5">
+
+    <div class="spell-detail-box">
+
+  <p><strong>Magic:</strong> {{spell.system.magic.value}}</p>
+  <p><strong>Range:</strong> {{spell.system.range.value}}</p>
+
+  <!-- ========================= -->
+  <!-- DURATION -->
+  <!-- ========================= -->
+  <p>
+  <strong>Duration:</strong>
+  {{#if spell.system.concentration.value}}
+    Concentration
+  {{else}}
+    {{spell.system.duration.value}}
+    {{spell.system.duration.type}}
+    {{#if spell.system.duration.extendable}} (Extendable){{/if}}
+  {{/if}}
+</p>
+
+  <!-- ========================= -->
+  <!-- TARGET -->
+  <!-- ========================= -->
+  <p>
+  <strong>Target:</strong>
+  {{#if spell.system.aoe.value}}
+    Area of Effect (Radius: {{spell.system.radius.value}})
+  {{else}}
+    {{spell.system.target.value}} target(s)
+  {{/if}}
+</p>
+
+  <!-- ========================= -->
+  <!-- DAMAGE -->
+  <!-- ========================= -->
+  <p><strong>Damage:</strong>
+    {{spell.system.damage.base.value}}
+    {{spell.system.damage.dice.value}}
+  </p>
+
+  <!-- ========================= -->
+  <!-- OVERCAST SPECIAL -->
+  <!-- ========================= -->
+  {{#if spell.system.overcastSpecialEffects.value.length}}
+    <p><strong>Overcast Special:</strong></p>
+
+    <ul>
+      {{#each spell.system.overcastSpecialEffects.value as |effect|}}
+        <li>
+          <strong>{{effect.label}}</strong> : {{effect.value}}
+        </li>
+      {{/each}}
+    </ul>
+  {{/if}}
+
+  <!-- ========================= -->
+  <!-- DESCRIPTION -->
+  <!-- ========================= -->
+  <p class="spell-description">
+  {{spell.system.description}}
+</p>
+
+</div>
+
+  </td>
+</tr>
       {{/each}}
     </tbody>
   </table>
@@ -52,6 +132,7 @@
   <table class="spells-table">
     <thead>
       <tr>
+        <th></th>
         <th>Name</th>
         <th>Mana</th>
         <th>Mem</th>
@@ -59,36 +140,117 @@
       </tr>
     </thead>
 
-    <tbody>
-      {{#each spellsAdvanced as |spell|}}
-      <tr>
+<tbody>
+  {{#each spellsAdvanced as |spell|}}
 
-        <td>{{spell.name}}</td>
+<tr class="spell-row" data-item-id="{{spell.id}}">
 
-        <td>
-          {{#if spell.system.memorized.value}}
-            {{spell.system.power.value}}
-          {{else}}
-            {{multiply spell.system.power.value 2}}
-          {{/if}}
-        </td>
+  <td class="spell-img-cell">
+  <img src="{{spell.img}}" title="{{spell.name}}">
+</td>
 
-        <td>
-          <input type="checkbox"
-            data-action="toggleSpellMemory"
-            data-item-id="{{spell.id}}"
-            {{checked spell.system.memorized.value}}>
-        </td>
+  <td 
+    class="spell-name roll-spell-name" 
+    data-action="rollSpell"
+    data-item-id="{{spell.id}}"
+  >
+    {{spell.name}}
+  </td>
 
-        <td class="item-actions">
-          <button data-action="castSpell" data-item-id="{{spell.id}}">Cast</button>
-          <button data-action="editItem" data-item-id="{{spell.id}}">✏️</button>
-          <button data-action="deleteItem" data-item-id="{{spell.id}}">🗑️</button>
-        </td>
+  <td>
+    {{#if spell.system.memorized.value}}
+      {{spell.system.power.value}}
+    {{else}}
+      {{multiply spell.system.power.value 2}}
+    {{/if}}
+  </td>
 
-      </tr>
+  <td>
+    <input type="checkbox"
+      data-action="toggleSpellMemory"
+      data-item-id="{{spell.id}}"
+      {{checked spell.system.memorized.value}}>
+  </td>
+
+  <td class="item-actions">
+    <button data-action="editItem" data-item-id="{{spell.id}}">✏️</button>
+    <button data-action="deleteItem" data-item-id="{{spell.id}}">🗑️</button>
+  </td>
+
+</tr>
+
+<!-- 🔽 DEPLIANT -->
+<tr class="spell-details" data-details="{{spell.id}}" style="display:none;">
+  <td colspan="5">
+
+    <div class="spell-detail-box">
+
+  <p><strong>Magic:</strong> {{spell.system.magic.value}}</p>
+  <p><strong>Range:</strong> {{spell.system.range.value}}</p>
+
+  <!-- ========================= -->
+  <!-- DURATION -->
+  <!-- ========================= -->
+  <p>
+  <strong>Duration:</strong>
+  {{#if spell.system.concentration.value}}
+    Concentration
+  {{else}}
+    {{spell.system.duration.value}}
+    {{spell.system.duration.type}}
+    {{#if spell.system.duration.extendable}} (Extendable){{/if}}
+  {{/if}}
+</p>
+
+  <!-- ========================= -->
+  <!-- TARGET -->
+  <!-- ========================= -->
+  <p>
+  <strong>Target:</strong>
+  {{#if spell.system.aoe.value}}
+    Area of Effect (Radius: {{spell.system.radius.value}})
+  {{else}}
+    {{spell.system.target.value}} target(s)
+  {{/if}}
+</p>
+
+  <!-- ========================= -->
+  <!-- DAMAGE -->
+  <!-- ========================= -->
+  <p><strong>Damage:</strong>
+    {{spell.system.damage.base.value}}
+    {{spell.system.damage.dice.value}}
+  </p>
+
+  <!-- ========================= -->
+  <!-- OVERCAST SPECIAL -->
+  <!-- ========================= -->
+  {{#if spell.system.overcastSpecialEffects.value.length}}
+    <p><strong>Overcast Special:</strong></p>
+
+    <ul>
+      {{#each spell.system.overcastSpecialEffects.value as |effect|}}
+        <li>
+          <strong>{{effect.label}}</strong> : {{effect.value}}
+        </li>
       {{/each}}
-    </tbody>
+    </ul>
+  {{/if}}
+
+  <!-- ========================= -->
+  <!-- DESCRIPTION -->
+  <!-- ========================= -->
+  <p class="spell-description">
+  {{spell.system.description}}
+</p>
+
+</div>
+
+  </td>
+</tr>
+
+  {{/each}}
+</tbody>
   </table>
 
 
@@ -98,6 +260,7 @@
   <table class="spells-table">
     <thead>
       <tr>
+        <th></th>
         <th>Name</th>
         <th>Mana</th>
         <th>Mem</th>
@@ -106,35 +269,115 @@
     </thead>
 
     <tbody>
-      {{#each spellsSuperior as |spell|}}
-      <tr>
+  {{#each spellsSuperior as |spell|}}
 
-        <td>{{spell.name}}</td>
+<tr class="spell-row" data-item-id="{{spell.id}}">
 
-        <td>
-          {{#if spell.system.memorized.value}}
-            {{spell.system.power.value}}
-          {{else}}
-            {{multiply spell.system.power.value 2}}
-          {{/if}}
-        </td>
+  <td class="spell-img-cell">
+  <img src="{{spell.img}}" title="{{spell.name}}">
+</td>
 
-        <td>
-          <input type="checkbox"
-            data-action="toggleSpellMemory"
-            data-item-id="{{spell.id}}"
-            {{checked spell.system.memorized.value}}>
-        </td>
+  <td 
+    class="spell-name roll-spell-name" 
+    data-action="rollSpell"
+    data-item-id="{{spell.id}}"
+  >
+    {{spell.name}}
+  </td>
 
-        <td class="item-actions">
-          <button data-action="castSpell" data-item-id="{{spell.id}}">Cast</button>
-          <button data-action="editItem" data-item-id="{{spell.id}}">✏️</button>
-          <button data-action="deleteItem" data-item-id="{{spell.id}}">🗑️</button>
-        </td>
+  <td>
+    {{#if spell.system.memorized.value}}
+      {{spell.system.power.value}}
+    {{else}}
+      {{multiply spell.system.power.value 2}}
+    {{/if}}
+  </td>
 
-      </tr>
+  <td>
+    <input type="checkbox"
+      data-action="toggleSpellMemory"
+      data-item-id="{{spell.id}}"
+      {{checked spell.system.memorized.value}}>
+  </td>
+
+  <td class="item-actions">
+    <button data-action="editItem" data-item-id="{{spell.id}}">✏️</button>
+    <button data-action="deleteItem" data-item-id="{{spell.id}}">🗑️</button>
+  </td>
+
+</tr>
+
+<!-- 🔽 DEPLIANT -->
+<tr class="spell-details" data-details="{{spell.id}}" style="display:none;">
+  <td colspan="5">
+
+    <div class="spell-detail-box">
+
+  <p><strong>Magic:</strong> {{spell.system.magic.value}}</p>
+  <p><strong>Range:</strong> {{spell.system.range.value}}</p>
+
+  <!-- ========================= -->
+  <!-- DURATION -->
+  <!-- ========================= -->
+  <p>
+  <strong>Duration:</strong>
+  {{#if spell.system.concentration.value}}
+    Concentration
+  {{else}}
+    {{spell.system.duration.value}}
+    {{spell.system.duration.type}}
+    {{#if spell.system.duration.extendable}} (Extendable){{/if}}
+  {{/if}}
+</p>
+
+  <!-- ========================= -->
+  <!-- TARGET -->
+  <!-- ========================= -->
+  <p>
+  <strong>Target:</strong>
+  {{#if spell.system.aoe.value}}
+    Area of Effect (Radius: {{spell.system.radius.value}})
+  {{else}}
+    {{spell.system.target.value}} target(s)
+  {{/if}}
+</p>
+
+  <!-- ========================= -->
+  <!-- DAMAGE -->
+  <!-- ========================= -->
+  <p><strong>Damage:</strong>
+    {{spell.system.damage.base.value}}
+    {{spell.system.damage.dice.value}}
+  </p>
+
+  <!-- ========================= -->
+  <!-- OVERCAST SPECIAL -->
+  <!-- ========================= -->
+  {{#if spell.system.overcastSpecialEffects.value.length}}
+    <p><strong>Overcast Special:</strong></p>
+
+    <ul>
+      {{#each spell.system.overcastSpecialEffects.value as |effect|}}
+        <li>
+          <strong>{{effect.label}}</strong> : {{effect.value}}
+        </li>
       {{/each}}
-    </tbody>
+    </ul>
+  {{/if}}
+
+  <!-- ========================= -->
+  <!-- DESCRIPTION -->
+  <!-- ========================= -->
+  <p class="spell-description">
+  {{spell.system.description}}
+</p>
+</div>
+
+  </td>
+</tr>
+
+  {{/each}}
+</tbody>
   </table>
 
 </div>

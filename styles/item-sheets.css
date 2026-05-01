@@ -1,0 +1,37 @@
+/* =========================
+   SMALL VISUAL TWEAKS
+========================= */
+
+.spell-row td:first-child {
+  padding-left: 10px;
+}
+
+.spell-row td:last-child {
+  padding-right: 10px;
+}
+
+.spell-img {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0;
+}
+
+.spell-img img {
+  width: 80px;
+  height: 80px;
+
+  object-fit: cover;
+
+  border: 1px solid #444;
+  border-radius: 10px;
+
+  background: #111;
+
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.spell-img img:hover {
+  opacity: 0.8;
+  transform: scale(1.05);
+}

@@ -1022,13 +1022,13 @@ input.movement-value {
 
 .skills-table th:nth-child(4),
 .skills-table td:nth-child(4) {
-  width: 35px;
+  width: 40px;
   text-align: center;
 }
 
 .skills-table th:nth-child(5),
 .skills-table td:nth-child(5) {
-  width: 50px;
+  width: 30px;
   padding: 0; /* 🔥 enlève le décalage */
 }
 
@@ -1152,6 +1152,14 @@ input.movement-value {
 .skills-table td.item-actions button:hover {
   background: #444;
   border-radius: 4px;
+}
+
+.roll-skill-name {
+  cursor: pointer;
+}
+
+.roll-skill-name:hover {
+  color: #e67e22;
 }
 
 /* =========================
@@ -1306,4 +1314,310 @@ input.movement-value {
 
 .talent-name {
   flex: 1;
+}
+
+.talent-row {
+  cursor: pointer;
+}
+
+.talent-description td {
+  background: #111;
+  font-size: 13px;
+  padding: 10px;
+  line-height: 1.4;
+  color: #ccc;
+}
+
+.talent-name:hover {
+  color: #e67e22;
+}
+
+/* =========================
+   MAGIC
+========================= */
+
+.roll-spell-name {
+  cursor: pointer;
+}
+
+.roll-spell-name:hover {
+  color: #3498db;
+  transform: scale(1.03);
+}
+
+.spell-detail-box {
+  padding: 10px;
+  background: rgba(0,0,0,0.2);
+  border-radius: 6px;
+}
+
+.spell-detail-box p {
+  margin: 4px 0;
+}
+
+.spell-detail-box ul {
+  margin: 5px 0;
+  padding-left: 15px;
+}
+
+/* =========================
+   MAGIC TAB
+========================= */
+
+.tab-magic {
+  display: flex;
+  flex-direction: column;
+  gap: 6px; /* 🔥 réduit global */
+}
+
+/* TITRES */
+.tab-magic h3 {
+  margin: 0;
+  padding: 6px 10px;
+
+  font-size: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-align: center;
+
+  color: #ddd;
+
+  background: #111;
+  border: 1px solid #444;
+  border-radius: 8px;
+  margin-bottom: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* =========================
+   TABLE SPELLS
+========================= */
+
+.spells-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  background: #1a1414;
+  border: 1px solid #444;
+  border-radius: 12px;
+  margin-top: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+
+  overflow: hidden;
+}
+
+/* HEADER */
+.spells-table thead {
+  background: #111;
+  text-align: center;
+}
+
+.spells-table th {
+  padding: 6px;
+  font-size: 12px;
+
+  text-transform: uppercase;
+  color: #bbb;
+
+  border-bottom: 1px solid #444;
+}
+
+/* ROW */
+.spells-table tr {
+  height: 30px;
+}
+
+.spells-table td {
+  padding: 6px;
+  border-bottom: 1px solid #333;
+  text-align: center;
+}
+
+/* zebra */
+.spells-table tbody tr:nth-child(even) {
+  background: rgba(255,255,255,0.03);
+}
+
+/* =========================
+   SPELL NAME (CLICKABLE)
+========================= */
+
+.roll-spell-name {
+  cursor: pointer;
+  font-weight: bold;
+  text-align: left;
+
+  transition: all 0.2s ease;
+}
+
+.roll-spell-name:hover {
+  color: #5dade2;
+  transform: translateX(3px);
+}
+
+/* =========================
+   CHECKBOX CENTER
+========================= */
+
+.spells-table input[type="checkbox"] {
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+/* =========================
+   ACTION BUTTONS
+========================= */
+
+.spells-table td.item-actions {
+  padding: 0;
+}
+
+.spells-table td.item-actions button {
+  all: unset;
+
+  width: 22px;
+  height: 22px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+}
+
+.spells-table td.item-actions button:hover {
+  background: #444;
+  border-radius: 6px;
+}
+
+/* =========================
+   SPELL DETAILS (FIX ALIGN)
+========================= */
+
+.spell-detail-box {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px 20px;
+
+  padding: 12px 14px;
+
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.4),
+    rgba(0,0,0,0.7)
+  );
+
+  border-top: 1px solid #333;
+}
+
+/* 🔥 CHAQUE LIGNE = FLEX → label + valeur collés */
+.spell-detail-box p {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  margin: 2px 0;
+}
+
+/* label */
+.spell-detail-box strong {
+  color: #aaa;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* =========================
+   FULL WIDTH BLOCKS
+========================= */
+
+/* Overcast title */
+.spell-detail-box p:has(+ ul) {
+  grid-column: 1 / -1;
+}
+
+/* liste */
+.spell-detail-box ul {
+  grid-column: 1 / -1;
+  margin: 4px 0;
+  padding-left: 16px;
+}
+
+/* =========================
+   DESCRIPTION CLEAN
+========================= */
+
+/* label description */
+.spell-detail-box p:has(strong:contains("Description")) {
+  grid-column: 1 / -1;
+  justify-content: center;
+}
+
+/* texte description */
+.spell-detail-box p:last-child {
+  grid-column: 1 / -1;
+
+  justify-content: center;
+  text-align: center;
+
+  margin-top: 6px;
+
+  font-style: italic;
+  opacity: 0.9;
+}
+
+/* =========================
+   LIST STYLE
+========================= */
+
+.spell-detail-box li {
+  margin-bottom: 2px;
+  color: #5dade2;
+}
+
+/* =========================
+   SPELL IMAGE COLUMN (FINAL FIX)
+========================= */
+
+/* largeur FIXE colonne */
+.spells-table th:first-child,
+.spells-table td:first-child {
+  width: 60px;        /* 🔥 largeur colonne → change ici */
+  min-width: 60px;
+  max-width: 60px;
+
+  padding: 4px;
+  text-align: center;
+}
+
+/* cellule */
+.spell-img-cell {
+  padding: 0;         /* 🔥 enlève padding parasite */
+}
+
+/* image */
+.spell-img-cell img {
+  display: block;
+
+  width: 100%;        /* 🔥 PREND toute la largeur de la cellule */
+  height: 50px;       /* 🔥 hauteur fixe propre */
+
+  object-fit: cover;
+
+  border-radius: 6px;
+  border: 1px solid #333;
+
+  background: #111;
+
+  margin: 0 auto;
+}
+
+.spell-description {
+  grid-column: 1 / -1;
+  text-align: center;
+  margin-top: 8px;
+
+  font-style: italic;
+  opacity: 0.9;
 }
