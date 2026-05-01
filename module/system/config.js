@@ -14,6 +14,19 @@ ATTRIBUTE_ORDER: [
   ]
 }
 
+SDP.ATTRIBUTE_ABBREVIATIONS = {
+  meleeAbility: "MA",
+  rangedAbility: "RA",
+  strength: "S",
+  toughness: "T",
+  initiative: "I",
+  agility: "A",
+  dexterity: "D",
+  intelligence: "Int",
+  willpower: "WP",
+  charisma: "C"
+};
+
 export const DAMAGE_TYPES = {
   slashing: "Slashing",
   piercing: "Piercing",

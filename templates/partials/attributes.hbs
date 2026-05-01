@@ -4,7 +4,28 @@
     <tr>
       <th></th>
       {{#each attributes as |attr|}}
-        <th>{{attr.label}}</th>
+        <th>
+          {{attr.label}}
+
+          {{#if ../currentCareer}}
+            {{#if (includes ../currentCareer.system.characteristics attr.key)}}
+              <button
+                class="attr-advance-btn"
+                data-action="advanceAttribute"
+                data-attr="{{attr.key}}"
+                title="Cost: ? XP">
+
+                {{#if (gte attr.advances (multiply ../currentCareer.system.level 5))}}
+                  ✔
+                {{else}}
+                  +
+                {{/if}}
+
+              </button>
+            {{/if}}
+          {{/if}}
+
+        </th>
       {{/each}}
     </tr>
   </thead>

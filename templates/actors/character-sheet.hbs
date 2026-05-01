@@ -38,7 +38,6 @@
   <div class="sdp-content-inner">
 
       {{#if (eq activeTab "skills")}}
-        <h2>Skills</h2>
         <div class="tab-skills">
           {{> "systems/sdp/templates/partials/attributes.hbs"}}
           <div class="skills-wrapper">
@@ -48,7 +47,6 @@
       {{/if}}
 
       {{#if (eq activeTab "talents")}}
-        <h2>Talents</h2>
         {{> "systems/sdp/templates/partials/talents.hbs"}}
       {{/if}}
 
@@ -76,13 +74,13 @@
 
     <!-- 🔥 TABS DANS LE BODY -->
     <div class="sdp-tabs">
-      <button data-tab="skills">⚔️</button>
-      <button data-tab="talents">✨</button>
-      <button data-tab="magic">🔮</button>
-      <button data-tab="inventory">🎒</button>
-      <button data-tab="effects">💀</button>
-      <button data-tab="info">📜</button>
-    </div>
+  <button data-tab="skills" data-label="Skills">⚔️</button>
+<button data-tab="talents" data-label="Talents">✨</button>
+<button data-tab="magic" data-label="Magic">🔮</button>
+<button data-tab="inventory" data-label="Inventory">🎒</button>
+<button data-tab="effects" data-label="Effects">💀</button>
+<button data-tab="info" data-label="Information">📜</button>
+</div>
 
   </div>
 

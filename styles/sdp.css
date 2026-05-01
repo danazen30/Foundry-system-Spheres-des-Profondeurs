@@ -15,30 +15,6 @@ padding:4px;
 text-align:center;
 }
 
-.talents-table {
-
-  width:100%;
-  border-collapse:collapse;
-  margin-top:10px;
-
-}
-
-.talents-table th,
-.talents-table td{
-
-  border:1px solid #444;
-  padding:4px;
-  text-align:center;
-
-}
-
-.talents-table input{
-
-  width:50px;
-  text-align:center;
-
-}
-
 .roll-attribute,
 .roll-skill {
   cursor: pointer;
@@ -171,23 +147,6 @@ text-align:center;
 .mana-container input {
   width: 50px;
   text-align: center;
-}
-
-.item-line {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.item-actions {
-  display: flex;
-  justify-content: center;
-  gap: 4px;
-}
-
-.item-actions button {
-  font-size: 11px;
-  padding: 1px 4px;
 }
 
 .spell-crit-success,

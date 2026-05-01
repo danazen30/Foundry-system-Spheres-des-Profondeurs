@@ -4,106 +4,180 @@
   <div class="skills-block">
     <h3>Basic Skills</h3>
 
-    <table class="skills-table">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Char</th>
-          <th>Adv</th>
-          <th>Value</th>
-          <th></th>
-        </tr>
-      </thead>
+    <div class="skills-table-wrapper">
 
-      <tbody>
+      <table class="skills-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Char</th>
+            <th>Adv</th>
+            <th>Value</th>
+            <th></th>
+          </tr>
+        </thead>
 
-        {{#each actor.items as |item|}}
-        {{#if (eq item.type "skill")}}
-        {{#unless item.system.advanced}}
+        <tbody>
 
-        <tr>
-          <td>{{item.name}}</td>
+          {{#each actor.items as |item|}}
+          {{#if (eq item.type "skill")}}
+          {{#unless item.system.advanced}}
 
-          <td>{{item.system.characteristic}}</td>
+          <tr>
 
-          <td>
-            <input type="number"
-                   value="{{item.system.advances}}"
-                   data-action="updateSkillAdv"
-                   data-item-id="{{item.id}}">
-          </td>
+            <!-- 🔥 NAME + CAREER BUTTON -->
+            <td class="skill-name-cell">
+  <div class="skill-name-inner">
+    <span>{{item.name}}</span>
 
-          <td class="roll-skill"
-              data-action="rollSkill"
-              data-item-id="{{item.id}}">
-            {{item.system.value}}
-          </td>
+    {{#if ../currentCareer}}
+      {{#if (includes ../currentCareer.system.skills item.name)}}
+        <button
+          class="skill-advance-btn"
+          data-action="advanceSkill"
+          data-item-id="{{item.id}}">
+          
+          {{#if (gte item.system.advances (multiply ../currentCareer.system.level 5))}}
+            ✔
+          {{else}}
+            +
+          {{/if}}
 
-          <td class="item-actions">
-            <button data-action="editItem" data-item-id="{{item.id}}">✏️</button>
-            <button data-action="deleteItem" data-item-id="{{item.id}}">🗑️</button>
-          </td>
-        </tr>
+        </button>
+      {{/if}}
+    {{/if}}
 
-        {{/unless}}
-        {{/if}}
-        {{/each}}
+  </div>
+</td>
 
-      </tbody>
-    </table>
+            <!-- CHAR -->
+            <td>
+              {{lookup ../config.ATTRIBUTE_ABBREVIATIONS item.system.characteristic}}
+            </td>
+
+            <!-- ADV -->
+            <td>
+              <input type="number"
+                     value="{{item.system.advances}}"
+                     data-action="updateSkillAdv"
+                     data-item-id="{{item.id}}">
+            </td>
+
+            <!-- VALUE -->
+            <td class="roll-skill"
+                data-action="rollSkill"
+                data-item-id="{{item.id}}">
+              {{item.system.value}}
+            </td>
+
+            <!-- ACTIONS -->
+            <td class="item-actions">
+              <div class="actions-wrapper">
+                <button data-action="editItem" data-item-id="{{item.id}}">✏️</button>
+                <button data-action="deleteItem" data-item-id="{{item.id}}">🗑️</button>
+              </div>
+            </td>
+
+          </tr>
+
+          {{/unless}}
+          {{/if}}
+          {{/each}}
+
+        </tbody>
+      </table>
+
+    </div>
   </div>
 
   <!-- 🔸 ADVANCED SKILLS -->
   <div class="skills-block">
     <h3>Advanced Skills</h3>
 
-    <table class="skills-table">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Char</th>
-          <th>Adv</th>
-          <th>Value</th>
-          <th></th>
-        </tr>
-      </thead>
+    <div class="skills-table-wrapper">
 
-      <tbody>
+      <table class="skills-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Char</th>
+            <th>Adv</th>
+            <th>Value</th>
+            <th></th>
+          </tr>
+        </thead>
 
-        {{#each actor.items as |item|}}
-        {{#if (eq item.type "skill")}}
-        {{#if item.system.advanced}}
+        <tbody>
 
-        <tr>
-          <td>{{item.name}}</td>
+          {{#each actor.items as |item|}}
+          {{#if (eq item.type "skill")}}
+          {{#if item.system.advanced}}
 
-          <td>{{item.system.characteristic}}</td>
+          <tr>
 
-          <td>
-            <input type="number"
-                   value="{{item.system.advances}}"
-                   data-action="updateSkillAdv"
-                   data-item-id="{{item.id}}">
-          </td>
+            <!-- 🔥 NAME + CAREER BUTTON -->
+            <td class="skill-name-cell">
 
-          <td class="roll-skill"
-              data-action="rollSkill"
-              data-item-id="{{item.id}}">
-            {{item.system.value}}
-          </td>
+              <span>{{item.name}}</span>
 
-          <td class="item-actions">
-            <button data-action="editItem" data-item-id="{{item.id}}">✏️</button>
-            <button data-action="deleteItem" data-item-id="{{item.id}}">🗑️</button>
-          </td>
-        </tr>
+              {{#if ../currentCareer}}
+                {{#if (includes ../currentCareer.system.skills item.name)}}
+                  <button
+                    class="skill-advance-btn"
+                    data-action="advanceSkill"
+                    data-item-id="{{item.id}}"
+                    title="Cost: ? XP">
 
-        {{/if}}
-        {{/if}}
-        {{/each}}
+                    {{#if (gte item.system.advances (multiply ../currentCareer.system.level 5))}}
+                      ✔
+                    {{else}}
+                      +
+                    {{/if}}
 
-      </tbody>
-    </table>
+                  </button>
+                {{/if}}
+              {{/if}}
+
+            </td>
+
+            <!-- CHAR -->
+            <td>
+              {{lookup ../config.ATTRIBUTE_ABBREVIATIONS item.system.characteristic}}
+            </td>
+
+            <!-- ADV -->
+            <td>
+              <input type="number"
+                     value="{{item.system.advances}}"
+                     data-action="updateSkillAdv"
+                     data-item-id="{{item.id}}">
+            </td>
+
+            <!-- VALUE -->
+            <td class="roll-skill"
+                data-action="rollSkill"
+                data-item-id="{{item.id}}">
+              {{item.system.value}}
+            </td>
+
+            <!-- ACTIONS -->
+            <td class="item-actions">
+              <div class="actions-wrapper">
+                <button data-action="editItem" data-item-id="{{item.id}}">✏️</button>
+                <button data-action="deleteItem" data-item-id="{{item.id}}">🗑️</button>
+              </div>
+            </td>
+
+          </tr>
+
+          {{/if}}
+          {{/if}}
+          {{/each}}
+
+        </tbody>
+      </table>
+
+    </div>
   </div>
 
 </div>

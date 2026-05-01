@@ -14,7 +14,7 @@ export class SdpActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 constructor(...args) {
     super(...args);
 
-    this.activeTab = "competence"; // 🔥 TAB PAR DEFAUT
+    this.activeTab = "skills"; // 🔥 TAB PAR DEFAUT
   }
 
   static DEFAULT_OPTIONS = {

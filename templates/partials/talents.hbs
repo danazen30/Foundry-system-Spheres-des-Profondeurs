@@ -18,20 +18,25 @@
 
       <tr>
 
-        <td>
-          {{item.name}}
+       <td>
+  <div class="talent-name-line">
 
-          {{#if ../currentCareer}}
-            {{#if (includes ../currentCareer.system.talents item.name)}}
-              <button
-                data-action="advanceTalent"
-                data-item-id="{{item.id}}">
-                +
-              </button>
-            {{/if}}
-          {{/if}}
+    <span class="talent-name">
+      {{item.name}}
+    </span>
 
-        </td>
+    {{#if ../currentCareer}}
+      {{#if (includes ../currentCareer.system.talents item.name)}}
+        <button
+          data-action="advanceTalent"
+          data-item-id="{{item.id}}">
+          +
+        </button>
+      {{/if}}
+    {{/if}}
+
+  </div>
+</td>
 
         <td>
           <input
@@ -60,9 +65,11 @@
         </td>
 
         <td class="item-actions">
-          <button data-action="editItem" data-item-id="{{item.id}}">✏️</button>
-          <button data-action="deleteItem" data-item-id="{{item.id}}">🗑️</button>
-        </td>
+              <div class="actions-wrapper">
+                <button data-action="editItem" data-item-id="{{item.id}}">✏️</button>
+                <button data-action="deleteItem" data-item-id="{{item.id}}">🗑️</button>
+              </div>
+            </td>
 
       </tr>
 
