@@ -3,7 +3,7 @@
 
 <h2>Melee Weapons</h2>
 
-<table class="weapons-table">
+<table class="weapons-table melee-table">
 <thead>
 <tr>
   <th></th>
@@ -28,7 +28,7 @@
 </td>
 
 <td class="weapon-toggle" data-item-id="{{item.id}}">
-  ▶ <span class="weapon-name">{{item.name}}</span>
+ <span class="weapon-name">{{item.name}}</span>
 </td>
 
 <td>
@@ -124,7 +124,7 @@
 
 <h2>Ranged Weapons</h2>
 
-<table class="weapons-table">
+<table class="weapons-table ranged-table">
 <thead>
 <tr>
   <th></th>
@@ -149,7 +149,7 @@
 </td>
 
 <td class="weapon-toggle" data-item-id="{{item.id}}">
-  ▶ <span class="weapon-name">{{item.name}}</span>
+  <span class="weapon-name">{{item.name}}</span>
 </td>
 
 <!-- 🔫 AMMO (déplacé ici) -->
@@ -378,34 +378,67 @@
 
 {{#each armors as |item|}}
 
-<tr class="item-row" data-item-id="{{item.id}}">
+<tr class="item-row armor-clickable" data-item-id="{{item.id}}">
 
   <td>
-  <img src="{{item.img}}" class="item-img">
-</td>
+    <img src="{{item.img}}" class="item-img">
+  </td>
 
-<td>{{item.name}}</td>
+  <!-- 👇 IMPORTANT -->
+  <td class="armor-toggle" data-item-id="{{item.id}}">
+    <span class="armor-name">{{item.name}}</span>
+  </td>
 
-<td>{{item.system.AP.head}}</td>
-<td>{{item.system.AP.body}}</td>
-<td>{{item.system.AP.leftArm}}</td>
-<td>{{item.system.AP.rightArm}}</td>
-<td>{{item.system.AP.leftLeg}}</td>
-<td>{{item.system.AP.rightLeg}}</td>
+  <td>{{item.system.AP.head}}</td>
+  <td>{{item.system.AP.body}}</td>
+  <td>{{item.system.AP.leftArm}}</td>
+  <td>{{item.system.AP.rightArm}}</td>
+  <td>{{item.system.AP.leftLeg}}</td>
+  <td>{{item.system.AP.rightLeg}}</td>
 
-<td>
-  <input
-    type="checkbox"
-    data-action="toggleArmor"
-    data-item-id="{{item.id}}"
-    {{checked item.system.worn.value}}>
-</td>
+  <td>
+    <input
+      type="checkbox"
+      data-action="toggleArmor"
+      data-item-id="{{item.id}}"
+      {{checked item.system.worn.value}}>
+  </td>
 
-<td class="item-actions">
-  <button data-action="editItem" data-item-id="{{item.id}}">✏️</button>
-  <button data-action="deleteItem" data-item-id="{{item.id}}">🗑️</button>
-</td>
+  <td class="item-actions">
+    <button data-action="editItem" data-item-id="{{item.id}}">✏️</button>
+    <button data-action="deleteItem" data-item-id="{{item.id}}">🗑️</button>
+  </td>
 
+</tr>
+
+<!-- 🔽 DEPLIANT -->
+<tr class="armor-details" data-details="{{item.id}}" style="display:none;">
+  <td colspan="100%">
+
+    <div class="armor-details-content">
+
+      <!-- TRAITS ARMOR -->
+      <div class="traits-inline">
+  <strong>Traits:</strong>
+
+  {{#each item.displayArmorTraits}}
+    <span class="trait-tag {{this.type}}">
+      {{this.label}}
+      {{#if this.value}} ({{this.value}}){{/if}}
+    </span>
+  {{/each}}
+</div>
+
+      <!-- DESCRIPTION -->
+      {{#if item.system.description}}
+        <div class="armor-desc">
+          {{item.system.description}}
+        </div>
+      {{/if}}
+
+    </div>
+
+  </td>
 </tr>
 
 {{/each}}
@@ -445,8 +478,8 @@
   </td>
 
   <td class="item-actions">
-    <button data-action="editItem" data-item-id="{{this._id}}">✏️</button>
-    <button data-action="deleteItem" data-item-id="{{this._id}}">🗑️</button>
+    <button data-action="editItem" data-item-id="{{this.id}}">✏️</button>
+    <button data-action="deleteItem" data-item-id="{{this.id}}">🗑️</button>
   </td>
 
 </tr>
@@ -524,10 +557,12 @@
     <img src="{{container.img}}" class="item-img">
   </td>
 
-  <td>
+<td>
+  <div class="container-cell">
     <button data-action="toggleContainer">▶</button>
     <strong>{{container.name}}</strong>
-  </td>
+  </div>
+</td>
 
   <td>{{container.system.quantity.value}}</td>
   <td>{{container.system.encumbrance.value}}</td>

@@ -335,6 +335,59 @@ const clothing = this.document.items.filter(i =>
 const armors = this.document.items.filter(i =>
   i.type === "armor" && !i.system.containerId
 );
+
+for (let a of armors) {
+
+  const armorTraits = a.system.armorTraits || {};
+  const itemTraits = a.system.itemTraits || {};
+
+  const allTraits = [];
+
+  // =========================
+  // ARMOR TRAITS
+  // =========================
+const armorTraitsArray = Array.isArray(armorTraits) ? armorTraits : [];
+
+for (const t of armorTraitsArray) {
+
+  const key = typeof t === "string" ? t : t.key;
+  const value = typeof t === "object" ? t.value : undefined;
+
+  const config = SDP.ARMOR_TRAITS?.[key];
+
+  allTraits.push({
+    key,
+    label: config?.label || key,
+    value,
+    type: config?.type || "neutral"
+  });
+}
+
+  // =========================
+  // ITEM TRAITS
+  // =========================
+const itemTraitsArray = Array.isArray(itemTraits) ? itemTraits : [];
+
+for (const t of itemTraitsArray) {
+
+  const key = typeof t === "string" ? t : t.key;
+  const value = typeof t === "object" ? t.value : undefined;
+
+  const config = SDP.ITEM_TRAITS?.[key];
+
+  allTraits.push({
+    key,
+    label: config?.label || key,
+    value,
+    type: config?.type || "neutral"
+  });
+}
+
+  a.displayArmorTraits = allTraits;
+
+  console.log("ARMOR FINAL TRAITS", a.name, allTraits);
+}
+
 const containers = this.document.items.filter(i => i.type === "container");
 
   const allItems = this.document.items;
@@ -414,7 +467,6 @@ if (s.legLeft) slots.legLeft.push(cloth);
 if (s.legRight) slots.legRight.push(cloth);
 }
 
-// ===== WEAPONS =====
 // ===== WEAPONS =====
 for (let weapon of weapons) {
 
@@ -2431,6 +2483,46 @@ root.querySelectorAll('[data-action="rollSpell"]').forEach(el => {
     const isHidden = details.style.display === "none";
 
     details.style.display = isHidden ? "table-row" : "none";
+
+  });
+
+});
+
+// =========================
+// ARMOR TOGGLE DETAILS
+// =========================
+
+root.querySelectorAll('.armor-toggle').forEach(el => {
+
+  // CLICK DROIT = ouvrir dépliant
+  el.addEventListener("contextmenu", (event) => {
+
+    event.preventDefault();
+
+    const itemId = event.currentTarget.dataset.itemId;
+
+    const details = root.querySelector(
+      `.armor-details[data-details="${itemId}"]`
+    );
+
+    if (!details) return;
+
+    const isHidden = details.style.display === "none";
+
+    details.style.display = isHidden ? "table-row" : "none";
+
+  });
+
+  // OPTIONNEL : click gauche ouvre la fiche
+  el.addEventListener("click", (event) => {
+
+    const item = this.document.items.get(
+      event.currentTarget.dataset.itemId
+    );
+
+    if (!item) return;
+
+    item.sheet.render(true);
 
   });
 
