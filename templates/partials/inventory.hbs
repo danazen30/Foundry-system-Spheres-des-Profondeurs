@@ -61,7 +61,7 @@
 </td>
 
 <td>
-  {{item.system.encumbrance.value}}
+  {{item.system.totalWeight}}
 </td>
 
 <td class="item-actions">
@@ -204,7 +204,7 @@
 </td>
 
 <td>
-  {{item.system.encumbrance.value}}
+  {{item.system.totalWeight}}
 </td>
 
 <td class="item-actions">
@@ -303,9 +303,10 @@
   <th></th>
 <th>Name</th>
 <th>Group</th>
-<th>Qty</th>
 <th>Damage</th>
 <th>Range Mod</th>
+<th>Qty</th>
+<th>Weight</th>
 <th></th>
 </tr>
 </thead>
@@ -325,6 +326,15 @@
 <td>{{item.system.weaponGroup}}</td>
 
 <td>
+  {{item.system.damage.base.value}}
+  {{#if item.system.damage.dice.value}}
+    + {{item.system.damage.dice.value}}
+  {{/if}}
+</td>
+
+<td>{{item.system.rangeModifier}}</td>
+
+<td>
   <input
     type="number"
     data-action="updateAmmoQty"
@@ -335,13 +345,8 @@
 </td>
 
 <td>
-  {{item.system.damage.base.value}}
-  {{#if item.system.damage.dice.value}}
-    + {{item.system.damage.dice.value}}
-  {{/if}}
+  {{item.system.totalWeight}}   <!-- ✅ AJOUT -->
 </td>
-
-<td>{{item.system.rangeModifier}}</td>
 
 <td class="item-actions">
   <button data-action="editItem" data-item-id="{{item.id}}">✏️</button>
@@ -370,6 +375,8 @@
 <th>L Leg</th>
 <th>R Leg</th>
 <th>Worn</th>
+<th>Qty</th>      
+<th>Weight</th> 
 <th></th>
 </tr>
 </thead>
@@ -403,6 +410,14 @@
       data-item-id="{{item.id}}"
       {{checked item.system.worn.value}}>
   </td>
+
+  <td>
+  {{item.system.quantity.value}}   <!-- ✅ AJOUT -->
+</td>
+
+<td>
+  {{item.system.totalWeight}}      <!-- ✅ AJOUT -->
+</td>
 
   <td class="item-actions">
     <button data-action="editItem" data-item-id="{{item.id}}">✏️</button>
@@ -455,6 +470,8 @@
   <th></th>
   <th>Name</th>
   <th>Equipped</th>
+  <th>Qty</th>       
+  <th>Weight</th>
   <th></th>
 </tr>
 </thead>
@@ -476,6 +493,14 @@
            data-action="toggleClothing"
            {{checked this.system.equipped}} />
   </td>
+
+  <td>
+  {{this.system.quantity.value}}   
+</td>
+
+<td>
+  {{this.system.totalWeight}}    
+</td>
 
   <td class="item-actions">
     <button data-action="editItem" data-item-id="{{this.id}}">✏️</button>
@@ -519,7 +544,7 @@
   </td>
 
   <td>
-    {{item.system.weight.value}}
+    {{item.system.totalWeight}}
   </td>
 
   <td>
@@ -565,7 +590,7 @@
 </td>
 
   <td>{{container.system.quantity.value}}</td>
-  <td>{{container.system.encumbrance.value}}</td>
+  <td>{{container.system.totalWeight}}</td>
 
   <td>
     {{#with (lookup ../containerLoad container.id) as |load|}}
@@ -609,7 +634,7 @@
   <td><img src="{{item.img}}" class="item-img"></td>
   <td>{{item.name}}</td>
   <td>{{item.system.quantity.value}}</td>
-  <td>{{item.system.encumbrance.value}}</td>
+  <td><td>{{item.system.totalWeight}}</td></td>
   <td>{{item.type}}</td>
 
   <td class="item-actions">

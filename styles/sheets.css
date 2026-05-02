@@ -1847,6 +1847,7 @@ input.movement-value {
   vertical-align: middle;
 }
 
+
 .container-table.inner {
   width: 100%;
   table-layout: fixed;
@@ -1860,17 +1861,66 @@ input.movement-value {
   border-bottom: 1px solid #333;
 }
 
-/* wrapper scroll clean */
-.container-inner-wrapper {
+.container-table.inner tr {
+  height: 18px; /* 🔥 encore plus compact */
+}
+
+.container-table.inner td {
+  padding: 2px 4px; /* 🔥 réduit max */
+  font-size: 14px;
+}
+
+.container-table.inner .item-actions button {
+  width: 16px;
+  height: 16px;
+  font-size: 10px;
+}
+
+.container-table.inner .item-img {
   width: 100%;
-  overflow-x: auto;
+  aspect-ratio: 1 / 1; /* 🔥 MAGIC */
+  height: auto;
+
+  object-fit: contain;
+}
+
+/* wrapper scroll clean */
+.container-table.inner td:first-child {
+  width: 26px;
+  height: 18px; /* 🔥 même hauteur que ta row */
+  padding: 1px;
+}
+
+.container-table.inner .item-img {
+  height: 100%;     /* 🔥 se cale sur la ligne */
+  width: auto;      /* 🔥 évite d'étirer */
+
+  max-width: 100%;  /* 🔥 sécurité */
+
+  object-fit: contain;
   display: block;
+  margin: 0 auto;
 }
 
 .container-cell {
   display: flex;
   align-items: center;
   gap: 6px;
+        /* 🔥 évite débordement */
+}
+
+/* 🔥 FIX ACTIONS CONTAINER */
+.container-table .item-actions {
+  display: auto;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+
+  white-space: nowrap; /* 🔥 empêche retour ligne */
+}
+
+.container-table .item-actions button {
+  display: inline-flex; /* 🔥 AU LIEU DE flex */
 }
 
 /* =========================

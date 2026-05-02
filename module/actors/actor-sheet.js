@@ -93,6 +93,18 @@ _getItemLayer(item) {
 }
 
   async _prepareContext() {
+
+  const applyFinalWeight = (items, field = "encumbrance") => {
+  for (let i of items) {
+
+    const qty = i.system.quantity?.value ?? 1;
+    const base = i.system[field]?.value ?? 0;
+
+    i.system.totalWeight = base * qty;
+
+  }
+};
+
     const context = {};
     const attributes = SDP.ATTRIBUTE_ORDER.map(key => {
   return {
@@ -100,6 +112,8 @@ _getItemLayer(item) {
     ...this.document.system.attributes[key]
   };
 });
+
+
 
 const sign = this.document.getSign();
 const signEffects = this.actor.getSignEffects();
@@ -509,6 +523,14 @@ for (let key in slots) {
   }
 
 }
+
+applyFinalWeight(meleeWeapons);
+applyFinalWeight(rangedWeapons);
+applyFinalWeight(possessions, "weight");
+applyFinalWeight(containers);
+applyFinalWeight(ammunition);
+applyFinalWeight(armors);
+applyFinalWeight(clothing);
 
 return {
   actor: this.document,
