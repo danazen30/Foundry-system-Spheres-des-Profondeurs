@@ -17,17 +17,66 @@
   >
 </div>
 
-    <div class="character-silhouette">
+<div class="character-silhouette">
   <div class="silhouette-wrapper">
 
     <img src="/systems/sdp/assets/silhouette.png">
 
-    <div class="slot head"></div>
-    <div class="slot chest"></div>
-    <div class="slot left-arm"></div>
-    <div class="slot right-arm"></div>
-    <div class="slot left-legs"></div>
-    <div class="slot right-legs"></div>
+    <!-- HEAD -->
+    <div class="slot head">
+      {{#each slots.head}}
+        <img src="{{this.img}}" title="{{this.name}}">
+      {{/each}}
+    </div>
+
+    <!-- CHEST -->
+    <div class="slot chest">
+      {{#each slots.chest}}
+        <img src="{{this.img}}" title="{{this.name}}">
+      {{/each}}
+    </div>
+
+    <!-- LEFT ARM -->
+    <div class="slot left-arm">
+      {{#each slots.armLeft}}
+        <img src="{{this.img}}" title="{{this.name}}">
+      {{/each}}
+    </div>
+
+    <!-- RIGHT ARM -->
+    <div class="slot right-arm">
+      {{#each slots.armRight}}
+        <img src="{{this.img}}" title="{{this.name}}">
+      {{/each}}
+    </div>
+
+    <!-- LEFT LEG -->
+    <div class="slot left-legs">
+      {{#each slots.legLeft}}
+        <img src="{{this.img}}" title="{{this.name}}">
+      {{/each}}
+    </div>
+
+    <!-- RIGHT LEG -->
+    <div class="slot right-legs">
+      {{#each slots.legRight}}
+        <img src="{{this.img}}" title="{{this.name}}">
+      {{/each}}
+    </div>
+
+    <!-- WEAPON MAIN -->
+    <div class="slot weapon-main">
+      {{#if slots.weaponMain}}
+        <img src="{{slots.weaponMain.img}}" title="{{slots.weaponMain.name}}">
+      {{/if}}
+    </div>
+
+    <!-- WEAPON OFF -->
+    <div class="slot weapon-off">
+      {{#if slots.weaponOff}}
+        <img src="{{slots.weaponOff.img}}" title="{{slots.weaponOff.name}}">
+      {{/if}}
+    </div>
 
   </div>
 </div>

@@ -382,15 +382,33 @@ display: flex;          /* 🔥 IMPORTANT */
 
 .slot {
   position: absolute;
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
 
   border: 1px solid #999;
   background: rgba(0,0,0,0.5);
 
-  transform: translate(-50%, -50%); /* 🔥 ULTRA IMPORTANT */
+  transform: translate(-50%, -50%);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden; /* 🔥 IMPORTANT */
 }
 
+.slot img {
+  all: unset; /* 🔥 nukes les styles Foundry */
+
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+
+  pointer-events: none; /* optionnel */
+}
 
 /* tête */
 .slot.head {
@@ -406,14 +424,14 @@ display: flex;          /* 🔥 IMPORTANT */
 
 /* bras gauche (un peu plus haut et plus proche) */
 .slot.left-arm {
-  top: 33%;
-  left: 15%;
+  top: 31%;
+  left: 18%;
 }
 
 /* bras droit */
 .slot.right-arm {
-  top: 33%;
-  left: 85%;
+  top: 31%;
+  left: 82%;
 }
 
 /* jambes (remontées) */
@@ -425,6 +443,16 @@ display: flex;          /* 🔥 IMPORTANT */
 .slot.right-legs {
   top: 70%;
   left: 74%;
+}
+
+.slot.weapon-main {
+  top: 45%;
+  left: 10%; /* main gauche visuelle */
+}
+
+.slot.weapon-off {
+  top: 45%;
+  left: 90%; /* main droite visuelle */
 }
 
 .sdp-body {
@@ -1629,13 +1657,227 @@ input.movement-value {
 }
 
 /* =========================
+   INVENTORY GLOBAL TABLE STYLE
+========================= */
+
+.tab-inventory {
+  display: flex;
+  flex-direction: column;
+
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.inventory-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.inventory-table button,
+.weapons-table button,
+.ammo-table button,
+.armors-table button {
+  all: unset;
+
+  padding: 2px 6px;
+  border: 1px solid #555;
+  border-radius: 6px;
+
+  background: #222;
+  color: #ddd;
+
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.inventory-table button:hover,
+.weapons-table button:hover,
+.ammo-table button:hover,
+.armors-table button:hover {
+  background: #444;
+}
+
+.ammo-row {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+}
+
+.ammo-row select {
+  background: #111;
+  border: 1px solid #444;
+  color: white;
+  height: 22px;
+  font-size: 12px;
+}
+
+.container-block {
+  border: 1px solid #444;
+  border-radius: 12px;
+  background: #1a1414;
+  overflow: hidden;
+}
+
+/* HEADER */
+.container-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 6px 10px;
+  background: #111;
+  border-bottom: 1px solid #333;
+}
+
+/* capacité */
+.container-capacity {
+  margin-left: auto;
+  font-size: 12px;
+}
+
+.capacity-warning {
+  color: #e74c3c;
+  margin-left: 6px;
+}
+
+/* contenu */
+.container-content {
+  padding: 6px;
+}
+
+.container-header-row {
+  background: #111;
+  font-weight: bold;
+}
+
+.container-header-row button {
+  margin-right: 6px;
+}
+
+.container-content-row td {
+  padding: 0;
+}
+
+.container-table.inner {
+  border: none;
+  border-radius: 0;
+}
+
+/* 🔥 IMPORTANT : éviter que la table interne casse tout */
+.container-table.inner {
+  table-layout: auto;      /* 🔥 FIX PRINCIPAL */
+  width: 100%;
+}
+
+/* 🔥 éviter que le td écrase le contenu */
+.container-content-row td {
+  padding: 0;
+  overflow: hidden;        /* 🔥 évite débordement bizarre */
+}
+
+/* 🔥 wrapper clean */
+.container-content-row > td > table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* 🔥 bonus : force alignement propre */
+.container-table th,
+.container-table td {
+  white-space: nowrap;
+}
+
+.container-inner-wrapper {
+  width: 100%;
+  overflow-x: auto; /* 🔥 scroll si trop large */
+}
+
+.tab-inventory h2 {
+  font-size: 22px;        /* 🔥 plus petit (ajuste 14–18 si tu veux) */
+  text-align: center;     /* 🔥 centré */
+
+  margin: 2px 0 2px 0;    /* 🔥 réduit l'espace vertical */
+  padding: 0;
+
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.weapons-table,
+.ammo-table,
+.armors-table,
+.inventory-table,
+.container-table {
+  margin-top: 0px; /* 🔥 beaucoup plus collé */
+}
+
+.weapons-table tr,
+.ammo-table tr,
+.armors-table tr,
+.inventory-table tr {
+  height: 44px; /* 🔥 ajuste (40–50 selon ton goût) */
+}
+
+.weapons-table td:first-child,
+.ammo-table td:first-child,
+.armors-table td:first-child,
+.inventory-table td:first-child {
+  width: 44px;
+  height: 44px; /* 🔥 LA CLÉ */
+  padding: 2px;
+}
+
+/* =========================
    weapons
 ========================= */
 
-.weapons-table{
-width:100%;
-border-collapse:collapse;
-margin-top:10px;
+.weapons-table {
+  width: 100%;
+  border-collapse: collapse;
+
+}
+
+/* image */
+.weapons-table th:nth-child(1),
+.weapons-table td:nth-child(1) {
+  width: 50px;
+}
+
+/* name */
+.weapons-table th:nth-child(2),
+.weapons-table td:nth-child(2) {
+  width: auto;
+}
+
+/* checkboxes */
+.weapons-table th:nth-child(3),
+.weapons-table td:nth-child(3),
+.weapons-table th:nth-child(4),
+.weapons-table td:nth-child(4),
+.weapons-table th:nth-child(5),
+.weapons-table td:nth-child(5) {
+  width: 40px;
+}
+
+/* qty / weight */
+.weapons-table th:nth-child(6),
+.weapons-table td:nth-child(6),
+.weapons-table th:nth-child(7),
+.weapons-table td:nth-child(7) {
+  width: 40px;
+}
+
+/* attack */
+.weapons-table th:nth-child(8),
+.weapons-table td:nth-child(8) {
+  width: 50px;
 }
 
 .weapons-table th,
@@ -1643,6 +1885,12 @@ margin-top:10px;
 border:1px solid #444;
 padding:4px;
 text-align:center;
+}
+
+.weapons-table td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .weapon-details-content {
@@ -1698,13 +1946,13 @@ text-align:center;
 }
 
 .item-img {
-  width: 28px;
-  height: 28px;
+  width: 100%;
+  height: 100%;
 
-  object-fit: cover;
+  object-fit: contain; /* 🔥 garde toute l'image sans crop */
 
   border-radius: 4px;
   border: 1px solid #444;
 
-  vertical-align: middle;
+  display: block;
 }

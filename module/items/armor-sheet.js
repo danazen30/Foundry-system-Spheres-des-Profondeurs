@@ -158,6 +158,18 @@ _processFormData(event) {
     });
   }
 
+  // =========================
+// SLOTS FIX (IMPORTANT)
+// =========================
+
+const slotKeys = ["head", "chest", "armLeft", "armRight", "legLeft", "legRight"];
+
+data.system.slots = data.system.slots || {};
+
+for (let key of slotKeys) {
+  data.system.slots[key] = !!data.system.slots[key];
+}
+
     // =========================
 // ARMOR TRAITS
 // =========================

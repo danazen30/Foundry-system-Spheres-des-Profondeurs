@@ -76,6 +76,22 @@ _getTalentMax(item) {
   return Number(max) || 0;
 }
 
+_getItemLayer(item) {
+
+  // priorité au layer défini
+  if (item.system.layer !== undefined) {
+    return item.system.layer;
+  }
+
+  // fallback automatique
+  switch (item.type) {
+    case "clothing": return 0;
+    case "armor": return 1;
+    default: return 0;
+  }
+
+}
+
   async _prepareContext() {
     const context = {};
     const attributes = SDP.ATTRIBUTE_ORDER.map(key => {
@@ -351,7 +367,96 @@ for (let container of containers) {
   containerLoad[container.id] = total;
 }
 
-console.log("SDP | Ammo count", ammunition.length);
+// =========================
+// EQUIPMENT SLOTS (SILHOUETTE)
+// =========================
+
+// reset
+const slots = {
+  head: [],
+  chest: [],
+  armLeft: [],
+  armRight: [],
+  legLeft: [],
+  legRight: [],
+
+  weaponMain: null,
+  weaponOff: null
+};
+
+// ===== ARMOR =====
+for (let armor of armors) {
+
+  if (!armor.system.worn?.value) continue;
+
+  const s = armor.system.slots || {};
+
+if (s.head) slots.head.push(armor);
+if (s.chest) slots.chest.push(armor);
+if (s.armLeft) slots.armLeft.push(armor);
+if (s.armRight) slots.armRight.push(armor);
+if (s.legLeft) slots.legLeft.push(armor);
+if (s.legRight) slots.legRight.push(armor);
+}
+
+// ===== CLOTHING =====
+for (let cloth of clothing) {
+
+  if (!cloth.system.equipped) continue;
+
+  const s = cloth.system.slots || {};
+
+if (s.head) slots.head.push(cloth);
+if (s.chest) slots.chest.push(cloth);
+if (s.armLeft) slots.armLeft.push(cloth);
+if (s.armRight) slots.armRight.push(cloth);
+if (s.legLeft) slots.legLeft.push(cloth);
+if (s.legRight) slots.legRight.push(cloth);
+}
+
+// ===== WEAPONS =====
+// ===== WEAPONS =====
+for (let weapon of weapons) {
+
+  if (!weapon.system.equipped) continue;
+
+  const handed = (weapon.system.handedness || "").toLowerCase();
+
+  // =========================
+  // 2 MAINS → prend les deux slots
+  // =========================
+  if (handed === "two") {
+
+    slots.weaponMain = weapon;
+    slots.weaponOff = weapon;
+
+    continue;
+  }
+
+  // =========================
+  // 1 MAIN / NORMAL
+  // =========================
+  if (weapon.system.offhand) {
+    slots.weaponOff = weapon;
+  } else {
+    slots.weaponMain = weapon;
+  }
+
+}
+// DEBUG
+console.log("SDP | Slots", slots);
+
+for (let key in slots) {
+
+  if (Array.isArray(slots[key])) {
+
+    slots[key].sort((a, b) => {
+      return this._getItemLayer(a) - this._getItemLayer(b);
+    });
+
+  }
+
+}
 
 return {
   actor: this.document,
@@ -388,6 +493,7 @@ return {
   containerLoad,
   rootItems,
   diseases,
+  slots,
   activeTab: this.activeTab
 };
   }
@@ -2078,7 +2184,7 @@ root.querySelectorAll('[data-action="toggleClothing"]').forEach(el => {
 // CONTAINER DROP
 // =========================
 
-root.querySelectorAll(".container-block").forEach(el => {
+root.querySelectorAll(".container-header-row").forEach(el => {
 
   el.addEventListener("dragover", e => e.preventDefault());
 
@@ -2145,11 +2251,17 @@ root.querySelectorAll('[data-action="toggleContainer"]').forEach(el => {
 
   el.addEventListener("click", (event) => {
 
-    const parent = event.currentTarget.closest(".container-block");
-    const content = parent.querySelector(".container-content");
+    const row = event.currentTarget.closest("tr");
+    const contentRow = row.nextElementSibling;
 
-    const open = content.style.display !== "none";
-    content.style.display = open ? "none" : "block";
+    if (!contentRow || !contentRow.classList.contains("container-content-row")) {
+      console.warn("Container row not found");
+      return;
+    }
+
+    const isHidden = contentRow.style.display === "none";
+
+    contentRow.style.display = isHidden ? "table-row" : "none";
 
   });
 

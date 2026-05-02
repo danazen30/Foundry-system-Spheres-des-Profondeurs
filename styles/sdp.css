@@ -2,8 +2,6 @@
 margin-top:10px;
 }
 
-
-
 .roll-attribute,
 .roll-skill {
   cursor: pointer;
@@ -47,22 +45,6 @@ margin-top:10px;
   height: 100%;
   background: #c0392b;
   transition: width 0.3s;
-}
-
-.armors-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.armors-table th,
-.armors-table td {
-  border: 1px solid #444;
-  padding: 4px;
-  text-align: center;
-}
-
-.armors-table th {
-  background: #222;
 }
 
 .injuries-table {
@@ -219,17 +201,6 @@ margin-top:10px;
   margin-left: 6px; /* 👈 colle au texte */
 }
 
-.ammo-row {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.reload-checkbox {
-  transform: scale(1.2);
-  cursor: pointer;
-}
-
 .trait-disabled {
   text-decoration: line-through;
   opacity: 0.5;
@@ -297,7 +268,6 @@ margin-top:10px;
 }
 
 
-
 .secondary-resources {
   margin-top: 10px;
 }
@@ -331,25 +301,4 @@ margin-top:10px;
 .secondary-box input {
   width: 30px;
   text-align: center;
-}
-
-.container-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.container-meta {
-  opacity: 0.7;
-}
-
-.container-capacity {
-  margin-left: auto;
-  font-weight: bold;
-}
-
-.capacity-warning {
-  color: #ff6b6b;
-  margin-left: 5px;
 }

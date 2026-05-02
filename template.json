@@ -691,6 +691,14 @@
       "armorTraits": {
         "type": "array",
         "value": []
+      },
+      "slots": {
+        "head": false,
+        "chest": false,
+        "armLeft": false,
+        "armRight": false,
+        "legLeft": false,
+        "legRight": false
       }
     },
     "condition": {
@@ -1006,6 +1014,21 @@
         "type": "boolean",
         "label": "Equipped",
         "value": false
+      },
+
+      "slots": {
+        "head": false,
+        "chest": false,
+        "armLeft": false,
+        "armRight": false,
+        "legLeft": false,
+        "legRight": false
+      },
+
+      "layer": {
+        "type": "number",
+        "label": "Layer",
+        "value": 0
       }
     },
 
