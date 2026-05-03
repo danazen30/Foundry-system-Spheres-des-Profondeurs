@@ -390,24 +390,20 @@ display: flex;          /* 🔥 IMPORTANT */
 
   transform: translate(-50%, -50%);
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  overflow: hidden; /* 🔥 IMPORTANT */
+  overflow: hidden;
 }
 
 .slot img {
-  all: unset; /* 🔥 nukes les styles Foundry */
+  all: unset;
 
-  display: block;
+  position: absolute; /* 🔥 IMPORTANT */
+  top: 0;
+  left: 0;
 
   width: 100%;
   height: 100%;
 
   object-fit: contain;
-
-  pointer-events: none; /* optionnel */
 }
 
 /* tête */
@@ -2094,3 +2090,11 @@ text-align:center;
   width: 30px;
 }
 
+.qty-clickable {
+  cursor: pointer;
+  text-align: center;
+}
+
+.qty-clickable:hover {
+  background: rgba(255,255,255,0.1);
+}

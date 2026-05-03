@@ -1,6 +1,6 @@
 <div class="tab-inventory">
   <div class="inventory-scroll">
-
+{{#if meleeWeapons.length}}
 <h2>Melee Weapons</h2>
 
 <table class="weapons-table melee-table">
@@ -52,11 +52,11 @@
 <td>
   <input type="checkbox"
          class="toggle-defense-weapon"
-         data-item-id="{{item._id}}"
+         data-item-id="{{item.id}}"
          {{checked item.system.isDefenseWeapon}}>
 </td>
 
-<td>
+<td class="qty-clickable" data-item-id="{{item.id}}">
   {{item.system.quantity.value}}
 </td>
 
@@ -121,7 +121,9 @@
 
 </tbody>
 </table>
+{{/if}}
 
+{{#if rangedWeapons.length}}
 <h2>Ranged Weapons</h2>
 
 <table class="weapons-table ranged-table">
@@ -157,13 +159,13 @@
   <div class="ammo-row">
 
     <select data-action="selectAmmo"
-            data-item-id="{{item._id}}">
+            data-item-id="{{item.id}}">
 
       <option value="">-- Aucun --</option>
 
       {{#each item.compatibleAmmo}}
-        <option value="{{this._id}}"
-          {{#if (eq this._id ../system.currentAmmo)}}selected{{/if}}>
+        <option value="{{this.id}}"
+          {{#if (eq this.id ../system.currentAmmo)}}selected{{/if}}>
           {{this.name}} ({{this.system.quantity.value}})
         </option>
       {{/each}}
@@ -174,7 +176,7 @@
       <input type="checkbox"
              class="reload-checkbox"
              data-action="toggleLoaded"
-             data-item-id="{{item._id}}"
+             data-item-id="{{item.id}}"
              {{checked item.system.loaded}}>
     {{/if}}
 
@@ -199,7 +201,7 @@
   >
 </td>
 
-<td>
+<td class="qty-clickable" data-item-id="{{item.id}}">
   {{item.system.quantity.value}}
 </td>
 
@@ -294,7 +296,9 @@
 
 </tbody>
 </table>
+{{/if}}
 
+{{#if ammunition.length}}
 <h2>Ammunition</h2>
 
 <table class="ammo-table">
@@ -334,14 +338,8 @@
 
 <td>{{item.system.rangeModifier}}</td>
 
-<td>
-  <input
-    type="number"
-    data-action="updateAmmoQty"
-    data-item-id="{{item.id}}"
-    value="{{item.system.quantity.value}}"
-    min="0"
-  >
+<td class="qty-clickable" data-item-id="{{item.id}}">
+  {{item.system.quantity.value}}
 </td>
 
 <td>
@@ -359,7 +357,9 @@
 
 </tbody>
 </table>
+{{/if}}
 
+{{#if armors.length}}
 <h2>Armors</h2>
 
 <table class="armors-table">
@@ -411,8 +411,8 @@
       {{checked item.system.worn.value}}>
   </td>
 
-  <td>
-  {{item.system.quantity.value}}   <!-- ✅ AJOUT -->
+<td class="qty-clickable" data-item-id="{{item.id}}">
+  {{item.system.quantity.value}}
 </td>
 
 <td>
@@ -461,7 +461,9 @@
 </tbody>
 
 </table>
+{{/if}}
 
+{{#if clothing.length}}
 <h2>Clothing & Accessories</h2>
 
 <table class="inventory-table">
@@ -489,13 +491,13 @@
 
   <td>
     <input type="checkbox"
-           data-item-id="{{this._id}}"
+           data-item-id="{{this.id}}"
            data-action="toggleClothing"
            {{checked this.system.equipped}} />
   </td>
 
-  <td>
-  {{this.system.quantity.value}}   
+<td class="qty-clickable" data-item-id="{{this.id}}">
+  {{this.system.quantity.value}}
 </td>
 
 <td>
@@ -512,7 +514,9 @@
 
 </tbody>
 </table>
+{{/if}}
 
+{{#if possessions.length}}
 <h2>Possessions</h2>
 
 <table class="inventory-table">
@@ -535,13 +539,9 @@
     {{item.name}}
   </td>
 
-  <td>
-    <input type="number"
-           value="{{item.system.quantity.value}}"
-           data-item-id="{{item.id}}"
-           data-action="updateItemQty"
-           min="0">
-  </td>
+ <td class="qty-clickable" data-item-id="{{item.id}}">
+  {{item.system.quantity.value}}
+</td>
 
   <td>
     {{item.system.totalWeight}}
@@ -555,8 +555,10 @@
 </tr>
   {{/each}}
 </table>
+{{/if}}
 
   <!-- CONTENT -->
+  {{#if containers.length}}
 <h2>Containers</h2>
 
 {{#each containers as |container|}}
@@ -584,12 +586,14 @@
 
 <td>
   <div class="container-cell">
-    <button data-action="toggleContainer">▶</button>
+    <button class="container-toggle" data-action="toggleContainer">▶</button>
     <strong>{{container.name}}</strong>
   </div>
 </td>
 
-  <td>{{container.system.quantity.value}}</td>
+<td class="qty-clickable" data-item-id="{{container.id}}">
+  {{container.system.quantity.value}}
+</td>
   <td>{{container.system.totalWeight}}</td>
 
   <td>
@@ -633,7 +637,9 @@
 
   <td><img src="{{item.img}}" class="item-img"></td>
   <td>{{item.name}}</td>
-  <td>{{item.system.quantity.value}}</td>
+<td class="qty-clickable" data-item-id="{{item.id}}">
+  {{item.system.quantity.value}}
+</td>
   <td><td>{{item.system.totalWeight}}</td></td>
   <td>{{item.type}}</td>
 
@@ -657,6 +663,7 @@
 </table>
 
 {{/each}}
+{{/if}}
 
   </div>
 </div>

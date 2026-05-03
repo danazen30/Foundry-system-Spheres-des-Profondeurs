@@ -15,6 +15,8 @@ constructor(...args) {
     super(...args);
 
     this.activeTab = "skills"; // 🔥 TAB PAR DEFAUT
+    this.openContainers = new Set();
+    this._scrollPositions = {};
   }
 
   static DEFAULT_OPTIONS = {
@@ -90,6 +92,19 @@ _getItemLayer(item) {
     default: return 0;
   }
 
+}
+
+async render(...args) {
+
+  // 🔥 1. SAVE AVANT RENDER
+const prevEl = this.element?.querySelector(".sdp-content-inner");
+
+if (prevEl && prevEl.scrollHeight > prevEl.clientHeight) {
+  this._scrollPositions.main = prevEl.scrollTop;
+}
+
+  // 🔥 2. RENDER NORMAL
+  return super.render(...args);
 }
 
   async _prepareContext() {
@@ -486,7 +501,14 @@ for (let weapon of weapons) {
 
   if (!weapon.system.equipped) continue;
 
-  const handed = (weapon.system.handedness || "").toLowerCase();
+const handed = (weapon.system.handedness || "").toLowerCase();
+
+// =========================
+// SPECIAL → PAS DE SLOT
+// =========================
+if (handed === "special") {
+  continue; // 🔥 ignore complètement pour la silhouette
+}
 
   // =========================
   // 2 MAINS → prend les deux slots
@@ -854,6 +876,22 @@ SdpRoll.openDialog({
 
   const root = this.element;
 
+  console.log("=== SCAN SCROLLABLE ELEMENTS ===");
+
+this.element.querySelectorAll("*").forEach(e => {
+
+  if (e.scrollHeight > e.clientHeight) {
+
+    console.log("SCROLLABLE:", {
+      el: e,
+      class: e.className,
+      scrollHeight: e.scrollHeight,
+      clientHeight: e.clientHeight
+    });
+
+  }
+
+});
 
   // ===== ATTRIBUTES =====
 root.querySelectorAll('[data-action="rollAttribute"]').forEach(el => {
@@ -2325,17 +2363,28 @@ root.querySelectorAll('[data-action="toggleContainer"]').forEach(el => {
 
   el.addEventListener("click", (event) => {
 
-    const row = event.currentTarget.closest("tr");
+    const button = event.currentTarget;
+    const row = button.closest("tr");
     const contentRow = row.nextElementSibling;
 
-    if (!contentRow || !contentRow.classList.contains("container-content-row")) {
-      console.warn("Container row not found");
-      return;
+    if (!contentRow) return;
+
+    const containerId = row.dataset.containerId;
+
+    const isOpen = this.openContainers.has(containerId);
+
+    if (isOpen) {
+      this.openContainers.delete(containerId);
+      contentRow.style.display = "none";
+
+      button.textContent = "▶"; // 👉 fermé
+
+    } else {
+      this.openContainers.add(containerId);
+      contentRow.style.display = "table-row";
+
+      button.textContent = "▼"; // 👉 ouvert
     }
-
-    const isHidden = contentRow.style.display === "none";
-
-    contentRow.style.display = isHidden ? "table-row" : "none";
 
   });
 
@@ -2534,22 +2583,98 @@ root.querySelectorAll('.armor-toggle').forEach(el => {
     details.style.display = isHidden ? "table-row" : "none";
 
   });
+});
 
-  // OPTIONNEL : click gauche ouvre la fiche
-  el.addEventListener("click", (event) => {
+// =========================
+// CLICK QUANTITY (GLOBAL)
+// =========================
 
-    const item = this.document.items.get(
-      event.currentTarget.dataset.itemId
-    );
+root.querySelectorAll('.qty-clickable').forEach(el => {
 
+
+  // CLICK DROIT → -1
+  el.addEventListener("contextmenu", async (event) => {
+
+    event.preventDefault();
+
+    const item = this.document.items.get(el.dataset.itemId);
     if (!item) return;
 
-    item.sheet.render(true);
+    const current = item.system.quantity?.value ?? 0;
 
+    if (current <= 0) return;
+
+    await item.update({
+      "system.quantity.value": current - 1
+    });
+
+  });
+
+  el.addEventListener("click", async (event) => {
+
+  // 🔥 FIX CRUCIAL
+  if (event.target.closest("input, select, button")) return;
+
+  const item = this.document.items.get(el.dataset.itemId);
+  if (!item) return;
+
+  const current = Number(item.system.quantity?.value ?? 0);
+
+  await item.update({
+    "system.quantity.value": current + 1
   });
 
 });
 
+});
+
+// =========================
+// RESTORE CONTAINERS STATE
+// =========================
+
+this.openContainers.forEach(containerId => {
+
+  const contentRow = root.querySelector(
+    `.container-content-row[data-container="${containerId}"]`
+  );
+
+  const headerRow = root.querySelector(
+    `.container-header-row[data-container-id="${containerId}"]`
+  );
+
+  if (contentRow) {
+    contentRow.style.display = "table-row";
+  }
+
+  if (headerRow) {
+    const btn = headerRow.querySelector(".container-toggle");
+    if (btn) btn.textContent = "▼";
+  }
+
+});
+
+// =========================
+// RESTORE SCROLL DEBUG
+// =========================
+
+const tryRestoreScroll = () => {
+
+  const el = this.element.querySelector(".sdp-content-inner");
+
+  if (!el) return;
+
+  // 🔥 attendre qu'il soit vraiment scrollable
+  if (el.scrollHeight <= el.clientHeight) {
+    requestAnimationFrame(tryRestoreScroll);
+    return;
+  }
+
+  el.scrollTop = this._scrollPositions.main || 0;
+
+  console.log("RESTORE FINAL:", el.scrollTop);
+};
+
+requestAnimationFrame(tryRestoreScroll);
 }
 
 _onLevelUp() {
