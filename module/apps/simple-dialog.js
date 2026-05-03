@@ -15,22 +15,25 @@ export class SimpleDialog extends HandlebarsApplicationMixin(ApplicationV2) {
     }
   };
 
-constructor({ title, content, buttons }) {
-  super({
-    window: {
-      title: title || "Dialog"
-    }
-  });
-
-  this.content = content;
-  this.buttons = buttons;
-}
-
   static PARTS = {
     body: {
       template: "systems/sdp/templates/dialogs/simple-dialog.hbs"
     }
   };
+
+  static LAYOUT = {
+    template: "templates/applications/window.hbs",
+    parts: ["body"]
+  };
+
+  constructor({ title, content, buttons }) {
+    super({
+      window: { title: title || "Dialog" }
+    });
+
+    this.content = content;
+    this.buttons = buttons;
+  }
 
   async _prepareContext() {
     return {
@@ -55,9 +58,25 @@ constructor({ title, content, buttons }) {
         }
 
         this.close();
-
       });
     });
   }
 
+  // ✅ FIX CRITIQUE
+setPosition(position = {}) {
+
+  // 🔥 si pas encore dans le DOM → on attend
+  if (!this.element || !this.element.parentElement) {
+
+    requestAnimationFrame(() => this.setPosition(position));
+    return this; // ⚠️ important : ne pas appeler super
+  }
+
+  // 🔒 sécurise width
+  if (position.width === undefined) {
+    position.width = 400;
+  }
+
+  return super.setPosition(position);
+}
 }

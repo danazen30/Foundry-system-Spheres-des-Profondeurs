@@ -317,12 +317,13 @@ w.displayTraits = normalized.map(t => {
   label: traitConfig?.label || t.key,
   value: t.value,
   type: traitConfig?.type || "neutral",
+  description: traitConfig?.description || "No description",
   disabled: (
-  t.key !== "protectrice" &&
-  t.source === "weapon" &&
-  isPositive &&
-  !hasValidSkill
-)
+    t.key !== "protectrice" &&
+    t.source === "weapon" &&
+    isPositive &&
+    !hasValidSkill
+  )
 };
 });
 
@@ -385,11 +386,12 @@ for (const t of armorTraitsArray) {
   const config = SDP.ARMOR_TRAITS?.[key];
 
   allTraits.push({
-    key,
-    label: config?.label || key,
-    value,
-    type: config?.type || "neutral"
-  });
+  key,
+  label: config?.label || key,
+  value,
+  type: config?.type || "neutral",
+  description: config?.description || "No description"
+});
 }
 
   // =========================
@@ -1479,8 +1481,28 @@ root.querySelectorAll('[data-action="deleteItem"]').forEach(el => {
   el.addEventListener("click", async (event) => {
 
     const item = this.document.items.get(event.currentTarget.dataset.itemId);
+    if (!item) return;
 
-    await item.delete();
+    new SimpleDialog({
+      title: "Delete Item",
+      content: `
+        <div class="confirm-delete">
+          <p>Are you sure you want to delete:</p>
+          <p><strong>${item.name}</strong> ?</p>
+        </div>
+      `,
+      buttons: {
+        confirm: {
+          label: "Delete",
+          callback: async () => {
+            await item.delete();
+          }
+        },
+        cancel: {
+          label: "Cancel"
+        }
+      }
+    }).render(true);
 
   });
 });
@@ -2654,16 +2676,52 @@ this.openContainers.forEach(containerId => {
 });
 
 // =========================
-// RESTORE SCROLL DEBUG
+// TRAIT CLICK → DIALOG (DELEGATION)
 // =========================
+root.addEventListener("click", (event) => {
 
-const tryRestoreScroll = () => {
-
-  const el = this.element.querySelector(".sdp-content-inner");
+  const el = event.target.closest(".trait-clickable");
 
   if (!el) return;
 
-  // 🔥 attendre qu'il soit vraiment scrollable
+  console.log("TRAIT CLICKED", el.dataset); // 🔥 DEBUG
+
+  const label = el.dataset.trait;
+  const desc = el.dataset.description;
+
+  new SimpleDialog({
+    title: label,
+    content: `
+      <div class="trait-dialog">
+        <p>${desc}</p>
+      </div>
+    `,
+    buttons: {
+      ok: {
+        label: "OK"
+      }
+    }
+  }).render(true);
+
+});
+
+// =========================
+// RESTORE SCROLL DEBUG
+// =========================
+
+const rootEl = this.element;
+
+if (!rootEl) return;
+
+const tryRestoreScroll = () => {
+
+  // 🔥 si la sheet a été détruite → stop
+  if (!rootEl.isConnected) return;
+
+  const el = rootEl.querySelector(".sdp-content-inner");
+  if (!el) return;
+
+  // 🔥 attendre que le layout soit prêt
   if (el.scrollHeight <= el.clientHeight) {
     requestAnimationFrame(tryRestoreScroll);
     return;
@@ -2675,7 +2733,7 @@ const tryRestoreScroll = () => {
 };
 
 requestAnimationFrame(tryRestoreScroll);
-}
+  }
 
 _onLevelUp() {
 

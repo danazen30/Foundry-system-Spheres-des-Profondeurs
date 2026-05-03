@@ -96,9 +96,13 @@
         <strong>Traits:</strong>
 
         {{#each item.displayTraits}}
-          <span class="trait-tag {{this.type}} {{#if this.disabled}}trait-disabled{{/if}}">
-            {{this.label}}
-          </span>
+          <span
+  class="trait-tag {{this.type}} {{#if this.disabled}}trait-disabled{{/if}} trait-clickable"
+  data-trait="{{this.label}}"
+  data-description="{{this.description}}"
+>
+  {{this.label}}
+</span>
         {{/each}}
       </div>
 
@@ -271,10 +275,14 @@
         <strong>Traits:</strong>
 
         {{#each item.displayTraits}}
-          <span class="trait-tag {{this.type}} {{#if this.disabled}}trait-disabled{{/if}}">
-            {{this.label}}
-          </span>
-        {{/each}}
+  <span
+    class="trait-tag {{this.type}} {{#if this.disabled}}trait-disabled{{/if}} trait-clickable"
+    data-trait="{{this.label}}"
+    data-description="{{this.description}}"
+  >
+    {{this.label}}
+  </span>
+{{/each}}
       </div>
 
     </div>
@@ -437,11 +445,16 @@
   <strong>Traits:</strong>
 
   {{#each item.displayArmorTraits}}
-    <span class="trait-tag {{this.type}}">
+    <span
+      class="trait-tag {{this.type}} {{#if this.disabled}}trait-disabled{{/if}} trait-clickable"
+      data-trait="{{this.label}}"
+      data-description="{{this.description}}"
+    >
       {{this.label}}
       {{#if this.value}} ({{this.value}}){{/if}}
     </span>
   {{/each}}
+
 </div>
 
       <!-- DESCRIPTION -->
