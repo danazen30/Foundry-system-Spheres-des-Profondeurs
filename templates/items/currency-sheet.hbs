@@ -1,0 +1,50 @@
+<div class="sdp-item-sheet">
+
+  <header class="sheet-header">
+    <img src="{{item.img}}" data-edit="img" class="item-img">
+
+    <input type="text"
+           name="name"
+           value="{{item.name}}"
+           placeholder="Currency Name"/>
+  </header>
+
+  <div class="sheet-content">
+
+    <div class="form-group">
+      <label>Type</label>
+      <select name="system.denomination.value">
+        {{#each denominations}}
+          <option value="{{this}}"
+            {{#if (eq this ../system.denomination.value)}}selected{{/if}}>
+            {{this}}
+          </option>
+        {{/each}}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Quantity</label>
+      <input type="number"
+             name="system.quantity.value"
+             value="{{system.quantity.value}}"/>
+    </div>
+
+    <!-- 🔥 POIDS -->
+    <div class="form-group">
+      <label>Weight (per unit)</label>
+      <input type="number"
+             name="system.encumbrance.value"
+             value="{{system.encumbrance.value}}"/>
+    </div>
+
+    <div class="form-group">
+      <label>Value (optional)</label>
+      <input type="number"
+             name="system.value.value"
+             value="{{system.value.value}}"/>
+    </div>
+
+  </div>
+
+</div>

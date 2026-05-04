@@ -1,5 +1,42 @@
 <div class="tab-inventory">
   <div class="inventory-scroll">
+
+<h2>Currency</h2>
+
+<table class="inventory-table">
+<tr>
+  <th></th>
+  <th>Name</th>
+  <th>Type</th>
+  <th>Qty</th>
+  <th></th>
+</tr>
+
+{{#each currency as |item|}}
+<tr class="item-row" data-item-id="{{item.id}}">
+
+  <td>
+    <img src="{{item.img}}" class="item-img">
+  </td>
+
+  <td>{{item.name}}</td>
+
+  <td>{{item.system.denomination.value}}</td>
+
+  <td class="qty-clickable" data-item-id="{{item.id}}">
+    {{item.system.quantity.value}}
+  </td>
+
+  <td class="item-actions">
+    <button data-action="editItem" data-item-id="{{item.id}}">✏️</button>
+    <button data-action="deleteItem" data-item-id="{{item.id}}">🗑️</button>
+  </td>
+
+</tr>
+{{/each}}
+
+</table>
+
 {{#if meleeWeapons.length}}
 <h2>Melee Weapons</h2>
 

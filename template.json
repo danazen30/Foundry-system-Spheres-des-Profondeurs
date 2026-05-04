@@ -1059,6 +1059,27 @@
         "type": "array",
         "value": []
       }
+    },
+    "currency": {
+      "templates": [
+        "quantity",
+        "description",
+        "gmNotes",
+        "playerNotes",
+        "encumbrance"
+      ],
+
+      "value": {
+        "type": "number",
+        "label": "Value",
+        "value": 0
+      },
+
+      "denomination": {
+        "type": "string",
+        "label": "Type",
+        "value": "gc"
+      }
     }
   }
 }

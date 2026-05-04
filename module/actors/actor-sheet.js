@@ -548,6 +548,10 @@ for (let key in slots) {
 
 }
 
+const currency = this.document.items.filter(i =>
+  i.type === "currency"
+);
+
 applyFinalWeight(meleeWeapons);
 applyFinalWeight(rangedWeapons);
 applyFinalWeight(possessions, "weight");
@@ -592,6 +596,7 @@ return {
   rootItems,
   diseases,
   slots,
+  currency,
   activeTab: this.activeTab
 };
   }
@@ -2702,6 +2707,39 @@ root.addEventListener("click", (event) => {
       }
     }
   }).render(true);
+
+});
+
+root.querySelectorAll('.currency-click').forEach(el => {
+
+  // CLICK GAUCHE → +1
+  el.addEventListener("click", async (event) => {
+
+    const type = el.dataset.type;
+
+    const current = this.document.system.currency?.[type] ?? 0;
+
+    await this.document.update({
+  [`system.currency.value.${type}`]: current + 1
+});
+
+  });
+
+  // CLICK DROIT → -1
+  el.addEventListener("contextmenu", async (event) => {
+
+    event.preventDefault();
+
+    const type = el.dataset.type;
+
+    const current = this.document.system.currency?.[type] ?? 0;
+
+    if (current <= 0) return;
+
+    await this.document.update({
+  [`system.currency.value.${type}`]: current - 1
+});
+  });
 
 });
 
