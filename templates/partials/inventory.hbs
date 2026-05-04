@@ -3,39 +3,48 @@
 
 <h2>Currency</h2>
 
-<table class="inventory-table">
+{{#if currency.length}}
+<table class="currency-table">
+
+<thead>
 <tr>
-  <th></th>
-  <th>Name</th>
-  <th>Type</th>
-  <th>Qty</th>
-  <th></th>
+  {{#each currency as |item|}}
+    <th>{{item.name}}</th>
+  {{/each}}
 </tr>
+</thead>
 
-{{#each currency as |item|}}
-<tr class="item-row" data-item-id="{{item.id}}">
+<tbody>
+<tr>
+  {{#each currency as |item|}}
+    <td class="currency-cell" data-item-id="{{item.id}}">
 
-  <td>
-    <img src="{{item.img}}" class="item-img">
-  </td>
+  <div class="currency-inner">
 
-  <td>{{item.name}}</td>
+    <!-- LEFT (image) -->
+    <img src="{{item.img}}" class="currency-img">
 
-  <td>{{item.system.denomination.value}}</td>
+    <!-- CENTER (qty) -->
+    <div class="currency-qty qty-clickable"
+         data-item-id="{{item.id}}">
+      {{item.system.quantity.value}}
+    </div>
 
-  <td class="qty-clickable" data-item-id="{{item.id}}">
-    {{item.system.quantity.value}}
-  </td>
+    <!-- RIGHT (actions) -->
+    <div class="currency-actions">
+      <button data-action="editItem" data-item-id="{{item.id}}">✏️</button>
+      <button data-action="deleteItem" data-item-id="{{item.id}}">🗑️</button>
+    </div>
 
-  <td class="item-actions">
-    <button data-action="editItem" data-item-id="{{item.id}}">✏️</button>
-    <button data-action="deleteItem" data-item-id="{{item.id}}">🗑️</button>
-  </td>
+  </div>
 
+</td>
+  {{/each}}
 </tr>
-{{/each}}
+</tbody>
 
 </table>
+{{/if}}
 
 {{#if meleeWeapons.length}}
 <h2>Melee Weapons</h2>

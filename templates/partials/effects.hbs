@@ -1,36 +1,99 @@
 <div class="tab-effects">
 
-  <!-- CONDITIONS -->
-  <h3>Conditions</h3>
+<h3>Conditions</h3>
 
-  <ul class="conditions-list">
+<!-- 🔢 NUMERIC CONDITIONS -->
+<table class="conditions-table numeric">
+  <thead>
+    <tr>
+      {{#each system.conditions as |value key|}}
+        {{#unless (eq (lookup (lookup ../config.conditionConfig key) "type") "state")}}
+          <th 
+  class="condition-header"
+  data-key="{{key}}"
+  data-description="{{lookup (lookup ../config.conditionConfig key) 'description'}}"
+>
+  {{key}}
+</th>
+        {{/unless}}
+      {{/each}}
+    </tr>
+  </thead>
+
+<tbody>
+
+  <!-- LIGNE VALEURS -->
+  <tr>
     {{#each system.conditions as |value key|}}
-
-    <li class="condition">
-
-      <span>{{key}}</span>
-
-      {{#if (eq (lookup (lookup ../config.conditionConfig key) "type") "state")}}
-
-        <input type="checkbox"
-          data-action="updateConditionState"
+      {{#unless (eq (lookup (lookup ../config.conditionConfig key) "type") "state")}}
+        <td 
+          class="condition-cell"
           data-key="{{key}}"
-          {{checked value}}>
-
-      {{else}}
-
-        <input type="number"
-          data-key="{{key}}"
-          value="{{lookup ../system.conditionTotals key}}"
-          min="0">
-
-      {{/if}}
-
-    </li>
-
+        >
+          <input type="number"
+            class="condition-clickable"
+            data-key="{{key}}"
+            value="{{lookup ../system.conditionTotals key}}"
+            min="0">
+        </td>
+      {{/unless}}
     {{/each}}
-  </ul>
+  </tr>
 
+  <!-- 🔥 DÉPLIANT GLOBAL -->
+  <tr class="condition-details-row" style="display:none;">
+    <td colspan="100%" class="condition-details-content"></td>
+  </tr>
+
+</tbody>
+</table>
+
+
+<!-- ✅ BOOLEAN CONDITIONS -->
+<table class="conditions-table boolean">
+  <thead>
+    <tr>
+      {{#each system.conditions as |value key|}}
+        {{#if (eq (lookup (lookup ../config.conditionConfig key) "type") "state")}}
+          <th 
+  class="condition-header"
+  data-key="{{key}}"
+  data-description="{{lookup (lookup ../config.conditionConfig key) 'description'}}"
+>
+  {{key}}
+</th>
+        {{/if}}
+      {{/each}}
+    </tr>
+  </thead>
+
+<tbody>
+
+  <!-- CHECKBOXES -->
+  <tr>
+    {{#each system.conditions as |value key|}}
+      {{#if (eq (lookup (lookup ../config.conditionConfig key) "type") "state")}}
+        <td 
+          class="condition-cell"
+          data-key="{{key}}"
+        >
+          <input type="checkbox"
+            name="system.conditions.{{key}}"
+            data-action="updateConditionState"
+            data-key="{{key}}"
+            {{checked value}}>
+        </td>
+      {{/if}}
+    {{/each}}
+  </tr>
+
+  <!-- 🔥 DÉPLIANT -->
+  <tr class="condition-details-row" style="display:none;">
+    <td colspan="100%" class="condition-details-content"></td>
+  </tr>
+
+</tbody>
+</table>
 
   <!-- INJURIES -->
   <h3>Injuries</h3>

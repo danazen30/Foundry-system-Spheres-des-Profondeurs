@@ -2743,6 +2743,76 @@ root.querySelectorAll('.currency-click').forEach(el => {
 
 });
 
+root.querySelectorAll('.condition-clickable').forEach(el => {
+
+  // CLICK GAUCHE → +1
+  el.addEventListener("click", async (event) => {
+
+    event.preventDefault();
+
+    const key = el.dataset.key;
+    const actor = this.document;
+
+    const current = actor.system.conditionTotals?.[key] ?? 0;
+
+    await SdpConditionEngine.add(actor, key, 1);
+
+  });
+
+  // CLICK DROIT → -1
+  el.addEventListener("contextmenu", async (event) => {
+
+    event.preventDefault();
+
+    const key = el.dataset.key;
+    const actor = this.document;
+
+    const current = actor.system.conditionTotals?.[key] ?? 0;
+
+    if (current <= 0) return;
+
+    // 🔥 IMPORTANT : remove 1 stack
+    await SdpConditionEngine.add(actor, key, -1);
+
+  });
+
+});
+
+// =========================
+// CONDITION CLICK
+// =========================
+
+root.querySelectorAll('.condition-header').forEach(el => {
+
+  el.addEventListener("contextmenu", (event) => {
+
+    event.preventDefault();
+
+    const key = el.dataset.key;
+    const description = el.dataset.description;
+
+    const table = el.closest("table");
+    const detailsRow = table.querySelector(".condition-details-row");
+    const content = table.querySelector(".condition-details-content");
+
+    if (!detailsRow || !content) return;
+
+    const isOpen = detailsRow.style.display === "table-row";
+
+    if (isOpen && content.dataset.key === key) {
+      detailsRow.style.display = "none";
+      return;
+    }
+
+    content.innerHTML = `<strong>${key}</strong><br>${description}`;
+    content.dataset.key = key;
+
+    detailsRow.style.display = "table-row";
+
+  });
+
+});
+
 // =========================
 // RESTORE SCROLL DEBUG
 // =========================

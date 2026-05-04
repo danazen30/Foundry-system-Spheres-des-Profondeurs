@@ -100,80 +100,188 @@ SDP.conditionConfig = {
     attackBonusAgainst: 1,
     trigger: "startTurn",
     test: "resistance",
-    onRecover: "exhausted"
+    onRecover: "exhausted",
+    description: `You have taken a blow to the head; you are disoriented or confused. 
+    Your ears are ringing, and nothing really makes sense anymore. 
+    You are unable to perform your Action during your turn, and you cannot run. 
+    You also suffer a -10 penalty to all Tests, and any opponent attempting to hit you in melee combat gains a +1 bonus to hit.
+
+    You may suffer from this same Condition multiple times; it is also possible to gain several instances of the same Condition from a single event. 
+    At the end of each round, you may attempt an Intermediate Resistance Test (+0). 
+    On a success, remove 1 Stunned Condition, and each SL (Success Level) achieved allows you to remove 1 additional Stunned Condition. 
+    Once all Stunned Conditions have been removed, gain +1 Exhausted Condition.`
   },
 
   bleeding: {
     type: "stack",
     trigger: "endTurn",
-    damagePerStack: 1
+    damagePerStack: 1,
+    description: `You are bleeding heavily. Lose 1 Wound at the end of each round, ignoring all modifiers. 
+    If you reach 0 Wounds, you no longer lose additional Wounds and immediately fall unconscious (gaining the Unconscious Condition) due to blood loss. 
+    At the end of each round, you have a 10% chance to die per Bleeding Condition you have; for example, if you suffer from 3 Bleeding Conditions, 
+    you will die from blood loss on a result of 1-30.
+
+    You cannot regain consciousness until all Bleeding Conditions are removed. 
+    A Bleeding Condition can be removed by: a successful Heal Test, where each SL (Success Level) removes an additional Bleeding Condition; or by any spell that restores Wounds, 
+    removing 1 Bleeding Condition per Wound healed. Once all Bleeding Conditions are removed, gain +1 Exhausted Condition.`
   },
 
   staggered: {
-    type: "state"
-
+    type: "state",
+    description: `A state between being fine and being dazed. 
+    A staggered character can take only a single simple action or a move action each round (but not both, and not a complex action).`
   },
+
   poisoned: {
     type: "stack",
     trigger: "endTurn",
     damagePerStack: 1,
     modifier: -10,
     test: "resistance",
-    onRecover: "exhausted"
+    onRecover: "exhausted",
+    description: `You have been poisoned or injected with venom. The difficulty of all Tests made to eliminate the poison is determined by the specific poison or venom involved.
+     At the end of each round, lose 1 Wound, ignoring all modifiers. In addition, you suffer a -10 penalty to all Tests.
+
+    If you reach 0 Wounds while Poisoned, you cannot recover any Wounds as long as you still have any Poisoned Conditions. 
+    At the end of each round, you may attempt a Resistance Test. On a success, remove one Poisoned Condition, and each SL (Success Level) 
+    allows you to remove one additional Poisoned Condition. A Heal Test can achieve the same result. Once all Poisoned Conditions have been removed, gain +1 Exhausted Condition.
+
+    If you fall Unconscious while Poisoned, make a death survival test as for Bleeding: for example, if you have 2 stacks, 
+    you will die on a roll of 1-20—and you die in horrible agony.`
   },
 
   burning: {
     type: "stack",
     trigger: "endTurn",
     dicePerStack: "d6",
-    armor:"lowest"
+    armor:"lowest",
+    description: `You have caught fire! Though perhaps not completely yet. This Condition can only be applied if you are flammable—for example, 
+    wearing clothing that can catch fire—but certain magical or divine effects may also set you ablaze even if you are not normally combustible.
+
+    At the end of each round, you suffer 1d6 Wounds, modified by your AP (Armor Points), to a minimum of 1 Wound. For each additional On Fire Condition you suffer, 
+    add +1d6 damage; thus, if you have 3 On Fire Conditions, you suffer 3d6 Wounds.
+
+    A single On Fire Condition can be removed with an Athletics Test, and each SL (Success Level) achieved allows you to remove one additional On Fire Condition. 
+    The difficulty of the Test is adjusted based on the circumstances: it is easier to extinguish the flames by rolling in sand than in the middle of a kitchen full of oil.`
   },
+
   exhausted: {
     type: "stack",
-    modifier: -10
+    modifier: -10,
+    description: `You are exhausted or stressed; either way, you need rest. You suffer a –10 penalty to all Tests.
+
+    To remove an Exhausted Condition, you normally require rest, a spell, or a divine effect. However, 
+    in some situations—such as when the Condition is caused by carrying too much weight—making adjustments (for example, carrying fewer items) may allow you to remove the Condition.
+
+    Be careful: if the number of Exhausted Conditions reaches your Toughness Bonus, you collapse to the ground and gain the Unconscious Condition.`
   },
+
   deafened: {
     type: "stack",
     modifier: -10,
     attackBonusAgainst : 1,
     trigger: "endTurn",
-    removePerTurn: 1
+    removePerTurn: 1,
+    description: `Whether due to a thunderous noise or a blow to the head, you can no longer hear properly. You suffer a -10 penalty to all Tests involving hearing, 
+    and any opponent attacking you in close combat gains an additional +1 bonus to hit (this bonus does not increase with multiple Deafened Conditions).
+
+    One Deafened Condition is removed at the end of each round after the first, often replaced by lingering tinnitus.`
+
   },
+
   prone: {
-    type: "state"
+    type: "state",
+    description: `You are on the ground, likely because you have no Wounds remaining, have fallen, or have been struck by something very large. During your turn, 
+    your Movement can only be used to stand up or to crawl up to half your Movement in meters.
+
+    Any opponent attempting to attack you in melee gains a +2 bonus to hit. The Prone Condition does not stack—you are either Prone or you are not.
+
+    Standing up is considered a move action and provokes an opportunity attack (however, if an ally is engaged in melee with the enemy, no opportunity attack is triggered).`
+
   },
+
   shaken: {
     type : "state",
-    modifier: -10
+    modifier: -10,
+    description: `The character suffers a –1 penalty to attack rolls, as well as a –10 penalty to skill and characteristic Tests. 
+    Being Shaken represents a lesser state of fear than being Frightened or Panicked.
+
+    Shaken lasts until the source of the fear is no longer a threat, at which point it grants an Exhausted Condition. This effect is removed if the Frightened Condition is applied.`
   },
+
   frightened: {
     type: "state",
     modifier: -30,
     trigger: "endTurn",
-    test: "calm"
+    test: "calm",
+    description: `A Frightened character flees from the source of their fear as quickly as possible. If no escape is available, they may fight. 
+    They suffer a -3 penalty to attack rolls, as well as to skill and characteristic Tests. 
+    They may use their powers and spells to escape, and will inevitably do so if no other option is available.
+
+    You cannot make any Tests to recover from this Condition while you are Engaged with an enemy. If you are not Engaged, 
+    at the end of each round you may attempt a Cool Test to remove the Frightened Condition. The difficulty varies depending on the situation and the threat. 
+    It is easier to regain your composure if you are hiding behind a barrel at the end of a dead-end alley far from danger (Easy +20) 
+    than if you are just a few strides away from a drooling demon demanding your blood (Very Hard -30).
+
+    This Condition is similar to being Shaken, except that the character does everything possible to flee. When Frightened ends, the Shaken Condition is applied.`
+ 
   },
+
   slowed: {
     type: "stack",
-    movementPenalty: 1
+    movementPenalty: 1,
+    description: `You are slowed. The source of your slowing reduces your Movement by 1 per stack. If your Movement is reduced to 0, you gain the Entangled Condition.`
+ 
   },
+
   entangled: {
     type: "state",
     trigger: "startTurn",
-    test: "strength"
+    test: "strength",
+    description: `You are hindered by something that restricts your movement; this could be ropes, a web, or even an opponent's bulging biceps. 
+    During your turn, you cannot use your Movement.
+
+    You may use your Action to remove the Entangled Condition by succeeding on an opposed Strength Test against the source of the entanglement. 
+    The difficulty varies depending on the situation. If this Condition was caused by Slowed, a success removes the Entangled Condition, and each SL (Success Level) 
+    reduces some of the Slowed stacks.`
   },
+
   unconscious: {
-    type: "state"
+    type: "state",
+    description: `You are knocked out, unconscious, or otherwise incapacitated. You can do absolutely nothing on your turn and have no awareness of your surroundings.
+
+    An attacker targeting you gains the benefit of the “I Will Not Fail!” rule without needing to spend a Resilience Point; alternatively, at the GM's discretion, 
+    a melee attack automatically kills you. Any ranged attack is also an automatic success and deals damage as if the attacker were at point-blank range.
+
+    The Unconscious Condition does not stack—you are either Unconscious or you are not. Recovering from this Condition will often depend on the circumstances that caused it. 
+    If you spend a Resolve Point to remove the Unconscious Condition but are still subject to its cause, you gain a new Unconscious Condition at the end of the round.
+
+    When you remove the Unconscious Condition, you gain the Prone and Exhausted Conditions.`
   },
+
   dying: {
     type: "state",
     trigger: "startTurn",
-    test: "dying"
+    test: "dying",
+    description: `The character is unconscious and dying. A creature with a negative number of Wounds that is not stabilized is considered to be dying. 
+    A dying creature cannot take any actions.
+
+    At the start of each of its turns, every round, until it becomes stabilized or dies, the character must make a Resistance Test. 
+    A stabilized character does not need to make this test. If the test is failed, the character loses 1 additional Wound.
+
+    A dying creature dies when its negative Wounds total equals its WT (Wound Threshold).
+
+    To stabilize the character, a successful Heal Test or a healing spell is required.`
   },
+
   surprised: {
     type: "state",
     trigger: "endTurn",
     removePerTurn: 1,
-    attackBonusAgainst: 3
+    attackBonusAgainst: 3,
+    description: `You are caught off guard and cannot act during your turn. Melee attacks against you gain a +3 bonus to hit.
+
+    The Condition is removed at the end of your round or after the first time you are targeted by an attack.`
   }
 
 };
