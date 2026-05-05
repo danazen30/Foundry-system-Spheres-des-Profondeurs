@@ -2403,3 +2403,320 @@ text-align:center;
   margin-top: 2px;     /* 🔥 colle au titre */
   margin-bottom: 6px;  /* 🔥 espace entre blocs */
 }
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* bloc */
+.details-group {
+  background: #1a1414;
+  border: 1px solid #444;
+  border-radius: 10px;
+  padding: 8px;
+}
+
+/* titre */
+.details-group h4 {
+  margin: 0 0 6px 0;
+  font-size: 16px;
+  text-transform: uppercase;
+  border-bottom: 1px solid #333;
+  padding-bottom: 2px;
+  letter-spacing: 1px;
+}
+
+/* grille interne */
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.details-group textarea {
+  width: 128px;
+
+  min-height: 18px;
+  height: 18px; /* 🔥 force une seule ligne au départ */
+
+  font-size: 14px;
+
+  resize: none;
+  overflow: hidden; /* 🔥 PAS DE SCROLL */
+
+  line-height: 18px; /* 🔥 alignement parfait */
+}
+
+/* on cible UNIQUEMENT le bloc Status */
+.details-group:nth-of-type(3) .details-grid {
+  grid-template-columns: 1fr 1fr 0.7fr; /* 🔥 standing plus petit */
+}
+
+/* input du standing plus compact */
+.details-group:nth-of-type(3) .resource-row:last-child input {
+  width: 70px;          /* 🔥 au lieu de 110px */
+  text-align: right;
+}
+
+/* optionnel : label un peu plus serré */
+.details-group:nth-of-type(3) .resource-row:last-child label {
+  font-size: 14px;
+}
+
+/* ton style existant légèrement amélioré */
+.resource-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+
+  background: #111;
+  border: 1px solid #444;
+  border-radius: 6px;
+
+  padding: 4px 6px;
+}
+
+.resource-row label {
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+.resource-row input {
+  width: 110px;
+  height: 18px;
+  font-size: 14px;
+}
+
+/* =========================
+   INFO TAB TITLES (ALIGN LIKE INVENTORY)
+========================= */
+
+.tab-info h3 {
+  font-size: 20px;          /* 🔥 réduit (proche inventory) */
+  text-align: center;
+
+  margin: 10px 0 6px 0;      /* 🔥 compact comme inventory */
+  padding: 0;
+
+  font-weight: 600;
+  letter-spacing: 0.5px;
+
+}
+
+/* =========================
+   CAREERS TABLE (ULTRA COMPACT)
+========================= */
+
+.careers-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  background: #1a1414;
+  border: 1px solid #444;
+  border-radius: 10px;
+  overflow: hidden;
+
+  margin-top: 2px;
+}
+
+/* HEADER */
+.careers-table thead {
+  background: #111;
+}
+
+.careers-table th {
+  padding: 2px 4px;          /* 🔥 ultra compact */
+  font-size: 16px;
+
+  text-transform: uppercase;
+  color: #bbb;
+
+  height: 20px;
+}
+
+/* ROW */
+.careers-table tr {
+  height: 22px;              /* 🔥 compact */
+}
+
+/* CELLS */
+.careers-table td {
+  padding: 2px 6px;          /* 🔥 réduit max */
+  border-bottom: 1px solid #333;
+
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* zebra */
+.careers-table tbody tr:nth-child(even) {
+  background: rgba(255,255,255,0.02);
+}
+
+/* NAME COLUMN */
+.careers-table td:first-child {
+  text-align: left;
+  padding-left: 8px;
+
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* CHECKBOX */
+.careers-table input[type="checkbox"] {
+  transform: scale(0.9);     /* 🔥 plus discret */
+  cursor: pointer;
+}
+
+/* ACTIONS */
+.careers-table td.item-actions {
+  padding: 0;
+  width: 40px;
+}
+
+.careers-table td.item-actions button {
+  all: unset;
+
+  width: 18px;
+  height: 18px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 14px;
+
+  cursor: pointer;
+}
+
+.careers-table td.item-actions button:hover {
+  background: #444;
+  border-radius: 4px;
+}
+
+/* COLUMN WIDTH CONTROL */
+.careers-table th:nth-child(2),
+.careers-table td:nth-child(2),
+.careers-table th:nth-child(3),
+.careers-table td:nth-child(3) {
+  width: 50px;               /* 🔥 compact checkboxes */
+}
+
+.careers-table th:nth-child(4),
+.careers-table td:nth-child(4) {
+  width: 50px;               /* 🔥 actions */
+}
+
+/* =========================
+   XP SUMMARY (TABLE STYLE)
+========================= */
+
+.xp-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+
+  margin-bottom: 8px;
+}
+
+.xp-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  background: #111;
+  border: 1px solid #444;
+  border-radius: 8px;
+
+  padding: 6px 4px;
+}
+
+.xp-cell label {
+  font-size: 12px;
+  opacity: 0.7;
+  margin-bottom: 2px;
+}
+
+.xp-cell input {
+  width: 60px;
+  height: 20px;
+
+  text-align: center;
+
+  background: #1a1414;
+  border: 1px solid #555;
+  border-radius: 4px;
+
+  color: white;
+  font-size: 14px;
+}
+
+/* =========================
+   LEVEL PROGRESSION (UPGRADE)
+========================= */
+
+.level-progression ul {
+  padding-left: 0;
+  margin: 0;
+}
+
+.level-entry {
+  list-style: none;
+
+  background: #1a1414;
+  border: 1px solid #444;
+  border-radius: 8px;
+
+  padding: 6px 8px;
+  margin-bottom: 6px;
+}
+
+/* ligne principale */
+.level-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* stats */
+.level-stats {
+  display: flex;
+  gap: 6px;
+}
+
+/* badges */
+.lvl-stat {
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: bold;
+
+  background: #111;
+  border: 1px solid #555;
+}
+
+/* couleurs thématiques */
+.lvl-stat.hp {
+  color: #e74c3c;
+}
+
+.lvl-stat.dmg {
+  color: #e67e22;
+}
+
+.lvl-stat.insp {
+  color: #9b59b6;
+}
+
+/* description */
+.level-desc {
+  margin: 4px 0 0 0;
+  font-size: 12px;
+  opacity: 0.8;
+  font-style: italic;
+}

@@ -5,193 +5,111 @@
 
   <div class="details">
 
-    <div class="resource-row">
-  <label>Species</label>
-  {{#if actor.items}}
-    {{#each actor.items as |item|}}
-      {{#if (eq item.type "specie")}}
-        <span>{{item.name}}</span>
-      {{/if}}
-    {{/each}}
-  {{else}}
-    <span>None</span>
-  {{/if}}
-</div>
+  <!-- PHYSICAL -->
+  <div class="details-group">
+    <h4>Physical</h4>
 
-<div class="resource-row">
-  <label>Age</label>
-  <input type="text" name="system.details.age.value" value="{{system.details.age.value}}">
-</div>
+    <div class="details-grid">
 
-<div class="resource-row">
-  <label>Height</label>
-  <input type="text" name="system.details.height.value" value="{{system.details.height.value}}">
-</div>
+      <div class="resource-row">
+        <label>Age</label>
+        <input type="text" name="system.details.age.value" value="{{system.details.age.value}}">
+      </div>
 
-<div class="resource-row">
-  <label>Weight</label>
-  <input type="text" name="system.details.weight.value" value="{{system.details.weight.value}}">
-</div>
+      <div class="resource-row">
+        <label>Height</label>
+        <input type="text" name="system.details.height.value" value="{{system.details.height.value}}">
+      </div>
 
-<div class="resource-row">
-  <label>Hair</label>
-  <input type="text" name="system.details.hairColor.value" value="{{system.details.hairColor.value}}">
-</div>
+      <div class="resource-row">
+        <label>Weight</label>
+        <input type="text" name="system.details.weight.value" value="{{system.details.weight.value}}">
+      </div>
 
-<div class="resource-row">
-  <label>Eyes</label>
-  <input type="text" name="system.details.eyeColor.value" value="{{system.details.eyeColor.value}}">
-</div>
+      <div class="resource-row">
+        <label>Hair</label>
+        <input type="text" name="system.details.hairColor.value" value="{{system.details.hairColor.value}}">
+      </div>
 
-<div class="resource-row">
-  <label>Mark</label>
-  <input type="text" name="system.details.distinguishingMark.value" value="{{system.details.distinguishingMark.value}}">
-</div>
+      <div class="resource-row">
+        <label>Eyes</label>
+        <input type="text" name="system.details.eyeColor.value" value="{{system.details.eyeColor.value}}">
+      </div>
 
-<div class="resource-row">
-  <label>Ascendant</label>
-  <input type="text" name="system.details.ascending.value" value="{{system.details.ascending.value}}">
-</div>
+      <div class="resource-row">
+        <label>Mark</label>
+        <input type="text" name="system.details.distinguishingMark.value" value="{{system.details.distinguishingMark.value}}">
+      </div>
 
-    <div class="resource-row">
-      <label>Career</label>
-      <input type="text" name="system.details.career.value" value="{{system.details.career.value}}">
     </div>
-
-    <div class="resource-row">
-      <label>Career Group</label>
-      <input type="text" name="system.details.careerGroup.value" value="{{system.details.careerGroup.value}}">
-    </div>
-
-    <div class="resource-row">
-      <label>Standing</label>
-      <input type="text" name="system.details.standing.value" value="{{system.details.standing.value}}">
-    </div>
-
-    <div>
-      <label>Sign:</label>
-      {{#if sign}}
-        <span>{{sign.name}}</span>
-      {{else}}
-        <span>No Sign</span>
-      {{/if}}
-    </div>
-
   </div>
 
 
-  <!-- LEVEL PROGRESSION -->
-  <h3>Level Progression</h3>
+  <!-- ORIGIN -->
+  <div class="details-group">
+    <h4>Origin</h4>
 
-  <div class="level-progression">
+    <div class="details-grid">
 
-    {{#if levelProgression.length}}
-      <ul>
-        {{#each levelProgression}}
-          <li>
-            <strong>Level {{this.level}}</strong> → +{{this.hp}} HP
-
-            {{#if this.description}}
-              <p class="level-desc">{{this.description}}</p>
-            {{/if}}
-          </li>
-        {{/each}}
-      </ul>
-    {{else}}
-      <p>No level progression yet</p>
-    {{/if}}
-
-  </div>
-
-
-  <!-- EXPERIENCE -->
-  <h3>Experience</h3>
-
-  <div class="xp-container">
-
-    <div class="resource-row">
-      <label>Total</label>
-      <input
-        type="number"
-        value="{{xp.total}}"
-        data-action="updateXP"
-        data-type="total"
-        {{#unless user.isGM}}readonly{{/unless}}>
-    </div>
-
-    <div class="resource-row">
-      <label>Spent</label>
-      <input
-        type="number"
-        value="{{xp.spent}}"
-        data-action="updateXP"
-        data-type="spent"
-        {{#unless user.isGM}}readonly{{/unless}}>
-    </div>
-
-    <div class="resource-row">
-      <label>Available</label>
-      <input
-        type="number"
-        value="{{xp.available}}"
-        readonly>
-    </div>
-
-    <div class="xp-bar">
-
-      <div class="xp-label">
-        XP: {{xpBar.value}}
-        {{#if xpBar.nextXP}}
-          / {{xpBar.nextXP}}
+      <div class="resource-row">
+        <label>Species</label>
+        {{#if species}}
+          <span>{{species.name}}</span>
         {{else}}
-          (MAX)
+          <span>None</span>
         {{/if}}
       </div>
 
-      <div class="xp-bar-bg">
-        <div class="xp-bar-fill" style="width: {{xpBar.percent}}%;"></div>
+      <div class="resource-row">
+        <label>Sign</label>
+        {{#if sign}}
+          <span>{{sign.name}}</span>
+        {{else}}
+          <span>No Sign</span>
+        {{/if}}
+      </div>
+
+      <div class="resource-row">
+        <label>Ascendant</label>
+        <input type="text" name="system.details.ascending.value" value="{{system.details.ascending.value}}">
       </div>
 
     </div>
-
   </div>
 
 
-  {{#if canLevelUp}}
-    <div class="level-up">
-      <button data-action="levelUp">
-        Level Up Available → {{availableLevel}}
-      </button>
+  <!-- STATUS -->
+  <div class="details-group">
+    <h4>Status</h4>
+
+    <div class="details-grid">
+
+      <div class="resource-row">
+        <label>Career</label>
+        <textarea name="system.details.career.value">{{system.details.career.value}}</textarea>
+      </div>
+
+      <div class="resource-row">
+  <label>Career Group</label>
+  <textarea name="system.details.careerGroup.value">{{system.details.careerGroup.value}}</textarea>
+</div>
+
+      <div class="resource-row">
+        <label>Standing</label>
+        <input type="text" name="system.details.standing.value" value="{{system.details.standing.value}}">
+      </div>
+
     </div>
-  {{/if}}
+  </div>
 
-
-  <!-- XP LOG -->
-  <h4>XP Log</h4>
-
-  <ul class="xp-log">
-
-    {{#if xp.log.length}}
-      {{#each xp.log}}
-        <li class="xp-entry">
-          {{this.label}}
-        </li>
-      {{/each}}
-    {{else}}
-      <li>No XP activity</li>
-    {{/if}}
-
-  </ul>
-
+</div>
 
   <!-- CAREERS -->
-  <h3>Careers</h3>
-
   <table class="careers-table">
 
     <thead>
       <tr>
-        <th>Name</th>
+        <th>Careers</th>
         <th>Current</th>
         <th>Completed</th>
         <th></th>
@@ -234,6 +152,110 @@
     </tbody>
 
   </table>
+
+  <!-- EXPERIENCE -->
+  <h3>Experience</h3>
+
+  <div class="xp-container">
+
+    <div class="xp-summary">
+
+  <div class="xp-cell">
+    <label>Total</label>
+    <input
+      type="number"
+      value="{{xp.total}}"
+      data-action="updateXP"
+      data-type="total"
+      {{#unless user.isGM}}readonly{{/unless}}>
+  </div>
+
+  <div class="xp-cell">
+    <label>Spent</label>
+    <input
+      type="number"
+      value="{{xp.spent}}"
+      data-action="updateXP"
+      data-type="spent"
+      {{#unless user.isGM}}readonly{{/unless}}>
+  </div>
+
+  <div class="xp-cell">
+    <label>Available</label>
+    <input
+      type="number"
+      value="{{xp.available}}"
+      readonly>
+  </div>
+
+</div>
+
+    <div class="xp-bar">
+
+      <div class="xp-label">
+        XP: {{xpBar.value}}
+        {{#if xpBar.nextXP}}
+          / {{xpBar.nextXP}}
+        {{else}}
+          (MAX)
+        {{/if}}
+      </div>
+
+      <div class="xp-bar-bg">
+        <div class="xp-bar-fill" style="width: {{xpBar.percent}}%;"></div>
+      </div>
+
+    </div>
+
+      <div class="level-progression">
+
+    {{#if levelProgression.length}}
+      <ul>
+        {{#each levelProgression}}
+          <li class="level-entry">
+
+  <div class="level-main">
+    <strong>Level {{this.level}}</strong>
+
+    <div class="level-stats">
+      {{#if this.hp}}
+        <span class="lvl-stat hp">+{{this.hp}} HP</span>
+      {{/if}}
+
+      {{#if this.damageBonus}}
+        <span class="lvl-stat dmg">+{{this.damageBonus}} DMG</span>
+      {{/if}}
+
+      {{#if this.inspirationDice}}
+        <span class="lvl-stat insp">+{{this.inspirationDice}} Insp</span>
+      {{/if}}
+    </div>
+  </div>
+
+  {{#if this.description}}
+    <p class="level-desc">{{this.description}}</p>
+  {{/if}}
+
+</li>
+        {{/each}}
+      </ul>
+    {{else}}
+      <p>No level progression yet</p>
+    {{/if}}
+
+  </div>
+
+  </div>
+
+
+  {{#if canLevelUp}}
+    <div class="level-up">
+      <button data-action="levelUp">
+        Level Up Available → {{availableLevel}}
+      </button>
+    </div>
+  {{/if}}
+
 
 <h3>Ambitions & Motivation</h3>
 
@@ -304,5 +326,22 @@
   </div>
 
 </div>
+
+  <!-- XP LOG -->
+  <h4>XP Log</h4>
+
+  <ul class="xp-log">
+
+    {{#if xp.log.length}}
+      {{#each xp.log}}
+        <li class="xp-entry">
+          {{this.label}}
+        </li>
+      {{/each}}
+    {{else}}
+      <li>No XP activity</li>
+    {{/if}}
+
+  </ul>
 
 </div>

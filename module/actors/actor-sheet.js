@@ -553,6 +553,9 @@ const currency = this.document.items.filter(i =>
 );
 
 const injuries = this.actor.items.filter(i => i.type === "injury");
+const species = this.document.items
+  .filter(i => i.type === "specie")
+  .at(-1);
 
 applyFinalWeight(meleeWeapons);
 applyFinalWeight(rangedWeapons);
@@ -600,6 +603,7 @@ return {
   slots,
   currency,
   injuries,
+  species,
   activeTab: this.activeTab
 };
   }
@@ -1549,65 +1553,117 @@ root.querySelectorAll('[data-action="updateTalentAdv"]').forEach(el => {
 root.querySelectorAll('[data-action="addSpeciesTest"]').forEach(el => {
   el.addEventListener("click", async (event) => {
 
-  const button = event.currentTarget;
+    console.log("=== ADD SPECIES CLICK ===");
 
-  if (button.disabled) return;
-  button.disabled = true;
+    const button = event.currentTarget;
+    if (button.disabled) return;
+    button.disabled = true;
 
-    const species = game.items.filter(i => i.type === "specie");
-
-    if (species.length === 0) {
-      ui.notifications.warn("No specie found");
-      return;
-    }
-
-    const specie = species[0];
     const actor = this.document;
 
     // =========================
-    // APPLY BASE ATTRIBUTES (REPLACE)
+    // 1. GET SPECIES
     // =========================
 
-    const updates = {};
+    const species = game.items.filter(i => i.type === "specie");
 
-    for (const [key, value] of Object.entries(specie.system.baseAttributes || {})) {
+    console.log("SPECIES FOUND:", species.map(s => s.name));
+
+    if (species.length === 0) {
+      ui.notifications.warn("No specie found");
+      button.disabled = false;
+      return;
+    }
+
+    const baseSpecie = species[0];
+
+    console.log("USING SPECIE:", baseSpecie.name);
+
+    // =========================
+    // 2. CREATE ITEM
+    // =========================
+
+    const [created] = await actor.createEmbeddedDocuments("Item", [
+      baseSpecie.toObject()
+    ]);
+
+    console.log("CREATED SPECIE ITEM:", created);
+
+    // =========================
+    // 3. PREPARE UPDATES
+    // =========================
+
+    const updates = {}; // 🔥 FIX CRITIQUE
+
+    const baseAttrs = created.system.baseAttributes || {};
+
+    console.log("BASE ATTRIBUTES:", baseAttrs);
+
+    for (const [key, value] of Object.entries(baseAttrs)) {
 
       if (value === 0 || value === null || value === undefined) continue;
 
-      const path = `system.attributes.${key}.initial`;
-
-      updates[path] = value;
+      updates[`system.attributes.${key}.initial`] = value;
     }
 
     // =========================
-// MOVEMENT (SPECIE)
-// =========================
+    // 4. MOVEMENT
+    // =========================
 
-if (specie.system.movement?.walk !== undefined) {
+    if (created.system.movement?.walk !== undefined) {
+      updates["system.resources.movement.value"] = created.system.movement.walk;
+    }
 
-  updates["system.resources.movement.walk"] = specie.system.movement.walk;
+    console.log("FINAL UPDATES:", updates);
 
-  // recalcul run (optionnel mais conseillé)
-  updates["system.resources.movement.run"] = specie.system.movement.walk * 2;
-
-}
+    // =========================
+    // 5. APPLY
+    // =========================
 
     await actor.update(updates);
 
-    // =========================
-    // REMOVE EXISTING SPECIE
-    // =========================
-
-    const existing = actor.items.find(i => i.type === "specie");
-    if (existing) await existing.delete();
+    console.log("ACTOR UPDATED");
 
     // =========================
-    // ADD SPECIE ITEM
+    // 6. FORCE RENDER
     // =========================
 
-    await actor.createEmbeddedDocuments("Item", [specie.toObject()]);
+    await this.render(true);
+
+    console.log("RENDER DONE");
+
+    button.disabled = false;
 
   });
+});
+
+Hooks.on("createItem", async (item, options, userId) => {
+
+  if (item.type !== "specie") return;
+
+  const actor = item.parent;
+  if (!actor) return;
+
+  console.log("SPECIE ADDED → APPLY EFFECT");
+
+  const updates = {};
+
+  const baseAttrs = item.system.baseAttributes || {};
+
+  for (const [key, value] of Object.entries(baseAttrs)) {
+
+    if (!value) continue;
+
+    updates[`system.attributes.${key}.initial`] = value;
+  }
+
+  // movement
+  if (item.system.movement?.walk !== undefined) {
+    updates["system.resources.movement.value"] = item.system.movement.walk;
+  }
+
+  await actor.update(updates);
+
 });
 
 // =========================
@@ -2814,6 +2870,20 @@ root.querySelectorAll('.condition-header').forEach(el => {
 
   });
 
+});
+
+root.querySelectorAll("textarea").forEach(el => {
+
+  const resize = () => {
+    el.style.height = "18px"; // reset (1 ligne)
+    el.style.height = el.scrollHeight + "px";
+  };
+
+  // init
+  resize();
+
+  // quand tu tapes
+  el.addEventListener("input", resize);
 });
 
 // =========================
