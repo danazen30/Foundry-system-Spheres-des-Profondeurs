@@ -96,14 +96,32 @@ _getItemLayer(item) {
 
 async render(...args) {
 
-  // 🔥 1. SAVE AVANT RENDER
-const prevEl = this.element?.querySelector(".sdp-content-inner");
+  // =========================
+  // SAVE TEXTAREA CONTENT
+  // =========================
+
+  const root = this.element;
+
+  if (root) {
+
+    this._textareaCache = {};
+
+    root.querySelectorAll("textarea").forEach(t => {
+      const key = t.dataset.field;
+      if (key) {
+        this._textareaCache[key] = t.value;
+      }
+    });
+
+    console.log("TEXTAREA SAVED:", this._textareaCache);
+  }
+
+  const prevEl = this.element?.querySelector(".sdp-content-inner");
 
 if (prevEl && prevEl.scrollHeight > prevEl.clientHeight) {
   this._scrollPositions.main = prevEl.scrollTop;
 }
 
-  // 🔥 2. RENDER NORMAL
   return super.render(...args);
 }
 
@@ -918,7 +936,7 @@ SdpRoll.openDialog({
 
   const root = this.element;
 
-  console.log("=== SCAN SCROLLABLE ELEMENTS ===");
+ console.log("ON RENDER START");
 
 this.element.querySelectorAll("*").forEach(e => {
 
@@ -934,6 +952,71 @@ this.element.querySelectorAll("*").forEach(e => {
   }
 
 });
+
+// =========================
+// RESTORE TEXTAREA CONTENT
+// =========================
+
+if (this._textareaCache) {
+
+  root.querySelectorAll("textarea").forEach(t => {
+
+    const key = t.dataset.field;
+
+    if (key && this._textareaCache[key] !== undefined) {
+      t.value = this._textareaCache[key];
+    }
+
+  });
+
+  console.log("TEXTAREA RESTORED");
+}
+// =========================
+// NOTES EDIT MODE
+//=========================
+
+const notesSection = root.querySelector(".notes-section");
+
+if (notesSection) {
+
+  const editBtn = notesSection.querySelector('[data-action="toggleNotesEdit"]');
+  const saveBtn = notesSection.querySelector('[data-action="saveNotes"]');
+  const textareas = notesSection.querySelectorAll("textarea");
+
+  // 👉 EDIT MODE
+  editBtn?.addEventListener("click", () => {
+
+  this._isEditingTextarea = true;
+
+  textareas.forEach(t => t.removeAttribute("readonly"));
+
+  editBtn.style.display = "none";
+  saveBtn.style.display = "inline-block";
+
+});
+
+  // 👉 SAVE
+saveBtn?.addEventListener("click", async () => {
+
+  const updates = {};
+
+  textareas.forEach(t => {
+    const key = t.dataset.field;
+    updates[`system.details.${key}.value`] = t.value;
+    t.setAttribute("readonly", true);
+  });
+
+  await this.document.update(updates);
+
+  // 🔥 AJOUT CRITIQUE
+  this._isEditingTextarea = false;
+
+  editBtn.style.display = "inline-block";
+  saveBtn.style.display = "none";
+
+});
+
+} 
 
   // ===== ATTRIBUTES =====
 root.querySelectorAll('[data-action="rollAttribute"]').forEach(el => {
@@ -2899,6 +2982,10 @@ root.querySelectorAll('.condition-header').forEach(el => {
   });
 
 });
+
+// =========================
+// AUTO RESIZE TEXTAREA (FIX)
+// =========================
 
 root.querySelectorAll("textarea").forEach(el => {
 

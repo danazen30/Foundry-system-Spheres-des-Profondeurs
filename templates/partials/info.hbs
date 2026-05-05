@@ -318,19 +318,30 @@
 
 <div class="notes-section">
 
+  <div class="notes-header">
+    <button data-action="toggleNotesEdit">✏️ Edit</button>
+    <button data-action="saveNotes" style="display:none;">💾 Save</button>
+  </div>
+
   <div class="resource-block">
     <label>Biography</label>
-    <textarea name="system.details.biography.value">{{system.details.biography.value}}</textarea>
+    <textarea data-field="biography" readonly>
+{{system.details.biography.value}}
+    </textarea>
   </div>
 
   <div class="resource-block">
     <label>Player Notes</label>
-    <textarea name="system.details.playerNotes.value">{{system.details.playerNotes.value}}</textarea>
+    <textarea data-field="playerNotes" readonly>
+{{system.details.playerNotes.value}}
+    </textarea>
   </div>
 
   <div class="resource-block">
     <label>GM Notes</label>
-    <textarea name="system.details.gmNotes.value">{{system.details.gmNotes.value}}</textarea>
+    <textarea data-field="gmNotes" readonly>
+{{system.details.gmNotes.value}}
+    </textarea>
   </div>
 
 </div>
