@@ -109,6 +109,7 @@
 
     <thead>
       <tr>
+        <th></th>
         <th>Careers</th>
         <th>Current</th>
         <th>Completed</th>
@@ -122,6 +123,10 @@
       {{#if (eq item.type "career")}}
 
       <tr>
+
+        <td class="career-img-cell">
+    <img src="{{item.img}}" alt="{{item.name}}">
+  </td>
 
         <td>{{item.name}}</td>
 
@@ -229,6 +234,12 @@
       {{#if this.inspirationDice}}
         <span class="lvl-stat insp">+{{this.inspirationDice}} Insp</span>
       {{/if}}
+
+      {{#if this.hpRoll}}
+  <span class="lvl-stat dice">
+    +{{this.hpRoll}} HP ({{this.hitDice}})
+  </span>
+{{/if}}
     </div>
   </div>
 
@@ -255,9 +266,6 @@
       </button>
     </div>
   {{/if}}
-
-
-<h3>Ambitions & Motivation</h3>
 
 <div class="ambitions">
 

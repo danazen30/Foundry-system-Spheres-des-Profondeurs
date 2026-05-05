@@ -557,6 +557,34 @@ const species = this.document.items
   .filter(i => i.type === "specie")
   .at(-1);
 
+  let levelProgression = [];
+
+if (sign?.system?.levels) {
+
+  const levels = sign.system.levels;
+
+const storedProgression = this.document.system.details?.levelProgression ?? [];
+
+levelProgression = storedProgression.map(data => {
+  return {
+    level: data.level,
+    hp: data.hp,
+    hitDice: data.hitDice,
+    hpRoll: data.hpRoll,
+    signRoll: data.signRoll,
+
+    // 🔥 AJOUT
+    damageBonus: data.damageBonus,
+    inspirationDice: data.inspirationDice,
+
+    description: data.description
+  };
+});
+
+  // tri par niveau (important)
+  levelProgression.sort((a, b) => a.level - b.level);
+}
+
 applyFinalWeight(meleeWeapons);
 applyFinalWeight(rangedWeapons);
 applyFinalWeight(possessions, "weight");
@@ -578,7 +606,7 @@ return {
   signEffects,
   canLevelUp: game.sdp.level.canLevelUp(this.actor),
   availableLevel: game.sdp.level.getAvailableLevel(this.actor),
-  levelProgression: this.document.system.details?.levelProgression ?? [],
+  levelProgression,
   xpBar: {
   value: xpTotal,
   currentLevel,

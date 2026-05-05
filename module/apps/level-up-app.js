@@ -188,7 +188,16 @@ const levelData = sign?.system.levels?.[level];
 
 progression.push({
   level,
+
   hp: hpGain,
+
+  hitDice: this._getHealthDice(level),
+  hpRoll: baseHP,
+
+  // 🔥 AJOUT ICI
+  damageBonus: levelData?.damageBonus || 0,
+  inspirationDice: levelData?.inspirationDice || null,
+
   description: levelData?.description || ""
 });
 

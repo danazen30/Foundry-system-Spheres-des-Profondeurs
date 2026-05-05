@@ -71,17 +71,6 @@
 }
 
 /* =========================
-   SIDEBAR
-========================= */
-
-.sdp-sidebar {
-  grid-area: sidebar;
-  background: #1e1e1e;
-  color: white;
-  padding: 10px;
-}
-
-/* =========================
    CONTENT
 ========================= */
 
@@ -91,7 +80,39 @@
   color: white;
   padding: 10px;
 
-  display: block;
+  display: flex;
+    flex: 1;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+
+   /*display: block;        🔥 IMPORTANT */
+  flex-direction: column; /* 🔥 IMPORTANT */
+
+  overflow: hidden;
+}
+
+/* =========================
+   MAIN LAYOUT (NEW)
+========================= */
+
+/* BODY = sidebar + content */
+.sdp-body {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  min-height: 0; /* 🔥 CRUCIAL */
+  overflow: hidden;
+}
+
+.sdp-content-inner {
+  flex: 1;
+  min-height: 0;
+
+  display: flex;          /* 🔥 AJOUT */
+  flex-direction: column; /* 🔥 AJOUT */
+
+  overflow: auto; /* 🔥 CHANGE (était auto) */
 }
 
 /* =========================
@@ -293,48 +314,14 @@
   height: 100%; /* 🔥 IMPORTANT */
 }
 
-/* =========================
-   MAIN LAYOUT (NEW)
-========================= */
-
-/* BODY = sidebar + content */
-.sdp-body {
-  display: flex;
-  flex: 1;
-  min-width: 0;
-  min-height: 0; /* 🔥 CRUCIAL */
-  overflow: hidden;
-}
-
-.sdp-content {
-  flex: 1;
-  min-width: 0;
-  min-height: 0;
-  height: 100%;
-
-display: flex;          /* 🔥 IMPORTANT */
-  flex-direction: column; /* 🔥 IMPORTANT */
-
-  overflow: hidden;
-}
-
-.sdp-content-inner {
-  flex: 1;
-  min-height: 0;
-
-  display: flex;          /* 🔥 AJOUT */
-  flex-direction: column; /* 🔥 AJOUT */
-
-  overflow: auto; /* 🔥 CHANGE (était auto) */
-}
-
 /* SIDEBAR */
 .sdp-sidebar {
   width: 200px;          /* 🔥 moins large */
   min-width: 160px;      /* sécurité */
   max-width: 240px;      /* évite qu’elle regrossisse */
-
+grid-area: sidebar;
   background: #1e1e1e;
+  color: white;
   padding: 10px;
 
   display: flex;
@@ -2439,14 +2426,15 @@ text-align:center;
   width: 128px;
 
   min-height: 18px;
-  height: 18px; /* 🔥 force une seule ligne au départ */
+  height: 18px; 
 
   font-size: 14px;
 
   resize: none;
-  overflow: hidden; /* 🔥 PAS DE SCROLL */
+  overflow: hidden; 
+  text-align: center;
 
-  line-height: 18px; /* 🔥 alignement parfait */
+  line-height: 18px; 
 }
 
 /* on cible UNIQUEMENT le bloc Status */
@@ -2560,7 +2548,6 @@ text-align:center;
 .careers-table td:first-child {
   text-align: left;
   padding-left: 8px;
-
   font-size: 14px;
   white-space: nowrap;
   overflow: hidden;
@@ -2571,6 +2558,7 @@ text-align:center;
 .careers-table input[type="checkbox"] {
   transform: scale(0.9);     /* 🔥 plus discret */
   cursor: pointer;
+
 }
 
 /* ACTIONS */
@@ -2610,6 +2598,42 @@ text-align:center;
 .careers-table th:nth-child(4),
 .careers-table td:nth-child(4) {
   width: 50px;               /* 🔥 actions */
+}
+
+/* =========================
+   CAREER IMAGE COLUMN (FIX CLEAN)
+========================= */
+
+/* colonne */
+.careers-table th:first-child,
+.careers-table td:first-child {
+  width: 44px;
+  min-width: 44px;
+  max-width: 44px;
+
+  padding: 2px;
+  text-align: center;
+}
+
+/* cellule */
+.career-img-cell {
+  padding: 0;
+}
+
+/* image */
+.career-img-cell img {
+  width: 100%;
+  height: 36px; /* 🔥 un peu plus grand */
+
+  object-fit: contain; /* 🔥 IMPORTANT → plus de crop dégueu */
+
+  border-radius: 6px;
+  border: 1px solid #333;
+
+  background: #111;
+
+  display: block;
+  margin: 0 auto;
 }
 
 /* =========================
@@ -2720,3 +2744,35 @@ text-align:center;
   opacity: 0.8;
   font-style: italic;
 }
+
+.ambitions {
+  margin-top: 22px; /* 🔥 espace avec le bloc au-dessus */
+}
+
+.ambitions .resource-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ambitions .resource-row label {
+  flex: 0 0 auto;     /* 🔥 taille auto = prend juste ce qu'il faut */
+  min-width: 90px;    /* 🔥 optionnel → aligne visuellement */
+}
+
+.ambitions .resource-row input {
+  flex: 1;            /* 🔥 prend tout l’espace restant */
+  width: 100%;        /* 🔥 sécurité */
+  text-align: center;
+}
+
+.ambitions h4 {
+  margin-top: 10px;
+  margin-bottom: 4px;
+  font-size: 20px;
+}
+
+.ambitions .resource-row:last-child {
+  margin-top: 10px; /* ajuste à ton goût */
+}
+
