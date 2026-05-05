@@ -552,6 +552,8 @@ const currency = this.document.items.filter(i =>
   i.type === "currency"
 );
 
+const injuries = this.actor.items.filter(i => i.type === "injury");
+
 applyFinalWeight(meleeWeapons);
 applyFinalWeight(rangedWeapons);
 applyFinalWeight(possessions, "weight");
@@ -597,6 +599,7 @@ return {
   diseases,
   slots,
   currency,
+  injuries,
   activeTab: this.activeTab
 };
   }

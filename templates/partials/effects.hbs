@@ -96,74 +96,115 @@
 </table>
 
   <!-- INJURIES -->
-  <h3>Injuries</h3>
+  {{#if injuries.length}}
+<h3>Injuries</h3>
 
-  <table class="injuries-table">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Severity</th>
-        <th>Location</th>
-        <th>Duration</th>
-        <th></th>
-      </tr>
-    </thead>
+<table class="effects-table">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Name</th>
+      <th>Severity</th>
+      <th>Location</th>
+      <th>Duration</th>
+      <th></th>
+    </tr>
+  </thead>
 
-    <tbody>
-      {{#each actor.items as |item|}}
-      {{#if (eq item.type "injury")}}
+  <tbody>
+    {{#each actor.items as |item|}}
+    {{#if (eq item.type "injury")}}
 
-      <tr>
+    <tr>
+      <!-- IMAGE -->
+      <td class="effect-img-cell">
+        <img src="{{item.img}}" class="effect-img">
+      </td>
 
-        <td>{{item.name}}</td>
-        <td>{{item.system.severity}}</td>
-        <td>{{item.system.location}}</td>
-        <td>{{item.system.duration}}</td>
+      <td>{{item.name}}</td>
+      <td>{{item.system.severity}}</td>
+      <td>{{item.system.location}}</td>
+      <td>{{item.system.duration}}</td>
 
-        <td class="item-actions">
-          <button data-action="editItem" data-item-id="{{item.id}}">✏️</button>
-          <button data-action="deleteItem" data-item-id="{{item.id}}">🗑️</button>
-        </td>
+      <td class="item-actions">
+        <button data-action="editItem" data-item-id="{{item.id}}">✏️</button>
+        <button data-action="deleteItem" data-item-id="{{item.id}}">🗑️</button>
+      </td>
+    </tr>
 
-      </tr>
+    {{/if}}
+    {{/each}}
+  </tbody>
+</table>
+{{/if}}
 
-      {{/if}}
-      {{/each}}
-    </tbody>
-  </table>
+<!-- TRAITS -->
+{{#if traits.length}}
+<h3>Traits</h3>
 
+<table class="effects-table">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Name</th>
+      <th></th>
+    </tr>
+  </thead>
 
-  <!-- TRAITS -->
-  <h3>Traits</h3>
-
-  <div class="effects-block">
+  <tbody>
     {{#each traits}}
-      <div class="item">
+    <tr>
 
-        <span>{{this.name}}</span>
+      <td class="effect-img-cell">
+        <img src="{{this.img}}" class="effect-img">
+      </td>
 
-        <button data-action="editItem" data-item-id="{{this.id}}">Edit</button>
-        <button data-action="deleteItem" data-item-id="{{this.id}}">Delete</button>
+      <td>{{this.name}}</td>
 
-      </div>
+      <td class="item-actions">
+        <button data-action="editItem" data-item-id="{{this.id}}">✏️</button>
+        <button data-action="deleteItem" data-item-id="{{this.id}}">🗑️</button>
+      </td>
+
+    </tr>
     {{/each}}
-  </div>
+  </tbody>
+</table>
+{{/if}}
 
 
-  <!-- DISEASES -->
-  <h3>Diseases</h3>
+<!-- DISEASES -->
+{{#if diseases.length}}
+<h3>Diseases</h3>
 
-  <div class="effects-block">
+<table class="effects-table">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Name</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
     {{#each diseases}}
-      <div class="item">
+    <tr>
 
-        <span>{{this.name}}</span>
+      <td class="effect-img-cell">
+        <img src="{{this.img}}" class="effect-img">
+      </td>
 
-        <button data-action="editItem" data-item-id="{{this.id}}">Edit</button>
-        <button data-action="deleteItem" data-item-id="{{this.id}}">Delete</button>
+      <td>{{this.name}}</td>
 
-      </div>
+      <td class="item-actions">
+        <button data-action="editItem" data-item-id="{{this.id}}">✏️</button>
+        <button data-action="deleteItem" data-item-id="{{this.id}}">🗑️</button>
+      </td>
+
+    </tr>
     {{/each}}
-  </div>
+  </tbody>
+</table>
+{{/if}}
 
 </div>

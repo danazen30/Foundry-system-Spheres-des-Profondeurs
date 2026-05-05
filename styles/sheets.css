@@ -2274,3 +2274,132 @@ text-align:center;
 .tab-effects h3 {
   text-align: center;
 }
+
+/* =========================
+   EFFECTS TABLE (Traits + Diseases)
+========================= */
+
+.effects-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  background: #1a1414;
+  border: 1px solid #444;
+  border-radius: 10px;
+  overflow: hidden;
+
+  margin-bottom: 8px;
+}
+
+/* header */
+.effects-table thead {
+  background: #111;
+}
+
+.effects-table th {
+  padding: 6px;
+  font-size: 12px;
+
+
+  text-transform: uppercase;
+  color: #bbb;
+
+  border-bottom: 1px solid #444;
+  text-align: center;
+
+}
+
+/* rows */
+.effects-table tr {
+  height: 28px;
+}
+
+/* cells */
+.effects-table td {
+  padding: 6px;
+  border-bottom: 1px solid #333;
+  text-align: center;
+}
+
+/* zebra */
+.effects-table tbody tr:nth-child(even) {
+  background: rgba(255,255,255,0.03);
+}
+
+/* name column */
+.effects-table td:first-child {
+  text-align: left;
+  padding-left: 10px;
+  font-weight: 500;
+}
+
+/* actions */
+.effects-table td.item-actions {
+  width: 60px;
+  padding: 0;
+}
+
+/* buttons */
+.effects-table td.item-actions button {
+  all: unset;
+
+  width: 22px;
+  height: 22px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+}
+
+.effects-table td.item-actions button:hover {
+  background: #444;
+  border-radius: 6px;
+}
+
+/* =========================
+   EFFECT IMAGE COLUMN
+========================= */
+
+/* largeur colonne */
+.effects-table th:first-child,
+.effects-table td:first-child {
+  width: 40px;
+  min-width: 40px;
+  max-width: 40px;
+
+  padding: 2px;
+  text-align: center;
+}
+
+/* cellule image */
+.effect-img-cell {
+  padding: 2px;
+}
+
+/* image */
+.effect-img {
+  width: 100%;
+  height: 32px;
+
+  object-fit: cover;
+
+  border-radius: 6px;
+  border: 1px solid #333;
+
+  background: #111;
+
+  display: block;
+  margin: 0 auto;
+}
+
+.tab-effects h3 {
+  margin: 10px 0 2px 0; /* 🔥 AVANT trop large */
+  padding: 2px 0;      /* 🔥 plus compact */
+}
+
+.effects-table {
+  margin-top: 2px;     /* 🔥 colle au titre */
+  margin-bottom: 6px;  /* 🔥 espace entre blocs */
+}

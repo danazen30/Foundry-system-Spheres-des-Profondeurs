@@ -6,6 +6,54 @@
   <div class="details">
 
     <div class="resource-row">
+  <label>Species</label>
+  {{#if actor.items}}
+    {{#each actor.items as |item|}}
+      {{#if (eq item.type "specie")}}
+        <span>{{item.name}}</span>
+      {{/if}}
+    {{/each}}
+  {{else}}
+    <span>None</span>
+  {{/if}}
+</div>
+
+<div class="resource-row">
+  <label>Age</label>
+  <input type="text" name="system.details.age.value" value="{{system.details.age.value}}">
+</div>
+
+<div class="resource-row">
+  <label>Height</label>
+  <input type="text" name="system.details.height.value" value="{{system.details.height.value}}">
+</div>
+
+<div class="resource-row">
+  <label>Weight</label>
+  <input type="text" name="system.details.weight.value" value="{{system.details.weight.value}}">
+</div>
+
+<div class="resource-row">
+  <label>Hair</label>
+  <input type="text" name="system.details.hairColor.value" value="{{system.details.hairColor.value}}">
+</div>
+
+<div class="resource-row">
+  <label>Eyes</label>
+  <input type="text" name="system.details.eyeColor.value" value="{{system.details.eyeColor.value}}">
+</div>
+
+<div class="resource-row">
+  <label>Mark</label>
+  <input type="text" name="system.details.distinguishingMark.value" value="{{system.details.distinguishingMark.value}}">
+</div>
+
+<div class="resource-row">
+  <label>Ascendant</label>
+  <input type="text" name="system.details.ascending.value" value="{{system.details.ascending.value}}">
+</div>
+
+    <div class="resource-row">
       <label>Career</label>
       <input type="text" name="system.details.career.value" value="{{system.details.career.value}}">
     </div>
@@ -186,5 +234,75 @@
     </tbody>
 
   </table>
+
+<h3>Ambitions & Motivation</h3>
+
+<div class="ambitions">
+
+  <!-- PERSONAL -->
+  <h4>Personal Ambitions</h4>
+
+  <div class="resource-row">
+    <label>Short Term</label>
+    <input type="text" name="system.details.personalAmbitions.shortTerm"
+           value="{{system.details.personalAmbitions.shortTerm}}">
+  </div>
+
+  <div class="resource-row">
+    <label>Long Term</label>
+    <input type="text" name="system.details.personalAmbitions.longTerm"
+           value="{{system.details.personalAmbitions.longTerm}}">
+  </div>
+
+  <!-- PARTY -->
+  <h4>Group Ambitions</h4>
+
+  <div class="resource-row">
+    <label>Name</label>
+    <input type="text" name="system.details.partyAmbitions.name"
+           value="{{system.details.partyAmbitions.name}}">
+  </div>
+
+  <div class="resource-row">
+    <label>Short Term</label>
+    <input type="text" name="system.details.partyAmbitions.shortTerm"
+           value="{{system.details.partyAmbitions.shortTerm}}">
+  </div>
+
+  <div class="resource-row">
+    <label>Long Term</label>
+    <input type="text" name="system.details.partyAmbitions.longTerm"
+           value="{{system.details.partyAmbitions.longTerm}}">
+  </div>
+
+  <!-- MOTIVATION -->
+  <div class="resource-row">
+    <label>Motivation</label>
+    <input type="text" name="system.details.motivation.value"
+           value="{{system.details.motivation.value}}">
+  </div>
+
+</div>
+
+<h3>Notes & Background</h3>
+
+<div class="notes-section">
+
+  <div class="resource-block">
+    <label>Biography</label>
+    <textarea name="system.details.biography.value">{{system.details.biography.value}}</textarea>
+  </div>
+
+  <div class="resource-block">
+    <label>Player Notes</label>
+    <textarea name="system.details.playerNotes.value">{{system.details.playerNotes.value}}</textarea>
+  </div>
+
+  <div class="resource-block">
+    <label>GM Notes</label>
+    <textarea name="system.details.gmNotes.value">{{system.details.gmNotes.value}}</textarea>
+  </div>
+
+</div>
 
 </div>
