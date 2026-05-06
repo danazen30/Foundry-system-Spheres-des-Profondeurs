@@ -17,6 +17,7 @@ constructor(...args) {
     this.activeTab = "skills"; // 🔥 TAB PAR DEFAUT
     this.openContainers = new Set();
     this._scrollPositions = {};
+    this._isEditingTextarea = false; // 🔥 AJOUT
   }
 
   static DEFAULT_OPTIONS = {
@@ -102,19 +103,6 @@ async render(...args) {
 
   const root = this.element;
 
-  if (root) {
-
-    this._textareaCache = {};
-
-    root.querySelectorAll("textarea").forEach(t => {
-      const key = t.dataset.field;
-      if (key) {
-        this._textareaCache[key] = t.value;
-      }
-    });
-
-    console.log("TEXTAREA SAVED:", this._textareaCache);
-  }
 
   const prevEl = this.element?.querySelector(".sdp-content-inner");
 
@@ -957,19 +945,30 @@ this.element.querySelectorAll("*").forEach(e => {
 // RESTORE TEXTAREA CONTENT
 // =========================
 
-if (this._textareaCache) {
+if (this._textareaCache && this._restoreAfterRender) {
 
   root.querySelectorAll("textarea").forEach(t => {
 
     const key = t.dataset.field;
+    const cached = this._textareaCache[key];
 
-    if (key && this._textareaCache[key] !== undefined) {
-      t.value = this._textareaCache[key];
+    if (key && cached) {
+
+      t.value = cached.value;
+
+      if (cached.height) {
+        t.style.height = cached.height;
+      }
+
     }
 
   });
 
-  console.log("TEXTAREA RESTORED");
+  console.log("TEXTAREA RESTORED AFTER SAVE");
+
+  // 🔥 CLEAN (IMPORTANT)
+  this._restoreAfterRender = false;
+  this._textareaCache = null;
 }
 // =========================
 // NOTES EDIT MODE
@@ -1000,16 +999,26 @@ saveBtn?.addEventListener("click", async () => {
 
   const updates = {};
 
+  // 🔥 CAPTURE AVANT UPDATE
+  this._textareaCache = {};
+
   textareas.forEach(t => {
     const key = t.dataset.field;
+
+    this._textareaCache[key] = {
+      value: t.value,
+      height: t.style.height
+    };
+
     updates[`system.details.${key}.value`] = t.value;
     t.setAttribute("readonly", true);
   });
 
-  await this.document.update(updates);
-
-  // 🔥 AJOUT CRITIQUE
+  // 🔥 FLAG RESTORE
+  this._restoreAfterRender = true;
   this._isEditingTextarea = false;
+
+  await this.document.update(updates);
 
   editBtn.style.display = "inline-block";
   saveBtn.style.display = "none";
@@ -2990,14 +2999,13 @@ root.querySelectorAll('.condition-header').forEach(el => {
 root.querySelectorAll("textarea").forEach(el => {
 
   const resize = () => {
-    el.style.height = "18px"; // reset (1 ligne)
+    el.style.height = "auto";
     el.style.height = el.scrollHeight + "px";
   };
 
-  // init
+  // 🔥 toujours resize APRÈS restore
   resize();
 
-  // quand tu tapes
   el.addEventListener("input", resize);
 });
 
