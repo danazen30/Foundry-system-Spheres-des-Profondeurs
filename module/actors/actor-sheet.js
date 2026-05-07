@@ -2635,47 +2635,74 @@ root.querySelectorAll('[data-action="toggleContainer"]').forEach(el => {
 
 root.querySelectorAll('[data-item-id]').forEach(el => {
 
-el.setAttribute("draggable", true);
+  el.setAttribute("draggable", true);
 
-el.addEventListener("dragstart", (event) => {
+  // 🔥 IMPORTANT
+  // bloque totalement le drag depuis inputs/buttons/etc
+  el.addEventListener("mousedown", (event) => {
 
-  const itemId = el.dataset.itemId;
-  const item = this.document.items.get(itemId);
+    if (
+      event.target.closest(
+        "input, textarea, select, option, button, label"
+      )
+    ) {
+      el.setAttribute("draggable", false);
+    } else {
+      el.setAttribute("draggable", true);
+    }
 
-  if (!item) return;
+  });
 
-  // =========================
-  // 🚫 BLOCK DRAG IF EQUIPPED
-  // =========================
+  el.addEventListener("mouseup", () => {
+    el.setAttribute("draggable", true);
+  });
 
-  // weapon
-  if (item.type === "weapon" && item.system.equipped) {
-    event.preventDefault();
-    return;
-  }
+  el.addEventListener("dragstart", (event) => {
 
-  // armor
-  if (item.type === "armor" && item.system.worn?.value) {
-    event.preventDefault();
-    return;
-  }
+    // 🔥 sécurité supplémentaire
+    if (
+      event.target.closest(
+        "input, textarea, select, option, button, label, .qty-clickable"
+      )
+    ) {
+      event.preventDefault();
+      return;
+    }
 
-  // clothing
-  if (item.type === "clothing" && item.system.equipped) {
-    event.preventDefault();
-    return;
-  }
+    const itemId = el.dataset.itemId;
+    const item = this.document.items.get(itemId);
 
-  // =========================
-  // ✅ NORMAL DRAG
-  // =========================
+    if (!item) return;
 
-  event.dataTransfer.setData("text/plain", JSON.stringify({
-    type: "Item",
-    uuid: item.uuid
-  }));
+    // =========================
+    // 🚫 BLOCK DRAG IF EQUIPPED
+    // =========================
 
-});
+    if (item.type === "weapon" && item.system.equipped) {
+      event.preventDefault();
+      return;
+    }
+
+    if (item.type === "armor" && item.system.worn?.value) {
+      event.preventDefault();
+      return;
+    }
+
+    if (item.type === "clothing" && item.system.equipped) {
+      event.preventDefault();
+      return;
+    }
+
+    // =========================
+    // ✅ NORMAL DRAG
+    // =========================
+
+    event.dataTransfer.setData("text/plain", JSON.stringify({
+      type: "Item",
+      uuid: item.uuid
+    }));
+
+  });
 
 });
 

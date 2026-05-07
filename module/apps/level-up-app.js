@@ -135,6 +135,7 @@ root.querySelector('[data-action="confirm"]').addEventListener("click", async ()
 }
 
   _getHealthDice(level) {
+    if (level === 0) return "1d4";
     if (level === 1) return "1d4";
     if (level === 2) return "1d6";
     if (level === 3) return "1d8";

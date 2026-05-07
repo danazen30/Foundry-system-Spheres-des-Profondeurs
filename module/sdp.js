@@ -2,6 +2,7 @@ import { SdpActor } from "./actors/actor.js";
 import { SdpActorSheet } from "./actors/actor-sheet.js";
 
 import { registerChatHandlers } from "./chat/chat-handlers.js";
+import { registerActorHandlers } from "./chat/actor-handler.js";
 
 import { SdpItemSheet } from "./items/item-sheet.js";
 import { SdpWeaponSheet } from "./items/weapon-sheet.js";
@@ -83,6 +84,7 @@ game.sdp.Roll = SdpRoll;
   CONFIG.Actor.documentClass = SdpActor;
   CONFIG.Item.documentClass = SdpItem;
 
+  registerActorHandlers();
 
 // ACTORS
 foundry.documents.collections.Actors.unregisterSheet("core", foundry.applications.sheets.ActorSheetV2);

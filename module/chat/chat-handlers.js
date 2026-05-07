@@ -9,7 +9,6 @@ import { registerOvercastHandlers } from "./spell-handler.js";
 export function registerChatHandlers() {
 
 
-
 Hooks.on("renderChatMessageHTML", (message, html) => {
 
   // 🔥 compat jQuery TEMPORAIRE
