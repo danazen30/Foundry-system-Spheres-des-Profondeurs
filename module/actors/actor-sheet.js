@@ -3054,56 +3054,83 @@ console.log(
 );
 
 // =========================
-// FORCE ENTER => <br> IN EDITORS
+// FORCE ENTER => <br> + TAB & ESPACES
 // =========================
-
-// =========================
-// FORCE ENTER => <br> IN EDITORS
-// =========================
-
 requestAnimationFrame(() => {
 
   const editors = root.querySelectorAll('[contenteditable="true"]');
 
-  console.log("EDITORS FOUND:", editors.length);
-
   editors.forEach(editor => {
-
-    console.log("EDITOR", editor);
 
     editor.addEventListener("keydown", (event) => {
 
-       console.log({
-    key: event.key,
-    code: event.code
-  });
+// =========================
+// ENTER → simple retour ligne
+// =========================
+  if (event.key === "Enter") {
+    event.preventDefault();
 
-      console.log("KEYDOWN", event.key);
+    const selection = window.getSelection();
+    if (!selection.rangeCount) return;
 
-      if (event.key !== "Enter") return;
+    const range = selection.getRangeAt(0);
+    range.deleteContents();
 
-      event.preventDefault();
-      event.stopPropagation();
-      event.stopImmediatePropagation();
+    // créer un <br> et un espace invisible après pour le curseur
+    const br = document.createElement("br");
+    const space = document.createTextNode("\u200B"); // caractère invisible
+    range.insertNode(br);
+    range.insertNode(space);
 
-      const br = document.createElement("br");
+    // placer le curseur après l'espace
+    range.setStartAfter(space);
+    range.setEndAfter(space);
 
-      const sel = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
 
-      if (!sel.rangeCount) return;
+      // =========================
+      // TAB → 4 espaces
+      // =========================
+      if (event.key === "Tab") {
 
-      const range = sel.getRangeAt(0);
+        event.preventDefault();
 
-      range.deleteContents();
-      range.insertNode(br);
+        document.execCommand(
+          "insertHTML",
+          false,
+          "&nbsp;&nbsp;&nbsp;&nbsp;"
+        );
 
-      range.setStartAfter(br);
-      range.setEndAfter(br);
+        return;
+      }
 
-      sel.removeAllRanges();
-      sel.addRange(range);
+      // =========================
+      // ESPACE → espace insécable
+      // =========================
+      if (event.key === " ") {
 
-      console.log("BR INSERTED");
+        event.preventDefault();
+
+        const selection = window.getSelection();
+
+        if (!selection.rangeCount) return;
+
+        const range = selection.getRangeAt(0);
+
+        const node = document.createTextNode("\u00A0");
+
+        range.insertNode(node);
+
+        range.setStartAfter(node);
+        range.setEndAfter(node);
+
+        selection.removeAllRanges();
+        selection.addRange(range);
+
+        return;
+      }
 
     });
 
@@ -3115,7 +3142,19 @@ requestAnimationFrame(() => {
 // AUTO RESIZE TEXTAREA (FIX)
 // =========================
 
+root.querySelectorAll("textarea").forEach(el => {
 
+  const resize = () => {
+    el.style.height = "18px"; // reset (1 ligne)
+    el.style.height = el.scrollHeight + "px";
+  };
+
+  // init
+  resize();
+
+  // quand tu tapes
+  el.addEventListener("input", resize);
+});
 
 // =========================
 // RESTORE SCROLL DEBUG

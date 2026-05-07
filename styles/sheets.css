@@ -2972,7 +2972,66 @@ text-align:center;
   font-style: italic;
 }
 
-.prosemirror p {
-  margin: 0 0 0.7em 0;
-  line-height: 1.6;
+/* =========================
+   NOTES & BACKGROUND STYLING
+========================= */
+
+/* wrapper général */
+.notes-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;              /* espace entre chaque note */
+  padding: 6px 0;
+}
+
+.note-block {
+  background: #1a1414;    /* cohérent avec skills-block */
+  border: 1px solid #444;
+  border-radius: 10px;
+  padding: 8px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.note-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.note-header label {
+  font-weight: bold;
+  font-size: 14px;
+  color: #ddd;
+}
+
+.note-header button.note-edit-btn {
+  font-size: 12px;
+  padding: 2px 6px;
+  border: 1px solid #555;
+  border-radius: 6px;
+  background: #222;
+  color: #ddd;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.note-header button.note-edit-btn:hover {
+  background: #444;
+}
+
+/* affichage lecture */
+.note-display {
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 6px;
+  padding: 6px;
+  min-height: 55px;
+  max-height: 100px;
+  color: #eee;
+  overflow-y: auto;
+  font-size: 14px;
+  line-height: 1.4;
 }
