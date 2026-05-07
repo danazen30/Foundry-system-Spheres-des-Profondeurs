@@ -73,6 +73,9 @@ export class SdpActor extends Actor {
     system.resources.movement.current ??= 4;
     system.resources.movement.walk ??= 0;
     system.resources.movement.run ??= 0;
+    system.resources.corruption ??= {};
+    system.resources.corruption.value ??= 0;
+    system.resources.corruption.max ??= 0;
 
     // =====================
     // CUSTOM
@@ -318,7 +321,7 @@ attr.bonus = Math.floor(attr.value / 10);
     const TB = system.attributes.toughness.bonus;
     const SB = system.attributes.strength.bonus;
     const WPB = system.attributes.willpower.bonus;
-
+    system.resources.corruption.max = Math.floor((TB + WPB) / 2);
     const baseHealth = (TB * 2) + SB + WPB;
 
 // NEW
@@ -334,6 +337,11 @@ if (system.health.value == null) {
 
 if (system.health.value > finalMax) {
   system.health.value = finalMax;
+}
+
+if (system.resources.corruption.value > system.resources.corruption.max) {
+  system.resources.corruption.value =
+    system.resources.corruption.max;
 }
 
     // =====================

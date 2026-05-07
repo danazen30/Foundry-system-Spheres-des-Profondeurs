@@ -66,11 +66,37 @@
             </div>
           </div>
 
-          <!-- REST -->
-          <div class="rest-inline">
-            <button class="rest-btn short-rest" data-action="shortRest">🥪</button>
-            <button class="rest-btn long-rest" data-action="longRest">🌙</button>
-          </div>
+ <!-- ☠️ CORRUPTION -->
+<div class="corruption-box">
+
+  <div class="corruption-line">
+    ☠️ Corruption
+  </div>
+
+  <div class="corruption-value">
+    <input
+      type="number"
+      name="system.resources.corruption.value"
+      value="{{system.resources.corruption.value}}"
+    >
+
+    <span>/</span>
+
+    <span>{{system.resources.corruption.max}}</span>
+  </div>
+
+</div>
+
+<!-- REST + FATE -->
+<div class="rest-fate-stack">
+
+  <!-- REST -->
+  <div class="rest-inline">
+    <button class="rest-btn short-rest" data-action="shortRest">🥪</button>
+    <button class="rest-btn long-rest" data-action="longRest">🌙</button>
+  </div>
+
+</div>
 
         </div>
 
@@ -141,29 +167,37 @@
       </div>
     </div>
 
-    <!-- SECONDARY -->
-    <div class="resource-box secondary-box">
-      <div class="secondary-item">
-        <label>Fortune</label>
-        <input type="number" name="system.resources.fortune.value" value="{{system.resources.fortune.value}}">
-      </div>
+    <!-- SECONDARY + CORRUPTION -->
+<div class="resource-box secondary-box">
 
-      <div class="secondary-item">
-        <label>Resolve</label>
-        <input type="number" name="system.resources.resolve.value" value="{{system.resources.resolve.value}}">
-      </div>
-
-      <div class="secondary-item">
-        <label>Fate</label>
-        <input type="number" name="system.resources.fate.value" value="{{system.resources.fate.value}}">
-      </div>
-
-      <div class="secondary-item">
-        <label>Resilience</label>
-        <input type="number" name="system.resources.resilience.value" value="{{system.resources.resilience.value}}">
-      </div>
-    </div>
-
+  <div class="secondary-item">
+    <label>Fortune</label>
+    <input type="number"
+           name="system.resources.fortune.value"
+           value="{{system.resources.fortune.value}}">
   </div>
+
+  <div class="secondary-item">
+    <label>Resolve</label>
+    <input type="number"
+           name="system.resources.resolve.value"
+           value="{{system.resources.resolve.value}}">
+  </div>
+
+  <div class="secondary-item">
+    <label>Fate</label>
+    <input type="number"
+           name="system.resources.fate.value"
+           value="{{system.resources.fate.value}}">
+  </div>
+
+  <div class="secondary-item">
+    <label>Resilience</label>
+    <input type="number"
+           name="system.resources.resilience.value"
+           value="{{system.resources.resilience.value}}">
+  </div>
+
+</div>
 
 </div>

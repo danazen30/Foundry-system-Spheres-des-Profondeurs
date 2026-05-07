@@ -16,7 +16,7 @@
 
 .header-top {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto 1fr;
   align-items: center;
   gap: 30px;
 }
@@ -27,20 +27,13 @@
   flex-direction: column;
 }
 
-/* CENTER (encumbrance) */
-.header-center {
-  text-align: center;
-  font-size: 13px;
-  opacity: 0.9;
-}
-
 /* RIGHT */ 
 .header-right {
   display: flex;
   justify-content: flex-end; /* 🔥 PUSH GLOBAL */
   align-items: flex-start;
 
-  width: 100%; /* 🔥 CRUCIAL */
+  width: 100%;
 }
 
 .header-right-stack {
@@ -668,11 +661,13 @@ grid-area: sidebar;
 .movement-header {
   font-size: 14px;
   opacity: 0.7;
+  text-align: center;
 }
 
 .movement-value {
   font-size: 14px;
   font-weight: bold;
+  text-align: center;
 }
 
 .movement-value input,
@@ -686,7 +681,7 @@ input.movement-value {
   padding: 0;
   margin: 0;
 
-  line-height: 20px; /* 🔥 CRUCIAL → centre vertical */
+  line-height: 18px; /* 🔥 CRUCIAL → centre vertical */
 
   box-sizing: border-box; /* 🔥 évite l’écrasement */
 
@@ -698,7 +693,7 @@ input.movement-value {
   border: 1px solid #444;
   border-radius: 10px;
 
-  padding: 6px 8px;
+  padding: 2px 4px;
 }
 
 /* =========================
@@ -717,18 +712,18 @@ input.movement-value {
 }
 
 .rest-btn {
-  width: 30px;
-  height: 26px;
+  width: 25px;
+  height: 10px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  font-size: 18px;
+  font-size: 14px;
 
   background: #222;
   border: 1px solid #555;
-  border-radius: 8px;
+  border-radius: 2px;
 
   cursor: pointer;
 
@@ -2905,4 +2900,118 @@ text-align:center;
 .edit-overlay-btn:hover {
   background: #444;
   transform: scale(1.1);
+}
+
+/* =========================
+   XP LOG
+========================= */
+
+.xp-log {
+  list-style: none;
+
+  margin: 0;
+  padding: 0;
+
+  background: #1a1414;
+  border: 1px solid #444;
+  border-radius: 10px;
+
+  max-height: 160px; /* 🔥 hauteur scrollable */
+  overflow-y: auto;
+
+  display: flex;
+  flex-direction: column;
+
+  scrollbar-width: thin;
+}
+
+/* entries */
+.xp-entry {
+  padding: 4px 6px;
+
+  border-bottom: 1px solid #333;
+
+  font-size: 12px;
+
+  display: flex;
+  align-items: center;
+
+  min-height: 26px;
+
+  transition: background 0.15s ease;
+}
+
+/* zebra */
+.xp-entry:nth-child(even) {
+  background: rgba(255,255,255,0.03);
+}
+
+/* hover */
+.xp-entry:hover {
+  background: rgba(255,255,255,0.06);
+}
+
+/* dernière ligne */
+.xp-entry:last-child {
+  border-bottom: none;
+}
+
+/* état vide */
+.xp-log li:not(.xp-entry) {
+  padding: 10px;
+  text-align: center;
+  opacity: 0.7;
+  font-style: italic;
+}
+
+.rest-corruption-stack{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+}
+
+.corruption-box{
+  display:flex;
+  flex-direction:column; /* 🔥 label au-dessus */
+  align-items:center;
+    
+
+  gap:2px;
+
+  padding:4px 6px;
+
+  background:#111;
+  border:1px solid #444;
+  border-radius:2px;
+}
+
+.corruption-line{
+  font-size:11px;
+  opacity:0.8;
+  white-space:nowrap;
+
+  text-align:center;
+  font-size:14px;
+}
+
+.corruption-value{
+  display:flex;
+  align-items:center;
+  gap:0px;
+
+  font-size:14px;
+  font-weight:bold;
+}
+
+.corruption-value input{
+  width:26px;
+  height:16px;
+
+  text-align:center;
+
+  border:1px solid #555;
+  border-radius:4px;
+
+  color:white;
 }
