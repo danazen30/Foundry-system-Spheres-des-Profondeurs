@@ -10,6 +10,15 @@
   padding: 6px; /* 🔥 AJOUT */
 }
 
+.sdp.sheet input,
+.sdp.sheet textarea,
+.sdp.sheet select,
+.sdp.sheet option,
+.sdp.sheet button,
+.sdp.sheet label {
+  -webkit-user-drag: none;
+}
+
 /* =========================
    HEADER TOP (NEW LAYOUT)
 ========================= */

@@ -2972,21 +2972,29 @@ root.querySelectorAll('.condition-clickable').forEach(el => {
   });
 
   // CLICK DROIT → -1
-  el.addEventListener("contextmenu", async (event) => {
+el.addEventListener("contextmenu", async (event) => {
 
-    event.preventDefault();
+  event.preventDefault();
 
-    const key = el.dataset.key;
-    const actor = this.document;
+  const key = el.dataset.key;
+  const actor = this.document;
 
-    const current = actor.system.conditionTotals?.[key] ?? 0;
+  const current = actor.system.conditionTotals?.[key] ?? 0;
 
-    if (current <= 0) return;
+  if (current <= 0) return;
 
-    // 🔥 IMPORTANT : remove 1 stack
-    await SdpConditionEngine.add(actor, key, -1);
+  // remove 1 stack
+  await SdpConditionEngine.add(actor, key, -1);
 
-  });
+  // 🔥 exhausted on recovery
+  if (
+    (key === "stunned" || key === "poisoned" || key === "bleeding") &&
+    current === 1
+  ) {
+    await SdpConditionEngine.add(actor, "exhausted", 1);
+  }
+
+});
 
 });
 

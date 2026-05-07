@@ -653,7 +653,9 @@ const actorSkillNames = actorSkills.map(s =>
     // DERIVED FINAL
     // =====================
 
-    system.derived.woundThreshold.value = resistance?.system.bonus ?? 0;
+    //system.derived.woundThreshold.value = resistance?.system.bonus ?? 0;
+    system.derived.woundThreshold.value =
+  Math.floor((resistance?.system.value || 0) / 10);
 
 // =====================
 // CONDITION MALUS (PARry / EVASION)
