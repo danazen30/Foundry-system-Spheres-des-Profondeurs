@@ -1989,6 +1989,39 @@ root.querySelectorAll('[data-action="advanceAttribute"]').forEach(el => {
 
   });
 
+    // CLICK DROIT
+  el.addEventListener("contextmenu", async (event) => {
+
+    event.preventDefault();
+
+    const key = event.currentTarget.dataset.attr;
+    const actor = this.document;
+
+    const current = actor.system.attributes[key].advances || 0;
+
+    if (current <= 0) return;
+
+    const newValue = current - 1;
+
+    const cost = this._getCost("attribute", newValue);
+
+    const xp = actor.system.details.experience;
+
+    await actor.update({
+      [`system.attributes.${key}.advances`]: newValue,
+      "system.details.experience.spent": Math.max(0, xp.spent - cost)
+    });
+
+    await this._addXPLog({
+      type: "refund",
+      amount: cost,
+      target: key,
+      old: current,
+      value: newValue
+    });
+
+  });
+
 });
 
 // =========================

@@ -45,27 +45,42 @@
     </tr>
 
     <!-- ADV -->
-    <tr>
-      <td><strong>Adv</strong></td>
-      {{#each attributes as |attr|}}
-        <td>
-          <input type="number"
-                 value="{{attr.advances}}"
-                 name="system.attributes.{{attr.key}}.advances">
-        </td>
-      {{/each}}
-    </tr>
+<tr>
+  <td><strong>Adv</strong></td>
 
-    <!-- MOD -->
-    <tr>
-      <td><strong>Mod</strong></td>
-      {{#each attributes as |attr|}}
-        <td>
-          <input type="number"
-                 value="{{attr.modifier}}">
-        </td>
-      {{/each}}
-    </tr>
+  {{#each attributes as |attr|}}
+    <td>
+
+      <input
+        type="number"
+        value="{{attr.advances}}"
+        name="system.attributes.{{attr.key}}.advances"
+        data-dtype="Number"
+        step="1"
+        {{#unless @root.user.isGM}}readonly{{/unless}}
+      >
+
+    </td>
+  {{/each}}
+</tr>
+
+<!-- MOD -->
+<tr>
+  <td><strong>Mod</strong></td>
+
+  {{#each attributes as |attr|}}
+    <td>
+
+      <input
+        type="number"
+        class="attr-modifier-input"
+        data-key="{{attr.key}}"
+        value="{{attr.modifier}}"
+      >
+
+    </td>
+  {{/each}}
+</tr>
 
     <!-- FINAL -->
     <tr>

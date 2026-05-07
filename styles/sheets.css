@@ -96,7 +96,10 @@
   min-width: 0;
   min-height: 0; /* 🔥 CRUCIAL */
   overflow: hidden;
+  height: 100%;
+
 }
+
 
 .sdp-content-inner {
   flex: 1;
@@ -429,15 +432,6 @@ grid-area: sidebar;
 .slot.weapon-off {
   top: 45%;
   left: 90%; /* main droite visuelle */
-}
-
-.sdp-body {
-  display: flex;
-  flex: 1;
-  min-width: 0;
-  min-height: 0;
-
-  height: 100%; /* 🔥 IMPORTANT */
 }
 
 /* 🔥 CHAÎNE DE HAUTEUR COMPLÈTE */
@@ -1648,6 +1642,8 @@ input.movement-value {
   font-weight: 600;
   letter-spacing: 0.5px;
 }
+
+
 
 /* =========================
    UNIFIED INVENTORY TABLES (TIGHT)
@@ -2964,17 +2960,23 @@ text-align:center;
   font-style: italic;
 }
 
+
 .rest-corruption-stack{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:6px;
+  display:grid;
+
+  grid-template-columns:auto auto;
+  grid-template-rows:auto auto;
+
+  gap:4px 6px;
+
+  align-items:start;
 }
 
 .corruption-box{
   display:flex;
   flex-direction:column; /* 🔥 label au-dessus */
   align-items:center;
+  min-width:70px;
     
 
   gap:2px;
@@ -3014,4 +3016,34 @@ text-align:center;
   border-radius:4px;
 
   color:white;
+}
+
+.rest-inline{
+  grid-column:2;
+  grid-row:1;
+
+  display:flex;
+  gap:6px;
+}
+
+.corruption-box{
+  grid-column:2;
+  grid-row:2;
+}
+
+.movement-header-box{
+  align-self:start;
+}
+
+.corruption-rest-row{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.corruption-stack{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
 }
