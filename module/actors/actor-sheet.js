@@ -568,7 +568,6 @@ const species = this.document.items
 if (sign?.system?.levels) {
 
   const levels = sign.system.levels;
-
 const storedProgression = this.document.system.details?.levelProgression ?? [];
 
 levelProgression = storedProgression.map(data => {
@@ -591,6 +590,11 @@ levelProgression = storedProgression.map(data => {
   levelProgression.sort((a, b) => a.level - b.level);
 }
 
+const progression =
+  this.document.system.details?.levelProgression ?? [];
+
+const hasValidatedLevel0 = progression.some(l => l.level === 0);
+
 applyFinalWeight(meleeWeapons);
 applyFinalWeight(rangedWeapons);
 applyFinalWeight(possessions, "weight");
@@ -610,7 +614,8 @@ return {
   xp: xpData,
   sign,
   signEffects,
-  canLevelUp: game.sdp.level.canLevelUp(this.actor),
+  canLevelUp:(  currentLevel === 0 &&  !hasValidatedLevel0) ||
+  game.sdp.level.canLevelUp(this.actor),
   availableLevel: game.sdp.level.getAvailableLevel(this.actor),
   levelProgression,
   xpBar: {
@@ -3111,7 +3116,35 @@ _onLevelUp() {
 
   const actor = this.document;
 
-  const newLevel = game.sdp.level.getAvailableLevel(actor);
+  let newLevel;
+
+  // =========================
+  // FIRST CHARACTER CREATION
+  // =========================
+
+  if ((actor.system.details?.level ?? 0) === 0) {
+
+    const progression =
+      actor.system.details?.levelProgression ?? [];
+
+    // si aucun niveau encore appliqué
+    if (progression.length === 0) {
+      newLevel = 0;
+    } else {
+      newLevel = game.sdp.level.getAvailableLevel(actor);
+    }
+
+  }
+
+  // =========================
+  // NORMAL LEVEL UP
+  // =========================
+
+  else {
+
+    newLevel = game.sdp.level.getAvailableLevel(actor);
+
+  }
 
   const app = new game.sdp.levelUpApp(actor, newLevel);
   app.render(true);
