@@ -318,31 +318,109 @@
 
 <div class="notes-section">
 
-  <div class="notes-header">
-    <button data-action="toggleNotesEdit">✏️ Edit</button>
-    <button data-action="saveNotes" style="display:none;">💾 Save</button>
-  </div>
+<div class="resource-block note-block">
 
-  <div class="resource-block">
+  <div class="note-header">
     <label>Biography</label>
-    <textarea data-field="biography" readonly>
-{{system.details.biography.value}}
-    </textarea>
+
+    <button
+      type="button"
+      class="note-edit-btn"
+      data-action="toggleEditor"
+      data-target="biography">
+      ✏️ Edit
+    </button>
   </div>
 
-  <div class="resource-block">
+  <!-- MODE LECTURE -->
+  <div class="note-display" data-display="biography">
+    {{{editors.biography}}}
+  </div>
+
+  <!-- MODE EDITION -->
+<div
+  class="note-editor"
+  data-editor="biography"
+  style="display:none;">
+
+  <prose-mirror
+  name="system.details.biography.value"
+  value="{{system.details.biography.value}}">
+  {{{system.details.biography.value}}}
+</prose-mirror>
+
+</div>
+  </div>
+
+<div class="resource-block note-block">
+
+  <div class="note-header">
     <label>Player Notes</label>
-    <textarea data-field="playerNotes" readonly>
-{{system.details.playerNotes.value}}
-    </textarea>
+
+    <button
+      type="button"
+      class="note-edit-btn"
+      data-action="toggleEditor"
+      data-target="playerNotes">
+      ✏️ Edit
+    </button>
   </div>
 
-  <div class="resource-block">
-    <label>GM Notes</label>
-    <textarea data-field="gmNotes" readonly>
-{{system.details.gmNotes.value}}
-    </textarea>
+  <!-- DISPLAY -->
+  <div class="note-display" data-display="playerNotes">
+    {{{editors.playerNotes}}}
   </div>
+
+  <!-- EDITOR -->
+  <div
+    class="note-editor"
+    data-editor="playerNotes"
+    style="display:none;">
+
+    <prose-mirror
+  name="system.details.playerNotes.value"
+  value="{{system.details.playerNotes.value}}">
+  {{{system.details.playerNotes.value}}}
+</prose-mirror>
+
+  </div>
+
+</div>
+
+<div class="resource-block note-block">
+
+  <div class="note-header">
+    <label>GM Notes</label>
+
+    <button
+      type="button"
+      class="note-edit-btn"
+      data-action="toggleEditor"
+      data-target="gmNotes">
+      ✏️ Edit
+    </button>
+  </div>
+
+  <!-- DISPLAY -->
+  <div class="note-display" data-display="gmNotes">
+    {{{editors.gmNotes}}}
+  </div>
+
+  <!-- EDITOR -->
+  <div
+    class="note-editor"
+    data-editor="gmNotes"
+    style="display:none;">
+
+   <prose-mirror
+  name="system.details.gmNotes.value"
+  value="{{system.details.gmNotes.value}}">
+  {{{system.details.gmNotes.value}}}
+</prose-mirror>
+
+  </div>
+
+</div>
 
 </div>
 

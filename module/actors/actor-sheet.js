@@ -17,7 +17,6 @@ constructor(...args) {
     this.activeTab = "skills"; // 🔥 TAB PAR DEFAUT
     this.openContainers = new Set();
     this._scrollPositions = {};
-    this._isEditingTextarea = false; // 🔥 AJOUT
   }
 
   static DEFAULT_OPTIONS = {
@@ -97,14 +96,10 @@ _getItemLayer(item) {
 
 async render(...args) {
 
-  // =========================
-  // SAVE TEXTAREA CONTENT
-  // =========================
-
-  const root = this.element;
+const root = this.element;
 
 
-  const prevEl = this.element?.querySelector(".sdp-content-inner");
+const prevEl = this.element?.querySelector(".sdp-content-inner");
 
 if (prevEl && prevEl.scrollHeight > prevEl.clientHeight) {
   this._scrollPositions.main = prevEl.scrollTop;
@@ -158,29 +153,6 @@ const skillMap = Object.fromEntries(
 const currentCareer = this.document.items.find(
     i => i.type === "career" && i.system.current
   );
-
-  // =========================
-// CURRENT CAREER TALENTS
-// =========================
-
-let currentCareerTalents = [];
-
-if (currentCareer) {
-
-  currentCareerTalents = currentCareer.system.talents || [];
-
-  // string -> array
-  if (typeof currentCareerTalents === "string") {
-    currentCareerTalents = currentCareerTalents
-      .split(",")
-      .map(t => t.trim());
-  }
-
-  if (!Array.isArray(currentCareerTalents)) {
-    currentCareerTalents = [];
-  }
-
-}
 
   const xpTotal = xpData.total;
 const currentLevel = this.document.system.details?.level ?? 0;
@@ -613,17 +585,36 @@ levelProgression = storedProgression.map(data => {
   levelProgression.sort((a, b) => a.level - b.level);
 }
 
-for (const talent of this.document.items.filter(i => i.type === "talent")) {
-
-  talent.isCareerTalent =
-    currentCareerTalents.includes(talent.name);
-
-}
-
 const progression =
   this.document.system.details?.levelProgression ?? [];
 
 const hasValidatedLevel0 = progression.some(l => l.level === 0);
+
+const biography =
+  this.document.system.details?.biography?.value ?? "";
+
+const playerNotes =
+  this.document.system.details?.playerNotes?.value ?? "";
+
+const gmNotes =
+  this.document.system.details?.gmNotes?.value ?? "";
+
+const editors = {
+  biography: await foundry.applications.ux.TextEditor.enrichHTML(
+    biography,
+    { async: true }
+  ),
+
+  playerNotes: await foundry.applications.ux.TextEditor.enrichHTML(
+    playerNotes,
+    { async: true }
+  ),
+
+  gmNotes: await foundry.applications.ux.TextEditor.enrichHTML(
+    gmNotes,
+    { async: true }
+  )
+};
 
 applyFinalWeight(meleeWeapons);
 applyFinalWeight(rangedWeapons);
@@ -641,6 +632,9 @@ return {
   currentCareer,
   skillMap,
   user: game.user,
+  editors,
+  owner: this.isOwner,
+  editable: this.isEditable,
   xp: xpData,
   sign,
   signEffects,
@@ -648,7 +642,6 @@ return {
   game.sdp.level.canLevelUp(this.actor),
   availableLevel: game.sdp.level.getAvailableLevel(this.actor),
   levelProgression,
-  currentCareerTalents,
   xpBar: {
   value: xpTotal,
   currentLevel,
@@ -681,27 +674,6 @@ return {
   async _applyCareer(career) {
 
   const actor = this.document;
-
-  // =========================
-// REMOVE OLD TEMP TALENTS
-// =========================
-
-const temporaryTalents = actor.items.filter(i =>
-
-  i.type === "talent" &&
-  i.system.careerTemporary &&
-  (i.system.advances || 0) <= 0
-
-);
-
-if (temporaryTalents.length) {
-
-  await actor.deleteEmbeddedDocuments(
-    "Item",
-    temporaryTalents.map(t => t.id)
-  );
-
-}
 
   // =========================
   // SET CURRENT
@@ -821,14 +793,9 @@ for (const talentName of talents) {
     }
 
     if (baseTalent) {
-      await actor.createEmbeddedDocuments("Item", [{
-  ...baseTalent.toObject(),
-  system: {
-    ...baseTalent.system,
-    advances: 0,
-    careerTemporary: true
-  }
-}]);
+      await actor.createEmbeddedDocuments("Item", [
+        baseTalent.toObject()
+      ]);
     }
 
   }
@@ -986,108 +953,14 @@ SdpRoll.openDialog({
 
   const root = this.element;
 
- console.log("ON RENDER START");
-
 this.element.querySelectorAll("*").forEach(e => {
 
   if (e.scrollHeight > e.clientHeight) {
-
-    console.log("SCROLLABLE:", {
-      el: e,
-      class: e.className,
-      scrollHeight: e.scrollHeight,
-      clientHeight: e.clientHeight
-    });
 
   }
 
 });
 
-// =========================
-// RESTORE TEXTAREA CONTENT
-// =========================
-
-if (this._textareaCache && this._restoreAfterRender) {
-
-  root.querySelectorAll("textarea").forEach(t => {
-
-    const key = t.dataset.field;
-    const cached = this._textareaCache[key];
-
-    if (key && cached) {
-
-      t.value = cached.value;
-
-      if (cached.height) {
-        t.style.height = cached.height;
-      }
-
-    }
-
-  });
-
-  console.log("TEXTAREA RESTORED AFTER SAVE");
-
-  // 🔥 CLEAN (IMPORTANT)
-  this._restoreAfterRender = false;
-  this._textareaCache = null;
-}
-// =========================
-// NOTES EDIT MODE
-//=========================
-
-const notesSection = root.querySelector(".notes-section");
-
-if (notesSection) {
-
-  const editBtn = notesSection.querySelector('[data-action="toggleNotesEdit"]');
-  const saveBtn = notesSection.querySelector('[data-action="saveNotes"]');
-  const textareas = notesSection.querySelectorAll("textarea");
-
-  // 👉 EDIT MODE
-  editBtn?.addEventListener("click", () => {
-
-  this._isEditingTextarea = true;
-
-  textareas.forEach(t => t.removeAttribute("readonly"));
-
-  editBtn.style.display = "none";
-  saveBtn.style.display = "inline-block";
-
-});
-
-  // 👉 SAVE
-saveBtn?.addEventListener("click", async () => {
-
-  const updates = {};
-
-  // 🔥 CAPTURE AVANT UPDATE
-  this._textareaCache = {};
-
-  textareas.forEach(t => {
-    const key = t.dataset.field;
-
-    this._textareaCache[key] = {
-      value: t.value,
-      height: t.style.height
-    };
-
-    updates[`system.details.${key}.value`] = t.value;
-    t.setAttribute("readonly", true);
-  });
-
-  // 🔥 FLAG RESTORE
-  this._restoreAfterRender = true;
-  this._isEditingTextarea = false;
-
-  await this.document.update(updates);
-
-  editBtn.style.display = "inline-block";
-  saveBtn.style.display = "none";
-
-});
-
-} 
 
   // ===== ATTRIBUTES =====
 root.querySelectorAll('[data-action="rollAttribute"]').forEach(el => {
@@ -2116,9 +1989,8 @@ if (current >= max) {
 }
 
   await item.update({
-  "system.advances": current + 1,
-  "system.careerTemporary": false
-});
+    "system.advances": current + 1
+  });
 
   await this.document.update({
     "system.details.experience.spent": xp.spent + cost
@@ -3124,21 +2996,126 @@ root.querySelectorAll('.condition-header').forEach(el => {
 });
 
 // =========================
+// TOGGLE NOTE EDITOR
+// =========================
+
+root.querySelectorAll('[data-action="toggleEditor"]').forEach(el => {
+
+  el.addEventListener("click", (event) => {
+
+    const target = event.currentTarget.dataset.target;
+
+    const display = root.querySelector(
+      `[data-display="${target}"]`
+    );
+
+    const editor = root.querySelector(
+      `[data-editor="${target}"]`
+    );
+
+    if (!display || !editor) return;
+
+    const isEditing = editor.style.display !== "none";
+
+    // =========================
+    // CLOSE
+    // =========================
+
+    if (isEditing) {
+
+      editor.style.display = "none";
+      display.style.display = "block";
+
+      event.currentTarget.textContent = "✏️ Edit";
+
+    }
+
+    // =========================
+    // OPEN
+    // =========================
+
+    else {
+
+      editor.style.display = "block";
+      display.style.display = "none";
+
+      event.currentTarget.textContent = "✔ Close";
+
+    }
+
+  });
+
+});
+
+console.log("ROOT", root);
+console.log(
+  "EDITORS NOW",
+  root.querySelectorAll('[contenteditable="true"]').length
+);
+
+// =========================
+// FORCE ENTER => <br> IN EDITORS
+// =========================
+
+// =========================
+// FORCE ENTER => <br> IN EDITORS
+// =========================
+
+requestAnimationFrame(() => {
+
+  const editors = root.querySelectorAll('[contenteditable="true"]');
+
+  console.log("EDITORS FOUND:", editors.length);
+
+  editors.forEach(editor => {
+
+    console.log("EDITOR", editor);
+
+    editor.addEventListener("keydown", (event) => {
+
+       console.log({
+    key: event.key,
+    code: event.code
+  });
+
+      console.log("KEYDOWN", event.key);
+
+      if (event.key !== "Enter") return;
+
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+
+      const br = document.createElement("br");
+
+      const sel = window.getSelection();
+
+      if (!sel.rangeCount) return;
+
+      const range = sel.getRangeAt(0);
+
+      range.deleteContents();
+      range.insertNode(br);
+
+      range.setStartAfter(br);
+      range.setEndAfter(br);
+
+      sel.removeAllRanges();
+      sel.addRange(range);
+
+      console.log("BR INSERTED");
+
+    });
+
+  });
+
+});
+
+// =========================
 // AUTO RESIZE TEXTAREA (FIX)
 // =========================
 
-root.querySelectorAll("textarea").forEach(el => {
 
-  const resize = () => {
-    el.style.height = "auto";
-    el.style.height = el.scrollHeight + "px";
-  };
-
-  // 🔥 toujours resize APRÈS restore
-  resize();
-
-  el.addEventListener("input", resize);
-});
 
 // =========================
 // RESTORE SCROLL DEBUG
