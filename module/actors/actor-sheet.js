@@ -1135,24 +1135,31 @@ root.querySelectorAll('[data-action="toggleWeaponEquip"]').forEach(el => {
     // UNEQUIP
     // =========================
 
-    if (!isEquipping) {
-
+if (!isEquipping) {
   await item.update({
     "system.equipped": false,
     "system.offhand": false,
     "system.isDefenseWeapon": false
   });
 
-  // 🔥 reassigne defense si besoin
-  const remaining = actor.items.find(i =>
-    i.type === "weapon" &&
-    i.system.equipped
+  // 🔥 Recalcule auto défense
+  const equippedWeapons = actor.items.filter(w =>
+    w.type === "weapon" && w.system.equipped
   );
 
-  if (remaining) {
-    await remaining.update({
-      "system.isDefenseWeapon": true
-    });
+  let defenseAssigned = false;
+
+  for (let w of equippedWeapons) {
+    const handed = (w.system.handedness || "").toLowerCase();
+    const isMelee = w.system.category === "melee";
+    const isSpecial = handed === "special";
+
+    if (!defenseAssigned && (isMelee || isSpecial)) {
+      await w.update({ isDefenseWeapon: true });
+      defenseAssigned = true;
+    } else {
+      await w.update({ isDefenseWeapon: false });
+    }
   }
 
   return;
