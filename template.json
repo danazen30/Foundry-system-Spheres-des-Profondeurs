@@ -631,6 +631,11 @@
         "type": "string",
         "label": "Key",
         "value": ""
+      },
+      "careerTemporary": {
+        "type": "boolean",
+        "label": "Career Temporary",
+        "value": false
       }
     },
     "armor": {

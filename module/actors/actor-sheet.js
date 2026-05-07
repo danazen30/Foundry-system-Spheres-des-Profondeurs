@@ -159,6 +159,29 @@ const currentCareer = this.document.items.find(
     i => i.type === "career" && i.system.current
   );
 
+  // =========================
+// CURRENT CAREER TALENTS
+// =========================
+
+let currentCareerTalents = [];
+
+if (currentCareer) {
+
+  currentCareerTalents = currentCareer.system.talents || [];
+
+  // string -> array
+  if (typeof currentCareerTalents === "string") {
+    currentCareerTalents = currentCareerTalents
+      .split(",")
+      .map(t => t.trim());
+  }
+
+  if (!Array.isArray(currentCareerTalents)) {
+    currentCareerTalents = [];
+  }
+
+}
+
   const xpTotal = xpData.total;
 const currentLevel = this.document.system.details?.level ?? 0;
 
@@ -590,6 +613,13 @@ levelProgression = storedProgression.map(data => {
   levelProgression.sort((a, b) => a.level - b.level);
 }
 
+for (const talent of this.document.items.filter(i => i.type === "talent")) {
+
+  talent.isCareerTalent =
+    currentCareerTalents.includes(talent.name);
+
+}
+
 const progression =
   this.document.system.details?.levelProgression ?? [];
 
@@ -618,6 +648,7 @@ return {
   game.sdp.level.canLevelUp(this.actor),
   availableLevel: game.sdp.level.getAvailableLevel(this.actor),
   levelProgression,
+  currentCareerTalents,
   xpBar: {
   value: xpTotal,
   currentLevel,
@@ -650,6 +681,27 @@ return {
   async _applyCareer(career) {
 
   const actor = this.document;
+
+  // =========================
+// REMOVE OLD TEMP TALENTS
+// =========================
+
+const temporaryTalents = actor.items.filter(i =>
+
+  i.type === "talent" &&
+  i.system.careerTemporary &&
+  (i.system.advances || 0) <= 0
+
+);
+
+if (temporaryTalents.length) {
+
+  await actor.deleteEmbeddedDocuments(
+    "Item",
+    temporaryTalents.map(t => t.id)
+  );
+
+}
 
   // =========================
   // SET CURRENT
@@ -769,9 +821,14 @@ for (const talentName of talents) {
     }
 
     if (baseTalent) {
-      await actor.createEmbeddedDocuments("Item", [
-        baseTalent.toObject()
-      ]);
+      await actor.createEmbeddedDocuments("Item", [{
+  ...baseTalent.toObject(),
+  system: {
+    ...baseTalent.system,
+    advances: 0,
+    careerTemporary: true
+  }
+}]);
     }
 
   }
@@ -2059,8 +2116,9 @@ if (current >= max) {
 }
 
   await item.update({
-    "system.advances": current + 1
-  });
+  "system.advances": current + 1,
+  "system.careerTemporary": false
+});
 
   await this.document.update({
     "system.details.experience.spent": xp.spent + cost

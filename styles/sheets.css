@@ -3049,3 +3049,11 @@ text-align:center;
   align-items:center;
   gap:4px;
 }
+
+.talent-temporary {
+  opacity: 0.45;
+}
+
+.talent-temporary .talent-name {
+  font-style: italic;
+}

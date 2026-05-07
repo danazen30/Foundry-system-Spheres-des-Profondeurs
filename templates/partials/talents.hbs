@@ -16,7 +16,12 @@
       {{#each actor.items as |item|}}
       {{#if (eq item.type "talent")}}
 
-      <tr class="talent-row" data-item-id="{{item.id}}">
+      <tr
+  class="talent-row
+  {{#if item.system.careerTemporary}}
+    talent-temporary
+  {{/if}}"
+  data-item-id="{{item.id}}">
 
   <td>
     <div class="talent-name-line">
@@ -24,15 +29,13 @@
         {{item.name}}
       </span>
 
-      {{#if ../currentCareer}}
-        {{#if (includes ../currentCareer.system.talents item.name)}}
+      {{#if item.isCareerTalent}}
           <button
             data-action="advanceTalent"
             data-item-id="{{item.id}}">
             +
           </button>
         {{/if}}
-      {{/if}}
     </div>
   </td>
 
