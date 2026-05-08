@@ -14,6 +14,8 @@ ATTRIBUTE_ORDER: [
   ]
 }
 
+CONFIG.SDP = CONFIG.SDP || {};
+
 SDP.ATTRIBUTE_ABBREVIATIONS = {
   meleeAbility: "MA",
   rangedAbility: "RA",
@@ -33,29 +35,122 @@ export const DAMAGE_TYPES = {
   bludgeoning: "Bludgeoning"
 };
 
-SDP.hitLocations = {
+CONFIG.SDP.hitLocations = {
 
   head: "Head",
   body: "Body",
-
   rightArm: "Right Arm",
   leftArm: "Left Arm",
-
   rightLeg: "Right Leg",
   leftLeg: "Left Leg"
 
 };
 
-SDP.hitLocationModifiers = {
+CONFIG.SDP.hitLocationModifiers = {
+
   head: -30,
   body: -10,
-
   rightArm: -20,
   leftArm: -20,
-
   rightLeg: -20,
   leftLeg: -20
+
 };
+
+CONFIG.SDP.hitLocationProfiles = {
+
+  humanoid: {
+
+    label: "Humanoid",
+
+    table: {
+      1: "head",
+      2: "rightArm",
+      3: "rightArm",
+      4: "leftArm",
+      5: "leftArm",
+      6: "body",
+      7: "body",
+      8: "body",
+      9: "rightLeg",
+      10: "rightLeg",
+      11: "leftLeg",
+      12: "leftLeg"
+    },
+
+    locations: {
+
+      head: {
+        label: "Head",
+        modifier: -30
+      },
+
+      body: {
+        label: "Body",
+        modifier: -10
+      },
+
+      rightArm: {
+        label: "Right Arm",
+        modifier: -20
+      },
+
+      leftArm: {
+        label: "Left Arm",
+        modifier: -20
+      },
+
+      rightLeg: {
+        label: "Right Leg",
+        modifier: -20
+      },
+
+      leftLeg: {
+        label: "Left Leg",
+        modifier: -20
+      }
+
+    }
+
+  },
+
+  serpent: {
+
+    label: "Serpent",
+
+    table: {
+      1: "head",
+      2: "head",
+      3: "head",
+      4: "body",
+      5: "body",
+      6: "body",
+      7: "body",
+      8: "body",
+      9: "body",
+      10: "body",
+      11: "body",
+      12: "body"
+    },
+
+    locations: {
+
+      head: {
+        label: "Head",
+        modifier: -30
+      },
+
+      body: {
+        label: "Body",
+        modifier: -10
+      },
+
+    }
+
+  }
+
+};
+SDP.hitLocationProfiles = CONFIG.SDP.hitLocationProfiles;
 
 SDP.conditions = {
 
@@ -83,8 +178,6 @@ SDP.turnConditions = {
   stunned: true
 
 };
-
-CONFIG.SDP = CONFIG.SDP || {};
 
 CONFIG.SDP.magicTypes = {
   minor: "Minor",

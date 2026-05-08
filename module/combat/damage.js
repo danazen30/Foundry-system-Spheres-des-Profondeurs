@@ -100,12 +100,16 @@ armor = this.getArmorValue(target, location, damageType, defenseType);
 const traits = weapon.system.traits || [];
 
 const hasInoffensive = traits.some(t => {
+
+  if (!t) return false;
+
   const key = (t.key || "")
     .replace(/([a-z])([A-Z])/g, "$1-$2")
     .toLowerCase()
     .replace(/[\s_]/g, "-");
 
   return key === "inoffensive";
+
 });
 
 if (hasInoffensive) {

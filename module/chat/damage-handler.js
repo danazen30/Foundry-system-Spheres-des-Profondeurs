@@ -1,4 +1,5 @@
 import { SdpDamage } from "../combat/damage.js";
+import { getHitLocationLabel } from "../combat/hit-location.js";
 
 export function registerDamageHandlers(html, message) {
 
@@ -232,7 +233,13 @@ await roll.toMessage({
     <h3>Damage Roll</h3>
     <p>Attacker: ${actor.name}</p>
     <p>Weapon: ${weapon.name}</p>
-    <p>Location: ${CONFIG.SDP.hitLocations[location]}</p>
+    <p>
+Location:
+${getHitLocationLabel(
+  card.dataset.locationProfile || "humanoid",
+  location
+)}
+</p>
     `
   });
 
@@ -317,9 +324,16 @@ if (card.classList.contains("sdp-spell")) {
     ChatMessage.create({
       content: `
             <div class="damage-card"
+            data-location-profile="${card.dataset.locationProfile || "humanoid"}"
            data-traits='${card.dataset.traits || "[]"}'>
       <h3>Damage Resolution</h3>
-      <p>Location: ${CONFIG.SDP.hitLocations[location]}</p>
+      <p>
+Location:
+${getHitLocationLabel(
+  card.dataset.locationProfile || "humanoid",
+  location
+)}
+</p>
       <p>Raw Damage: ${damage}</p>
       <p>Armor: ${armor}</p>
       <p>Final Damage: ${finalDamage}</p>
@@ -478,7 +492,13 @@ if (hasTaille) {
     content: `
     <div class="sdp-damage-result">
       <h4>${token.actor.name}</h4>
-      <p>Location: ${CONFIG.SDP.hitLocations[location]}</p>
+      <p>
+Location:
+${getHitLocationLabel(
+  "humanoid",
+  location
+)}
+</p>
       <p>Damage: ${damage}</p>
       <p>Armor: ${armor}</p>
       <p><strong>Final: ${finalDamage}</strong></p>
@@ -602,7 +622,13 @@ if(severity){
 
       <h3>Injury Sustained</h3>
 
-      <p>Location: ${CONFIG.SDP.hitLocations[location]}</p>
+      <p>
+Location:
+${getHitLocationLabel(
+  "humanoid",
+  location
+)}
+</p>
       <p>Severity: ${severity}</p>
 
       ${injury ? `
@@ -772,7 +798,13 @@ html.on("click", ".validate-damage", async ev => {
   await ChatMessage.create({
     content: `
       <h3>Damage Resolution</h3>
-      <p>Location: ${CONFIG.SDP.hitLocations[location]}</p>
+      <p>
+Location:
+${getHitLocationLabel(
+  card.dataset.locationProfile || "humanoid",
+  location
+)}
+</p>
       <p>Raw Damage: ${damage}</p>
       <p>Armor: ${armor}</p>
       <p>Final Damage: ${finalDamage}</p>

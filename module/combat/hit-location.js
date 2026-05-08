@@ -1,48 +1,71 @@
-export async function rollHitLocation() {
+export async function rollHitLocation(profileKey = "humanoid") {
 
-    // jet de localisation
+    // =========================
+    // ROLL
+    // =========================
+
     const roll = await (new Roll("1d12")).roll();
+
+    // =========================
+    // PROFILE
+    // =========================
+
+    const profile =
+        CONFIG.SDP.hitLocationProfiles?.[profileKey];
+
+    if (!profile) {
+
+        console.error(`SDP | Unknown hit location profile: ${profileKey}`);
+
+        return {
+            roll,
+            location: "body"
+        };
+    }
+
+    // =========================
+    // RESULT
+    // =========================
 
     const result = roll.total;
 
-    let location;
+    const location =
+        profile.table?.[result] || "body";
 
-    switch(result){
-
-        case 1:
-            location = "head";
-            break;
-
-        case 2:
-        case 3:
-            location = "rightArm";
-            break;
-
-        case 4:
-        case 5:
-            location = "leftArm";
-            break;
-
-        case 6:
-        case 7:
-        case 8:
-            location = "body";
-            break;
-
-        case 9:
-        case 10:
-            location = "rightLeg";
-            break;
-
-        case 11:
-        case 12:
-            location = "leftLeg";
-            break;
-    }
+    // =========================
+    // RETURN
+    // =========================
 
     return {
-        roll: roll,
-        location: location
+        roll,
+        location
     };
+
+}
+
+export function getHitLocationProfile(profileKey = "humanoid") {
+
+    const profile =
+        CONFIG.SDP.hitLocationProfiles?.[profileKey];
+
+    if (!profile) {
+
+        console.error(`SDP | Unknown hit location profile: ${profileKey}`);
+
+        return CONFIG.SDP.hitLocationProfiles.humanoid;
+    }
+
+    return profile;
+}
+
+export function getHitLocationLabel(profileKey, location) {
+
+    const profile =
+        getHitLocationProfile(profileKey);
+
+    return (
+        profile.locations?.[location]?.label ||
+        location
+    );
 
 }

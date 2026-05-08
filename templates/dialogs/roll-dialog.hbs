@@ -97,17 +97,39 @@
 <!-- COMBAT ONLY -->
 <!-- ===================== -->
 
-{{#if isAttack}}
+{{#if (or isAttack isSpell)}}
 
 <h3>Combat</h3>
 
+<label>Hit Table</label>
+
+<select name="hitLocationProfile">
+
+  {{#each hitProfiles}}
+
+    <option value="{{@key}}">
+      {{this.label}}
+    </option>
+
+  {{/each}}
+
+</select>
+
 <label>Target</label>
+
 <select name="location">
+
   <option value="">Random</option>
-  <option value="body">Body (-10)</option>
-  <option value="arm">Arm (-20)</option>
-  <option value="leg">Leg (-20)</option>
-  <option value="head">Head (-30)</option>
+
+  {{#each hitLocations}}
+
+    <option value="{{this.key}}">
+      {{this.label}}
+      ({{this.modifier}})
+    </option>
+
+  {{/each}}
+
 </select>
 
 <label>

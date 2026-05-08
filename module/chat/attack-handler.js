@@ -1,3 +1,5 @@
+import { getHitLocationLabel } from "../combat/hit-location.js";
+
 export function registerAttackHandlers(html, message) {
 
   //===================

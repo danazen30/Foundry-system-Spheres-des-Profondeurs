@@ -1,5 +1,5 @@
 import { SdpRoll } from "../rolls/roll.js";
-import { rollHitLocation } from "./hit-location.js";
+import { rollHitLocation, getHitLocationProfile} from "./hit-location.js";
 
 export class SdpSpell {
 
@@ -134,6 +134,14 @@ static async cast(actor, spell, baseValue){
 
   const dialogMods = game.sdp?.dialogModifiers || {};
 
+ const hitProfileKey =
+  dialogMods.hitLocationProfile ||
+  actor.system.hitLocationProfile ||
+  "humanoid";
+
+const hitProfile =
+  getHitLocationProfile(hitProfileKey);
+
   const selectedTalents = dialogMods.talents || [];
 
     const system = spell.system;
@@ -156,9 +164,19 @@ if (bestSkill){
   skillName = bestSkill.name;
 }
 
+let locationMod = 0;
+
+if (dialogMods.location) {
+
+  locationMod =
+    hitProfile.locations?.[dialogMods.location]?.modifier || 0;
+
+}
+
 const targetValue =
   (skillValue || INT) +
-  (dialogMods.totalMod || 0);
+  (dialogMods.totalMod || 0) +
+  locationMod;
 
   const roll = await (new Roll("1d100")).roll();
   const result = roll.total;
@@ -266,7 +284,8 @@ SL = SdpRoll.applySuccessBonus(SL, actor, selectedTalents);
       roll: { total: "manual" }
     };
   } else {
-    hitLocation = await rollHitLocation();
+    hitLocation =
+  await rollHitLocation(hitProfileKey);
   }
 
   // ======================
@@ -373,8 +392,8 @@ await actor.update({
      data-hasskill="${hasSkill}"
      data-weapon="${spell.id}"
      data-location="${hitLocation.location}"
+     data-location-profile="${hitProfileKey}"
      data-talents='${JSON.stringify(selectedTalents)}'
-     data-overcast="${overcast}"
      data-overcast="${overcast}"
      data-overcast-used="0">
 
@@ -402,7 +421,11 @@ await actor.update({
 
 <p><strong>Mana Cost:</strong> ${manaCost}</p>
 
-<p><strong>Location:</strong> ${CONFIG.SDP.hitLocations[hitLocation.location]}</p>
+<p>
+<strong>Location:</strong>
+${hitProfile.locations?.[hitLocation.location]?.label || hitLocation.location}
+(${hitLocation.roll.total})
+</p>
 
 ${concentration ? `<p><strong>Concentration</strong></p>` : ""}
 

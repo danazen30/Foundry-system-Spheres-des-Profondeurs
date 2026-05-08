@@ -145,6 +145,22 @@ const isAttribute =
     !this.spellData
   );
 
+const hitProfileKey = "humanoid";
+
+const hitProfile =
+  CONFIG.SDP.hitLocationProfiles?.[hitProfileKey];
+
+const hitLocations = Object.entries(
+  hitProfile?.locations || {}
+).map(([key, data]) => ({
+  key,
+  label: data.label,
+  modifier:
+    data.modifier >= 0
+      ? `+${data.modifier}`
+      : data.modifier
+}));
+
 return {
     actor: this.actor,
     label: this.label,
@@ -155,11 +171,14 @@ return {
     conditionMod,
     conditionDetails,
     modifiers,
+    hitLocations,
     inspirationDice: this.signEffects.inspirationDice,
     inspirationResult: this.inspirationResult,
     spellData: this.spellData,
     type: this.type,
-    isAttribute
+    isAttribute,
+    isSpell: !!this.spellData,
+    hitProfiles: CONFIG.SDP.hitLocationProfiles,
   };
 }
 
@@ -212,13 +231,19 @@ const updatePreview = () => {
     total += config.modifier * stack;
   }
 
-  if (this.weapon) {
-    for (const t of this.weapon.system.traits || []) {
-      const key = (t.key || "").toLowerCase();
-      if (key === "unbalanced") total -= 10;
-      if (key === "accurate") total += 10;
-    }
+if (this.weapon) {
+
+  for (const t of this.weapon.system.traits || []) {
+
+    if (!t) continue;
+
+    const key = (t.key || "").toLowerCase();
+
+    if (key === "unbalanced") total -= 10;
+    if (key === "accurate") total += 10;
   }
+
+}
 
   const el = root.querySelector('#totalModifier');
   if (el) el.textContent = total;
@@ -232,6 +257,42 @@ root.addEventListener("change", (ev) => {
   if (ev.target.name === "difficulty") updatePreview();
 });
 
+const profileSelect =
+  root.querySelector('[name="hitLocationProfile"]');
+
+const locationSelect =
+  root.querySelector('[name="location"]');
+
+profileSelect?.addEventListener("change", (ev) => {
+
+  const profileKey = ev.target.value;
+
+  const profile =
+    CONFIG.SDP.hitLocationProfiles?.[profileKey];
+
+  if (!profile || !locationSelect) return;
+
+  locationSelect.innerHTML = "";
+
+  const randomOption = document.createElement("option");
+  randomOption.value = "";
+  randomOption.textContent = "Random";
+
+  locationSelect.appendChild(randomOption);
+
+  for (const [key, data] of Object.entries(profile.locations)) {
+
+    const option = document.createElement("option");
+
+    option.value = key;
+
+    option.textContent =
+      `${data.label} (${data.modifier})`;
+
+    locationSelect.appendChild(option);
+  }
+
+});
 // 🔥 CRUCIAL
 setTimeout(() => updatePreview(), 0);
 
@@ -287,6 +348,10 @@ async _roll() {
 const root = this.element?.querySelector(".window-content");
 if (!root) return;
 
+const hitLocationProfile =
+  root.querySelector('[name="hitLocationProfile"]')?.value
+  || "humanoid";
+
 const modValue = Number(root.querySelector('[name="customMod"]')?.value || 0);
 const diffValue = Number(root.querySelector('[name="difficulty"]')?.value || 0);
 const attributeOverride = root.querySelector('[name="attributeOverride"]')?.value || null;
@@ -308,6 +373,7 @@ const finesse = root.querySelector('[name="finesse"]')?.checked || false;
 
 game.sdp.dialogModifiers = {
   totalMod: modValue + diffValue,
+  hitLocationProfile,
 
   conditionMod: this.actor.system.conditionTotals
     ? Object.entries(this.actor.system.conditionTotals).reduce((acc, [key, value]) => {

@@ -1,8 +1,9 @@
 import { SdpRoll } from "../rolls/roll.js";
-import { rollHitLocation } from "./hit-location.js";
+import { rollHitLocation, getHitLocationProfile} from "./hit-location.js";
 import { SdpTraitEngine } from "../system/trait-engine.js";
 import { WEAPON_TRAITS } from "../system/config.js";
 import { ITEM_TRAITS } from "../system/config.js";
+
 
 export class SdpAttack {
 
@@ -11,6 +12,14 @@ static async attackTest(actor, weapon, attackValue){
 const dialogMods = game.sdp?.dialogModifiers || {};
 const inspiration = dialogMods.inspiration || 0;
 const useFinesse = dialogMods.finesse;
+const hitProfileKey =
+  dialogMods.hitLocationProfile ||
+  actor.system.hitLocationProfile ||
+  "humanoid";
+
+const hitProfile =
+  getHitLocationProfile(hitProfileKey);
+
   // ======================
 // STUNNED CHECK
 // ======================
@@ -52,9 +61,9 @@ if (dialogMods.location) {
     roll: { total: "manual" }
   };
 
-} else {
+  } else {
 
-  hitLocation = await rollHitLocation();
+  hitLocation = await rollHitLocation(hitProfileKey);
 
 }
 
@@ -206,7 +215,10 @@ if (finalTraits.some(t => t.key === "fast")) {
 let locationMod = 0;
 
 if (dialogMods.location) {
-  locationMod = CONFIG.SDP.hitLocationModifiers?.[hitLocation.location] || 0;
+
+  locationMod =
+    hitProfile.locations?.[hitLocation.location]?.modifier || 0;
+
 }
 
 let targetValue =
@@ -408,6 +420,7 @@ if (finalTraits.some(t => t.key === "reload")) {
      data-weapon="${weapon.id}"
      data-target="${targetId ?? ""}"
      data-location="${hitLocation.location}"
+     data-location-profile="${hitProfileKey}"
      data-talents='${JSON.stringify(dialogMods.talents || [])}'
      data-traits='${JSON.stringify(normalizedTraits)}'
      data-damagetype="${weapon.system.damageType || "slashing"}">
@@ -449,7 +462,11 @@ ${displayTraits.length ? `
   ${critText}
   ${breakText}
 
-  <p>Hit Location: ${CONFIG.SDP.hitLocations[hitLocation.location]} (${hitLocation.roll.total})</p>
+  <p>
+Hit Location:
+${hitProfile.locations?.[hitLocation.location]?.label || hitLocation.location}
+(${hitLocation.roll.total})
+</p>
 
   <p><strong>${success ? "HIT" : "MISS"}</strong></p>
 
@@ -662,7 +679,10 @@ if (result === 100) {
 let locationMod = 0;
 
 if (dialogMods.location) {
-  locationMod = CONFIG.SDP.hitLocationModifiers?.[hitLocation.location] || 0;
+
+  locationMod =
+    hitProfile.locations?.[hitLocation.location]?.modifier || 0;
+
 }
 
 let attackScore =
@@ -757,6 +777,7 @@ if(crit.failure){
      data-weapon="${weapon.id}"
      data-target="${targetId ?? ""}"
      data-location="${hitLocation.location}"
+     data-location-profile="${hitProfileKey}"
      data-critical="${crit.success}"
      data-brutal="${dialogMods.brutal}"
      data-traits='${JSON.stringify(normalizedTraits)}'
@@ -782,7 +803,11 @@ if(crit.failure){
   <p>Roll: ${result}</p>
   <p>SL: ${SL}</p>
   ${inspiration > 0 ? `<p>Inspiration: +${inspiration}</p>` : ""}
-  <p>Location: ${CONFIG.SDP.hitLocations[hitLocation.location]} (${hitLocation.roll.total})</p>
+  <p>
+Location:
+${hitProfile.locations?.[hitLocation.location]?.label || hitLocation.location}
+(${hitLocation.roll.total})
+</p>
   ${critText}
   ${breakText}
   ${dialogMods.charge ? "<p>Charge</p>" : ""}

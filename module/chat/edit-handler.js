@@ -1,6 +1,7 @@
 import { SimpleDialog } from "../apps/simple-dialog.js";
 import { SdpRoll } from "../rolls/roll.js";
 import { WEAPON_TRAITS } from "../system/config.js";
+import { getHitLocationLabel } from "../combat/hit-location.js";
 
 
 export function registerEditHandlers(html, message) {
@@ -510,6 +511,7 @@ if (isImpaling && isRound && newRoll <= target) {
      data-weapon="${card.dataset.weapon}"
      data-target="${card.dataset.target}"
      data-location="${card.dataset.location}"
+     data-location-profile="${card.dataset.locationProfile || "humanoid"}"
      data-critical="${crit.success}"
      data-brutal="${card.dataset.brutal}"
      data-traits='${JSON.stringify(traits)}'>
@@ -537,7 +539,13 @@ if (isImpaling && isRound && newRoll <= target) {
 
   ${critText}
 
-  <p>Hit Location: ${CONFIG.SDP.hitLocations[card.dataset.location]}</p>
+<p>
+Hit Location:
+${getHitLocationLabel(
+  card.dataset.locationProfile || "humanoid",
+  card.dataset.location
+)}
+</p>
 
   <p><strong>${success ? "HIT" : "MISS"}</strong></p>
 
@@ -642,6 +650,7 @@ if (isImpaling && isRound && successCheck) {
      data-weapon="${card.dataset.weapon}"
      data-target=""
      data-location="${card.dataset.location}"
+     data-location-profile="${card.dataset.locationProfile || "humanoid"}"
      data-critical="${crit.success}"
      data-brutal="${card.dataset.brutal}"
      data-traits='${JSON.stringify(traits)}'>
@@ -666,7 +675,13 @@ if (isImpaling && isRound && successCheck) {
   <p>SL: ${SL}</p>
   <p>Attack Score: ${attackScore} (${oldAttack})</p>
 
-  <p>Location: ${CONFIG.SDP.hitLocations[card.dataset.location]}</p>
+<p>
+Location:
+${getHitLocationLabel(
+  card.dataset.locationProfile || "humanoid",
+  card.dataset.location
+)}
+</p>
 
   ${critText}
 
