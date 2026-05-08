@@ -2391,9 +2391,61 @@ el.addEventListener("click", (event) => {
 
   if (!weapon) return;
 
+  // =========================
+  // EQUIPPED CHECK
+  // =========================
+
   if (!weapon.system.equipped) {
     ui.notifications.warn(`${weapon.name} is not equipped`);
     return;
+  }
+
+  // =========================
+  // WEAPON QUANTITY CHECK
+  // =========================
+
+  const weaponQty = weapon.system.quantity?.value;
+
+  if (
+    weaponQty !== undefined &&
+    weaponQty !== null &&
+    weaponQty <= 0
+  ) {
+    ui.notifications.warn(`${weapon.name} is depleted`);
+    return;
+  }
+
+  // =========================
+  // AMMO CHECK (AVANT DIALOG)
+  // =========================
+
+  if (weapon.system.category === "ranged" && weapon.system.consumesAmmo) {
+
+    if (!weapon.system.currentAmmo) {
+
+      ui.notifications.warn("No ammunition selected");
+      return;
+
+    }
+
+    const ammo = this.document.items.get(weapon.system.currentAmmo);
+
+    if (!ammo) {
+
+      ui.notifications.warn("Ammunition not found");
+      return;
+
+    }
+
+    const qty = ammo.system.quantity?.value ?? 0;
+
+    if (qty <= 0) {
+
+      ui.notifications.warn("No ammunition left");
+      return;
+
+    }
+
   }
 
   let target;
