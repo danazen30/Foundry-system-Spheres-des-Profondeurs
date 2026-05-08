@@ -2386,6 +2386,19 @@ root.querySelectorAll('.weapon-toggle').forEach(el => {
 
 el.addEventListener("click", (event) => {
 
+  const stunned = this.document.system.conditions?.stunned || 0;
+
+if (stunned > 0) {
+
+  event.preventDefault();
+
+  ui.notifications.warn(
+    `${this.document.name} is stunned and cannot attack`
+  );
+
+  return;
+}
+
   const itemId = event.currentTarget.dataset.itemId;
   const weapon = this.document.items.get(itemId);
 
