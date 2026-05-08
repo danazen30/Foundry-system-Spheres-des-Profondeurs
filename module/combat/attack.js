@@ -297,6 +297,88 @@ if (bestSkill) {
 
     const result = roll.total;
 
+    // =========================
+// AMMO / WEAPON CONSUMPTION (ON ROLL)
+// =========================
+
+if (weapon.system.category === "ranged") {
+
+  console.log("SDP | CONSUMPTION ON ATTACK ROLL", {
+    weapon: weapon.name,
+    consumesAmmo: weapon.system.consumesAmmo,
+    ammo: ammo?.name
+  });
+
+  // =========================
+  // NORMAL AMMO
+  // =========================
+
+  if (weapon.system.consumesAmmo) {
+
+    if (ammo) {
+
+      const current = ammo.system.quantity?.value ?? 0;
+
+      // 🔥 SECURITE
+      if (current <= 0) {
+
+        ui.notifications.warn(`${ammo.name} is empty`);
+        return;
+
+      }
+
+      const newValue = Math.max(current - 1, 0);
+
+      await ammo.update({
+        "system.quantity.value": newValue
+      });
+
+      console.log("SDP | Ammo consumed on roll", {
+        ammo: ammo.name,
+        before: current,
+        after: newValue
+      });
+
+    } else {
+
+      ui.notifications.warn("No ammunition selected");
+      return;
+
+    }
+
+  }
+
+  // =========================
+  // THROWN WEAPON
+  // =========================
+
+  else {
+
+    const current = weapon.system.quantity?.value ?? 0;
+
+    if (current <= 0) {
+
+      ui.notifications.warn(`${weapon.name} is depleted`);
+      return;
+
+    }
+
+    const newValue = Math.max(current - 1, 0);
+
+    await weapon.update({
+      "system.quantity.value": newValue
+    });
+
+    console.log("SDP | Thrown weapon consumed on roll", {
+      weapon: weapon.name,
+      before: current,
+      after: newValue
+    });
+
+  }
+
+}
+
 let critFailBase = 96;
 
 // trait dangerous
