@@ -1,6 +1,6 @@
 export const SDP = {
 
-ATTRIBUTE_ORDER: [
+  ATTRIBUTE_ORDER: [
     "meleeAbility",
     "rangedAbility",
     "strength",
@@ -11,8 +11,43 @@ ATTRIBUTE_ORDER: [
     "intelligence",
     "willpower",
     "charisma"
-  ]
-}
+  ],
+
+  rangeBands: {
+
+    pointBlank: {
+      label: "Point Blank",
+      multiplier: 0.1,
+      modifier: 30
+    },
+
+    short: {
+      label: "Short",
+      multiplier: 0.5,
+      modifier: 10
+    },
+
+    normal: {
+      label: "Normal",
+      multiplier: 1,
+      modifier: 0
+    },
+
+    long: {
+      label: "Long",
+      multiplier: 2,
+      modifier: -10
+    },
+
+    extreme: {
+      label: "Extreme",
+      multiplier: 3,
+      modifier: -30
+    }
+
+  }
+
+};
 
 CONFIG.SDP = CONFIG.SDP || {};
 

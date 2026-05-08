@@ -201,11 +201,26 @@ const meleeWeapons = weapons.filter(w => w.system.category === "melee");
 const rangedWeapons = weapons
   .filter(w => w.system.category === "ranged");
 
-  for (let w of weapons) {
+for (let w of weapons) {
 
-  const traits = w.system.traits || [];
+  const weaponTraits = Array.isArray(w.system.traits)
+    ? w.system.traits
+    : [];
 
-  w.hasReload = traits.some(t => t?.key === "reload");
+  const itemTraits = Array.isArray(w.system.itemTraits)
+    ? w.system.itemTraits
+    : [];
+
+  const allTraits = [
+    ...weaponTraits,
+    ...itemTraits
+  ];
+
+  console.log("SDP | HAS RELOAD RAW", {
+  weapon: w.name,
+  weaponTraits: JSON.parse(JSON.stringify(weaponTraits)),
+  itemTraits: JSON.parse(JSON.stringify(itemTraits))
+});
 
 }
 
@@ -214,6 +229,74 @@ for (let w of rangedWeapons) {
   w.compatibleAmmo = allAmmo.filter(a =>
     a.system.weaponGroup === w.system.ammunitionGroup
   );
+
+  // =========================
+  // HAS RELOAD
+  // =========================
+
+  const weaponTraits = Array.isArray(w.system.traits)
+    ? w.system.traits
+    : [];
+
+  const itemTraits = Array.isArray(w.system.itemTraits)
+    ? w.system.itemTraits
+    : [];
+
+  const allTraits = [
+    ...weaponTraits,
+    ...itemTraits
+  ];
+
+const hasReload = allTraits.some(t => {
+
+  if (!t) return false;
+
+  if (typeof t === "string") {
+
+    const value = t.toLowerCase().trim();
+
+    return [
+      "reload",
+      "rechargement"
+    ].includes(value);
+
+  }
+
+  if (typeof t === "object") {
+
+    const value = (
+      t.key ||
+      t.name ||
+      t.label ||
+      t.value ||
+      ""
+    )
+      .toString()
+      .toLowerCase()
+      .trim();
+
+    console.log("RELOAD TRAIT CHECK", {
+      raw: t,
+      parsed: value
+    });
+
+    return [
+      "reload",
+      "rechargement"
+    ].includes(value);
+
+  }
+
+  return false;
+
+});
+
+w.hasReload = hasReload;
+
+console.log("FINAL RELOAD FLAG", {
+  weapon: w.name,
+  hasReload: w.hasReload
+});
 
 }
 console.log("SDP | Ammo mapping", {

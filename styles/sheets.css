@@ -1952,7 +1952,12 @@ padding:4px;
 text-align:center;
 }
 
-.weapons-table td {
+
+.weapons-table tr.weapon-row td:not(.weapon-name-cell) {
+  white-space: nowrap;
+}
+
+.weapon-name-cell {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -2041,33 +2046,84 @@ text-align:center;
 /* ammo (plus large) */
 .ranged-table th:nth-child(3),
 .ranged-table td:nth-child(3) {
-  width: 160px;
+  width: 180px;
 }
 
-/* equip + offhand */
+/* equip */
 .ranged-table th:nth-child(4),
-.ranged-table td:nth-child(4),
+.ranged-table td:nth-child(4) {
+  width: 42px;
+}
+
+/* reload */
 .ranged-table th:nth-child(5),
 .ranged-table td:nth-child(5) {
-  width: 30px;
+  width: 55px;
 }
 
 /* qty */
 .ranged-table th:nth-child(6),
 .ranged-table td:nth-child(6) {
-  width: 30px;
+  width: 42px;
 }
 
-/* 🔥 WEIGHT (TON BESOIN) */
+/* weight */
 .ranged-table th:nth-child(7),
 .ranged-table td:nth-child(7) {
-  width: 30px;
+  width: 42px;
 }
 
 /* actions */
 .ranged-table th:nth-child(8),
 .ranged-table td:nth-child(8) {
-  width: 30px;
+  width: 42px;
+}
+
+/* checkbox ranged clean */
+.ranged-table input[type="checkbox"] {
+  transform: scale(1.05);
+  margin: 0 auto;
+  display: block;
+}
+
+/* évite le texte parasite */
+.ranged-table td {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* =========================
+   RANGED AMMO ROW
+========================= */
+
+.ammo-row{
+  display:flex;
+  align-items:center;
+  gap:6px;
+
+  width:100%;
+}
+
+/* le select prend toute la place */
+.ammo-row select{
+  flex:1;
+  min-width:0;
+}
+
+/* pousse le reload à droite */
+.reload-wrapper{
+  margin-left:auto;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* checkbox clean */
+.reload-checkbox{
+  transform:scale(1.1);
+  cursor:pointer;
 }
 
 .qty-clickable {

@@ -35,13 +35,76 @@ if(stunned > 0){
 
   const isRanged = weapon.system.category === "ranged";
 
-  const weaponTraitsBase = weapon.system.traits || [];
+const weaponTraitsBase = Array.isArray(weapon.system.traits)
+  ? weapon.system.traits
+  : [];
 
-const hasReload = weaponTraitsBase.some(t => t?.key === "reload");
+const itemTraitsBase = Array.isArray(weapon.system.itemTraits)
+  ? weapon.system.itemTraits
+  : [];
+
+const allReloadTraits = [
+  ...weaponTraitsBase,
+  ...itemTraitsBase
+];
+
+const hasReload = allReloadTraits.some(t => {
+
+  if (!t) return false;
+
+  if (typeof t === "string") {
+    return t.toLowerCase() === "reload";
+  }
+
+  if (typeof t === "object") {
+    return (t.key || "").toLowerCase() === "reload";
+  }
+
+  return false;
+
+});
+
 const forceReload = weapon.system.forceReload;
 
-if (hasReload && !weapon.system.loaded) {
+console.log("SDP | RELOAD CHECK", {
+  weapon: weapon.name,
+  hasReload,
+  forceReload,
+  loaded: weapon.system.loaded
+});
+
+// =========================
+// FORCE RELOAD
+// considère l'arme comme chargée
+// =========================
+
+if (hasReload && forceReload) {
+
+  console.log("SDP | FORCE RELOAD ACTIVE", {
+    weapon: weapon.name
+  });
+
+  // force loaded
+  if (!weapon.system.loaded) {
+
+    await weapon.update({
+      "system.loaded": true,
+      "system.reloadProgress": 0
+    });
+
+    // IMPORTANT
+    weapon.system.loaded = true;
+  }
+
+}
+else if (hasReload && !weapon.system.loaded) {
+
+  console.log("SDP | RELOAD REQUIRED", {
+    weapon: weapon.name
+  });
+
   return await this.reloadTest(actor, weapon);
+
 }
 
 const targets = Array.from(game.user.targets);
@@ -98,10 +161,87 @@ console.log("SDP | Ammo used", {
 
 const base = actor._getBestWeaponSkill(weapon);
 
-let rangeMod = 0;
+// =========================
+// RANGE CALCULATION
+// =========================
+
+let rangeModifier = 0;
+let rangeLabel = "Unknown";
+let measuredDistance = 0;
+
+const targetToken = targets[0];
+const sourceToken = actor.getActiveTokens()[0];
+
+if (sourceToken && targetToken) {
+
+const path = [
+  sourceToken.center,
+  targetToken.center
+];
+
+measuredDistance = canvas.grid.measurePath(path).distance;
+
+// =========================
+// FINAL RANGE (WEAPON + AMMO)
+// =========================
+
+const baseRange =
+  Number(weapon.system.range || 0);
+
+let ammoRangeModifier = 0;
 
 if (ammo) {
-  rangeMod = Number(ammo.system.rangeModifier) || 0;
+  ammoRangeModifier =
+    Number(ammo.system.rangeModifier || 0);
+}
+
+const weaponRange = Math.max(
+  0,
+  baseRange + ammoRangeModifier
+);
+
+const bands = CONFIG.SDP.rangeBands;
+
+  if (measuredDistance <= weaponRange * bands.pointBlank.multiplier) {
+
+    rangeModifier = bands.pointBlank.modifier;
+    rangeLabel = bands.pointBlank.label;
+
+  } else if (measuredDistance <= weaponRange * bands.short.multiplier) {
+
+    rangeModifier = bands.short.modifier;
+    rangeLabel = bands.short.label;
+
+  } else if (measuredDistance <= weaponRange * bands.normal.multiplier) {
+
+    rangeModifier = bands.normal.modifier;
+    rangeLabel = bands.normal.label;
+
+  } else if (measuredDistance <= weaponRange * bands.long.multiplier) {
+
+    rangeModifier = bands.long.modifier;
+    rangeLabel = bands.long.label;
+
+  } else if (measuredDistance <= weaponRange * bands.extreme.multiplier) {
+
+    rangeModifier = bands.extreme.modifier;
+    rangeLabel = bands.extreme.label;
+
+  } else {
+
+    ui.notifications.warn("Target is out of range");
+    return;
+
+  }
+
+  console.log("SDP | RANGE BAND", {
+    weapon: weapon.name,
+    distance: measuredDistance,
+    range: weaponRange,
+    band: rangeLabel,
+    modifier: rangeModifier
+  });
+
 }
 
 // =========================
@@ -226,7 +366,8 @@ let targetValue =
   (dialogMods.totalMod || 0) +
   (dialogMods.conditionMod || 0) +
   locationMod +
-  fastBonus;
+  fastBonus +
+  rangeModifier;
 
   // =========================
 // OFFHAND (RANGED)
@@ -481,7 +622,10 @@ if(crit.failure){
     // 🔥 UNLOAD TOUJOURS SI RELOAD (SAFE)
 if (finalTraits.some(t => t.key === "reload")) {
 
-  await weapon.update({ "system.loaded": false });
+  await weapon.update({
+  "system.loaded": false,
+  "system.forceReload": false
+});
 
   console.log("SDP | WEAPON UNLOADED (RANGED)", {
     weapon: weapon.name,
@@ -537,6 +681,7 @@ ${displayTraits.length ? `
 
   <p>Test: ${source}</p>
   <p>Target: ${targetValue}</p>
+  <p>Range: ${rangeLabel} (${Math.round(measuredDistance)}m)</p>
   <p>Roll: ${result}</p>
   ${inspiration > 0 ? `<p>Inspiration: +${inspiration}</p>` : ""}
   <p>SL: ${SL} (${SdpRoll.getSLLabel(SL)})</p>
@@ -909,7 +1054,11 @@ ${hitProfile.locations?.[hitLocation.location]?.label || hitLocation.location}
 
 static async reloadTest(actor, weapon) {
 
-  const reloadTrait = weapon.system.traits.find(t => t.key === "reload");
+  const reloadTrait = [...(weapon.system.traits || []), ...(weapon.system.itemTraits || [])]
+  .find(t => {
+    if (typeof t === "string") return t === "reload";
+    return t.key === "reload";
+  });
   const target = Number(reloadTrait?.value || 1);
 
   const roll = await (new Roll("1d100")).roll();
@@ -922,10 +1071,6 @@ if (traits.some(t => t.key === "dangerous")) {
   critFailMin = 86;
 }
 
-const crit = SdpRoll.getCritical(result, targetValue, {
-  critFailBase: critFailMin
-});
-
 const base = actor._getBestWeaponSkill(weapon);
 
 const dialogMods = game.sdp?.dialogModifiers || {};
@@ -934,6 +1079,10 @@ let targetValue =
   base +
   (dialogMods.totalMod || 0) +
   (dialogMods.conditionMod || 0);
+
+  const crit = SdpRoll.getCritical(result, targetValue, {
+  critFailBase: critFailMin
+});
 
 let success;
 

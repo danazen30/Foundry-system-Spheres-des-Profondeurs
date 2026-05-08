@@ -222,13 +222,20 @@
 
     </select>
 
-    {{#if item.hasReload}}
-      <input type="checkbox"
-             class="reload-checkbox"
-             data-action="toggleLoaded"
-             data-item-id="{{item.id}}"
-             {{checked item.system.loaded}}>
-    {{/if}}
+{{#if item.hasReload}}
+
+  <label class="reload-wrapper">
+    <input
+      type="checkbox"
+      class="reload-checkbox"
+      data-action="toggleBoolean"
+      data-path="system.forceReload"
+      data-item-id="{{item.id}}"
+      {{checked item.system.forceReload}}
+    />
+  </label>
+
+{{/if}}
 
   </div>
 </td>
