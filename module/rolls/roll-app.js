@@ -361,6 +361,33 @@ const selectedTalents = Array.from(
   root.querySelectorAll('input[name="talent"]:checked')
 ).map(el => el.value);
 
+// =========================
+// TALENT OBJECTS
+// =========================
+
+const selectedTalentObjects = selectedTalents
+  .map(id => this.actor.items.get(id))
+  .filter(Boolean);
+
+const talentsHTML =
+  selectedTalentObjects.length > 0
+    ? `
+      <div class="roll-talents">
+
+        <ul>
+          ${selectedTalentObjects.map(t => `
+            <li>
+              ${t.name}
+              ${t.system.advances
+                ? `(${t.system.advances})`
+                : ""}
+            </li>
+          `).join("")}
+        </ul>
+      </div>
+    `
+    : "";
+
 // autres inputs
 const location = root.querySelector('[name="location"]')?.value || null;
 const brutal = root.querySelector('[name="brutal"]')?.checked || false;
@@ -528,6 +555,7 @@ await roll.toMessage({
     <p><strong>Roll:</strong> ${result}</p>
     ${this.inspirationResult ? `<p>Inspiration: +${this.inspirationResult}</p>` : ""}
     <p><strong>SL:</strong> ${SL} (${game.sdp.Roll.getSLLabel(SL)})</p>
+    ${talentsHTML}
 
     <p>
       <strong>Result:</strong> 

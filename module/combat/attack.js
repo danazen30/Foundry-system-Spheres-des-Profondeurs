@@ -593,6 +593,33 @@ const selectedTalents = dialogMods.talents || [];
 
 SL = SdpRoll.applySuccessBonus(SL, actor, selectedTalents);
 
+// =========================
+// TALENTS HTML
+// =========================
+
+const selectedTalentObjects = selectedTalents
+  .map(id => actor.items.get(id))
+  .filter(Boolean);
+
+const talentsHTML =
+  selectedTalentObjects.length > 0
+    ? `
+      <div class="roll-talents">
+
+        <ul>
+          ${selectedTalentObjects.map(t => `
+            <li>
+              ${t.name}
+              ${t.system.advances
+                ? `(${t.system.advances})`
+                : ""}
+            </li>
+          `).join("")}
+        </ul>
+      </div>
+    `
+    : "";
+
     let critText = "";
 
 if(crit.success){
@@ -694,7 +721,7 @@ Hit Location:
 ${hitProfile.locations?.[hitLocation.location]?.label || hitLocation.location}
 (${hitLocation.roll.total})
 </p>
-
+${talentsHTML}
   <p><strong>${success ? "HIT" : "MISS"}</strong></p>
 
   ${damageButton}
@@ -985,6 +1012,35 @@ context = SdpTraitEngine.applyAttackTraits(context);
 
   let critText = "";
 
+  // =========================
+// TALENTS HTML
+// =========================
+
+const selectedTalents = dialogMods.talents || [];
+
+const selectedTalentObjects = selectedTalents
+  .map(id => actor.items.get(id))
+  .filter(Boolean);
+
+const talentsHTML =
+  selectedTalentObjects.length > 0
+    ? `
+      <div class="roll-talents">
+
+        <ul>
+          ${selectedTalentObjects.map(t => `
+            <li>
+              ${t.name}
+              ${t.system.advances
+                ? `(${t.system.advances})`
+                : ""}
+            </li>
+          `).join("")}
+        </ul>
+      </div>
+    `
+    : "";
+
 if(crit.success){
   critText = `<p><strong>CRITICAL SUCCESS</strong></p>`;
 }
@@ -1038,6 +1094,7 @@ ${hitProfile.locations?.[hitLocation.location]?.label || hitLocation.location}
   ${critText}
   ${breakText}
   ${dialogMods.charge ? "<p>Charge</p>" : ""}
+  ${talentsHTML}
   <p>Attack Score: ${attackScore}</p>
 
  <button class="apply-defense">Apply Defense</button>

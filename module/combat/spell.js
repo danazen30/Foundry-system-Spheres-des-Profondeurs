@@ -269,6 +269,33 @@ const hasDowngradeTalent = actor.items.some(i => {
 
 SL += dialogMods.inspiration || 0;
 
+// =========================
+// TALENTS HTML
+// =========================
+
+const selectedTalentObjects = selectedTalents
+  .map(id => actor.items.get(id))
+  .filter(Boolean);
+
+const talentsHTML =
+  selectedTalentObjects.length > 0
+    ? `
+      <div class="roll-talents">
+
+        <ul>
+          ${selectedTalentObjects.map(t => `
+            <li>
+              ${t.name}
+              ${t.system.advances
+                ? `(${t.system.advances})`
+                : ""}
+            </li>
+          `).join("")}
+        </ul>
+      </div>
+    `
+    : "";
+
 // 🔥 APPLY SUCCESS BONUS
 SL = SdpRoll.applySuccessBonus(SL, actor, selectedTalents);
 
@@ -416,7 +443,7 @@ await actor.update({
   ${magicConsequence ? `
   <p><strong>Magical Consequence:</strong> ${magicConsequence.toUpperCase()}</p>
 ` : ""}
-
+${talentsHTML}
 <p class="spell-result"><strong>${success ? "SUCCESS" : "FAILURE"}</strong></p>
 
 <p><strong>Mana Cost:</strong> ${manaCost}</p>
