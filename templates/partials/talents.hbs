@@ -18,8 +18,17 @@
 
       <tr
   class="talent-row
+
   {{#if item.system.careerTemporary}}
     talent-temporary
+  {{/if}}
+
+  {{#if item.isAvailable}}
+    talent-unpurchased
+  {{/if}}
+
+  {{#if item.isPurchased}}
+    talent-purchased
   {{/if}}"
   data-item-id="{{item.id}}">
 
@@ -29,13 +38,14 @@
         {{item.name}}
       </span>
 
-      {{#if item.isCareerTalent}}
-          <button
-            data-action="advanceTalent"
-            data-item-id="{{item.id}}">
-            +
-          </button>
-        {{/if}}
+     {{#if item.isCareerTalent}}
+  <button
+    class="talent-advance-btn"
+    data-action="advanceTalent"
+    data-item-id="{{item.id}}">
+    +
+  </button>
+{{/if}}
     </div>
   </td>
 

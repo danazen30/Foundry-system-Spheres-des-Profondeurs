@@ -3091,3 +3091,43 @@ text-align:center;
   font-size: 14px;
   line-height: 1.4;
 }
+
+/* =========================
+   TALENTS STATES
+========================= */
+
+.talent-unpurchased {
+  opacity: 0.45;
+}
+
+.talent-unpurchased .talent-name {
+  color: #888;
+  font-style: italic;
+}
+
+.talent-purchased {
+  opacity: 1;
+}
+
+.talent-advance-btn {
+  width: 18px;
+  height: 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #666;
+  border-radius: 6px;
+
+  background: #222;
+  color: #ddd;
+
+  cursor: pointer;
+
+  flex-shrink: 0;
+}
+
+.talent-advance-btn:hover {
+  background: #555;
+}
