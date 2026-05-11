@@ -437,9 +437,13 @@ let critFailBase = 96;
 if (traits.some(t => t.key === "dangerous")) {
   critFailBase = 86;
 }
-const crit = SdpRoll.getCritical(newRoll, target, {
-  critFailBase
-});
+const crit = SdpRoll.getCritical(
+  newRoll,
+  finalTarget,
+  {
+    critFailBase
+  }
+);
 
 // 🔥 HARD OVERRIDE
 if (newRoll === 100) {
@@ -452,9 +456,17 @@ let critText = "";
               if(crit.success){
                 critText = `<p><strong>CRITICAL SUCCESS</strong></p>`;
               }
-              if(crit.failure){
-                critText = `<p><strong>CRITICAL FAILURE</strong></p>`;
-              }
+              if (crit.failure) {
+
+  critText = `
+    <p><strong>CRITICAL FAILURE</strong></p>
+
+    <button class="roll-critical-failure"
+      data-table="critical-attack-failure">
+      Roll Critical Failure
+    </button>
+  `;
+}
 
 const item = actor.items.get(card.dataset.weapon);
 const itemTraits = item.system.itemTraits || [];
@@ -595,18 +607,38 @@ if (traits.some(t => t.key === "dangerous")) {
   });
 }
 
-let crit = {
-  success: newRoll >= 1 && newRoll <= 5,
-  failure: newRoll >= critFailMin && newRoll <= 100
-};
+const crit = SdpRoll.getCritical(
+  newRoll,
+  baseAttack * 10,
+  {
+    critFailBase: critFailMin
+  }
+);
+
+// 🔥 melee : désactive uniquement les crit success natifs
+crit.success = false;
+
+// 🔥 HARD OVERRIDE
+if (newRoll === 100) {
+  crit.success = false;
+  crit.failure = true;
+}
 
               let critText = "";
               if(crit.success){
                 critText = `<p><strong>CRITICAL SUCCESS</strong></p>`;
               }
-              if(crit.failure){
-                critText = `<p><strong>CRITICAL FAILURE</strong></p>`;
-              }
+              if (crit.failure) {
+
+  critText = `
+    <p><strong>CRITICAL FAILURE</strong></p>
+
+    <button class="roll-critical-failure"
+      data-table="critical-attack-failure">
+      Roll Critical Failure
+    </button>
+  `;
+}
 
 const item = actor.items.get(card.dataset.weapon);
 const itemTraits = item.system.itemTraits || [];

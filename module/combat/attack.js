@@ -620,15 +620,24 @@ const talentsHTML =
     `
     : "";
 
-    let critText = "";
+let critText = "";
 
-if(crit.success){
+if (crit.success) {
   critText = `<p><strong>CRITICAL SUCCESS</strong></p>`;
 }
 
-if(crit.failure){
-  critText = `<p><strong>CRITICAL FAILURE</strong></p>`;
+if (crit.failure) {
+
+  critText = `
+    <p><strong>CRITICAL FAILURE</strong></p>
+
+    <button class="roll-critical-failure"
+      data-table="critical-attack-failure">
+      Roll Critical Failure
+    </button>
+  `;
 }
+
 
     let damageButton = "";
 
@@ -863,21 +872,27 @@ if (finalTraits.some(t => t.key === "dangerous")) {
   });
 }
 
-let crit;
+let critFailBase = 96;
 
-if (isMelee) {
-  crit = { success: false, failure: false };
-} else {
-  let critFailBase = 96;
+if (finalTraits.some(t => t.key === "dangerous")) {
+  critFailBase = 86;
 
-  if (finalTraits.some(t => t.key === "dangerous")) {
-    critFailBase = 86;
-  }
-
-  crit = SdpRoll.getCritical(result, targetValue, {
-    critFailBase
+  console.log("SDP | DANGEROUS (MELEE)", {
+    weapon: weapon.name,
+    critFailMin: critFailBase
   });
 }
+
+const crit = SdpRoll.getCritical(
+  result,
+  baseAttack * 10,
+  {
+    critFailBase
+  }
+);
+
+// 🔥 melee : désactive uniquement les crit success natifs
+crit.success = false;
 
 // =========================
 // FLAWED ITEM TRAIT (BREAK)
@@ -1010,7 +1025,23 @@ let context = {
 
 context = SdpTraitEngine.applyAttackTraits(context);
 
-  let critText = "";
+ let critText = "";
+
+if (crit.success) {
+  critText = `<p><strong>CRITICAL SUCCESS</strong></p>`;
+}
+
+if (crit.failure) {
+
+  critText = `
+    <p><strong>CRITICAL FAILURE</strong></p>
+
+    <button class="roll-critical-failure"
+      data-table="critical-attack-failure">
+      Roll Critical Failure
+    </button>
+  `;
+}
 
   // =========================
 // TALENTS HTML
@@ -1040,14 +1071,6 @@ const talentsHTML =
       </div>
     `
     : "";
-
-if(crit.success){
-  critText = `<p><strong>CRITICAL SUCCESS</strong></p>`;
-}
-
-if(crit.failure){
-  critText = `<p><strong>CRITICAL FAILURE</strong></p>`;
-}
 
   const html = `
 <div class="sdp-attack"
@@ -1207,7 +1230,14 @@ if (crit.success) {
 }
 
 if (crit.failure) {
-  critText = `<p><strong>CRITICAL FAILURE</strong></p>`;
+
+  critText = `
+    <p><strong>CRITICAL FAILURE</strong></p>
+
+    <button class="roll-reload-critical">
+      Reload Malfunction
+    </button>
+  `;
 }
 
   const html = `

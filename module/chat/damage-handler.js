@@ -416,13 +416,13 @@ if (hasTaille) {
 
 }
 
-  const result = await SdpDamage.applyFullDamage({
-    actor: token.actor,
-    damage,
-    location
-  });
+const result = await SdpDamage.applyFullDamage({
+  actor: token.actor,
+  damage,
+  location
+});
 
-  const { finalDamage, armor, newHealth, current } = result;
+const { finalDamage, armor, newHealth, current, severity } = result;
 
   ChatMessage.create({
     content: `
@@ -439,6 +439,11 @@ ${getHitLocationLabel(
       <p>Armor: ${armor}</p>
       <p><strong>Final: ${finalDamage}</strong></p>
       <p>HP: ${current} → ${newHealth}</p>
+      ${
+  severity
+    ? `<p><strong>Injury Severity:</strong> ${severity}</p>`
+    : ""
+}
     </div>
     `
   });
@@ -525,14 +530,17 @@ if (hasTaille && targetId) {
     const actor = token.actor;
 
     const result = await SdpDamage.applyFullDamage({
-      actor,
-      damage,
-      location
-    });
+  actor,
+  damage,
+  location
+});
 
-    const { newHealth, current } = result;
+const {
+  newHealth,
+  current,
+  severity
+} = result;
 
-    const severity = result.severity;
 
 if(severity){
 
@@ -588,12 +596,17 @@ ${getHitLocationLabel(
     );
 
     await message.update({
-      content: `
-      <h3>Damage Resolution</h3>
-      <p>Target: ${actor.name}</p>
-      <p><strong>${current} → ${newHealth}</strong></p>
-      `
-    });
+  content: `
+  <h3>Damage Resolution</h3>
+  <p>Target: ${actor.name}</p>
+  ${
+    severity
+      ? `<p><strong>Severity:</strong> ${severity}</p>`
+      : ""
+  }
+  <p><strong>${current} → ${newHealth}</strong></p>
+  `
+});
 
   });
 

@@ -303,8 +303,94 @@ const result = attackScore > defense ? "HIT" : "MISS";
 
   });
 
+//===================
+// CRITICAL FAILURE
+//===================
+
+html.find(".roll-critical-failure").click(async ev => {
+
+  const tableKey = ev.currentTarget.dataset.table;
+
+  if (!tableKey) {
+    ui.notifications.warn("Missing critical table");
+    return;
+  }
+
+  // =========================
+  // TABLE NAME
+  // =========================
+
+ let tableName = "";
+
+switch (tableKey) {
+
+  case "critical-attack-failure":
+    tableName = "Critical Attack Failure";
+    break;
+
 }
 
+  if (!tableName) {
+    ui.notifications.warn("Critical table not configured");
+    return;
+  }
+
+  // =========================
+  // FIND TABLE
+  // =========================
+
+  const table = game.tables.find(t => t.name === tableName);
+
+  if (!table) {
+
+    ui.notifications.warn(
+      `Table not found: ${tableName}`
+    );
+
+    return;
+  }
+
+  // =========================
+  // ROLL TABLE
+  // =========================
+
+  await table.draw();
+
+});
+
+//===================
+// RELOAD CRITICAL
+//===================
+
+html.on("click", ".roll-reload-critical", async ev => {
+
+  await ChatMessage.create({
+
+    speaker: ChatMessage.getSpeaker(),
+
+    content: `
+      <div class="sdp-reload-critical">
+
+        <h3>Reload Malfunction</h3>
+
+        <p>
+          At the GM’s decision, depending on the weapon being used,
+          it may become damaged, jam, or even explode in your hands.
+        </p>
+
+        <p>
+          Its mechanism may also seize up and require maintenance
+          to be made operational again, or suffer any other malfunction
+          appropriate to the situation.
+        </p>
+
+      </div>
+    `
+  });
+
+});
+
+}
 
 //===================
 // UPDATE ATTACK CARD (PATCH STYLE)
