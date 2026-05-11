@@ -84,7 +84,7 @@ function registerSkillAdv(sheet, root) {
 
 function registerMovement(sheet, root) {
 
-  root.querySelectorAll(".movement-input").forEach(el => {
+  root.querySelectorAll(".movement-value").forEach(el => {
 
     el.addEventListener("change", async (event) => {
 
@@ -102,9 +102,9 @@ function registerMovement(sheet, root) {
         newDisplayed + slowed;
 
       await actor.update({
-        "system.resources.movement.value":
-          newBase
-      });
+  "system.resources.movement.value":
+    newBase
+});
 
     });
 

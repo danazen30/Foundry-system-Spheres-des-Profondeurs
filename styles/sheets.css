@@ -219,14 +219,26 @@
 .attributes-table td {
   border: 1px solid #444;
   padding: 4px;
+
+  min-width:  50px; /* 🔥 évite l'écrasement */
+  height: 30px;
+
+  box-sizing: border-box;
 }
 
 .attributes-table th {
   background: #222;
-  position: relative; /* 🔥 IMPORTANT */
-  text-align: center; /* 🔥 centre le label */
+
+  position: relative;
+
+  text-align: center;
   vertical-align: middle;
-  padding-right: 20px;
+
+  padding: 4px 18px 4px 6px;
+
+  white-space: nowrap;
+
+  height: 40px;
 }
 
 .attributes-table td {
