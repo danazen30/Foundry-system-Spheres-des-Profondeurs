@@ -3,6 +3,7 @@ import { rollHitLocation, getHitLocationProfile} from "./hit-location.js";
 import { SdpTraitEngine } from "../system/trait-engine.js";
 import { WEAPON_TRAITS } from "../system/config.js";
 import { ITEM_TRAITS } from "../system/config.js";
+import { SdpSizeEngine } from "../system/size-engine.js";
 
 
 export class SdpAttack {
@@ -370,6 +371,29 @@ let targetValue =
   rangeModifier;
 
   // =========================
+// SIZE MODIFIER
+// =========================
+
+let sizeModifier = 0;
+
+if (targets[0]?.actor) {
+
+  sizeModifier = SdpSizeEngine.getRangedAttackModifier(
+  targets[0].actor.system.size
+);
+
+  targetValue += sizeModifier;
+
+  console.log("SDP | SIZE MODIFIER (RANGED)", {
+    attacker: actor.name,
+    target: targets[0].actor.name,
+    modifier: sizeModifier,
+    finalTarget: targetValue
+  });
+
+}
+
+  // =========================
 // OFFHAND (RANGED)
 // =========================
 
@@ -717,6 +741,7 @@ ${displayTraits.length ? `
 
   <p>Test: ${source}</p>
   <p>Target: ${targetValue}</p>
+${sizeModifier !== 0 ? `<p>Size Modifier: ${sizeModifier > 0 ? "+" : ""}${sizeModifier}</p>` : ""}
   <p>Range: ${rangeLabel} (${Math.round(measuredDistance)}m)</p>
   <p>Roll: ${result}</p>
   ${inspiration > 0 ? `<p>Inspiration: +${inspiration}</p>` : ""}
@@ -965,6 +990,34 @@ let attackScore =
   Math.floor((dialogMods.conditionMod || 0) / 10) +
   Math.floor(locationMod / 10); // 🔥 AJOUT
 
+  // =========================
+// SIZE MODIFIER
+// =========================
+
+let sizeModifier = 0;
+
+const meleeTarget = targets[0]?.actor;
+
+if (meleeTarget) {
+
+  sizeModifier = SdpSizeEngine.getAttackModifier(
+  actor.system.size,
+  meleeTarget.system.size
+);
+
+  const sizeBonus = Math.floor(sizeModifier / 10);
+
+  attackScore += sizeBonus;
+
+  console.log("SDP | SIZE MODIFIER (MELEE)", {
+    attacker: actor.name,
+    target: meleeTarget.name,
+    modifier: sizeModifier,
+    appliedBonus: sizeBonus,
+    finalAttack: attackScore
+  });
+
+}
 
   // =========================
 // ITEM TRAITS
@@ -1119,6 +1172,7 @@ ${hitProfile.locations?.[hitLocation.location]?.label || hitLocation.location}
   ${dialogMods.charge ? "<p>Charge</p>" : ""}
   ${talentsHTML}
   <p>Attack Score: ${attackScore}</p>
+${sizeModifier !== 0 ? `<p>Size Modifier: ${sizeModifier > 0 ? "+" : ""}${Math.floor(sizeModifier / 10)} DR</p>` : ""}
 
  <button class="apply-defense">Apply Defense</button>
 

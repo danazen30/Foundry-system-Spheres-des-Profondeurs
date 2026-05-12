@@ -819,6 +819,74 @@ export const ARMOR_TRAITS = {
 
 };
 
+SDP.sizes = {
+
+  
+    tiny: {
+    label: "Tiny",
+    order: 0,
+    strength: -30,
+    toughness: -30,
+    agility: 15,
+    damageMultiplier: 0.2
+  },
+
+    verySmall: {
+    label: "Very Small",
+    order: 1,
+    strength: -20,
+    toughness: -20,
+    agility: 10,
+    damageMultiplier: 0.5
+  },
+
+  small: {
+    label: "Small",
+    order: 2,
+    strength: -10,
+    toughness: -10,
+    agility: 5,
+    damageMultiplier: 1
+  },
+
+  average: {
+    label: "Average",
+    order: 3,
+    strength: 0,
+    toughness: 0,
+    agility: 0,
+    damageMultiplier: 1
+  },
+
+  large: {
+    label: "Large",
+    order: 4,
+    strength: 10,
+    toughness: 10,
+    agility: -5,
+    damageMultiplier: 1.5
+  },
+
+  enormous: {
+    label: "Enormous",
+    order: 5,
+    strength: 20,
+    toughness: 20,
+    agility: -10,
+    damageMultiplier: 2
+  },
+
+  gigantic: {
+    label: "Gigantic",
+    order: 6,
+    strength: 30,
+    toughness: 30,
+    agility: -15,
+    damageMultiplier: 3
+  }
+
+};
+
 CONFIG.SDP.WEAPON_TRAITS = WEAPON_TRAITS;
 SDP.ARMOR_TRAITS = ARMOR_TRAITS;
 SDP.WEAPON_TRAITS = WEAPON_TRAITS;

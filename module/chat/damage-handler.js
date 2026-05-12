@@ -637,7 +637,7 @@ try {
 
   const faces = Number(button.dataset.faces);
 
-  const reroll = new Roll(`1d${faces}`);
+const reroll = new Roll(`1d${faces}`);
   await reroll.evaluate();
 
   await game.dice3d?.showForRoll(reroll);

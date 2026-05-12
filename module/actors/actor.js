@@ -1,4 +1,5 @@
 import { SdpActorInventory } from "./actor-inventory.js";
+import { SdpSizeEngine } from "../system/size-engine.js";
 
 export class SdpActor extends Actor {
 
@@ -283,6 +284,15 @@ else if (enc >= 3) {
   movePenalty = -10;
 }
 
+// =====================
+// SIZE MODIFIERS
+// =====================
+
+const actorSize = system.size || "average";
+
+const sizeModifiers =
+  SdpSizeEngine.getAttributeModifiers(actorSize);
+
     // =====================
     // ATTRIBUTES
     // =====================
@@ -296,13 +306,28 @@ else if (enc >= 3) {
       // 👉 ENCUMBRANCE MODIFIER
 let encMod = 0;
 
+let sizeMod = 0;
+
+if (key === "strength") {
+  sizeMod = sizeModifiers.strength;
+}
+
+if (key === "toughness") {
+  sizeMod = sizeModifiers.toughness;
+}
+
+if (key === "agility") {
+  sizeMod = sizeModifiers.agility;
+}
+
 if (key === "agility") {
   encMod = agiPenalty;
 }
 
 attr.encumbranceModifier = encMod; // 🔥 DEBUG / UI POSSIBLE
+attr.sizeModifier = sizeMod;
 
-attr.totalModifier = manualMod + itemMod + encMod;
+attr.totalModifier = manualMod + itemMod + encMod + sizeMod;
 
 let baseValue =
   Number(attr.initial || 0) +
@@ -315,19 +340,67 @@ attr.bonus = Math.floor(attr.value / 10);
     }
 
     // =====================
-    // HEALTH
-    // =====================
+// HEALTH
+// =====================
 
-    const TB = system.attributes.toughness.bonus;
-    const SB = system.attributes.strength.bonus;
-    const WPB = system.attributes.willpower.bonus;
-    system.resources.corruption.max = Math.floor((TB + WPB) / 2);
-    const baseHealth = (TB * 2) + SB + WPB;
+const TB = system.attributes.toughness.bonus;
+const SB = system.attributes.strength.bonus;
+const WPB = system.attributes.willpower.bonus;
 
-// NEW
-const levelBonus = system.health.levelBonus ?? 0;
+system.resources.corruption.max =
+  Math.floor((TB + WPB) / 2);
 
-system.health.max = baseHealth + levelBonus;
+const healthSize = system.size || "average";
+
+let baseHealth = 0;
+
+// =====================
+// SIZE HEALTH CALCULATION
+// =====================
+
+switch (healthSize) {
+
+  case "tiny":
+    baseHealth = TB;
+    break;
+
+  case "verySmall":
+    baseHealth = TB + WPB;
+    break;
+
+  case "small":
+    baseHealth = SB + TB + WPB;
+    break;
+
+  case "large":
+    baseHealth = ((SB + (TB * 2) + WPB) * 2);
+    break;
+
+  case "enormous":
+    baseHealth = ((SB + (TB * 2) + WPB) * 4);
+    break;
+
+  case "gigantic":
+    baseHealth = ((SB + (TB * 2) + WPB) * 8);
+    break;
+
+  // average fallback
+  case "average":
+  default:
+    baseHealth = SB + (TB * 2) + WPB;
+    break;
+
+}
+
+// =====================
+// LEVEL BONUS
+// =====================
+
+const levelBonus =
+  system.health.levelBonus ?? 0;
+
+system.health.max =
+  baseHealth + levelBonus;
 
 const finalMax = system.health.max;
 

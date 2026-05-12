@@ -1,3 +1,5 @@
+import { SdpSizeEngine } from "../system/size-engine.js";
+
 export class SdpDamage {
 
   static getDamageFormula(actor, weapon){
@@ -132,13 +134,53 @@ let impactfulTrait = null;
 
 let devastating = false;
 
+// =========================
+// WEAPON DEVASTATING
+// =========================
+
 for (let t of traits) {
+
   if (!t) continue;
 
-  if (t.key === "devastating") {
+  const key = (t.key || "")
+    .replace(/([a-z])([A-Z])/g, "$1-$2")
+    .toLowerCase()
+    .replace(/[\s_]/g, "-");
+
+  if (key === "devastating") {
+
     devastating = true;
+
+    console.log("SDP | DEVASTATING (WEAPON)", {
+      weapon: weapon.name
+    });
+
     break;
   }
+}
+
+// =========================
+// SIZE DEVASTATING
+// =========================
+
+if (
+  !devastating &&
+  target &&
+  SdpSizeEngine.grantsDevastating(
+    actor.system.size,
+    target.system.size
+  )
+) {
+
+  devastating = true;
+
+  console.log("SDP | DEVASTATING (SIZE)", {
+    attacker: actor.name,
+    attackerSize: actor.system.size,
+    defender: target.name,
+    defenderSize: target.system.size
+  });
+
 }
 
 for (let t of traits) {
@@ -330,6 +372,21 @@ await roll.evaluate();
 
 let damage = roll.total;
 
+// =========================
+// SIZE DAMAGE MULTIPLIER
+// =========================
+
+const sizeMultiplier =
+  CONFIG.SDP.sizes?.[actor.system.size]?.damageMultiplier || 1;
+
+damage = Math.floor(damage * sizeMultiplier);
+
+console.log("SDP | SIZE DAMAGE MULTIPLIER", {
+  actor: actor.name,
+  size: actor.system.size,
+  multiplier: sizeMultiplier,
+  finalDamage: damage
+});
 
   // =========================
   // BRUTAL

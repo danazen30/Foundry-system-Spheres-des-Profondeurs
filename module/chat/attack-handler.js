@@ -1,4 +1,5 @@
 import { getHitLocationLabel } from "../combat/hit-location.js";
+import { SdpSizeEngine } from "../system/size-engine.js";
 
 export function registerAttackHandlers(html, message) {
 
@@ -48,20 +49,49 @@ const defenseWeapon = target.items.find(i =>
 
 let parry = target.system.derived.parry.value;
 
+// ======================
+// SIZE MODIFIER
+// ======================
+
+const attacker = game.actors.get(actorId);
+
+if (attacker) {
+
+  const sizeModifier =
+    SdpSizeEngine.getParryModifier(
+      target.system.size,
+      attacker.system.size
+    );
+
+  parry += Math.floor(sizeModifier / 10);
+
+  console.log("SDP | SIZE MODIFIER (DEFENSE)", {
+    defender: target.name,
+    attacker: attacker.name,
+    modifier: sizeModifier,
+    finalParry: parry
+  });
+
+}
+
 if (defenseWeapon) {
 
   console.log("SDP | Defense weapon used", defenseWeapon.name);
 
-  // 👉 exemple : base parry + weapon bonus
-  const weaponParry = defenseWeapon.system.parry || 0;
+  const weaponParry =
+    defenseWeapon.system.parry || 0;
 
-parry += weaponParry;
+  parry += weaponParry;
 
+}
 
 if (hasEntangling) {
+
   parry -= 1;
-  console.log("SDP | Entangling applied: -1 Parry");
-}
+
+  console.log(
+    "SDP | Entangling applied: -1 Parry"
+  );
 
 }
 
@@ -253,6 +283,31 @@ const target = token.actor;
 
     let parry = target.system.derived.parry.value;
 
+// ======================
+// SIZE MODIFIER
+// ======================
+
+const attacker = game.actors.get(actorId);
+
+if (attacker) {
+
+  const sizeModifier =
+    SdpSizeEngine.getParryModifier(
+      target.system.size,
+      attacker.system.size
+    );
+
+  parry += Math.floor(sizeModifier / 10);
+
+  console.log("SDP | SIZE MODIFIER (DEFENSE)", {
+    defender: target.name,
+    attacker: attacker.name,
+    modifier: sizeModifier,
+    finalParry: parry
+  });
+
+}
+
 // defense weapon
 const defenseWeapon = target.items.find(i =>
   i.type === "weapon" &&
@@ -261,8 +316,12 @@ const defenseWeapon = target.items.find(i =>
 );
 
 if (defenseWeapon) {
-  const weaponParry = defenseWeapon.system.parry || 0;
+
+  const weaponParry =
+    defenseWeapon.system.parry || 0;
+
   parry += weaponParry;
+
 }
 
 // entangling à la fin

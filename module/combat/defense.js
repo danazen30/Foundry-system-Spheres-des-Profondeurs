@@ -1,11 +1,36 @@
 import { SdpTraitEngine } from "../system/trait-engine.js";
+import { SdpSizeEngine } from "../system/size-engine.js";
 
 export class SdpDefense {
 
-  static getDefense(target){
+  static getDefense(target, attacker = null){
 
     let parry = target.system.derived.parry.value;
     const evasion = target.system.derived.evasion.value;
+
+    // =========================
+// SIZE MODIFIER
+// =========================
+
+let sizeModifier = 0;
+
+if (attacker) {
+
+  sizeModifier = SdpSizeEngine.getParryModifier(
+    target.system.size,
+    attacker.system.size
+  );
+
+  parry += Math.floor(sizeModifier / 10);
+
+  console.log("SDP | SIZE MODIFIER (DEFENSE)", {
+    defender: target.name,
+    attacker: attacker.name,
+    modifier: sizeModifier,
+    finalParry: parry
+  });
+
+}
 
     // =========================
     // APPLY DEFENSE TRAITS
