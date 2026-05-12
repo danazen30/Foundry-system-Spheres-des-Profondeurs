@@ -335,7 +335,8 @@ return {
   currency,
   injuries,
   species,
-  activeTab: this.activeTab
+  activeTab: this.activeTab,
+  isNPC: this.actor.type === "npc",
 };
   }
 

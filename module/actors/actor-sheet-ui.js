@@ -45,16 +45,16 @@ function registerPortrait(sheet, root) {
   root.querySelector(".character-portrait img")
     ?.addEventListener("click", async () => {
 
-      const fp = new FilePicker({
-        type: "image",
-        current: sheet.document.img,
+      const fp = new foundry.applications.apps.FilePicker.implementation({
+    type: "image",
+    current: sheet.document.img,
 
-        callback: async (path) => {
-          await sheet.document.update({ img: path });
-        }
-      });
+    callback: async (path) => {
+      await sheet.document.update({ img: path });
+    }
+  });
 
-      fp.render(true);
+fp.render(true);
 
     });
 

@@ -159,6 +159,7 @@
   </table>
 
   <!-- EXPERIENCE -->
+  {{#unless isNPC}}
   <h3>Experience</h3>
 
   <div class="xp-container">
@@ -211,6 +212,7 @@
       </div>
 
     </div>
+    {{/unless}}
 
       <div class="level-progression">
 
@@ -267,6 +269,7 @@
     </div>
   {{/if}}
 
+{{#unless isNPC}}
 <div class="ambitions">
 
   <!-- PERSONAL -->
@@ -313,11 +316,12 @@
   </div>
 
 </div>
+{{/unless}}
 
 <h3>Notes & Background</h3>
 
 <div class="notes-section">
-
+{{#unless isNPC}}
 <div class="resource-block note-block">
 
   <div class="note-header">
@@ -351,7 +355,7 @@
 
 </div>
   </div>
-
+{{/unless}}
 <div class="resource-block note-block">
 
   <div class="note-header">
@@ -423,7 +427,7 @@
 </div>
 
 </div>
-
+{{#unless isNPC}}
   <!-- XP LOG -->
   <h3>XP Log</h3>
 
@@ -440,5 +444,5 @@
     {{/if}}
 
   </ul>
-
+{{/unless}}
 </div>

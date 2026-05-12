@@ -1,0 +1,150 @@
+<div class="sdp-header npc-header">
+
+  <!-- TOP -->
+  <div class="header-top npc-header-top">
+
+    <!-- NAME -->
+    <div class="header-left">
+      <input
+        type="text"
+        name="name"
+        value="{{actor.name}}"
+        class="actor-name"
+      >
+    </div>
+
+   <!-- LEVEL -->
+<div class="npc-level">
+  Level : {{actor.system.details.level}}
+</div>
+
+<!-- ENCUMBRANCE -->
+<div class="npc-top-right">
+  <div class="encumbrance">
+    <span>
+      ⚖️ {{system.resources.encumbrance.value}} /
+      {{system.resources.encumbrance.max}}
+    </span>
+
+    {{#if system.resources.encumbrance.state.label}}
+      <span class="encumbrance-warning">
+        {{system.resources.encumbrance.state.label}}
+      </span>
+    {{/if}}
+  </div>
+
+    </div>
+
+  </div>
+
+  <!-- MAIN -->
+  <div class="npc-header-main">
+
+    <!-- LEFT -->
+    <div class="npc-resource-column">
+
+      <!-- HEALTH -->
+      <div class="resource-box resource-bar">
+        <div class="resource-top">
+          <div class="resource-label">❤️ Health :</div>
+
+          <div class="resource-values">
+            <input
+              type="number"
+              name="system.health.value"
+              value="{{system.health.value}}">
+
+            <span>/ {{system.health.max}}</span>
+          </div>
+        </div>
+
+        <div class="bar">
+          <div
+            class="bar-fill health-fill"
+            style="width: {{multiply (divide system.health.value system.health.max) 100}}%;">
+          </div>
+        </div>
+      </div>
+
+      <!-- MANA -->
+      <div class="resource-box resource-bar">
+        <div class="resource-top">
+          <div class="resource-label">🔵 Mana :</div>
+
+          <div class="resource-values">
+            <input
+              type="number"
+              name="system.resources.mana.value"
+              value="{{system.resources.mana.value}}">
+
+            <span>/ {{system.resources.mana.max}}</span>
+          </div>
+        </div>
+
+        <div class="bar">
+          <div
+            class="bar-fill mana-fill"
+            style="width: {{multiply (divide system.resources.mana.value system.resources.mana.max) 100}}%;">
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT -->
+    <div class="npc-combat-side">
+
+      <!-- DERIVED -->
+      <div class="resource-box derived-grid">
+
+        <div class="derived-cell">
+          <label>⚔️ Attack</label>
+          <span>{{system.derived.attack.value}}</span>
+        </div>
+
+        <div class="derived-cell">
+          <label>🌀 Evasion</label>
+          <span>{{system.derived.evasion.value}}</span>
+        </div>
+
+        <div class="derived-cell">
+          <label>🛡️ Parry</label>
+          <span>{{system.derived.parry.value}}</span>
+        </div>
+
+        <div class="derived-cell">
+          <label>💢 Wound</label>
+          <span>{{system.derived.woundThreshold.value}}</span>
+        </div>
+
+      </div>
+
+      <!-- MOVE -->
+      <div class="movement-header-box">
+        <div class="movement-grid">
+
+          <div class="movement-header">Move</div>
+          <div class="movement-header">Walk</div>
+          <div class="movement-header">Run</div>
+
+          <input
+            type="number"
+            class="movement-value"
+            value="{{system.resources.movement.current}}">
+
+          <div class="movement-value">
+            {{system.resources.movement.walk}}
+          </div>
+
+          <div class="movement-value">
+            {{system.resources.movement.run}}
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

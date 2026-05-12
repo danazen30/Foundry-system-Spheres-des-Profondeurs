@@ -38,7 +38,7 @@
           <!-- LEVEL -->
           <div class="level-block">
             <div class="level-label">
-              Level {{system.details.level.value}}
+              Level {{actor.system.details.level}}
             </div>
 
             <div class="level-bar">
@@ -49,7 +49,9 @@
             <div class="level-xp">
               {{xpBar.value}} / {{xpBar.nextXP}}
             </div>
+         
           </div>
+          
 
           <!-- MOVE -->
           <div class="movement-header-box">
@@ -66,6 +68,7 @@
             </div>
           </div>
 
+{{#unless isNPC}}
 <!-- CORRUPTION + REST -->
 <div class="corruption-rest-row">
 
@@ -113,6 +116,7 @@
   </div>
 
 </div>
+{{/unless}}
 
         </div>
 
@@ -183,6 +187,7 @@
       </div>
     </div>
 
+{{#unless isNPC}}
     <!-- SECONDARY -->
     <div class="resource-box secondary-box">
       <div class="secondary-item">
@@ -205,6 +210,7 @@
         <input type="number" name="system.resources.resilience.value" value="{{system.resources.resilience.value}}">
       </div>
     </div>
+    {{/unless}}
 
   </div>
 

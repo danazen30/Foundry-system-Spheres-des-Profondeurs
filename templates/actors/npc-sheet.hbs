@@ -1,0 +1,134 @@
+<div class="sdp-sheet">
+
+{{> "systems/sdp/templates/partials/npc-header.hbs"}}
+
+  <!-- 🔥 WRAPPER IMPORTANT -->
+  <div class="sdp-body">
+
+    <div class="sdp-sidebar">
+
+        <!-- 🖼️ PORTRAIT -->
+  <div class="character-portrait">
+  <img 
+    class="profile-img"
+    src="{{actor.img}}" 
+    alt="{{actor.name}}"
+    data-edit="img"
+  >
+</div>
+
+<div class="character-silhouette">
+  <div class="silhouette-wrapper">
+
+    <img src="/systems/sdp/assets/silhouette.png">
+
+    <!-- HEAD -->
+    <div class="slot head">
+      {{#each slots.head}}
+        <img src="{{this.img}}" title="{{this.name}}">
+      {{/each}}
+    </div>
+
+    <!-- CHEST -->
+    <div class="slot chest">
+      {{#each slots.chest}}
+        <img src="{{this.img}}" title="{{this.name}}">
+      {{/each}}
+    </div>
+
+    <!-- LEFT ARM -->
+    <div class="slot left-arm">
+      {{#each slots.armLeft}}
+        <img src="{{this.img}}" title="{{this.name}}">
+      {{/each}}
+    </div>
+
+    <!-- RIGHT ARM -->
+    <div class="slot right-arm">
+      {{#each slots.armRight}}
+        <img src="{{this.img}}" title="{{this.name}}">
+      {{/each}}
+    </div>
+
+    <!-- LEFT LEG -->
+    <div class="slot left-legs">
+      {{#each slots.legLeft}}
+        <img src="{{this.img}}" title="{{this.name}}">
+      {{/each}}
+    </div>
+
+    <!-- RIGHT LEG -->
+    <div class="slot right-legs">
+      {{#each slots.legRight}}
+        <img src="{{this.img}}" title="{{this.name}}">
+      {{/each}}
+    </div>
+
+    <!-- WEAPON MAIN -->
+    <div class="slot weapon-main">
+      {{#if slots.weaponMain}}
+        <img src="{{slots.weaponMain.img}}" title="{{slots.weaponMain.name}}">
+      {{/if}}
+    </div>
+
+    <!-- WEAPON OFF -->
+    <div class="slot weapon-off">
+      {{#if slots.weaponOff}}
+        <img src="{{slots.weaponOff.img}}" title="{{slots.weaponOff.name}}">
+      {{/if}}
+    </div>
+
+  </div>
+</div>
+
+    </div>
+
+    <div class="sdp-content">
+  <div class="sdp-content-inner">
+
+      {{#if (eq activeTab "skills")}}
+        <div class="tab-skills">
+          {{> "systems/sdp/templates/partials/attributes.hbs"}}
+          <div class="skills-wrapper">
+            {{> "systems/sdp/templates/partials/skills.hbs"}}
+          </div>
+        </div>
+      {{/if}}
+
+      {{#if (eq activeTab "talents")}}
+        {{> "systems/sdp/templates/partials/talents.hbs"}}
+      {{/if}}
+
+      {{#if (eq activeTab "magic")}}
+        {{> "systems/sdp/templates/partials/magic.hbs"}}
+      {{/if}}
+
+      {{#if (eq activeTab "inventory")}}      
+        {{> "systems/sdp/templates/partials/inventory.hbs"}}
+      {{/if}}
+
+      {{#if (eq activeTab "effects")}}
+        {{> "systems/sdp/templates/partials/effects.hbs"}}
+      {{/if}}
+
+      {{#if (eq activeTab "info")}}
+        {{> "systems/sdp/templates/partials/info.hbs"}}
+      {{/if}}
+
+    </div>
+
+    <!-- 🔥 TABS DANS LE BODY -->
+    <div class="sdp-tabs">
+  <button data-tab="skills" data-label="Skills">⚔️</button>
+<button data-tab="talents" data-label="Talents">✨</button>
+<button data-tab="magic" data-label="Magic">🔮</button>
+<button data-tab="inventory" data-label="Inventory">🎒</button>
+<button data-tab="effects" data-label="Effects">💀</button>
+<button data-tab="info" data-label="Information">📜</button>
+</div>
+
+  </div>
+
+  </div>
+
+</div>

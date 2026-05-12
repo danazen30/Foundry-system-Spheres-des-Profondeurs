@@ -3143,3 +3143,62 @@ text-align:center;
 .talent-advance-btn:hover {
   background: #555;
 }
+
+/* =========================
+   NPC HEADER
+========================= */
+
+.npc-header {
+  padding-bottom: 4px;
+}
+
+.npc-header-top {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+
+  align-items: center;
+
+  margin-bottom: 6px;
+}
+
+.npc-header-top .header-left {
+  justify-self: start;
+}
+
+.npc-top-right {
+  justify-self: end;
+}
+
+.npc-level {
+  font-size: 14px;
+  font-weight: bold;
+  justify-self: center;
+}
+
+.npc-header-main {
+  display: flex;
+  gap: 8px;
+}
+
+.npc-resource-column {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.npc-combat-side {
+  display: flex;
+  gap: 6px;
+  align-items: stretch;
+}
+
+.npc-combat-side .derived-grid {
+  min-width: 240px;
+}
+
+.npc-combat-side .movement-header-box {
+  display: flex;
+  align-items: center;
+}
