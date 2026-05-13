@@ -3202,3 +3202,9 @@ text-align:center;
   display: flex;
   align-items: center;
 }
+
+.note-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}

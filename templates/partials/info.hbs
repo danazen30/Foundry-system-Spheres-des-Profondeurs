@@ -331,13 +331,32 @@
 
     <label>Shared NPC Notes</label>
 
-    {{#if sharedJournal}}
-    <button
-      type="button"
-      data-action="unlinkSharedJournal">
-      ❌
-    </button>
-    {{/if}}
+    <div class="note-actions">
+
+      {{#if canEditPlayerNotes}}
+      <button
+        type="button"
+        class="note-edit-btn"
+        data-action="toggleEditor"
+        data-target="sharedNpcNotes">
+
+        ✏️ Edit
+
+      </button>
+      {{/if}}
+
+      {{#if sharedJournal}}
+      <button
+        type="button"
+        class="note-edit-btn"
+        data-action="unlinkSharedJournal">
+
+        ❌
+
+      </button>
+      {{/if}}
+
+    </div>
 
   </div>
 
@@ -379,16 +398,6 @@
   </prose-mirror>
 
 </div>
-
-<button
-  type="button"
-  class="note-edit-btn"
-  data-action="toggleEditor"
-  data-target="sharedNpcNotes">
-
-  ✏️ Edit
-
-</button>
 {{/if}}
 
 </div>
