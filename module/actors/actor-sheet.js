@@ -4,7 +4,6 @@ import { SDP } from "../system/config.js";
 import { SimpleDialog } from "../apps/simple-dialog.js";
 import { SdpSpell } from "../combat/spell.js";
 import { SdpConditionEngine } from "../system/condition-engine.js";
-import { sdpSocket } from "../sdp.js";
 
 import { getCost, getTalentCost, getTalentMax, getAttributes, getXPData, getSkillMap, getCurrentCareer, getXPBar, getSpellsByType} from "./actor-sheet-utils.js";
 import { registerAttributeListeners, registerSkillListeners} from "./actor-sheet-listeners.js";
@@ -329,6 +328,64 @@ const isLimitedObserver =
   this.isOwner ||
   isLimitedObserver;
 
+let sharedNpcNotes = "";
+let sharedJournal = null;
+
+const sharedJournalId =
+  this.actor.getFlag(
+    "sdp",
+    "sharedNotesJournal"
+  );
+
+if (sharedJournalId) {
+
+  sharedJournal =
+    game.journal.get(sharedJournalId);
+
+  const page =
+    sharedJournal?.pages?.contents?.[0];
+
+  sharedNpcNotes =
+    page?.text?.content || "";
+
+}
+
+// =========================
+// NOTES
+// =========================
+
+const biography =
+  this.document.system.details?.biography?.value ?? "";
+
+const playerNotes =
+  this.document.system.details?.playerNotes?.value ?? "";
+
+const gmNotes =
+  this.document.system.details?.gmNotes?.value ?? "";
+
+const editors = {
+  biography: await foundry.applications.ux.TextEditor.enrichHTML(
+    biography,
+    { async: true }
+  ),
+
+  playerNotes: await foundry.applications.ux.TextEditor.enrichHTML(
+    playerNotes,
+    { async: true }
+  ),
+
+  gmNotes: await foundry.applications.ux.TextEditor.enrichHTML(
+    gmNotes,
+    { async: true }
+  )
+};
+
+editors.sharedNpcNotes =
+  await foundry.applications.ux.TextEditor.enrichHTML(
+    sharedNpcNotes,
+    { async: true }
+  );
+
 return {
   actor: this.document,
   system: this.document.system,
@@ -372,6 +429,9 @@ return {
   isObserver,
   isLimitedObserver,
   canEditPlayerNotes,
+  sharedJournal,
+  sharedNpcNotes,
+  editors
 };
   }
 
@@ -662,6 +722,37 @@ async _onDropItem(event, data) {
   return created;
 }
 
+async _onDrop(event) {
+
+  const data = TextEditor.getDragEventData(event);
+
+  // =========================
+  // JOURNAL DROP
+  // =========================
+
+  if (
+    data.type === "JournalEntry" &&
+    this.actor.type === "npc"
+  ) {
+
+    await this.actor.setFlag(
+      "sdp",
+      "sharedNotesJournal",
+      data.uuid.split(".").pop()
+    );
+
+    ui.notifications.info(
+      "Journal linked to NPC"
+    );
+
+    this.render();
+
+    return;
+  }
+
+  return super._onDrop(event);
+}
+
 async _toggleSpellMemory(event) {
 
   event.preventDefault();
@@ -733,10 +824,21 @@ SdpRoll.openDialog({
 
 }
 
-  _onRender(context, options) {
+  async _onRender(context, options) {
   super._onRender(context, options);
 
   const root = this.element;
+
+  const sharedJournalId =
+  this.actor.getFlag(
+    "sdp",
+    "sharedNotesJournal"
+  );
+
+const sharedJournal =
+  sharedJournalId
+    ? game.journal.get(sharedJournalId)
+    : null;
   registerAttributeListeners(this);
   registerSkillListeners(this);
   registerCombatListeners(this, root);
@@ -753,36 +855,68 @@ this.element.querySelectorAll("*").forEach(e => {
 
 });
 
-// =========================
-// OBSERVER PLAYER NOTES SAVE
-// =========================
-
-if (
-  this.actor.type === "npc" &&
-  !game.user.isGM &&
-  !this.actor.isOwner
-) {
-
-  const textarea = this.element.querySelector(
-    'textarea[name="system.details.playerNotes.value"]'
+const unlinkBtn =
+  this.element.querySelector(
+    '[data-action="unlinkSharedJournal"]'
   );
 
-  if (textarea) {
+if (unlinkBtn) {
 
-    textarea.addEventListener("change", async e => {
+  unlinkBtn.addEventListener(
+    "click",
+    async () => {
 
-  console.log(
-    "PLAYER NOTES CHANGED"
+      await this.actor.unsetFlag(
+        "sdp",
+        "sharedNotesJournal"
+      );
+
+      this.render();
+
+    }
   );
-
-});
-
-  }
 
 }
 
 restoreScroll(this);
   }
+
+  async _onChangeForm(formConfig, event) {
+
+  await super._onChangeForm(formConfig, event);
+
+  const sharedJournalId =
+    this.actor.getFlag(
+      "sdp",
+      "sharedNotesJournal"
+    );
+
+  if (!sharedJournalId) return;
+
+  const sharedJournal =
+    game.journal.get(sharedJournalId);
+
+  const page =
+    sharedJournal?.pages?.contents?.[0];
+
+  if (!page) return;
+
+  const proseMirror =
+    this.element.querySelector(
+      'prose-mirror[name="sharedNpcNotes"]'
+    );
+
+  if (!proseMirror) return;
+
+  await page.update({
+  "text.content":
+    proseMirror.value || ""
+});
+
+// refresh sheet
+await this.render(false);
+
+}
   
 _onLevelUp() {
 
@@ -890,50 +1024,6 @@ if (game.dice3d) {
   });
 
 }
-
-async _processFormData(event, form, formData) {
-
-  console.log("FORM DATA", formData.object);
-
-  // observer npc
-  if (
-    this.actor.type === "npc" &&
-    !game.user.isGM &&
-    !this.actor.isOwner
-  ) {
-
-    const update = {};
-
-    if ("system.details.playerNotes.value" in formData.object) {
-
-      update["system.details.playerNotes.value"] =
-        formData.object["system.details.playerNotes.value"];
-
-    }
-
-    if (Object.keys(update).length) {
-
-      await sdpSocket.executeAsGM(
-        "observerUpdate",
-        this.actor.id,
-        update
-      );
-
-      console.log(
-        "OBSERVER UPDATE SENT",
-        update
-      );
-
-    }
-
-    return;
-  }
-
-  // NORMAL SAVE
-  await this.document.update(formData.object);
-
-}
-
 
 }
 

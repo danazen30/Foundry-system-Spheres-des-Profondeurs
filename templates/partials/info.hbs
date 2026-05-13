@@ -323,6 +323,86 @@
 
 <div class="notes-section">
 
+{{#if isNPC}}
+
+<div class="resource-block note-block shared-journal-drop">
+
+  <div class="note-header">
+
+    <label>Shared NPC Notes</label>
+
+    {{#if sharedJournal}}
+    <button
+      type="button"
+      data-action="unlinkSharedJournal">
+      ❌
+    </button>
+    {{/if}}
+
+  </div>
+
+  {{#if sharedJournal}}
+
+    <p>
+      Linked Journal:
+      <strong>{{sharedJournal.name}}</strong>
+    </p>
+
+    <div class="resource-block note-block">
+
+  <!-- DISPLAY -->
+  <div
+    class="note-display"
+    data-display="sharedNpcNotes">
+
+    {{{editors.sharedNpcNotes}}}
+
+  </div>
+
+  <!-- EDITOR -->
+{{#if canEditPlayerNotes}}
+<div
+  class="note-editor"
+  data-editor="sharedNpcNotes"
+  style="display:none;">
+
+  <prose-mirror
+    name="sharedNpcNotes"
+    value="{{sharedNpcNotes}}">
+
+    {{{sharedNpcNotes}}}
+
+  </prose-mirror>
+
+</div>
+
+<button
+  type="button"
+  class="note-edit-btn"
+  data-action="toggleEditor"
+  data-target="sharedNpcNotes">
+
+  ✏️ Edit
+
+</button>
+{{/if}}
+
+</div>
+
+  {{else}}
+
+    <div class="empty-drop-zone">
+
+      Drop a Journal here
+
+    </div>
+
+  {{/if}}
+
+</div>
+
+{{/if}}
+
 {{#unless isLimitedObserver}}
 <div class="resource-block note-block">
 
@@ -338,44 +418,63 @@
     </button>
   </div>
 
-  <!-- MODE LECTURE -->
- <div
-  class="note-editor"
-  data-editor="biography">
+  <!-- DISPLAY -->
+  <div class="note-display" data-display="biography">
+    {{{system.details.biography.value}}}
+  </div>
 
-  <textarea
-    name="system.details.biography.value"
-    rows="10">{{system.details.biography.value}}</textarea>
+  <!-- EDITOR -->
+  <div
+    class="note-editor"
+    data-editor="biography"
+    style="display:none;">
+
+    <prose-mirror
+  name="system.details.biography.value"
+  value="{{system.details.biography.value}}">
+  {{{system.details.biography.value}}}
+</prose-mirror>
+
+  </div>
 
 </div>
-  </div>
 {{/unless}}
 
 <div class="resource-block note-block">
 
   <div class="note-header">
     <label>Player Notes</label>
-{{#if canEditPlayerNotes}}
+
+    {{#if canEditPlayerNotes}}
     <button
-  type="button"
-  class="note-edit-btn"
-  data-action="toggleEditor"
-  data-target="playerNotes">
-  ✏️ Edit
-</button>
+      type="button"
+      class="note-edit-btn"
+      data-action="toggleEditor"
+      data-target="playerNotes">
+      ✏️ Edit
+    </button>
     {{/if}}
+
   </div>
 
   <!-- DISPLAY -->
+  <div class="note-display" data-display="playerNotes">
+    {{{system.details.playerNotes.value}}}
+  </div>
+
+  <!-- EDITOR -->
   <div
-  class="note-editor"
-  data-editor="playerNotes">
+    class="note-editor"
+    data-editor="playerNotes"
+    style="display:none;">
 
-  <textarea
-    name="system.details.playerNotes.value"
-    rows="10">{{system.details.playerNotes.value}}</textarea>
+    <prose-mirror
+  name="system.details.playerNotes.value"
+  value="{{system.details.playerNotes.value}}">
+  {{{system.details.playerNotes.value}}}
+</prose-mirror>
 
-</div>
+  </div>
 
 </div>
 {{#unless isLimitedObserver}}
@@ -394,19 +493,27 @@
   </div>
 
   <!-- DISPLAY -->
+  <div class="note-display" data-display="gmNotes">
+    {{{system.details.gmNotes.value}}}
+  </div>
+
+  <!-- EDITOR -->
   <div
-  class="note-editor"
-  data-editor="gmNotes">
+    class="note-editor"
+    data-editor="gmNotes"
+    style="display:none;">
 
-  <textarea
-    name="system.details.gmNotes.value"
-    rows="10">{{system.details.gmNotes.value}}</textarea>
+    <prose-mirror
+  name="system.details.gmNotes.value"
+  value="{{system.details.gmNotes.value}}">
+  {{{system.details.gmNotes.value}}}
+</prose-mirror>
+
+  </div>
 
 </div>
-
 </div>
 
-</div>
   {{/unless}}
 {{#unless isNPC}}
   <!-- XP LOG -->
