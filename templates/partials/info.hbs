@@ -345,7 +345,11 @@
 
     <p>
       Linked Journal:
-      <strong>{{sharedJournal.name}}</strong>
+      <strong>
+  {{sharedJournal.name}}
+  →
+  {{sharedJournalPage.name}}
+</strong>
     </p>
 
     <div class="resource-block note-block">
@@ -439,7 +443,7 @@
 
 </div>
 {{/unless}}
-
+{{#unless isNPC}}
 <div class="resource-block note-block">
 
   <div class="note-header">
@@ -477,6 +481,7 @@
   </div>
 
 </div>
+{{/unless}}
 {{#unless isLimitedObserver}}
 <div class="resource-block note-block">
 

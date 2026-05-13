@@ -329,24 +329,29 @@ const isLimitedObserver =
   isLimitedObserver;
 
 let sharedNpcNotes = "";
-let sharedJournal = null;
 
-const sharedJournalId =
+let sharedJournal = null;
+let sharedJournalPage = null;
+
+const sharedPageId =
   this.actor.getFlag(
     "sdp",
-    "sharedNotesJournal"
+    "sharedNotesPage"
   );
 
-if (sharedJournalId) {
+if (sharedPageId) {
+
+  sharedJournalPage =
+    game.journal
+      .contents
+      .flatMap(j => j.pages.contents)
+      .find(p => p.id === sharedPageId);
 
   sharedJournal =
-    game.journal.get(sharedJournalId);
-
-  const page =
-    sharedJournal?.pages?.contents?.[0];
+    sharedJournalPage?.parent || null;
 
   sharedNpcNotes =
-    page?.text?.content || "";
+    sharedJournalPage?.text?.content || "";
 
 }
 
@@ -430,6 +435,7 @@ return {
   isLimitedObserver,
   canEditPlayerNotes,
   sharedJournal,
+  sharedJournalPage,
   sharedNpcNotes,
   editors
 };
@@ -724,30 +730,73 @@ async _onDropItem(event, data) {
 
 async _onDrop(event) {
 
-  const data = TextEditor.getDragEventData(event);
+  const data =
+  foundry.applications.ux.TextEditor
+    .getDragEventData(event);
 
   // =========================
   // JOURNAL DROP
   // =========================
 
-  if (
-    data.type === "JournalEntry" &&
-    this.actor.type === "npc"
-  ) {
+if (
+  (data.type === "JournalEntry" ||
+   data.type === "JournalEntryPage") &&
+  this.actor.type === "npc"
+) {
 
-    await this.actor.setFlag(
-      "sdp",
-      "sharedNotesJournal",
-      data.uuid.split(".").pop()
-    );
+    let pageId = null;
 
-    ui.notifications.info(
-      "Journal linked to NPC"
-    );
+// =========================
+// DROP PAGE DIRECTEMENT
+// =========================
 
-    this.render();
+if (data.type === "JournalEntryPage") {
 
-    return;
+  pageId = data.uuid.split(".").pop();
+
+}
+
+// =========================
+// DROP JOURNAL ENTIER
+// → prend première page
+// =========================
+
+else if (data.type === "JournalEntry") {
+
+  const journalId =
+    data.uuid.split(".").pop();
+
+  const journal =
+    game.journal.get(journalId);
+
+  pageId =
+    journal?.pages?.contents?.[0]?.id;
+
+}
+
+if (!pageId) {
+
+  ui.notifications.warn(
+    "No valid journal page found"
+  );
+
+  return;
+
+}
+
+await this.actor.setFlag(
+  "sdp",
+  "sharedNotesPage",
+  pageId
+);
+
+ui.notifications.info(
+  "Journal page linked to NPC"
+);
+
+this.render();
+
+return;
   }
 
   return super._onDrop(event);
@@ -829,16 +878,6 @@ SdpRoll.openDialog({
 
   const root = this.element;
 
-  const sharedJournalId =
-  this.actor.getFlag(
-    "sdp",
-    "sharedNotesJournal"
-  );
-
-const sharedJournal =
-  sharedJournalId
-    ? game.journal.get(sharedJournalId)
-    : null;
   registerAttributeListeners(this);
   registerSkillListeners(this);
   registerCombatListeners(this, root);
@@ -868,10 +907,10 @@ if (unlinkBtn) {
 
       await this.actor.unsetFlag(
         "sdp",
-        "sharedNotesJournal"
+        "sharedNotesPage"
       );
 
-      this.render();
+      await this.render(false);
 
     }
   );
@@ -885,19 +924,19 @@ restoreScroll(this);
 
   await super._onChangeForm(formConfig, event);
 
-  const sharedJournalId =
-    this.actor.getFlag(
-      "sdp",
-      "sharedNotesJournal"
-    );
+  const sharedPageId =
+  this.actor.getFlag(
+    "sdp",
+    "sharedNotesPage"
+  );
 
-  if (!sharedJournalId) return;
+if (!sharedPageId) return;
 
-  const sharedJournal =
-    game.journal.get(sharedJournalId);
-
-  const page =
-    sharedJournal?.pages?.contents?.[0];
+const page =
+  game.journal
+    .contents
+    .flatMap(j => j.pages.contents)
+    .find(p => p.id === sharedPageId);
 
   if (!page) return;
 
