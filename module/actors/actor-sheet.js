@@ -4,6 +4,7 @@ import { SDP } from "../system/config.js";
 import { SimpleDialog } from "../apps/simple-dialog.js";
 import { SdpSpell } from "../combat/spell.js";
 import { SdpConditionEngine } from "../system/condition-engine.js";
+import { sdpSocket } from "../sdp.js";
 
 import { getCost, getTalentCost, getTalentMax, getAttributes, getXPData, getSkillMap, getCurrentCareer, getXPBar, getSpellsByType} from "./actor-sheet-utils.js";
 import { registerAttributeListeners, registerSkillListeners} from "./actor-sheet-listeners.js";
@@ -21,7 +22,12 @@ export class SdpActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 constructor(...args) {
     super(...args);
 
-    this.activeTab = "skills"; // 🔥 TAB PAR DEFAUT
+    const isGM = game.user?.isGM;
+
+this.activeTab =
+  this.actor?.type === "npc"
+    ? (isGM ? "skills" : "info")
+    : "skills";
     this.openContainers = new Set();
     this._scrollPositions = {};
   }
@@ -30,7 +36,7 @@ constructor(...args) {
     classes: ["sdp", "sheet", "actor"],
     position: { width: 800, height: 900 },
     window: { resizable: true },
-    form: { submitOnChange: true }
+    form: { submitOnChange: true}
   };
 
   static PARTS = {
@@ -48,6 +54,11 @@ async render(...args) {
 
 const root = this.element;
 
+const html =
+  root instanceof HTMLElement
+    ? root
+    : root?.[0] ?? root?.element ?? root;
+
 
 const prevEl = this.element?.querySelector(".sdp-content-inner");
 
@@ -56,6 +67,35 @@ if (prevEl && prevEl.scrollHeight > prevEl.clientHeight) {
 }
 
   return super.render(...args);
+}
+
+get isEditable() {
+
+  // GM
+  if (game.user.isGM) {
+    return true;
+  }
+
+  // owner normal
+  if (super.isEditable) {
+    return true;
+  }
+
+  // observer NPC → autorise édition player notes
+  const isObserver =
+    this.actor.testUserPermission(
+      game.user,
+      CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER
+    );
+
+  const isNpc =
+    this.actor.type === "npc";
+
+  if (isNpc && isObserver) {
+    return true;
+  }
+
+  return false;
 }
 
   async _prepareContext() {
@@ -270,32 +310,24 @@ const progression =
 
 const hasValidatedLevel0 = progression.some(l => l.level === 0);
 
-const biography =
-  this.document.system.details?.biography?.value ?? "";
+const isGM =
+  game.user.isGM;
 
-const playerNotes =
-  this.document.system.details?.playerNotes?.value ?? "";
+const isObserver =
+  this.actor.testUserPermission(
+    game.user,
+    CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER
+  );
 
-const gmNotes =
-  this.document.system.details?.gmNotes?.value ?? "";
+const isLimitedObserver =
+  this.actor.type === "npc" &&
+  isObserver &&
+  !isGM;
 
-const editors = {
-  biography: await foundry.applications.ux.TextEditor.enrichHTML(
-    biography,
-    { async: true }
-  ),
-
-  playerNotes: await foundry.applications.ux.TextEditor.enrichHTML(
-    playerNotes,
-    { async: true }
-  ),
-
-  gmNotes: await foundry.applications.ux.TextEditor.enrichHTML(
-    gmNotes,
-    { async: true }
-  )
-};
-
+  const canEditPlayerNotes =
+  isGM ||
+  this.isOwner ||
+  isLimitedObserver;
 
 return {
   actor: this.document,
@@ -305,7 +337,6 @@ return {
   currentCareer,
   skillMap,
   user: game.user,
-  editors,
   owner: this.isOwner,
   editable: this.isEditable,
   xp: xpData,
@@ -337,6 +368,10 @@ return {
   species,
   activeTab: this.activeTab,
   isNPC: this.actor.type === "npc",
+  isGM,
+  isObserver,
+  isLimitedObserver,
+  canEditPlayerNotes,
 };
   }
 
@@ -703,12 +738,12 @@ SdpRoll.openDialog({
 
   const root = this.element;
   registerAttributeListeners(this);
-registerSkillListeners(this);
-registerCombatListeners(this, root);
-registerXPListeners(this, root);
-registerUIListeners(this, root);
-registerItemListeners(this, root);
-registerInteractionListeners(this, root);
+  registerSkillListeners(this);
+  registerCombatListeners(this, root);
+  registerXPListeners(this, root);
+  registerUIListeners(this, root);
+  registerItemListeners(this, root);
+  registerInteractionListeners(this, root);
 
 this.element.querySelectorAll("*").forEach(e => {
 
@@ -717,6 +752,34 @@ this.element.querySelectorAll("*").forEach(e => {
   }
 
 });
+
+// =========================
+// OBSERVER PLAYER NOTES SAVE
+// =========================
+
+if (
+  this.actor.type === "npc" &&
+  !game.user.isGM &&
+  !this.actor.isOwner
+) {
+
+  const textarea = this.element.querySelector(
+    'textarea[name="system.details.playerNotes.value"]'
+  );
+
+  if (textarea) {
+
+    textarea.addEventListener("change", async e => {
+
+  console.log(
+    "PLAYER NOTES CHANGED"
+  );
+
+});
+
+  }
+
+}
 
 restoreScroll(this);
   }
@@ -828,6 +891,50 @@ if (game.dice3d) {
 
 }
 
+async _processFormData(event, form, formData) {
+
+  console.log("FORM DATA", formData.object);
+
+  // observer npc
+  if (
+    this.actor.type === "npc" &&
+    !game.user.isGM &&
+    !this.actor.isOwner
+  ) {
+
+    const update = {};
+
+    if ("system.details.playerNotes.value" in formData.object) {
+
+      update["system.details.playerNotes.value"] =
+        formData.object["system.details.playerNotes.value"];
+
+    }
+
+    if (Object.keys(update).length) {
+
+      await sdpSocket.executeAsGM(
+        "observerUpdate",
+        this.actor.id,
+        update
+      );
+
+      console.log(
+        "OBSERVER UPDATE SENT",
+        update
+      );
+
+    }
+
+    return;
+  }
+
+  // NORMAL SAVE
+  await this.document.update(formData.object);
+
+}
+
+
 }
 
 Hooks.on("createItem", async (item, options, userId) => {
@@ -858,3 +965,4 @@ Hooks.on("createItem", async (item, options, userId) => {
   await actor.update(updates);
 
 });
+

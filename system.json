@@ -25,6 +25,7 @@
   "url": "https://github.com/danazen30/Foundry-system-Spheres-des-Profondeurs",
   "manifest": "",
   "download": "",
+  "socket": true,
 
   "initiative": "1d20 + @attributes.initiative.value",
 
@@ -151,6 +152,15 @@
     }
 
   ],
+
+  "relationships": {
+  "requires": [
+    {
+      "id": "socketlib",
+      "type": "module"
+    }
+  ]
+},
 
   "documentTypes": {
     "Actor": {

@@ -104,6 +104,7 @@
 
 </div>
 
+{{#unless isLimitedObserver}}
   <!-- CAREERS -->
   <table class="careers-table">
 
@@ -259,7 +260,7 @@
   </div>
 
   </div>
-
+{{/unless}}
 
   {{#if canLevelUp}}
     <div class="level-up">
@@ -321,7 +322,8 @@
 <h3>Notes & Background</h3>
 
 <div class="notes-section">
-{{#unless isNPC}}
+
+{{#unless isLimitedObserver}}
 <div class="resource-block note-block">
 
   <div class="note-header">
@@ -337,60 +339,46 @@
   </div>
 
   <!-- MODE LECTURE -->
-  <div class="note-display" data-display="biography">
-    {{{editors.biography}}}
-  </div>
-
-  <!-- MODE EDITION -->
-<div
+ <div
   class="note-editor"
-  data-editor="biography"
-  style="display:none;">
+  data-editor="biography">
 
-  <prose-mirror
-  name="system.details.biography.value"
-  value="{{system.details.biography.value}}">
-  {{{system.details.biography.value}}}
-</prose-mirror>
+  <textarea
+    name="system.details.biography.value"
+    rows="10">{{system.details.biography.value}}</textarea>
 
 </div>
   </div>
 {{/unless}}
+
 <div class="resource-block note-block">
 
   <div class="note-header">
     <label>Player Notes</label>
-
+{{#if canEditPlayerNotes}}
     <button
-      type="button"
-      class="note-edit-btn"
-      data-action="toggleEditor"
-      data-target="playerNotes">
-      ✏️ Edit
-    </button>
+  type="button"
+  class="note-edit-btn"
+  data-action="toggleEditor"
+  data-target="playerNotes">
+  ✏️ Edit
+</button>
+    {{/if}}
   </div>
 
   <!-- DISPLAY -->
-  <div class="note-display" data-display="playerNotes">
-    {{{editors.playerNotes}}}
-  </div>
-
-  <!-- EDITOR -->
   <div
-    class="note-editor"
-    data-editor="playerNotes"
-    style="display:none;">
+  class="note-editor"
+  data-editor="playerNotes">
 
-    <prose-mirror
-  name="system.details.playerNotes.value"
-  value="{{system.details.playerNotes.value}}">
-  {{{system.details.playerNotes.value}}}
-</prose-mirror>
-
-  </div>
+  <textarea
+    name="system.details.playerNotes.value"
+    rows="10">{{system.details.playerNotes.value}}</textarea>
 
 </div>
 
+</div>
+{{#unless isLimitedObserver}}
 <div class="resource-block note-block">
 
   <div class="note-header">
@@ -406,27 +394,20 @@
   </div>
 
   <!-- DISPLAY -->
-  <div class="note-display" data-display="gmNotes">
-    {{{editors.gmNotes}}}
-  </div>
-
-  <!-- EDITOR -->
   <div
-    class="note-editor"
-    data-editor="gmNotes"
-    style="display:none;">
+  class="note-editor"
+  data-editor="gmNotes">
 
-   <prose-mirror
-  name="system.details.gmNotes.value"
-  value="{{system.details.gmNotes.value}}">
-  {{{system.details.gmNotes.value}}}
-</prose-mirror>
-
-  </div>
+  <textarea
+    name="system.details.gmNotes.value"
+    rows="10">{{system.details.gmNotes.value}}</textarea>
 
 </div>
 
 </div>
+
+</div>
+  {{/unless}}
 {{#unless isNPC}}
   <!-- XP LOG -->
   <h3>XP Log</h3>
@@ -445,4 +426,5 @@
 
   </ul>
 {{/unless}}
+
 </div>

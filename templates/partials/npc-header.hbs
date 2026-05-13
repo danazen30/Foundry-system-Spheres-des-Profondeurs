@@ -13,6 +13,7 @@
       >
     </div>
 
+{{#unless isLimitedObserver}}
    <!-- LEVEL -->
 <div class="npc-level">
   Level : {{actor.system.details.level}}
@@ -31,12 +32,13 @@
         {{system.resources.encumbrance.state.label}}
       </span>
     {{/if}}
-  </div>
-
     </div>
+  </div>
+    {{/unless}}
 
   </div>
 
+{{#unless isLimitedObserver}}
   <!-- MAIN -->
   <div class="npc-header-main">
 
@@ -146,5 +148,6 @@
     </div>
 
   </div>
+  {{/unless}}
 
 </div>

@@ -35,6 +35,8 @@ import { SDP } from "./system/config.js";
 import { SdpConditionEngine } from "./system/condition-engine.js";
 import { SdpTurnEngine } from "./system/turn-engine.js";
 
+export let sdpSocket;
+
 const difficultyMap = {
   light: 0,
   moderate: -10,
@@ -200,6 +202,11 @@ registerChatHandlers();
 /* ========================================= */
 
 Hooks.once("ready", () => {
+  console.log("SDP READY", game.user.name);
+  console.log(
+  "REGISTERING SDP SOCKET",
+  game.user.name
+);
 
   game.sdp = game.sdp || {};
   game.sdp.conditions = SdpConditionEngine;
@@ -209,6 +216,26 @@ Hooks.once("ready", () => {
   level: SdpLevelService
 };
 game.sdp.levelUpApp = LevelUpApp;
+
+sdpSocket = socketlib.registerSystem("sdp");
+
+sdpSocket.register(
+  "observerUpdate",
+  async (actorId, update) => {
+
+    const actor =
+      game.actors.get(actorId);
+
+    if (!actor) return;
+
+    await actor.update(update);
+
+    console.log(
+      "GM UPDATE APPLIED"
+    );
+
+  }
+);
 
 });
 
