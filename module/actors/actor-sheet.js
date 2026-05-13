@@ -878,6 +878,26 @@ SdpRoll.openDialog({
 
   const root = this.element;
 
+  // =========================
+// PREVENT ENTER SUBMIT
+// =========================
+
+this.element.addEventListener("keydown", (event) => {
+
+  if (event.key !== "Enter") return;
+
+  const target = event.target;
+
+  // autorise textarea
+  if (target.tagName === "TEXTAREA") return;
+
+  // autorise prose mirror
+  if (target.closest("prose-mirror")) return;
+
+  event.preventDefault();
+
+});
+
   registerAttributeListeners(this);
   registerSkillListeners(this);
   registerCombatListeners(this, root);

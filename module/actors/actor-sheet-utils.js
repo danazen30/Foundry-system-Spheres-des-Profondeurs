@@ -68,7 +68,8 @@ export function applyFinalWeight(items, field = "encumbrance") {
     const qty = i.system.quantity?.value ?? 1;
     const base = i.system[field]?.value ?? 0;
 
-    i.system.totalWeight = base * qty;
+    i.system.totalWeight =
+  Math.round((base * qty) * 100) / 100;
   }
 }
 
@@ -283,7 +284,7 @@ function registerSpellRows(sheet, root) {
 
 }
 
-function registerArmorRows(root) {
+export function registerArmorRows(root) {
 
   root.querySelectorAll(".armor-toggle").forEach(el => {
 

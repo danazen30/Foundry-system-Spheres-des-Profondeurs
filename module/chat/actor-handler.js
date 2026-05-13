@@ -2,67 +2,109 @@ import { LevelUpApp } from "../apps/level-up-app.js";
 
 export function registerActorHandlers() {
 
-  Hooks.on("createActor", async (actor) => {
+Hooks.on("createActor", async (actor) => {
 
-    if (actor.type !== "character") return;
+  // =========================
+  // TYPES VALIDES
+  // =========================
 
-    if (actor.items.some(i => i.type === "skill")) return;
+  const validTypes = [
+    "character",
+    "npc"
+  ];
 
-    const pack = game.packs.get("sdp.skills");
+  if (!validTypes.includes(actor.type)) {
+    return;
+  }
 
-    if (!pack) {
-      console.error("SDP | skills pack not found");
-      return;
-    }
+  // =========================
+  // EVITE DUPLICATION
+  // =========================
 
-    const docs = await pack.getDocuments();
+  if (actor.items.some(i => i.type === "skill")) {
+    return;
+  }
 
-    // =========================
-    // BASIC SKILLS
-    // =========================
+  // =========================
+  // PACK
+  // =========================
 
-    const basicSkills = docs.filter(skill => {
+  const pack =
+    game.packs.get("sdp.skills");
 
-      return skill.type === "skill" &&
-        (
-          skill.system.advanced === false ||
-          skill.system.advanced === "false" ||
-          skill.system.advanced == null
-        );
+  if (!pack) {
 
-    });
-
-    // =========================
-    // ADVANCED SKILLS
-    // =========================
-
-    const defaultAdvancedSkills = [
-      "Stealth"
-    ];
-
-    const advancedSkills = docs.filter(skill =>
-      defaultAdvancedSkills.includes(skill.name)
+    console.error(
+      "SDP | skills pack not found"
     );
 
-    // =========================
-    // CREATE
-    // =========================
+    return;
+  }
 
-    const toCreate = [
-      ...basicSkills,
-      ...advancedSkills
-    ].map(skill => skill.toObject());
+  const docs =
+    await pack.getDocuments();
 
-    if (toCreate.length) {
+  // =========================
+  // BASIC SKILLS
+  // =========================
 
-      await actor.createEmbeddedDocuments("Item", toCreate);
+  const basicSkills = docs.filter(skill => {
 
-      console.log("SDP | Default skills added", {
-        actor: actor.name,
-        count: toCreate.length
-      });
-    }
+    return (
+      skill.type === "skill" &&
+      (
+        skill.system.advanced === false ||
+        skill.system.advanced === "false" ||
+        skill.system.advanced == null
+      )
+    );
 
   });
+
+  // =========================
+  // DEFAULT ADVANCED
+  // =========================
+
+  const defaultAdvancedSkills = [
+    "Stealth"
+  ];
+
+  const advancedSkills =
+    docs.filter(skill =>
+      defaultAdvancedSkills.includes(
+        skill.name
+      )
+    );
+
+  // =========================
+  // CREATE
+  // =========================
+
+  const toCreate = [
+    ...basicSkills,
+    ...advancedSkills
+  ].map(skill =>
+    skill.toObject()
+  );
+
+  if (!toCreate.length) {
+    return;
+  }
+
+  await actor.createEmbeddedDocuments(
+    "Item",
+    toCreate
+  );
+
+  console.log(
+    "SDP | Default skills added",
+    {
+      actor: actor.name,
+      type: actor.type,
+      count: toCreate.length
+    }
+  );
+
+});
 
 }

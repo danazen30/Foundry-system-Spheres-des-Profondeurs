@@ -19,7 +19,7 @@ export class SdpActorInventory {
     total += weight;
   }
 
-  return total;
+  return Math.round(total * 100) / 100;
 }
 
 static async applyEncumbrance(actor) {
@@ -41,6 +41,7 @@ for (let item of actor.items) {
   }
 
   total += weight;
+  total = Math.round(total * 100) / 100;
 
 }
 
