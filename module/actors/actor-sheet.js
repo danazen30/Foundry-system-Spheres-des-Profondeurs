@@ -1114,4 +1114,3 @@ Hooks.on("createItem", async (item, options, userId) => {
   await actor.update(updates);
 
 });
-

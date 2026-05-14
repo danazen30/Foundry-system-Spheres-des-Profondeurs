@@ -471,10 +471,7 @@ if (
     const dodge = getSkill("dodge");
     const brawl = getSkill("brawl");
 
-console.log("MODIFIERS:", system.skillModifiers);
-
 for (let skill of skills) {
-  console.log("SKILL KEY:", skill.system.key);
 
   const attribute =
     system.attributes[skill.system.characteristic]?.value ?? 0;
@@ -814,9 +811,6 @@ const sign = this.items.find(i => i.type === "sign");
 
 const wpb = this.system.attributes.willpower?.bonus || 0;
 const level = this.system.details?.level || 0;
-
-console.log("Talent level:", level);
-console.log("Mana bonus:", system.custom.manaMultiplierBonus);
 
 // table non linéaire
 const manaMultiplier = {

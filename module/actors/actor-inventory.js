@@ -22,7 +22,7 @@ export class SdpActorInventory {
   return Math.round(total * 100) / 100;
 }
 
-static async applyEncumbrance(actor) {
+static applyEncumbrance(actor) {
 
   let total = 0;
 
@@ -76,10 +76,13 @@ else if (ratio > 1) {
   };
 }
 
-await actor.update({
-  "system.resources.encumbrance.value": total,
-  "system.resources.encumbrance.max": max,
-  "system.resources.encumbrance.state": encumbranceState
-});
+actor.system.resources.encumbrance =
+  actor.system.resources.encumbrance || {};
+
+actor.system.resources.encumbrance.value = total;
+
+actor.system.resources.encumbrance.max = max;
+
+actor.system.resources.encumbrance.state = encumbranceState;
 }
 }
