@@ -1,0 +1,40 @@
+<div class="sdp-sheet">
+
+{{> "systems/sdp/templates/partials/creature-header.hbs"}}
+
+<div class="sdp-body">
+
+    <div class="sdp-content">
+  <div class="sdp-content-inner">
+
+      {{#if (eq activeTab "skills")}}
+        {{> "systems/sdp/templates/partials/creature-combat.hbs"}}
+      {{/if}}
+
+      {{#if (eq activeTab "magic")}}
+        {{> "systems/sdp/templates/partials/magic.hbs"}}
+      {{/if}}
+
+      {{#if (eq activeTab "effects")}}
+        {{> "systems/sdp/templates/partials/effects.hbs"}}
+      {{/if}}
+
+      {{#if (eq activeTab "info")}}
+  {{> "systems/sdp/templates/partials/creature-info.hbs"}}
+{{/if}}
+
+    </div>
+
+    <!-- 🔥 TABS DANS LE BODY -->
+    <div class="sdp-tabs">
+  <button data-tab="skills" data-label="Skills">⚔️</button>
+<button data-tab="magic" data-label="Magic">🔮</button>
+<button data-tab="effects" data-label="Effects">💀</button>
+<button data-tab="info" data-label="Information">📜</button>
+</div>
+
+  </div>
+
+  </div>
+
+</div>

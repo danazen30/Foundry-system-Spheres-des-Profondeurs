@@ -1,6 +1,7 @@
 import { SdpActor } from "./actors/actor.js";
 import { SdpActorSheet } from "./actors/actor-sheet.js";
 import { SdpNpcSheet } from "./actors/npc-sheet.js";
+import { SdpCreatureSheet } from "./actors/creature-sheet.js";
 
 import { registerChatHandlers } from "./chat/chat-handlers.js";
 import { registerActorHandlers } from "./chat/actor-handler.js";
@@ -78,6 +79,10 @@ async function getInjuryFromPack(location, severity, isConsequence = false) {
     "systems/sdp/templates/partials/effects.hbs",
     "systems/sdp/templates/partials/info.hbs",
     "systems/sdp/templates/partials/npc-header.hbs",
+    "systems/sdp/templates/partials/creature-header.hbs",
+    "systems/sdp/templates/partials/creature-info.hbs",
+    "systems/sdp/templates/partials/creature-attributes.hbs",
+    "systems/sdp/templates/partials/creature-combat.hbs"
   ]);
 
   CONFIG.SDP = SDP;
@@ -96,6 +101,8 @@ foundry.documents.collections.Actors.unregisterSheet("core", foundry.application
 foundry.documents.collections.Actors.registerSheet("sdp", SdpActorSheet, {types: ["character"], makeDefault: true});
 
 foundry.documents.collections.Actors.registerSheet("sdp", SdpNpcSheet, {types: ["npc"], makeDefault: true});
+
+foundry.documents.collections.Actors.registerSheet("sdp", SdpCreatureSheet, {types: ["creature"], makeDefault: true});
 
 // items
 // ✅ V13 correct

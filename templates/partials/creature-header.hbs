@@ -1,0 +1,155 @@
+<div class="sdp-header creature-header">
+
+  <div class="creature-header-main">
+
+    <!-- PORTRAIT -->
+    <div class="character-portrait creature-portrait">
+      <img
+        class="profile-img"
+        src="{{actor.img}}"
+        alt="{{actor.name}}"
+        data-edit="img"
+      >
+    </div>
+
+    <!-- CENTER -->
+    <div class="creature-resource-column">
+
+      <!-- NAME -->
+      <div class="creature-name-row">
+        <input
+          type="text"
+          name="name"
+          value="{{actor.name}}"
+          class="actor-name"
+        >
+      </div>
+
+      <!-- HEALTH -->
+      <div class="resource-box resource-bar">
+
+        <div class="resource-top">
+
+          <div class="resource-label">
+            ❤️ Health
+          </div>
+
+          <div class="resource-values">
+
+            <input
+  type="number"
+  name="system.health.value"
+  value="{{system.health.value}}">
+
+<span>
+  / {{system.health.max}}
+</span>
+
+          </div>
+
+        </div>
+
+        <div class="bar">
+          <div
+            class="bar-fill health-fill"
+            style="width: {{multiply (divide system.health.value system.health.max) 100}}%;">
+          </div>
+        </div>
+
+      </div>
+
+      <!-- MANA -->
+      <div class="resource-box resource-bar">
+
+        <div class="resource-top">
+
+          <div class="resource-label">
+            🔵 Mana
+          </div>
+
+          <div class="resource-values">
+
+            <input
+              type="number"
+              name="system.resources.mana.value"
+              value="{{system.resources.mana.value}}">
+
+            <span>
+              / {{system.resources.mana.max}}
+            </span>
+
+          </div>
+
+        </div>
+
+        <div class="bar">
+          <div
+            class="bar-fill mana-fill"
+            style="width: {{multiply (divide system.resources.mana.value system.resources.mana.max) 100}}%;">
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- RIGHT -->
+    <div class="creature-combat-side">
+
+      <!-- DERIVED -->
+      <div class="resource-box derived-grid">
+
+        <div class="derived-cell">
+          <label>⚔️ Attack</label>
+          <span>{{system.derived.attack.value}}</span>
+        </div>
+
+        <div class="derived-cell">
+          <label>🌀 Evasion</label>
+          <span>{{system.derived.evasion.value}}</span>
+        </div>
+
+        <div class="derived-cell">
+          <label>🛡️ Parry</label>
+          <span>{{system.derived.parry.value}}</span>
+        </div>
+
+        <div class="derived-cell">
+          <label>💢 Wound</label>
+          <span>{{system.derived.woundThreshold.value}}</span>
+        </div>
+
+      </div>
+
+      <!-- MOVEMENT -->
+      <div class="movement-header-box">
+
+        <div class="movement-grid">
+
+          <div class="movement-header">Move</div>
+          <div class="movement-header">Walk</div>
+          <div class="movement-header">Run</div>
+
+          <input
+            type="number"
+            class="movement-value"
+            name="system.resources.movement.current"
+            value="{{system.resources.movement.current}}">
+
+          <div class="movement-value">
+            {{system.resources.movement.walk}}
+          </div>
+
+          <div class="movement-value">
+            {{system.resources.movement.run}}
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

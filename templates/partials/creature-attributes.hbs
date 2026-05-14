@@ -1,0 +1,41 @@
+<table class="creature-attributes-table">
+
+  <thead>
+    <tr>
+
+      {{#each attributes as |attr|}}
+
+        <th
+          class="creature-attr-roll"
+          data-action="rollAttribute"
+          data-attr="{{attr.key}}"
+        >
+          {{attr.label}}
+        </th>
+
+      {{/each}}
+
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+
+      {{#each attributes as |attr|}}
+
+        <td>
+
+          <input
+  type="number"
+  value="{{attr.initial}}"
+  name="system.attributes.{{attr.key}}.initial"
+>
+
+        </td>
+
+      {{/each}}
+
+    </tr>
+  </tbody>
+
+</table>

@@ -3208,3 +3208,319 @@ text-align:center;
   gap: 6px;
   align-items: center;
 }
+
+/* =========================
+   CREATURE HEADER
+========================= */
+
+.creature-header {
+  padding: 8px;
+}
+
+.creature-header-main {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+}
+
+/* portrait */
+
+.creature-portrait {
+  width: 130px;
+  height: 130px;
+
+  flex-shrink: 0;
+
+  border: 1px solid #444;
+  border-radius: 10px;
+
+  overflow: hidden;
+  background: #111;
+}
+
+.creature-portrait img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+/* center */
+
+.creature-resource-column {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.creature-name-row {
+  padding: 4px 2px;
+}
+
+/* right */
+
+.creature-combat-side {
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+
+  min-width: 240px;
+}
+
+.creature-combat-side .derived-grid {
+  min-width: 240px;
+}
+
+.creature-combat-side .movement-header-box {
+  width: 100%;
+}
+
+/* =========================
+   CREATURE INFO TAB
+========================= */
+
+.creature-info-grid {
+  display: grid;
+
+  grid-template-columns: 320px 1fr;
+
+  gap: 12px;
+}
+
+.creature-info-left,
+.creature-info-right {
+  display: flex;
+  flex-direction: column;
+
+  gap: 12px;
+}
+
+.creature-info-card {
+  background: rgba(0, 0, 0, 0.35);
+
+  border: 1px solid #3a2f2f;
+  border-radius: 10px;
+
+  padding: 10px;
+
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.creature-info-title {
+  font-weight: bold;
+
+  margin-bottom: 8px;
+
+  font-size: 16px;
+}
+
+.creature-size-value {
+  font-size: 18px;
+  text-transform: capitalize;
+}
+
+.creature-traits-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+}
+
+.creature-trait-row {
+  padding: 6px 8px;
+
+  border-radius: 6px;
+
+  background: rgba(255,255,255,0.04);
+
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+/* =========================
+   CREATURE NOTES
+========================= */
+
+.creature-note-display,
+.creature-note-editor {
+  min-height: 200px;
+  max-height: 240px;
+
+  overflow-y: auto;
+}
+
+/* prose mirror content */
+
+.creature-note-editor .editor-content {
+  min-height: 200px;
+  max-height: 240px;
+
+  overflow-y: auto;
+}
+
+/* =========================
+   CREATURE PORTRAIT
+========================= */
+
+.creature-portrait {
+  width: 130px;
+  min-width: 130px;
+  height: 130px;
+
+  overflow: hidden;
+
+  background: #111;
+
+  cursor: pointer;
+}
+
+.creature-portrait .profile-img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  display: block;
+}
+
+/* Attribut creature */
+
+.creature-attributes-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+}
+
+.creature-attributes-table th,
+.creature-attributes-table td {
+  text-align: center;
+  padding: 4px;
+}
+
+.creature-attributes-table input {
+  width: 100%;
+  text-align: center;
+}
+
+.creature-attr-roll {
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+.creature-attr-roll:hover {
+  color: var(--color-text-hyperlink);
+  text-shadow: 0 0 6px rgba(255,255,255,0.4);
+}
+
+.creature-combat-tab .skills-wrapper {
+  min-height: 250px;
+}
+
+/* =========================================
+   CREATURE COMBAT TAB ULTRA COMPACT
+========================================= */
+
+.creature-combat-tab {
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;              /* 🔥 réduit espace entre sections */
+
+  padding: 0;
+  margin: 0;
+}
+
+/* skills + inventory collés */
+.creature-combat-tab > * {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* wrapper skills */
+.creature-combat-tab .skills-wrapper {
+  margin: 0;
+  padding: 0;
+}
+
+/* titres */
+.creature-combat-tab h2 {
+  margin: 0px 0 0 0;
+  padding: 0;
+
+  font-size: 25px;
+  line-height: 1;
+  text-align: center;
+}
+
+/* tables */
+.creature-combat-tab table {
+  margin-top: 0 !important;
+  margin-bottom: 0px !important;
+}
+
+/* lignes ultra compactes */
+.creature-combat-tab .weapons-table tr,
+.creature-combat-tab .ammo-table tr,
+.creature-combat-tab .armors-table tr,
+.creature-combat-tab .inventory-table tr,
+.creature-combat-tab .container-table tr {
+  height: 18px;
+}
+
+/* cellules */
+.creature-combat-tab .weapons-table td,
+.creature-combat-tab .ammo-table td,
+.creature-combat-tab .armors-table td,
+.creature-combat-tab .inventory-table td,
+.creature-combat-tab .container-table td {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+/* headers */
+.creature-combat-tab .weapons-table th,
+.creature-combat-tab .ammo-table th,
+.creature-combat-tab .armors-table th,
+.creature-combat-tab .inventory-table th,
+.creature-combat-tab .container-table th {
+  padding-top: 0;
+  padding-bottom: 0;
+
+  height: 16px;
+  font-size: 10px;
+}
+
+/* images inventaire */
+.creature-combat-tab .item-img {
+  width: 18px;
+  height: 18px;
+
+  min-width: 18px;
+  min-height: 18px;
+}
+
+/* détails dépliants */
+.creature-combat-tab .weapon-details-content,
+.creature-combat-tab .armor-details-content,
+.creature-combat-tab .container-inner-wrapper {
+  padding: 0px;
+}
+
+/* traits */
+.creature-combat-tab .traits-inline {
+  gap: 0px;
+}
+
+/* boutons */
+.creature-combat-tab button {
+  min-height: 18px;
+  padding: 0px;
+}
+
+/* réduit gros espace du content */
+.creature-combat-tab + * {
+  margin-top: 0;
+}

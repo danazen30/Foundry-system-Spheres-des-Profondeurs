@@ -1,0 +1,167 @@
+<div class="creature-info-grid">
+
+  <!-- LEFT -->
+  <div class="creature-info-left">
+
+    <!-- SIZE -->
+    <div class="creature-info-card">
+
+      <div class="creature-info-title">
+        📏 Size
+      </div>
+
+     <div class="creature-size-value">
+
+  <select name="system.size">
+
+    {{#each config.sizes as |size key|}}
+
+      <option
+        value="{{key}}"
+        {{#if (eq ../system.size key)}}selected{{/if}}>
+
+        {{size.label}}
+
+      </option>
+
+    {{/each}}
+
+  </select>
+
+</div>
+
+    </div>
+
+    <!-- TRAITS -->
+    <div class="creature-info-card">
+
+      <div class="creature-info-title">
+        🧬 Traits
+      </div>
+
+      <div class="creature-traits-list">
+
+        {{#if actor.itemTypes.trait.length}}
+
+          {{#each actor.itemTypes.trait}}
+
+            <div class="creature-trait-row">
+              {{this.name}}
+            </div>
+
+          {{/each}}
+
+        {{else}}
+
+          <div class="creature-empty">
+            No traits
+          </div>
+
+        {{/if}}
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- RIGHT -->
+  <div class="creature-info-right">
+
+   <!-- PLAYER NOTES -->
+<div class="creature-info-card">
+
+  <div class="note-header">
+
+    <label>📖 Player Notes</label>
+
+    {{#if canEditPlayerNotes}}
+    <button
+      type="button"
+      class="note-edit-btn"
+      data-action="toggleEditor"
+      data-target="creaturePlayerNotes">
+
+      ✏️ Edit
+
+    </button>
+    {{/if}}
+
+  </div>
+
+  <!-- DISPLAY -->
+  <div
+    class="creature-note-display"
+    data-display="creaturePlayerNotes">
+
+    {{{system.details.playerNotes.value}}}
+
+  </div>
+
+  <!-- EDITOR -->
+  <div
+    class="creature-note-editor"
+    data-editor="creaturePlayerNotes"
+    style="display:none;">
+
+    <prose-mirror
+      name="system.details.playerNotes.value"
+      value="{{system.details.playerNotes.value}}">
+
+      {{{system.details.playerNotes.value}}}
+
+    </prose-mirror>
+
+  </div>
+
+</div>
+
+    <!-- GM NOTES -->
+<div class="creature-info-card">
+
+  <div class="note-header">
+
+    <label>🔒 GM Notes</label>
+
+    <button
+      type="button"
+      class="note-edit-btn"
+      data-action="toggleEditor"
+      data-target="creatureGMNotes">
+
+      ✏️ Edit
+
+    </button>
+
+  </div>
+
+  <!-- DISPLAY -->
+  <div
+    class="creature-note-display"
+    data-display="creatureGMNotes">
+
+    {{{system.details.gmNotes.value}}}
+
+  </div>
+
+  <!-- EDITOR -->
+  <div
+    class="creature-note-editor"
+    data-editor="creatureGMNotes"
+    style="display:none;">
+
+    <prose-mirror
+      name="system.details.gmNotes.value"
+      value="{{system.details.gmNotes.value}}">
+
+      {{{system.details.gmNotes.value}}}
+
+    </prose-mirror>
+
+  </div>
+
+</div>
+
+  </div>
+
+</div>
