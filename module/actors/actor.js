@@ -86,6 +86,11 @@ export class SdpActor extends Actor {
     system.custom.offhandReduction ??= 0;
     system.custom.manaMultiplierBonus ??= 0;
 
+    system.details ??= {};
+
+system.details.size ??= {};
+system.details.size.value ??= "average";
+
 system.combat ??= {};
 
 system.combat.defenseMode ??= "auto";
@@ -292,7 +297,10 @@ else if (enc >= 3) {
 // SIZE MODIFIERS
 // =====================
 
-const actorSize = system.size || "average";
+const actorSize =
+  system.details?.size?.value ||
+  system.size ||
+  "average";
 
 const sizeModifiers =
   SdpSizeEngine.getAttributeModifiers(actorSize);
@@ -354,7 +362,10 @@ const WPB = system.attributes.willpower.bonus;
 system.resources.corruption.max =
   Math.floor((TB + WPB) / 2);
 
-const healthSize = system.size || "average";
+const healthSize =
+  system.details?.size?.value ||
+  system.size ||
+  "average";
 
 let baseHealth = 0;
 

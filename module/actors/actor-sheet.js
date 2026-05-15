@@ -437,7 +437,7 @@ return {
   sharedJournal,
   sharedJournalPage,
   sharedNpcNotes,
-  editors
+  editors,
 };
   }
 

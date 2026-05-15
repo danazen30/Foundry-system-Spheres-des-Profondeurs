@@ -42,6 +42,27 @@
       </div>
 
     </div>
+
+<div class="resource-row">
+  <label>Size</label>
+
+  <select name="system.details.size.value">
+
+    {{#each config.sizes as |size key|}}
+
+      <option
+        value="{{key}}"
+        {{#if (eq @root.system.details.size.value key)}}selected{{/if}}>
+
+        {{size.label}}
+
+      </option>
+
+    {{/each}}
+
+  </select>
+</div>
+
   </div>
 
 
