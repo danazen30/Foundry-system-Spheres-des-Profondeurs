@@ -132,6 +132,44 @@ let canChoose = false;
 let forcedChoice = null;
 
 // ======================
+// CREATURE DEFENSE MODE
+// ======================
+
+const defenseMode =
+  target.system.combat?.defenseMode ||
+  "auto";
+
+console.log(
+  "SDP | Defense mode",
+  {
+    actor: target.name,
+    mode: defenseMode
+  }
+);
+
+// ======================
+// FORCED DEFENSE
+// ======================
+
+if (defenseMode === "evasion") {
+
+  forcedChoice = "evasion";
+
+}
+
+else if (defenseMode === "parry") {
+
+  forcedChoice = "parry";
+
+}
+
+// ======================
+// AUTO MODE
+// ======================
+
+else {
+
+// ======================
 // SMART LOGIC (FINAL FIX)
 // ======================
 
@@ -158,6 +196,8 @@ else if (hasSidestep || hasDefenseChoiceWeapon) {
 // CAS 5 — fallback
 else {
   forcedChoice = parry >= evasion ? "parry" : "evasion";
+}
+
 }
 
 console.log("SDP | Defense decision (FINAL)", {

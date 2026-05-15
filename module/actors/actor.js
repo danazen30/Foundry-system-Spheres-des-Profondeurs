@@ -86,6 +86,10 @@ export class SdpActor extends Actor {
     system.custom.offhandReduction ??= 0;
     system.custom.manaMultiplierBonus ??= 0;
 
+system.combat ??= {};
+
+system.combat.defenseMode ??= "auto";
+
     system.conditionOverride ??= {};
 
 for (const item of this.items) {

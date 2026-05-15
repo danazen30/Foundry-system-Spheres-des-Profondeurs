@@ -63,6 +63,53 @@
 
     </div>
 
+    <!-- DEFENSE MODE -->
+<div class="creature-info-card">
+
+  <div class="creature-info-title">
+    🛡️ Defense
+  </div>
+
+  <div class="creature-size-value">
+
+    <select name="system.combat.defenseMode">
+
+      <option
+        value="auto"
+        {{#if (eq system.combat.defenseMode "auto")}}
+          selected
+        {{/if}}>
+
+        Auto
+
+      </option>
+
+      <option
+        value="evasion"
+        {{#if (eq system.combat.defenseMode "evasion")}}
+          selected
+        {{/if}}>
+
+        Evasion Only
+
+      </option>
+
+      <option
+        value="parry"
+        {{#if (eq system.combat.defenseMode "parry")}}
+          selected
+        {{/if}}>
+
+        Parry Only
+
+      </option>
+
+    </select>
+
+  </div>
+
+</div>
+
   </div>
 
   <!-- RIGHT -->

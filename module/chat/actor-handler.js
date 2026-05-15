@@ -10,7 +10,8 @@ Hooks.on("createActor", async (actor) => {
 
   const validTypes = [
     "character",
-    "npc"
+    "npc",
+    "creature"
   ];
 
   if (!validTypes.includes(actor.type)) {
