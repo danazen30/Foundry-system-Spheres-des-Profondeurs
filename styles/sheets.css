@@ -377,8 +377,9 @@ grid-area: sidebar;
 }
 
 
-.slot {
+.character-silhouette .slot {
   position: absolute;
+
   width: 50px;
   height: 50px;
 
@@ -390,10 +391,10 @@ grid-area: sidebar;
   overflow: hidden;
 }
 
-.slot img {
+.character-silhouette .slot img {
   all: unset;
 
-  position: absolute; /* 🔥 IMPORTANT */
+  position: absolute;
   top: 0;
   left: 0;
 
@@ -404,46 +405,46 @@ grid-area: sidebar;
 }
 
 /* tête */
-.slot.head {
+.character-silhouette .slot.head {
   top: 5%;
   left: 50%;
 }
 
 /* torse (un peu plus bas) */
-.slot.chest {
+.character-silhouette .slot.chest {
   top: 22%;
   left: 50%;
 }
 
 /* bras gauche (un peu plus haut et plus proche) */
-.slot.left-arm {
+.character-silhouette .slot.left-arm {
   top: 31%;
   left: 18%;
 }
 
 /* bras droit */
-.slot.right-arm {
+.character-silhouette .slot.right-arm {
   top: 31%;
   left: 82%;
 }
 
 /* jambes (remontées) */
-.slot.left-legs {
+.character-silhouette .slot.left-legs {
   top: 70%;
   left: 26%;
 }
 
-.slot.right-legs {
+.character-silhouette .slot.right-legs {
   top: 70%;
   left: 74%;
 }
 
-.slot.weapon-main {
+.character-silhouette .slot.weapon-main {
   top: 45%;
   left: 10%; /* main gauche visuelle */
 }
 
-.slot.weapon-off {
+.character-silhouette .slot.weapon-off {
   top: 45%;
   left: 90%; /* main droite visuelle */
 }

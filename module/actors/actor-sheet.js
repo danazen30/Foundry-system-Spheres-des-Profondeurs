@@ -938,6 +938,7 @@ if (unlinkBtn) {
 }
 
 restoreScroll(this);
+
   }
 
   async _onChangeForm(formConfig, event) {
