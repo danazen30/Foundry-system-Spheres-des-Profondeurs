@@ -86,6 +86,9 @@ export class SdpActor extends Actor {
     system.custom.offhandReduction ??= 0;
     system.custom.manaMultiplierBonus ??= 0;
 
+    system.custom.healthBonus ??= 0;
+system.custom.manaBonus ??= 0;
+
     system.details ??= {};
 
 system.details.size ??= {};
@@ -251,6 +254,22 @@ for (const item of this.items.contents) {
 
 }
 
+if (change.key === "system.custom.healthBonus") {
+
+  const base = Number(change.value || 0);
+
+  system.custom.healthBonus += base;
+
+}
+
+if (change.key === "system.custom.manaBonus") {
+
+  const base = Number(change.value || 0);
+
+  system.custom.manaBonus += base;
+
+}
+
     }
   }
 }
@@ -355,9 +374,11 @@ attr.bonus = Math.floor(attr.value / 10);
 // HEALTH
 // =====================
 
-const TB = system.attributes.toughness.bonus;
-const SB = system.attributes.strength.bonus;
-const WPB = system.attributes.willpower.bonus;
+const TB = Math.max( 0, system.attributes.toughness.bonus);
+
+const SB = Math.max( 0, system.attributes.strength.bonus);
+
+const WPB = Math.max( 0, system.attributes.willpower.bonus);
 
 system.resources.corruption.max =
   Math.floor((TB + WPB) / 2);
@@ -414,8 +435,13 @@ switch (healthSize) {
 const levelBonus =
   system.health.levelBonus ?? 0;
 
+const healthBonus =
+  system.custom.healthBonus || 0;
+
 system.health.max =
-  baseHealth + levelBonus;
+  baseHealth +
+  levelBonus +
+  healthBonus;
 
 const finalMax = system.health.max;
 
@@ -824,7 +850,7 @@ const sign = this.items.find(i => i.type === "sign");
 // MANA CALCULATION
 // =========================
 
-const wpb = this.system.attributes.willpower?.bonus || 0;
+const wpb = Math.max( 0, this.system.attributes.willpower?.bonus || 0);
 const level = this.system.details?.level || 0;
 
 // table non linéaire
@@ -846,7 +872,11 @@ const multiplier = baseMultiplier + Math.max(0, bonusMultiplier);
 
 this.system.resources.mana = this.system.resources.mana || {};
 
-this.system.resources.mana.max = wpb * multiplier;
+const manaBonus =
+  system.custom.manaBonus || 0;
+
+this.system.resources.mana.max =
+  (wpb * multiplier) + manaBonus;
 
 // =========================
 // 🔋 MANA CLAMP (ANTI OVERFLOW)
