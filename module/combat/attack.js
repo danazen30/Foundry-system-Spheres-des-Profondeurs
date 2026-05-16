@@ -362,36 +362,18 @@ if (dialogMods.location) {
 
 }
 
+const dynamicModifierTotal =
+  (dialogMods.dynamicModifiers || [])
+    .reduce((acc, m) => {
+      return acc + Number(m.value || 0);
+    }, 0);
+
 let targetValue =
   base +
   (dialogMods.totalMod || 0) +
   (dialogMods.conditionMod || 0) +
-  locationMod +
-  fastBonus +
-  rangeModifier;
-
-  // =========================
-// SIZE MODIFIER
-// =========================
-
-let sizeModifier = 0;
-
-if (targets[0]?.actor) {
-
-  sizeModifier = SdpSizeEngine.getRangedAttackModifier(
-  targets[0].actor.system.size
-);
-
-  targetValue += sizeModifier;
-
-  console.log("SDP | SIZE MODIFIER (RANGED)", {
-    attacker: actor.name,
-    target: targets[0].actor.name,
-    modifier: sizeModifier,
-    finalTarget: targetValue
-  });
-
-}
+  dynamicModifierTotal +
+  locationMod;
 
   // =========================
 // OFFHAND (RANGED)
@@ -413,43 +395,6 @@ if (weapon.system.offhand) {
     finalTarget: targetValue
   });
 
-}
-
-  // =========================
-// ITEM TRAITS
-// =========================
-
-// ===== PRACTICAL ITEM TRAIT (RANGED) =====
-if (itemTraits.some(t => t.key === "practical")) {
-  targetValue += 10;
-
-  console.log("SDP | PRACTICAL (RANGED)", {
-    weapon: weapon.name,
-    newTarget: targetValue
-  });
-}
-
-if (itemTraits.some(t => t.key === "impractical")) {
-  targetValue -= 10;
-}
-
-// ===== PRECISE TRAIT =====
-if (finalTraits.some(t => t.key === "precise")) {
-  targetValue += 10;
-
-  console.log("SDP | PRECISE (RANGED)", {
-    weapon: weapon.name,
-    newTarget: targetValue
-  });
-}
-
-if (finalTraits.some(t => t.key === "imprecise")) {
-  targetValue -= 10;
-
-  console.log("SDP | IMPRECISE (RANGED)", {
-    weapon: weapon.name,
-    newTarget: targetValue
-  });
 }
 
 // 🔥 juste pour affichage
@@ -741,7 +686,6 @@ ${displayTraits.length ? `
 
   <p>Test: ${source}</p>
   <p>Target: ${targetValue}</p>
-${sizeModifier !== 0 ? `<p>Size Modifier: ${sizeModifier > 0 ? "+" : ""}${sizeModifier}</p>` : ""}
   <p>Range: ${rangeLabel} (${Math.round(measuredDistance)}m)</p>
   <p>Roll: ${result}</p>
   ${inspiration > 0 ? `<p>Inspiration: +${inspiration}</p>` : ""}
@@ -839,7 +783,6 @@ const finalTraits = [...activePositiveTraits, ...negativeTraits];
   // ======================
 
   const isMelee = true;
-const meleeBonus = Math.floor((dialogMods.totalMod || 0) / 10);
 
 let chargeBonus = 0;
 
@@ -979,92 +922,25 @@ if (dialogMods.location) {
 
 }
 
+const totalModifier =
+  (dialogMods.totalMod || 0) +
+  (dialogMods.conditionMod || 0) +
+  (dialogMods.dynamicModifiers || [])
+    .reduce((acc, m) => {
+      return acc + Number(m.value || 0);
+    }, 0);
+
+const meleeModifier =
+  Math.floor(totalModifier / 10);
+
 let attackScore =
   baseAttack +
-  meleeBonus +
+  meleeModifier +
   SL +
   bonus +
   inspiration +
-  fastBonus +
   chargeBonus +
-  Math.floor((dialogMods.conditionMod || 0) / 10) +
-  Math.floor(locationMod / 10); // 🔥 AJOUT
-
-  // =========================
-// SIZE MODIFIER
-// =========================
-
-let sizeModifier = 0;
-
-const meleeTarget = targets[0]?.actor;
-
-if (meleeTarget) {
-
-  sizeModifier = SdpSizeEngine.getAttackModifier(
-  actor.system.size,
-  meleeTarget.system.size
-);
-
-  const sizeBonus = Math.floor(sizeModifier / 10);
-
-  attackScore += sizeBonus;
-
-  console.log("SDP | SIZE MODIFIER (MELEE)", {
-    attacker: actor.name,
-    target: meleeTarget.name,
-    modifier: sizeModifier,
-    appliedBonus: sizeBonus,
-    finalAttack: attackScore
-  });
-
-}
-
-  // =========================
-// ITEM TRAITS
-// =========================
-
-// ===== PRACTICAL ITEM TRAIT (MELEE) =====
-if (itemTraits.some(t => t.key === "practical")) {
-  attackScore += 1;
-
-  console.log("SDP | PRACTICAL (MELEE)", {
-    weapon: weapon.name,
-    newAttack: attackScore
-  });
-}
-
-if (itemTraits.some(t => t.key === "impractical")) {
-  attackScore -= 1;
-}
-
-// ===== PRECISE TRAIT =====
-if (finalTraits.some(t => t.key === "precise")) {
-  attackScore += 1;
-
-  console.log("SDP | PRECISE (MELEE)", {
-    weapon: weapon.name,
-    newAttack: attackScore
-  });
-}
-
-// ===== SLOW TRAIT =====
-if (finalTraits.some(t => t.key === "slow")) {
-  attackScore -= 1;
-
-  console.log("SDP | SLOW (MELEE)", {
-    weapon: weapon.name,
-    newAttack: attackScore
-  });
-}
-
-if (finalTraits.some(t => t.key === "imprecise")) {
-  attackScore -= 1;
-
-  console.log("SDP | IMPRECISE (MELEE)", {
-    weapon: weapon.name,
-    newAttack: attackScore
-  });
-}
+  Math.floor(locationMod / 10);
 
 let context = {
   actor,
@@ -1131,7 +1007,7 @@ const talentsHTML =
      data-attack="${attackScore}"
      data-baseattack="${baseAttack}"
     data-type="melee"
-    data-meleebonus="${meleeBonus}"
+    data-meleemodifier="${meleeModifier}"
      data-actor="${actor.id}"
      data-weapon="${weapon.id}"
      data-target="${targetId ?? ""}"
@@ -1172,7 +1048,6 @@ ${hitProfile.locations?.[hitLocation.location]?.label || hitLocation.location}
   ${dialogMods.charge ? "<p>Charge</p>" : ""}
   ${talentsHTML}
   <p>Attack Score: ${attackScore}</p>
-${sizeModifier !== 0 ? `<p>Size Modifier: ${sizeModifier > 0 ? "+" : ""}${Math.floor(sizeModifier / 10)} DR</p>` : ""}
 
  <button class="apply-defense">Apply Defense</button>
 

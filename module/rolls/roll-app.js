@@ -1,6 +1,7 @@
 import { SdpAttack } from "../combat/attack.js";
 import { SdpSpell } from "../combat/spell.js";
 import { SdpRoll } from "../rolls/roll.js";
+import { SdpSizeEngine } from "../system/size-engine.js";
 
 const { ApplicationV2 } = foundry.applications.api;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -99,6 +100,185 @@ async _prepareContext() {
   }
 
   // =========================
+// SIZE / RANGE MODIFIERS
+// =========================
+
+const targets = Array.from(game.user.targets);
+const targetActor = targets[0]?.actor;
+
+// -------------------------
+// MELEE SIZE
+// -------------------------
+
+if (
+  this.type === "attack" &&
+  this.weapon &&
+  this.weapon.system.category === "melee" &&
+  targetActor
+) {
+
+  const attackerSize =
+  this.actor.system.details?.size?.value ||
+  this.actor.system.size ||
+  "average";
+
+const defenderSize =
+  targetActor.system.details?.size?.value ||
+  targetActor.system.size ||
+  "average";
+
+const sizeModifier =
+  SdpSizeEngine.getAttackModifier(
+    attackerSize,
+    defenderSize
+  );
+
+  if (sizeModifier !== 0) {
+
+    modifiers.push({
+      label: "Size",
+      value: sizeModifier
+    });
+
+  }
+
+}
+
+// -------------------------
+// RANGED SIZE
+// -------------------------
+
+if (
+  this.type === "attack" &&
+  this.weapon &&
+  this.weapon.system.category === "ranged" &&
+  targetActor
+) {
+
+  const defenderSize =
+  targetActor.system.details?.size?.value ||
+  targetActor.system.size ||
+  "average";
+
+const sizeModifier =
+  SdpSizeEngine.getRangedAttackModifier(
+    defenderSize
+  );
+
+  if (sizeModifier !== 0) {
+
+    modifiers.push({
+      label: "Target Size",
+      value: sizeModifier
+    });
+
+  }
+
+}
+
+// -------------------------
+// RANGE MODIFIER
+// -------------------------
+
+if (
+  this.type === "attack" &&
+  this.weapon &&
+  this.weapon.system.category === "ranged" &&
+  targetActor
+) {
+
+  const sourceToken =
+    this.actor.getActiveTokens()[0];
+
+  const targetToken = targets[0];
+
+  if (sourceToken && targetToken) {
+
+    const path = [
+      sourceToken.center,
+      targetToken.center
+    ];
+
+    const distance =
+      canvas.grid.measurePath(path).distance;
+
+    const baseRange =
+  Number(this.weapon.system.range || 0);
+
+// =========================
+// AMMO RANGE MODIFIER
+// =========================
+
+let ammoRangeModifier = 0;
+
+if (this.weapon.system.currentAmmo) {
+
+  const ammo =
+    this.actor.items.get(
+      this.weapon.system.currentAmmo
+    );
+
+  if (ammo) {
+
+    ammoRangeModifier =
+      Number(ammo.system.rangeModifier || 0);
+
+  }
+
+}
+
+const finalRange =
+  Math.max(
+    0,
+    baseRange + ammoRangeModifier
+  );
+
+    const bands = CONFIG.SDP.rangeBands;
+
+    let rangeModifier = 0;
+    let rangeLabel = "";
+
+    if (distance <= finalRange * bands.pointBlank.multiplier) {
+
+      rangeModifier = bands.pointBlank.modifier;
+      rangeLabel = bands.pointBlank.label;
+
+    }
+    else if (distance <= finalRange * bands.short.multiplier) {
+
+      rangeModifier = bands.short.modifier;
+      rangeLabel = bands.short.label;
+
+    }
+    else if (distance <= finalRange * bands.normal.multiplier) {
+
+      rangeModifier = bands.normal.modifier;
+      rangeLabel = bands.normal.label;
+
+    }
+    else if (distance <= finalRange * bands.long.multiplier) {
+
+      rangeModifier = bands.long.modifier;
+      rangeLabel = bands.long.label;
+
+    }
+    else if (distance <= finalRange * bands.extreme.multiplier) {
+
+      rangeModifier = bands.extreme.modifier;
+      rangeLabel = bands.extreme.label;
+
+    }
+
+    modifiers.push({
+      label: `Range (${rangeLabel})`,
+      value: rangeModifier
+    });
+
+  }
+
+}
+
+  // =========================
 // WEAPON TRAITS → MODIFIERS
 // =========================
 
@@ -131,6 +311,22 @@ if (this.weapon) {
       modifiers.push({ label: "Impractical", value: -10 });
     }
 
+    if (key === "fast") {
+  modifiers.push({ label: "Fast", value: 10 });
+}
+
+if (key === "slow") {
+  modifiers.push({ label: "Slow", value: -10 });
+}
+
+if (key === "accurate") {
+  modifiers.push({ label: "Accurate", value: 10 });
+}
+
+if (key === "unbalanced") {
+  modifiers.push({ label: "Unbalanced", value: -10 });
+}
+
   }
 }
   this._modifiers = modifiers;
@@ -161,9 +357,26 @@ const hitLocations = Object.entries(
       : data.modifier
 }));
 
+const hasFinesseTrait =
+  this.weapon &&
+  (
+    this.weapon.system.traits || []
+  ).some(t => {
+
+    if (!t) return false;
+
+    if (typeof t === "string") {
+      return t.toLowerCase() === "finesse";
+    }
+
+    return (t.key || "").toLowerCase() === "finesse";
+
+  });
+
 return {
     actor: this.actor,
     label: this.label,
+    hasFinesseTrait,
     target: this.target,
     isAttack: this.type === "attack",
     talents,
@@ -199,49 +412,14 @@ const updatePreview = () => {
 
   let total = mod + diff;
 
-  if (this.weapon) {
+  for (const modifier of this._modifiers || []) {
 
-  const weaponTraits = this.weapon.system.traits || [];
-  const itemTraits = this.weapon.system.itemTraits || [];
+  if (
+    modifier.label === "Custom" ||
+    modifier.label === "Difficulty"
+  ) continue;
 
-  const allTraits = [...weaponTraits, ...itemTraits];
-
-  for (const t of allTraits) {
-
-    const key = t?.key;
-    if (!key) continue;
-
-    if (key === "precise") total += 10;
-    if (key === "imprecise") total -= 10;
-    if (key === "practical") total += 10;
-    if (key === "impractical") total -= 10;
-  }
-}
-
-  const conditions = this.actor.system.conditionTotals || {};
-
-  for (const key in conditions) {
-    const value = conditions[key];
-    if (!value) continue;
-
-    const stack = value === true ? 1 : value;
-    const config = CONFIG.SDP.conditionConfig?.[key];
-    if (!config?.modifier) continue;
-
-    total += config.modifier * stack;
-  }
-
-if (this.weapon) {
-
-  for (const t of this.weapon.system.traits || []) {
-
-    if (!t) continue;
-
-    const key = (t.key || "").toLowerCase();
-
-    if (key === "unbalanced") total -= 10;
-    if (key === "accurate") total += 10;
-  }
+  total += Number(modifier.value || 0);
 
 }
 
@@ -399,6 +577,12 @@ const finesse = root.querySelector('[name="finesse"]')?.checked || false;
 // =========================
 
 game.sdp.dialogModifiers = {
+  dynamicModifiers:
+  (this._modifiers || [])
+    .filter(m =>
+      m.label !== "Custom" &&
+      m.label !== "Difficulty"
+    ),
   totalMod: modValue + diffValue,
   hitLocationProfile,
 
