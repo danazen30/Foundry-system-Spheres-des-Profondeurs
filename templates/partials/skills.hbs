@@ -121,7 +121,11 @@
             <!-- 🔥 NAME + CAREER BUTTON -->
             <td class="skill-name-cell">
 
-              <span>{{item.name}}</span>
+              <span class="roll-skill-name"
+      data-action="rollSkill"
+      data-item-id="{{item.id}}">
+  {{item.name}}
+</span>
 
               {{#if ../currentCareer}}
                 {{#if (includes ../currentCareer.system.skills item.name)}}
