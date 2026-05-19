@@ -26,30 +26,30 @@ Hooks.on("createActor", async (actor) => {
     return;
   }
 
-  // =========================
-  // PACK
-  // =========================
+// =========================
+// SKILLS PACK
+// =========================
 
-  const pack =
-    game.packs.get("sdp.skills");
+const skillsPack =
+  game.packs.get("sdp.skills");
 
-  if (!pack) {
+  if (!skillsPack) {
 
-    console.error(
-      "SDP | skills pack not found"
-    );
+  console.error(
+    "SDP | skills pack not found"
+  );
 
-    return;
-  }
+  return;
+}
 
-  const docs =
-    await pack.getDocuments();
+  const skillDocs =
+  await skillsPack.getDocuments();
 
   // =========================
   // BASIC SKILLS
   // =========================
 
-  const basicSkills = docs.filter(skill => {
+  const basicSkills = skillDocs.filter(skill => {
 
     return (
       skill.type === "skill" &&
@@ -71,22 +71,125 @@ Hooks.on("createActor", async (actor) => {
   ];
 
   const advancedSkills =
-    docs.filter(skill =>
+  skillDocs.filter(skill =>
       defaultAdvancedSkills.includes(
         skill.name
       )
     );
 
+    // =========================
+// DEFAULT CURRENCIES
+// =========================
+
+const currencies = [
+
+  {
+    name: "Platinum coin",
+    type: "currency",
+
+    system: {
+
+      denomination: {
+        value: "platinum"
+      },
+
+      quantity: {
+        value: 0
+      },
+
+      encumbrance: {
+  value: 0.001
+}
+
+    }
+
+  },
+
+  {
+    name: "Gold coin",
+    type: "currency",
+
+    system: {
+
+      denomination: {
+        value: "gold"
+      },
+
+      quantity: {
+        value: 0
+      },
+
+      encumbrance: {
+  value: 0.001
+}
+
+    }
+
+  },
+
+  {
+    name: "Silver coin",
+    type: "currency",
+
+    system: {
+
+      denomination: {
+        value: "silver"
+      },
+
+      quantity: {
+        value: 0
+      },
+
+      encumbrance: {
+  value: 0.001
+}
+
+    }
+
+  },
+
+  {
+    name: "Copper coin",
+    type: "currency",
+
+    system: {
+
+      denomination: {
+        value: "copper"
+      },
+
+      quantity: {
+        value: 0
+      },
+
+      encumbrance: {
+  value: 0.001
+}
+
+    }
+
+  }
+
+];
+
   // =========================
   // CREATE
   // =========================
 
-  const toCreate = [
-    ...basicSkills,
-    ...advancedSkills
-  ].map(skill =>
-    skill.toObject()
-  );
+ const toCreate = [
+
+  ...basicSkills,
+
+  ...advancedSkills,
+
+  ...currencies
+
+].map(item =>
+  item.toObject
+    ? item.toObject()
+    : item
+);
 
   if (!toCreate.length) {
     return;
