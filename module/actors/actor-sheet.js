@@ -148,7 +148,8 @@ for (const item of this.document.items) {
 
   const advances = Number(item.system.advances || 0);
 
-  const isPurchased = advances > 0;
+  const isPurchased =
+  advances > 0;
 
   const isAvailable =
     isCareerTalent &&
