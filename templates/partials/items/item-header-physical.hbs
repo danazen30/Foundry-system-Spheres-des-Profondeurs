@@ -1,0 +1,123 @@
+<div class="item-header physical-header">
+
+  <!-- NAME -->
+  <div class="item-name-row">
+    <input
+      type="text"
+      name="name"
+      value="{{item.name}}"
+      placeholder="Item Name"
+    />
+  </div>
+
+  <!-- BODY -->
+  <div class="item-header-body">
+
+    <!-- IMAGE -->
+    <div class="item-header-image">
+      <img
+        src="{{item.img}}"
+        title="{{item.name}}"
+        data-edit="img"
+      />
+    </div>
+
+    <!-- META -->
+    <div class="item-header-main">
+
+      <div class="item-meta-wrapper">
+
+        <!-- TOP -->
+        <div class="item-meta-grid top-row">
+
+          <!-- TYPE -->
+          <div class="meta-field">
+
+            <label>Type</label>
+
+            <div class="meta-value">
+              {{item.type}}
+            </div>
+
+          </div>
+
+          <!-- PRICE -->
+          <div class="meta-field price-field">
+
+            <label>Price</label>
+
+            <div class="price-grid">
+
+              <input
+                type="number"
+                name="system.price.platinum"
+                value="{{system.price.platinum}}"
+                placeholder="-"
+              />
+
+              <input
+                type="number"
+                name="system.price.gold"
+                value="{{system.price.gold}}"
+                placeholder="-"
+              />
+
+              <input
+                type="number"
+                name="system.price.silver"
+                value="{{system.price.silver}}"
+                placeholder="-"
+              />
+
+              <input
+                type="number"
+                name="system.price.copper"
+                value="{{system.price.copper}}"
+                placeholder="-"
+              />
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- BOTTOM -->
+        <div class="item-meta-grid bottom-row">
+
+          <!-- QUANTITY -->
+          <div class="meta-field qty-field">
+
+            <label>Qty</label>
+
+            <input
+              type="number"
+              name="system.quantity.value"
+              value="{{system.quantity.value}}"
+            />
+
+          </div>
+
+          <!-- WEIGHT -->
+          <div class="meta-field weight-field">
+
+            <label>Weight</label>
+
+            <input
+              type="number"
+              step="0.1"
+              name="system.encumbrance.value"
+              value="{{system.encumbrance.value}}"
+            />
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

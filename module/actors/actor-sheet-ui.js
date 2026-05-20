@@ -1,6 +1,6 @@
 import { SimpleDialog } from "../apps/simple-dialog.js";
 import { SdpConditionEngine } from "../system/condition-engine.js";
-import { registerArmorRows} from "./actor-sheet-utils.js";
+import { registerArmorRows, registerTalentRows} from "./actor-sheet-utils.js";
 
 export function registerUIListeners(sheet, root) {
 
@@ -15,6 +15,8 @@ registerConditionStates(sheet, root);
 registerQuantityControls(sheet, root);
 
 registerArmorRows(root);
+
+registerTalentRows(sheet, root);
 
 registerEditorToggles(root);
 

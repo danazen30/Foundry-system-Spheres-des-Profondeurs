@@ -143,3 +143,193 @@
 .weapon-img img:hover {
   opacity: 0.8;
 }
+
+/* =========================
+   ITEM HEADER PHYSICAL
+========================= */
+
+.item-header {
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+
+  margin-bottom: 12px;
+}
+
+.item-header-body {
+  display: flex;
+  gap: 12px;
+}
+
+.item-header-image img {
+  width: 96px;
+  height: 96px;
+
+  object-fit: cover;
+
+  border: 1px solid #555;
+  border-radius: 6px;
+
+  cursor: pointer;
+}
+
+.item-header-main {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.item-name-row input {
+  width: 100%;
+
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.item-meta-wrapper {
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+}
+
+.item-meta-grid {
+  display: grid;
+
+  gap: 8px;
+}
+
+.top-row {
+  grid-template-columns:
+    1fr 5fr;
+}
+
+.bottom-row {
+  grid-template-columns:
+    1fr 1fr;
+}
+
+.meta-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.meta-field label {
+  font-size: 11px;
+  font-weight: bold;
+
+  text-transform: uppercase;
+
+  opacity: 0.8;
+}
+
+.meta-value {
+  display: flex;
+  align-items: center;
+
+  min-height: 28px;
+
+  padding: 0 6px;
+
+  border: 1px solid #555;
+  border-radius: 4px;
+
+  background: rgba(0,0,0,0.1);
+}
+
+/* =========================
+   PRICE GRID
+========================= */
+
+.price-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 4px;
+}
+
+.price-grid input {
+  text-align: center;
+
+  min-width: 0;
+
+  padding: 0 4px;
+}
+
+/* =========================
+   ITEM TABS
+========================= */
+
+.item-tabs {
+  display: flex;
+
+  gap: 4px;
+
+  margin-bottom: 12px;
+
+  padding-bottom: 6px;
+
+  border-bottom: 1px solid #444;
+}
+
+.item-tabs button {
+  flex: 1;
+
+  padding: 8px 10px;
+
+  border: 1px solid transparent;
+  border-radius: 6px;
+
+  background: transparent;
+
+  color: inherit;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    transform 0.1s;
+}
+
+.item-tabs button:hover {
+  background: rgba(255,255,255,0.05);
+
+  border-color: #555;
+}
+
+.item-tabs button.active {
+  background: rgba(255,255,255,0.08);
+
+  border-color: #777;
+
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.04);
+}
+
+.item-tabs button:active {
+  transform: translateY(1px);
+}
+
+/* =========================
+   ITEM TAB CONTENT
+========================= */
+
+.item-description-tab,
+.item-effects-tab,
+.item-details-tab {
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+}
+

@@ -197,7 +197,7 @@ export function getWeapons(actor) {
 
 }
 
-function registerTalentRows(sheet, root) {
+export function registerTalentRows(sheet, root) {
 
   root.querySelectorAll(".talent-row").forEach(row => {
 

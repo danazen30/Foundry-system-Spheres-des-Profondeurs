@@ -82,7 +82,10 @@ async function getInjuryFromPack(location, severity, isConsequence = false) {
     "systems/sdp/templates/partials/creature-header.hbs",
     "systems/sdp/templates/partials/creature-info.hbs",
     "systems/sdp/templates/partials/creature-attributes.hbs",
-    "systems/sdp/templates/partials/creature-combat.hbs"
+    "systems/sdp/templates/partials/creature-combat.hbs",
+    "systems/sdp/templates/partials/items/item-header-physical.hbs",
+    "systems/sdp/templates/partials/items/item-description-tab.hbs",
+    "systems/sdp/templates/partials/items/item-effects-tab.hbs"
   ]);
 
   CONFIG.SDP = SDP;

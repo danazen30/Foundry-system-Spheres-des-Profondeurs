@@ -1,21 +1,37 @@
 <div class="sdp-item-sheet">
 
-<h1>
-  <input type="text" name="name" value="{{item.name}}" />
-</h1>
+{{> "systems/sdp/templates/partials/items/item-header-physical.hbs"}}
 
-<div class="weapon-img">
-  <img src="{{item.img}}" title="{{item.name}}" />
-</div>
+<!-- ========================= -->
+<!-- TABS -->
+<!-- ========================= -->
 
-<div class="form-group">
-  <label>Quantity</label>
-  <input type="number" name="system.quantity.value" value="{{system.quantity.value}}">
-</div>
+<nav class="item-tabs">
 
-<label>Weight</label>
-<input type="number" name="system.encumbrance.value" value="{{system.encumbrance.value}}" step="0.1">
+  <button
+    type="button"
+    data-tab="description"
+    class="{{#if (eq activeTab 'description')}}active{{/if}}">
+    Description
+  </button>
 
+  <button
+    type="button"
+    data-tab="details"
+    class="{{#if (eq activeTab 'details')}}active{{/if}}">
+    Details
+  </button>
+
+  <button
+    type="button"
+    data-tab="effects"
+    class="{{#if (eq activeTab 'effects')}}active{{/if}}">
+    Effects
+  </button>
+
+</nav>
+
+{{#if (eq activeTab "details")}}
 <h2>Weapon</h2>
 
 <div class="form-group">
@@ -229,5 +245,18 @@
 
 </div>
 
+{{/if}}
+
+{{#if (eq activeTab "description")}}
+
+  {{> "systems/sdp/templates/partials/items/item-description-tab.hbs"}}
+
+{{/if}}
+
+{{#if (eq activeTab "effects")}}
+
+  {{> "systems/sdp/templates/partials/items/item-effects-tab.hbs"}}
+
+{{/if}}
 
 </div>
