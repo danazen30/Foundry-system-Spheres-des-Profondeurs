@@ -1,31 +1,51 @@
 <div class="sdp-item-sheet">
 
-  <h2>{{item.name}}</h2>
+{{> "systems/sdp/templates/partials/items/item-header-simple.hbs"}}
 
-  <div class="weapon-img">
-  <img src="{{item.img}}" title="{{item.name}}" />
-</div>
+<!-- ========================= -->
+<!-- TABS -->
+<!-- ========================= -->
 
-  <label>Description</label>
-  <textarea name="system.description.value">
-    {{system.description.value}}
-  </textarea>
+<nav class="item-tabs">
 
-  <hr>
+  <button
+    type="button"
+    data-tab="description"
+    class="{{#if (eq activeTab 'description')}}active{{/if}}">
 
-  <h3>Effects</h3>
+    Description
 
-  <button data-action="create-effect">Add Effect</button>
+  </button>
 
-  <div class="effects">
-    {{#each effects}}
-      <div class="effect" data-effect-id="{{this.id}}">
-        <span>{{this.name}}</span>
+  <button
+    type="button"
+    data-tab="effects"
+    class="{{#if (eq activeTab 'effects')}}active{{/if}}">
 
-        <button data-action="edit-effect">Edit</button>
-        <button data-action="delete-effect">Delete</button>
-      </div>
-    {{/each}}
-  </div>
+    Effects
+
+  </button>
+
+</nav>
+
+<!-- ========================= -->
+<!-- DESCRIPTION -->
+<!-- ========================= -->
+
+{{#if (eq activeTab "description")}}
+
+  {{> "systems/sdp/templates/partials/items/item-description-tab.hbs"}}
+
+{{/if}}
+
+<!-- ========================= -->
+<!-- EFFECTS -->
+<!-- ========================= -->
+
+{{#if (eq activeTab "effects")}}
+
+  {{> "systems/sdp/templates/partials/items/item-effects-tab.hbs"}}
+
+{{/if}}
 
 </div>

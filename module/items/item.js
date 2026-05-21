@@ -1,3 +1,49 @@
+const DEFAULT_ITEM_IMAGES = {
+
+  weapon:
+    "systems/sdp/assets/icons/items/weapons.png",
+
+  armor:
+    "systems/sdp/assets/icons/items/armors.png",
+
+  talent:
+    "systems/sdp/assets/icons/items/talent.png",
+
+  skill:
+    "systems/sdp/assets/icons/items/skills.png",
+
+  spell:
+    "systems/sdp/assets/icons/items/spells.png",
+
+  injury:
+    "systems/sdp/assets/icons/items/injury.png",
+
+  disease:
+    "systems/sdp/assets/icons/items/diseases.png",
+
+  ammunition:
+    "systems/sdp/assets/icons/items/ammunitions.png",
+
+  clothing:
+    "systems/sdp/assets/icons/items/clothings.png",
+
+  container:
+    "systems/sdp/assets/icons/items/containers.png",
+
+  career:
+    "systems/sdp/assets/icons/items/careers.png",
+
+  specie:
+    "systems/sdp/assets/icons/items/species.png",
+
+  sign:
+    "systems/sdp/assets/icons/items/sign.png",
+
+  trait:
+    "systems/sdp/assets/icons/items/traits.png"
+
+};
+
 export class SdpItem extends Item {
 
 prepareDerivedData(){
@@ -14,86 +60,116 @@ prepareDerivedData(){
       leftLeg: 0,
       rightLeg: 0
     };
-  }
-}
-
-_onCreate(data, options, userId) {
-  super._onCreate(data, options, userId);
-
-  if (this.type === "armor") {
-    this._syncArmorEffects();
-  }
-
-if (this.type === "clothing") {
-  this._syncClothingEffects();
-}
-}
-
-async _syncArmorEffects() {
-
-  if (this.type !== "armor") return;
-
-  const isWorn = this.system.worn?.value;
-
-  for (const effect of this.effects) {
-
-    await effect.update({
-      disabled: !isWorn
-    });
 
   }
 
 }
 
-async _syncClothingEffects() {
+async _onCreate(data, options, userId) {
 
-  if (this.type !== "clothing") return;
+  await super._onCreate(
+    data,
+    options,
+    userId
+  );
 
-  const isEquipped = this.system.equipped;
+// =========================
+// DEFAULT IMAGE
+// =========================
 
-  for (const effect of this.effects) {
+const defaultImg =
+  DEFAULT_ITEM_IMAGES[this.type];
 
-    await effect.update({
-      disabled: !isEquipped
-    });
+const hasDefaultCoreIcon =
+  !this.img ||
+  this.img === "icons/svg/item-bag.svg";
 
-  }
+if (
+  defaultImg &&
+  hasDefaultCoreIcon
+) {
+
+  await this.update({
+    img: defaultImg
+  });
+
+}
+  // =========================
+  // EFFECTS
+  // =========================
+
+  await this._syncActiveEffects();
 
 }
 
 async update(data, options) {
 
-  const result = await super.update(data, options);
+  const result =
+    await super.update(data, options);
 
-  // =========================
-  // ARMOR
-  // =========================
+  const equippedChanged =
+    foundry.utils.hasProperty(
+      data,
+      "system.equipped"
+    );
 
-  if (this.type === "armor") {
+  const wornChanged =
+    foundry.utils.hasProperty(
+      data,
+      "system.worn.value"
+    );
 
-    const wornChanged = foundry.utils.hasProperty(data, "system.worn");
+  if (
+    equippedChanged ||
+    wornChanged
+  ) {
 
-    if (wornChanged) {
-      await this._syncArmorEffects();
-    }
-
-  }
-
-  // =========================
-  // CLOTHING
-  // =========================
-
-  if (this.type === "clothing") {
-
-    const equippedChanged = foundry.utils.hasProperty(data, "system.equipped");
-
-    if (equippedChanged) {
-      await this._syncClothingEffects();
-    }
+    await this._syncActiveEffects();
 
   }
 
   return result;
+
+}
+
+async _syncActiveEffects() {
+
+  // =========================
+  // DETERMINE ACTIVE STATE
+  // =========================
+
+  let active = true;
+
+  switch (this.type) {
+
+    case "weapon":
+    case "clothing":
+      active =
+        this.system.equipped === true;
+      break;
+
+    case "armor":
+      active =
+        this.system.worn?.value === true;
+      break;
+
+    default:
+      return;
+
+  }
+
+  // =========================
+  // SYNC EFFECTS
+  // =========================
+
+  for (const effect of this.effects) {
+
+    await effect.update({
+      disabled: !active
+    });
+
+  }
+
 }
 
 }

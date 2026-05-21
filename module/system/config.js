@@ -736,9 +736,10 @@ export const ARMOR_TRAITS = {
 
   padded: {
     label: "Padded",
+    type: "positive",
     description: `Designed to absorb the most violent impacts, this padding dampens blunt blows at the cost of increased weight.
     It reduces blunt damage by an amount equal to 2x the armor's AP.
-    However, the armor's weight is increased by 2 kilograms.`,
+    However, the armor's weight is increased by 1.5x.`,
     hasValue: false
   },
 

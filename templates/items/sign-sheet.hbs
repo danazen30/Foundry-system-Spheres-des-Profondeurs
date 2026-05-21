@@ -1,46 +1,167 @@
 <div class="sdp-item-sheet">
 
-  <h2>{{item.name}}</h2>
+{{> "systems/sdp/templates/partials/items/item-header-simple.hbs"}}
 
-  <div>
-    <label>Attribute:</label>
-    <input type="text" name="system.attribute" value="{{system.attribute}}">
+<!-- ========================= -->
+<!-- TABS -->
+<!-- ========================= -->
+
+<nav class="item-tabs">
+
+  <button
+    type="button"
+    data-tab="description"
+    class="{{#if (eq activeTab 'description')}}active{{/if}}">
+
+    Description
+
+  </button>
+
+  <button
+    type="button"
+    data-tab="details"
+    class="{{#if (eq activeTab 'details')}}active{{/if}}">
+
+    Details
+
+  </button>
+
+</nav>
+
+<!-- ========================= -->
+<!-- DESCRIPTION -->
+<!-- ========================= -->
+
+{{#if (eq activeTab "description")}}
+
+  {{> "systems/sdp/templates/partials/items/item-description-tab.hbs"}}
+
+{{/if}}
+
+<!-- ========================= -->
+<!-- DETAILS -->
+<!-- ========================= -->
+
+{{#if (eq activeTab "details")}}
+
+<div class="weapon-card">
+
+  <div class="weapon-card-title">
+    Sign
   </div>
 
-  <hr>
+  <div class="weapon-grid">
 
-  <div class="sign-levels">
+    <div class="form-group full-width">
 
-  <h2>Levels</h2>
+      <label>Attribute</label>
 
-  <button type="button" class="add-level">+ Add Level</button>
-
-  {{#each system.levels as |lvl key|}}
-    <div class="level-block" data-level="{{key}}">
-
-      <h3>Level {{key}}</h3>
-
-      <label>HP Dice</label>
-      <input type="text" name="system.levels.{{key}}.hp" value="{{lvl.hp}}" placeholder="1d4" />
-
-      <label>Damage Bonus</label>
-      <input type="text" name="system.levels.{{key}}.damageBonus" value="{{lvl.damageBonus}}" />
-
-      <label>Inspiration Dice</label>
-      <input type="text" name="system.levels.{{key}}.inspirationDice" value="{{lvl.inspirationDice}}" />
-
-      <div class="form-group">
-  <label>Description</label>
-  <textarea
-    name="system.levels.{{@key}}.description"
-  >{{this.description}}</textarea>
-</div>
-
-      <button type="button" class="delete-level">Delete</button>
+      <input
+        type="text"
+        name="system.attribute"
+        value="{{system.attribute}}">
 
     </div>
-  {{/each}}
+
+  </div>
 
 </div>
+
+<div class="weapon-card">
+
+  <div class="overcast-header">
+
+    <div class="weapon-card-title">
+      Levels
+    </div>
+
+    <button
+      type="button"
+      class="effect-create-button add-level">
+
+      ✚ Add Level
+
+    </button>
+
+  </div>
+
+  <div class="sign-levels-layout">
+
+    {{#each system.levels as |lvl key|}}
+
+    <div
+      class="sign-level-card"
+      data-level="{{key}}">
+
+      <button
+        type="button"
+        class="remove-overcast-special delete-level">
+
+        ✖
+
+      </button>
+
+      <div class="sign-level-title">
+        Level {{key}}
+      </div>
+
+      <div class="sign-level-grid">
+
+        <div class="form-group">
+
+          <label>HP Dice</label>
+
+          <input
+            type="text"
+            name="system.levels.{{key}}.hp"
+            value="{{lvl.hp}}"
+            placeholder="1d4">
+
+        </div>
+
+        <div class="form-group">
+
+          <label>Damage Bonus</label>
+
+          <input
+            type="text"
+            name="system.levels.{{key}}.damageBonus"
+            value="{{lvl.damageBonus}}">
+
+        </div>
+
+        <div class="form-group full-width">
+
+          <label>Inspiration Dice</label>
+
+          <input
+            type="text"
+            name="system.levels.{{key}}.inspirationDice"
+            value="{{lvl.inspirationDice}}">
+
+        </div>
+
+        <div class="form-group full-width">
+
+          <label>Description</label>
+
+          <textarea
+            class="sign-description"
+            name="system.levels.{{key}}.description"
+          >{{lvl.description}}</textarea>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    {{/each}}
+
+  </div>
+
+</div>
+
+{{/if}}
 
 </div>

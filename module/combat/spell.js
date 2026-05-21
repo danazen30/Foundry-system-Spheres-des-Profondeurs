@@ -464,6 +464,9 @@ ${overcast > 0 ? `
 </p>
 
 <div class="spell-overcast-controls">
+<button class="reset-overcast">
+  Reset Overcast
+</button>
 
   ${specialEffects.map((e, i) => {
 

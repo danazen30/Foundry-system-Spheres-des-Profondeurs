@@ -1,45 +1,116 @@
 <div class="sdp-item-sheet">
 
-<h1>
-  <input type="text" name="name" value="{{item.name}}" />
-</h1>
+{{> "systems/sdp/templates/partials/items/item-header-simple.hbs"}}
 
-<h2>Skill</h2>
+<!-- ========================= -->
+<!-- TABS -->
+<!-- ========================= -->
 
-<div class="form-group">
-  <label>Key</label>
-  <input type="text" name="system.key" value="{{system.key}}">
+<nav class="item-tabs">
+
+  <button
+    type="button"
+    data-tab="description"
+    class="{{#if (eq activeTab 'description')}}active{{/if}}">
+
+    Description
+
+  </button>
+
+  <button
+    type="button"
+    data-tab="details"
+    class="{{#if (eq activeTab 'details')}}active{{/if}}">
+
+    Details
+
+  </button>
+
+</nav>
+
+<!-- ========================= -->
+<!-- DESCRIPTION -->
+<!-- ========================= -->
+
+{{#if (eq activeTab "description")}}
+
+  {{> "systems/sdp/templates/partials/items/item-description-tab.hbs"}}
+
+{{/if}}
+
+<!-- ========================= -->
+<!-- DETAILS -->
+<!-- ========================= -->
+
+{{#if (eq activeTab "details")}}
+
+<div class="weapon-card">
+
+  <div class="weapon-card-title">
+    Skill
+  </div>
+
+  <div class="weapon-grid">
+
+    <div class="form-group full-width">
+
+      <label>Key</label>
+
+      <input
+        type="text"
+        name="system.key"
+        value="{{system.key}}">
+
+    </div>
+
+    <div class="form-group">
+
+      <label>Characteristic</label>
+
+      <select name="system.characteristic">
+
+        {{selectOptions
+          characteristicOptions
+          selected=system.characteristic}}
+
+      </select>
+
+    </div>
+
+    <div class="form-group">
+
+      <label>Type</label>
+
+      <select name="system.advanced">
+
+        <option
+          value="false"
+          {{#unless system.advanced}}
+            selected
+          {{/unless}}>
+
+          Basic
+
+        </option>
+
+        <option
+          value="true"
+          {{#if system.advanced}}
+            selected
+          {{/if}}>
+
+          Advanced
+
+        </option>
+
+      </select>
+
+    </div>
+
+  </div>
+
 </div>
 
-<div class="form-group">
-  <label>Characteristic</label>
-  <select name="system.characteristic">
-    {{selectOptions characteristicOptions selected=system.characteristic}}
-  </select>
-</div>
-
-<div class="form-group">
-  <label>Type</label>
-
-  <select name="system.advanced">
-    <option value="false" {{#unless system.advanced}}selected{{/unless}}>
-      Basic
-    </option>
-
-    <option value="true" {{#if system.advanced}}selected{{/if}}>
-      Advanced
-    </option>
-  </select>
-</div>
-
-<div class="form-group">
-  <label>Modifier</label>
-  <input type="number" name="system.modifier" value="{{system.modifier}}">
-</div>
-
-<div class="form-group">
-  <label>Description</label>
-  <textarea name="system.description">{{system.description}}</textarea>
-</div>
+{{/if}}
 
 </div>

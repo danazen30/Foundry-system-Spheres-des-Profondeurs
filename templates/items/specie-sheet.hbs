@@ -1,181 +1,425 @@
 <div class="sdp-item-sheet">
 
-<h1>
-  <input type="text" name="name" value="{{item.name}}" />
-</h1>
+{{> "systems/sdp/templates/partials/items/item-header-simple.hbs"}}
 
-<h2>Base Attributes</h2>
+<!-- ========================= -->
+<!-- TABS -->
+<!-- ========================= -->
 
-<label>Melee Ability</label>
-<input type="number" name="system.baseAttributes.meleeAbility" value="{{system.baseAttributes.meleeAbility}}">
+<nav class="item-tabs">
 
-<label>Ranged Ability</label>
-<input type="number" name="system.baseAttributes.rangedAbility" value="{{system.baseAttributes.rangedAbility}}">
+  <button
+    type="button"
+    data-tab="description"
+    class="{{#if (eq activeTab 'description')}}active{{/if}}">
 
-<label>Strength</label>
-<input type="number" name="system.baseAttributes.strength" value="{{system.baseAttributes.strength}}">
+    Description
 
-<label>Toughness</label>
-<input type="number" name="system.baseAttributes.toughness" value="{{system.baseAttributes.toughness}}">
-
-<label>Initiative</label>
-<input type="number" name="system.baseAttributes.initiative" value="{{system.baseAttributes.initiative}}">
-
-<label>Agility</label>
-<input type="number" name="system.baseAttributes.agility" value="{{system.baseAttributes.agility}}">
-
-<label>Dexterity</label>
-<input type="number" name="system.baseAttributes.dexterity" value="{{system.baseAttributes.dexterity}}">
-
-<label>Intelligence</label>
-<input type="number" name="system.baseAttributes.intelligence" value="{{system.baseAttributes.intelligence}}">
-
-<label>Will Power</label>
-<input type="number" name="system.baseAttributes.willpower" value="{{system.baseAttributes.willpower}}">
-
-<label>Charisma</label>
-<input type="number" name="system.baseAttributes.charisma" value="{{system.baseAttributes.charisma}}">
-
-<h2>Movement</h2>
-
-<label>Walk</label>
-<input type="number"
-       name="system.movement.walk"
-       value="{{system.movement.walk}}">
-
-<h2>Starting Skills</h2>
-
-<button type="button" data-action="add-skill">
-  ➕ Add Skill
-</button>
-
-<ul class="skill-list">
-  {{#each startingSkills as |skill|}}
-  <li>
-
-    <span>{{skill.name}}</span>
-
-    <button type="button" data-action="remove-skill" data-skill="{{skill.id}}">
-      ❌
-    </button>
-
-  </li>
-  {{/each}}
-</ul>
-
-<h3>Groups</h3>
-
-{{#each system.startingSkills.groups as |group index|}}
-
-<div class="group">
-
-  <label>Count</label>
-  <input type="number"
-         name="system.startingSkills.groups.{{index}}.count"
-         value="{{group.count}}">
-
-  <label>Value</label>
-  <input type="number"
-         name="system.startingSkills.groups.{{index}}.value"
-         value="{{group.value}}">
-
-</div>
-
-{{/each}}
-
-<h2>Starting Talents</h2>
-
-<button type="button" data-action="add-talent">
-  ➕ Add Fixed Talent
-</button>
-
-<ul>
-  {{#each startingTalents as |talent|}}
-  <li>
-    <span>{{talent.name}}</span>
-    <button data-action="remove-talent" data-id="{{talent.id}}">❌</button>
-  </li>
-  {{/each}}
-</ul>
-
-<h3>Talent Choices</h3>
-
-<button data-action="add-talent-choice">
-  ➕ Add Choice Group
-</button>
-
-{{#each choiceTalents as |group|}}
-
-<div class="talent-choice">
-
-  <label>Count</label>
-  <input
-  type="number"
-  class="choice-count"
-  data-index="{{@index}}"
-  value="{{group.count}}">
-
-  <button data-action="add-choice-option" data-index="{{@index}}">
-    ➕ Add Talent
   </button>
 
-  <ul>
-    {{#each group.options as |talent|}}
-<li>
-  {{talent.name}}
-      <button data-action="remove-choice-option"
-              data-index="{{@../index}}"
-              data-id="{{talent.id}}">
-        ❌
-      </button>
-    </li>
-    {{/each}}
-  </ul>
+  <button
+    type="button"
+    data-tab="details"
+    class="{{#if (eq activeTab 'details')}}active{{/if}}">
+
+    Details
+
+  </button>
+
+  <button
+    type="button"
+    data-tab="effects"
+    class="{{#if (eq activeTab 'effects')}}active{{/if}}">
+
+    Effects
+
+  </button>
+
+</nav>
+
+<!-- ========================= -->
+<!-- DESCRIPTION -->
+<!-- ========================= -->
+
+{{#if (eq activeTab "description")}}
+
+  {{> "systems/sdp/templates/partials/items/item-description-tab.hbs"}}
+
+{{/if}}
+
+<!-- ========================= -->
+<!-- DETAILS -->
+<!-- ========================= -->
+
+{{#if (eq activeTab "details")}}
+
+<!-- ========================= -->
+<!-- ATTRIBUTES -->
+<!-- ========================= -->
+
+<div class="weapon-card">
+
+  <div class="weapon-card-title">
+    Base Attributes
+  </div>
+
+  <div class="specie-attributes-grid">
+
+    <div class="form-group">
+      <label>MA</label>
+      <input type="number" name="system.baseAttributes.meleeAbility" value="{{system.baseAttributes.meleeAbility}}">
+    </div>
+
+    <div class="form-group">
+      <label>RA</label>
+      <input type="number" name="system.baseAttributes.rangedAbility" value="{{system.baseAttributes.rangedAbility}}">
+    </div>
+
+    <div class="form-group">
+      <label>S</label>
+      <input type="number" name="system.baseAttributes.strength" value="{{system.baseAttributes.strength}}">
+    </div>
+
+    <div class="form-group">
+      <label>T</label>
+      <input type="number" name="system.baseAttributes.toughness" value="{{system.baseAttributes.toughness}}">
+    </div>
+
+    <div class="form-group">
+      <label>I</label>
+      <input type="number" name="system.baseAttributes.initiative" value="{{system.baseAttributes.initiative}}">
+    </div>
+
+    <div class="form-group">
+      <label>AG</label>
+      <input type="number" name="system.baseAttributes.agility" value="{{system.baseAttributes.agility}}">
+    </div>
+
+    <div class="form-group">
+      <label>DEX</label>
+      <input type="number" name="system.baseAttributes.dexterity" value="{{system.baseAttributes.dexterity}}">
+    </div>
+
+    <div class="form-group">
+      <label>INT</label>
+      <input type="number" name="system.baseAttributes.intelligence" value="{{system.baseAttributes.intelligence}}">
+    </div>
+
+    <div class="form-group">
+      <label>WP</label>
+      <input type="number" name="system.baseAttributes.willpower" value="{{system.baseAttributes.willpower}}">
+    </div>
+
+    <div class="form-group">
+      <label>CHA</label>
+      <input type="number" name="system.baseAttributes.charisma" value="{{system.baseAttributes.charisma}}">
+    </div>
+
+  </div>
 
 </div>
 
-{{/each}}
+<!-- ========================= -->
+<!-- MOVEMENT -->
+<!-- ========================= -->
 
-<h3>Random Talents</h3>
+<div class="weapon-card">
 
-<label>Table</label>
-<select class="random-table-select">
+  <div class="weapon-card-title">
+    Movement
+  </div>
 
-  <option value="">-- None --</option>
+  <div class="specie-movement-row">
 
-  {{#each tables}}
-    <option value="{{this.id}}" {{#if (eq this.id ../system.startingTalents.random.tableId)}}selected{{/if}}>
-      {{this.name}}
-    </option>
-  {{/each}}
+    <div class="form-group">
 
-</select>
+      <label>Walk</label>
 
-<label>Count</label>
-<input type="number"
-       class="random-count"
-       value="{{system.startingTalents.random.count}}">
+      <input
+        type="number"
+        name="system.movement.walk"
+        value="{{system.movement.walk}}">
 
+    </div>
 
+  </div>
 
-<h2>Description</h2>
-<textarea name="system.description">{{system.description}}</textarea>
+</div>
 
-<h2>Effects</h2>
+<!-- ========================= -->
+<!-- SKILLS -->
+<!-- ========================= -->
 
-<button type="button" data-action="create-effect">
-  ➕ Add Effect
-</button>
+<div class="weapon-card">
 
-<ol class="effects-list">
-  {{#each effects}}
-  <li class="effect" data-effect-id="{{this.id}}">
-    <div>{{this.name}}</div>
+  <div class="specie-card-header">
 
-    <button type="button" data-action="edit-effect">✏️</button>
-    <button type="button" data-action="delete-effect">🗑️</button>
-  </li>
-  {{/each}}
-</ol>
+    <div class="weapon-card-title">
+      Starting Skills
+    </div>
+
+    <button
+      type="button"
+      class="effect-create-button"
+      data-action="add-skill">
+
+      ✚ Add Skill
+
+    </button>
+
+  </div>
+
+  <ul class="item-choice-list compact">
+
+    {{#each startingSkills as |skill|}}
+
+    <li>
+
+      <span>{{skill.name}}</span>
+
+      <button
+        type="button"
+        data-action="remove-skill"
+        data-skill="{{skill.id}}">
+
+        ✖
+
+      </button>
+
+    </li>
+
+    {{/each}}
+
+  </ul>
+
+  <div class="specie-subtitle">
+    Skill Groups
+  </div>
+
+  <div class="specie-group-list">
+
+    {{#each system.startingSkills.groups as |group index|}}
+
+    <div class="specie-group-card">
+
+      <div class="weapon-grid">
+
+        <div class="form-group">
+
+          <label>Count</label>
+
+          <input
+            type="number"
+            name="system.startingSkills.groups.{{index}}.count"
+            value="{{group.count}}">
+
+        </div>
+
+        <div class="form-group">
+
+          <label>Value</label>
+
+          <input
+            type="number"
+            name="system.startingSkills.groups.{{index}}.value"
+            value="{{group.value}}">
+
+        </div>
+
+      </div>
+
+    </div>
+
+    {{/each}}
+
+  </div>
+
+</div>
+
+<!-- ========================= -->
+<!-- TALENTS -->
+<!-- ========================= -->
+
+<div class="weapon-card">
+
+  <div class="specie-card-header">
+
+    <div class="weapon-card-title">
+      Starting Talents
+    </div>
+
+    <button
+      type="button"
+      class="effect-create-button"
+      data-action="add-talent">
+
+      ✚ Add Talent
+
+    </button>
+
+  </div>
+
+  <ul class="item-choice-list compact">
+
+    {{#each startingTalents as |talent|}}
+
+    <li>
+
+      <span>{{talent.name}}</span>
+
+      <button
+        type="button"
+        data-action="remove-talent"
+        data-id="{{talent.id}}">
+
+        ✖
+
+      </button>
+
+    </li>
+
+    {{/each}}
+
+  </ul>
+
+  <!-- CHOICES -->
+
+  <div class="specie-card-header small-top">
+
+    <div class="specie-subtitle">
+      Talent Choices
+    </div>
+
+    <button
+      type="button"
+      class="effect-create-button"
+      data-action="add-talent-choice">
+
+      ✚ Add Group
+
+    </button>
+
+  </div>
+
+  <div class="talent-choice-layout">
+
+    {{#each choiceTalents as |group|}}
+
+    <div class="talent-choice-card">
+
+      <div class="form-group">
+
+        <label>Choice Count</label>
+
+        <input
+          type="number"
+          class="choice-count"
+          data-index="{{@index}}"
+          value="{{group.count}}">
+
+      </div>
+
+      <button
+        type="button"
+        class="effect-create-button"
+        data-action="add-choice-option"
+        data-index="{{@index}}">
+
+        ✚ Add Talent
+
+      </button>
+
+      <ul class="item-choice-list compact">
+
+        {{#each group.options as |talent|}}
+
+        <li>
+
+          <span>{{talent.name}}</span>
+
+          <button
+            type="button"
+            data-action="remove-choice-option"
+            data-index="{{@../index}}"
+            data-id="{{talent.id}}">
+
+            ✖
+
+          </button>
+
+        </li>
+
+        {{/each}}
+
+      </ul>
+
+    </div>
+
+    {{/each}}
+
+  </div>
+
+  <!-- RANDOM -->
+
+  <div class="specie-subtitle">
+    Random Talents
+  </div>
+
+  <div class="weapon-grid">
+
+    <div class="form-group">
+
+      <label>Table</label>
+
+      <select class="random-table-select">
+
+        <option value="">
+          -- None --
+        </option>
+
+        {{#each tables}}
+
+        <option
+          value="{{this.id}}"
+          {{#if (eq this.id ../system.startingTalents.random.tableId)}}
+            selected
+          {{/if}}>
+
+          {{this.name}}
+
+        </option>
+
+        {{/each}}
+
+      </select>
+
+    </div>
+
+    <div class="form-group">
+
+      <label>Count</label>
+
+      <input
+        type="number"
+        class="random-count"
+        value="{{system.startingTalents.random.count}}">
+
+    </div>
+
+  </div>
+
+</div>
+
+{{/if}}
+
+<!-- ========================= -->
+<!-- EFFECTS -->
+<!-- ========================= -->
+
+{{#if (eq activeTab "effects")}}
+
+  {{> "systems/sdp/templates/partials/items/item-effects-tab.hbs"}}
+
+{{/if}}
 
 </div>

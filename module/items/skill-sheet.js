@@ -4,34 +4,76 @@ export class SdpSkillSheet extends SdpItemSheet {
 
   static PARTS = {
     sheet: {
-      template: "systems/sdp/templates/items/skill-sheet.hbs"
+      template:
+        "systems/sdp/templates/items/skill-sheet.hbs"
     }
   };
 
   async _prepareContext() {
 
-  const system = this.document.system;
+    const context =
+      await super._prepareContext();
 
-  // 🔥 FIX SELECT BOOLEAN
-  system.advanced = system.advanced === true || system.advanced === "true";
+    context.system.advanced =
+      context.system.advanced === true ||
+      context.system.advanced === "true";
 
-  return {
-    item: this.document,
-    system: system,
+    context.characteristicOptions = [
 
-    characteristicOptions: [
-      { value: "meleeAbility", label: "Melee Ability" },
-      { value: "rangedAbility", label: "Ranged Ability" },
-      { value: "strength", label: "Strength" },
-      { value: "toughness", label: "Toughness" },
-      { value: "initiative", label: "Initiative" },
-      { value: "agility", label: "Agility" },
-      { value: "dexterity", label: "Dexterity" },
-      { value: "intelligence", label: "Intelligence" },
-      { value: "willpower", label: "Willpower" },
-      { value: "charisma", label: "Charisma" }
-    ]
-  };
-}
+      {
+        value: "meleeAbility",
+        label: "Melee Ability"
+      },
+
+      {
+        value: "rangedAbility",
+        label: "Ranged Ability"
+      },
+
+      {
+        value: "strength",
+        label: "Strength"
+      },
+
+      {
+        value: "toughness",
+        label: "Toughness"
+      },
+
+      {
+        value: "initiative",
+        label: "Initiative"
+      },
+
+      {
+        value: "agility",
+        label: "Agility"
+      },
+
+      {
+        value: "dexterity",
+        label: "Dexterity"
+      },
+
+      {
+        value: "intelligence",
+        label: "Intelligence"
+      },
+
+      {
+        value: "willpower",
+        label: "Willpower"
+      },
+
+      {
+        value: "charisma",
+        label: "Charisma"
+      }
+
+    ];
+
+    return context;
+
+  }
 
 }

@@ -1,88 +1,238 @@
 <div class="sdp-item-sheet">
 
-<h1>
-  <input type="text" name="name" value="{{item.name}}" />
-</h1>
+{{> "systems/sdp/templates/partials/items/item-header-simple.hbs"}}
 
-<!-- ===================== -->
-<!-- CORE DATA -->
-<!-- ===================== -->
+<!-- ========================= -->
+<!-- TABS -->
+<!-- ========================= -->
 
-<div class="form-group">
-  <label>Key</label>
-  <input type="text" name="system.key" value="{{system.key}}">
+<nav class="item-tabs">
+
+<button
+    type="button"
+    data-tab="description"
+    class="{{#if (eq activeTab 'description')}}active{{/if}}">
+
+    Description
+
+  </button>
+
+  <button
+    type="button"
+    data-tab="details"
+    class="{{#if (eq activeTab 'details')}}active{{/if}}">
+
+    Details
+
+  </button>
+
+  <button
+    type="button"
+    data-tab="effects"
+    class="{{#if (eq activeTab 'effects')}}active{{/if}}">
+
+    Effects
+
+  </button>
+
+</nav>
+
+<!-- ========================= -->
+<!-- DETAILS -->
+<!-- ========================= -->
+
+{{#if (eq activeTab "details")}}
+
+<div class="weapon-card">
+
+  <div class="weapon-card-title">
+    Talent
+  </div>
+
+  <div class="weapon-grid">
+
+    <div class="form-group">
+
+      <label>Advances</label>
+
+      <input
+        type="number"
+        name="system.advances"
+        value="{{system.advances}}" />
+
+    </div>
+
+    <div class="form-group">
+
+      <label>Max Advances</label>
+
+      <input
+        type="text"
+        name="system.max"
+        value="{{system.max}}" />
+
+    </div>
+
+    <div class="compact-checkbox">
+
+      <input
+        type="checkbox"
+        name="system.canAdvance"
+        {{checked system.canAdvance}}>
+
+      <label>Can Advance</label>
+
+    </div>
+
+  </div>
+
 </div>
 
-<div class="form-group">
-  <label>Advances</label>
-  <input type="number" name="system.advances" value="{{system.advances}}">
+{{#if user.isGM}}
+
+<div class="weapon-card">
+
+  <div class="weapon-card-title">
+    GM Notes
+  </div>
+
+  <div
+    class="note-display"
+    data-display="gmNotes">
+
+    {{{editors.gmNotes}}}
+
+  </div>
+
+  <div
+    class="note-editor"
+    data-editor="gmNotes"
+    style="display:none;">
+
+    <prose-mirror
+      name="system.gmNotes"
+      value="{{system.gmNotes}}">
+
+      {{{system.gmNotes}}}
+
+    </prose-mirror>
+
+  </div>
+
+  <button
+    type="button"
+    class="note-edit-btn"
+    data-action="toggleEditor"
+    data-target="gmNotes">
+
+    ✏️ Edit
+
+  </button>
+
 </div>
 
-<div class="form-group">
-  <label>Max Advances</label>
-  <input type="text" name="system.max" value="{{system.max}}">
-</div>
+{{/if}}
 
-<div class="form-group">
-  <label>Can Advance</label>
-  <input type="checkbox" name="system.canAdvance" {{checked system.canAdvance}}>
-</div>
+{{/if}}
 
-<!-- ===================== -->
+<!-- ========================= -->
 <!-- DESCRIPTION -->
-<!-- ===================== -->
+<!-- ========================= -->
 
-<div class="form-group">
-  <label>Description</label>
-  <textarea name="system.description">{{system.description}}</textarea>
+{{#if (eq activeTab "description")}}
+
+<div class="weapon-card">
+
+  <div class="weapon-card-title">
+    Description
+  </div>
+
+  <div
+    class="note-display"
+    data-display="description">
+
+    {{{editors.description}}}
+
+  </div>
+
+  <div
+    class="note-editor"
+    data-editor="description"
+    style="display:none;">
+
+    <prose-mirror
+      name="system.description"
+      value="{{system.description}}">
+
+      {{{system.description}}}
+
+    </prose-mirror>
+
+  </div>
+
+  <button
+    type="button"
+    class="note-edit-btn"
+    data-action="toggleEditor"
+    data-target="description">
+
+    ✏️ Edit
+
+  </button>
+
 </div>
 
-<div class="form-group">
-  <label>Player Notes</label>
-  <textarea name="system.playerNotes">{{system.playerNotes}}</textarea>
+<div class="weapon-card">
+
+  <div class="weapon-card-title">
+    Player Notes
+  </div>
+
+  <div
+    class="note-display"
+    data-display="playerNotes">
+
+    {{{editors.playerNotes}}}
+
+  </div>
+
+  <div
+    class="note-editor"
+    data-editor="playerNotes"
+    style="display:none;">
+
+    <prose-mirror
+      name="system.playerNotes"
+      value="{{system.playerNotes}}">
+
+      {{{system.playerNotes}}}
+
+    </prose-mirror>
+
+  </div>
+
+  <button
+    type="button"
+    class="note-edit-btn"
+    data-action="toggleEditor"
+    data-target="playerNotes">
+
+    ✏️ Edit
+
+  </button>
+
 </div>
 
-<div class="form-group">
-  <label>GM Notes</label>
-  <textarea name="system.gmNotes">{{system.gmNotes}}</textarea>
-</div>
+{{/if}}
 
-<!-- ===================== -->
+<!-- ========================= -->
 <!-- EFFECTS -->
-<!-- ===================== -->
+<!-- ========================= -->
 
-<h2>Effects</h2>
+{{#if (eq activeTab "effects")}}
 
-<button type="button" data-action="create-effect">
-  ➕ Add Effect
-</button>
+{{> "systems/sdp/templates/partials/items/item-effects-tab.hbs"}}
 
-<ol class="effects-list">
-
-  {{#each effects}}
-
-  <li class="effect flexrow" data-effect-id="{{this.id}}">
-
-    <div class="effect-name">
-      {{this.name}}
-    </div>
-
-    <div class="effect-controls">
-
-      <button type="button" data-action="edit-effect">
-        ✏️
-      </button>
-
-      <button type="button" data-action="delete-effect">
-        🗑️
-      </button>
-
-    </div>
-
-  </li>
-
-  {{/each}}
-
-</ol>
+{{/if}}
 
 </div>

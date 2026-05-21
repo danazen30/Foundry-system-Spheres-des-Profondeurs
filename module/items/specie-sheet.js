@@ -3,195 +3,293 @@ import { SkillSelectorApp } from "../apps/skill-selector.js";
 
 export class SdpSpecieSheet extends SdpItemSheet {
 
+  constructor(...args) {
+
+    super(...args);
+
+    this.activeTab = "description";
+
+  }
+
   static PARTS = {
     sheet: {
-      template: "systems/sdp/templates/items/specie-sheet.hbs"
+      template:
+        "systems/sdp/templates/items/specie-sheet.hbs"
     }
   };
 
+  // =========================
+  // CONTEXT
+  // =========================
+
   async _prepareContext() {
 
-    const choices = this.document.system.startingSkills?.choices || [];
+    const context =
+      await super._prepareContext();
 
-    const tables = game.tables.map(t => ({
-      id: t.id,
-      name: t.name
-    }));
+    context.tables =
+      game.tables.map(t => ({
+        id: t.id,
+        name: t.name
+      }));
 
-    const skills = choices.map(id => {
-      const skill = game.items.get(id);
-      return {
-        id,
-        name: skill?.name || "Unknown Skill"
-      };
-    });
+    context.startingSkills =
+      this._resolveDocuments(
+        this.document.system
+          .startingSkills?.choices || [],
+        "Unknown Skill"
+      );
 
-    const talentIds = this.document.system.startingTalents?.fixed || [];
+    context.startingTalents =
+      this._resolveDocuments(
+        this.document.system
+          .startingTalents?.fixed || [],
+        "Unknown Talent"
+      );
 
-    const talents = talentIds.map(id => {
-      const talent = game.items.get(id);
-      return {
-        id,
-        name: talent?.name || "Unknown Talent"
-      };
-    });
+    context.choiceTalents =
+      (
+        this._getTalentData().choices || []
+      ).map(group => ({
 
-    const choiceTalents = (this.document.system.startingTalents?.choices || []).map(group => {
-
-      const options = (group.options || []).map(id => {
-        const talent = game.items.get(id);
-        return {
-          id,
-          name: talent?.name || "Unknown Talent"
-        };
-      });
-
-      return {
         count: group.count,
-        options
-      };
 
-    });
+        options:
+          this._resolveDocuments(
+            group.options || [],
+            "Unknown Talent"
+          )
 
-    return {
-      item: this.document,
-      system: this.document.system,
-      effects: this.document.effects,
-      startingSkills: skills,
-      startingTalents: talents,
-      choiceTalents,
-      tables
-    };
+      }));
+
+    return context;
+
   }
 
+  // =========================
+  // RENDER
+  // =========================
+
   _onRender(context, options) {
-    super._onRender(context, options);
 
-    const root = this.element;
+    super._onRender(
+      context,
+      options
+    );
 
-    // =========================
-    // BUTTON HANDLERS
-    // =========================
+    const root =
+      this.getRoot();
 
-    root.querySelectorAll("[data-action]").forEach(el => {
+    root.querySelectorAll(
+      "[data-action]"
+    ).forEach(el => {
 
-      el.addEventListener("click", (event) => {
+      el.addEventListener(
+        "click",
+        event => {
 
-        const action = el.dataset.action;
+          const action =
+            el.dataset.action;
 
-        switch (action) {
+          switch (action) {
 
-          case "create-effect": this._createEffect(); break;
-          case "edit-effect": this._editEffect(event); break;
-          case "delete-effect": this._deleteEffect(event); break;
+            case "add-skill":
+              this._addSkill();
+              break;
 
-          case "add-skill": this._addSkill(); break;
-          case "remove-skill": this._removeSkill(event); break;
+            case "remove-skill":
+              this._removeSkill(event);
+              break;
 
-          case "add-talent": this._addTalent(); break;
-          case "remove-talent": this._removeTalent(event); break;
+            case "add-talent":
+              this._addTalent();
+              break;
 
-          case "add-talent-choice": this._addTalentChoice(); break;
-          case "add-choice-option": this._addChoiceOption(event); break;
-          case "remove-choice-option": this._removeChoiceOption(event); break;
+            case "remove-talent":
+              this._removeTalent(event);
+              break;
+
+            case "add-talent-choice":
+              this._addTalentChoice();
+              break;
+
+            case "add-choice-option":
+              this._addChoiceOption(event);
+              break;
+
+            case "remove-choice-option":
+              this._removeChoiceOption(event);
+              break;
+
+          }
 
         }
-
-      });
+      );
 
     });
 
-    // =========================
-    // CHOICE COUNT
-    // =========================
+    root.querySelectorAll(
+      ".choice-count"
+    ).forEach(input => {
 
-    root.querySelectorAll(".choice-count").forEach(input => {
+      input.addEventListener(
+        "change",
+        async event => {
 
-      input.addEventListener("change", async (event) => {
+          const index =
+            Number(
+              event.target.dataset.index
+            );
 
-        const index = Number(event.target.dataset.index);
-        const value = Number(event.target.value);
+          const value =
+            Number(
+              event.target.value
+            );
 
-        const base = this.document.system.startingTalents || {};
+          const talents =
+            this._getTalentData();
 
-        const talents = {
-          fixed: Array.isArray(base.fixed) ? base.fixed : [],
-          choices: Array.isArray(base.choices) ? base.choices : [],
-          random: typeof base.random === "object" ? base.random : { tableId: "", count: 1 }
-        };
-
-        const choices = [...talents.choices];
-
-        if (!choices[index]) return;
-
-        choices[index].count = value;
-
-        await this.document.update({
-          "system.startingTalents": {
-            ...talents,
-            choices
+          if (!talents.choices[index]) {
+            return;
           }
-        });
 
-      });
+          talents.choices[index].count =
+            value;
+
+          await this._updateTalents(
+            talents
+          );
+
+        }
+      );
 
     });
 
-    // =========================
-    // RANDOM TABLE
-    // =========================
+    root.querySelector(
+      ".random-table-select"
+    )?.addEventListener(
+      "change",
+      async event => {
 
-    root.querySelector(".random-table-select")?.addEventListener("change", async (e) => {
+        const talents =
+          this._getTalentData();
 
-      const tableId = e.target.value;
+        talents.random.tableId =
+          event.target.value;
 
-      const base = this.document.system.startingTalents || {};
+        await this._updateTalents(
+          talents
+        );
 
-      const talents = {
-        fixed: Array.isArray(base.fixed) ? base.fixed : [],
-        choices: Array.isArray(base.choices) ? base.choices : [],
-        random: typeof base.random === "object" ? base.random : { tableId: "", count: 1 }
+      }
+    );
+
+    root.querySelector(
+      ".random-count"
+    )?.addEventListener(
+      "change",
+      async event => {
+
+        const talents =
+          this._getTalentData();
+
+        talents.random.count =
+          Number(
+            event.target.value
+          );
+
+        await this._updateTalents(
+          talents
+        );
+
+      }
+    );
+
+  }
+
+  // =========================
+  // HELPERS
+  // =========================
+
+  _resolveDocuments(ids, fallback) {
+
+    return ids.map(id => {
+
+      const doc =
+        game.items.get(id);
+
+      return {
+        id,
+        name:
+          doc?.name || fallback
       };
 
-      await this.document.update({
-        "system.startingTalents": {
-          ...talents,
-          random: {
-            ...talents.random,
-            tableId
-          }
-        }
-      });
-
     });
 
-    // =========================
-    // RANDOM COUNT
-    // =========================
+  }
 
-    root.querySelector(".random-count")?.addEventListener("change", async (e) => {
+  _getTalentData() {
 
-      const count = Number(e.target.value);
+    const base =
+      this.document.system
+        .startingTalents || {};
 
-      const base = this.document.system.startingTalents || {};
+    return {
 
-      const talents = {
-        fixed: Array.isArray(base.fixed) ? base.fixed : [],
-        choices: Array.isArray(base.choices) ? base.choices : [],
-        random: typeof base.random === "object" ? base.random : { tableId: "", count: 1 }
-      };
+      fixed:
+        Array.isArray(base.fixed)
+          ? [...base.fixed]
+          : [],
 
-      await this.document.update({
-        "system.startingTalents": {
-          ...talents,
-          random: {
-            ...talents.random,
-            count
-          }
-        }
+      choices:
+        Array.isArray(base.choices)
+          ? foundry.utils.deepClone(
+              base.choices
+            )
+          : [],
+
+      random:
+        typeof base.random === "object"
+          ? foundry.utils.deepClone(
+              base.random
+            )
+          : {
+              tableId: "",
+              count: 1
+            }
+
+    };
+
+  }
+
+  async _updateTalents(talents) {
+
+    await this.document.update({
+      "system.startingTalents":
+        talents
+    });
+
+  }
+
+  async _openSelector(type, callback) {
+
+    const items =
+      game.items
+        .filter(i => i.type === type)
+        .map(i => ({
+          id: i.id,
+          name: i.name
+        }));
+
+    const app =
+      new SkillSelectorApp({
+
+        skills: items,
+        callback
+
       });
 
-    });
+    app.render(true);
 
   }
 
@@ -201,93 +299,109 @@ export class SdpSpecieSheet extends SdpItemSheet {
 
   async _addSkill() {
 
-    const skills = game.items
-      .filter(i => i.type === "skill")
-      .map(s => ({ id: s.id, name: s.name }));
+    await this._openSelector(
+      "skill",
+      async skillId => {
 
-    const app = new SkillSelectorApp({
-      skills,
-      callback: async (skillId) => {
+        if (
+          !this.document.system
+            .startingSkills
+        ) {
 
-        if (!this.document.system.startingSkills) {
           await this.document.update({
             "system.startingSkills": {
               choices: [],
               groups: [
-                { count: 3, value: 3 },
-                { count: 3, value: 5 }
+                {
+                  count: 3,
+                  value: 3
+                },
+                {
+                  count: 3,
+                  value: 5
+                }
               ]
             }
           });
+
         }
 
-        const current = this.document.system.startingSkills?.choices || [];
+        const current =
+          this.document.system
+            .startingSkills?.choices || [];
 
         await this.document.update({
-          "system.startingSkills.choices": [...current, skillId]
+          "system.startingSkills.choices": [
+            ...current,
+            skillId
+          ]
         });
 
       }
-    });
+    );
 
-    app.render(true);
   }
 
   async _removeSkill(event) {
 
-    const skillId = event.currentTarget.dataset.skill;
-    const current = this.document.system.startingSkills.choices || [];
+    const skillId =
+      event.currentTarget.dataset.skill;
+
+    const current =
+      this.document.system
+        .startingSkills?.choices || [];
 
     await this.document.update({
-      "system.startingSkills.choices": current.filter(id => id !== skillId)
+      "system.startingSkills.choices":
+        current.filter(
+          id => id !== skillId
+        )
     });
 
   }
 
   // =========================
-  // TALENTS FIXED
+  // FIXED TALENTS
   // =========================
 
   async _addTalent() {
 
-    const talents = game.items
-      .filter(i => i.type === "talent")
-      .map(t => ({ id: t.id, name: t.name }));
+    await this._openSelector(
+      "talent",
+      async talentId => {
 
-    const app = new SkillSelectorApp({
-      skills: talents,
-      callback: async (talentId) => {
+        const talents =
+          this._getTalentData();
 
-        if (!this.document.system.startingTalents) {
-          await this.document.update({
-            "system.startingTalents": {
-              fixed: [],
-              choices: [],
-              random: { tableId: "", count: 1 }
-            }
-          });
-        }
+        talents.fixed.push(
+          talentId
+        );
 
-        const current = this.document.system.startingTalents.fixed || [];
-
-        await this.document.update({
-          "system.startingTalents.fixed": [...current, talentId]
-        });
+        await this._updateTalents(
+          talents
+        );
 
       }
-    });
+    );
 
-    app.render(true);
   }
 
   async _removeTalent(event) {
 
-    const id = event.currentTarget.dataset.id;
-    const current = this.document.system.startingTalents.fixed || [];
+    const id =
+      event.currentTarget.dataset.id;
 
-    await this.document.update({
-      "system.startingTalents.fixed": current.filter(t => t !== id)
-    });
+    const talents =
+      this._getTalentData();
+
+    talents.fixed =
+      talents.fixed.filter(
+        t => t !== id
+      );
+
+    await this._updateTalents(
+      talents
+    );
 
   }
 
@@ -297,95 +411,84 @@ export class SdpSpecieSheet extends SdpItemSheet {
 
   async _addTalentChoice() {
 
-    const base = this.document.system.startingTalents || {};
+    const talents =
+      this._getTalentData();
 
-    const talents = {
-      fixed: Array.isArray(base.fixed) ? base.fixed : [],
-      choices: Array.isArray(base.choices) ? base.choices : [],
-      random: typeof base.random === "object" ? base.random : { tableId: "", count: 1 }
-    };
-
-    const choices = [...talents.choices, { count: 1, options: [] }];
-
-    await this.document.update({
-      "system.startingTalents": {
-        ...talents,
-        choices
-      }
+    talents.choices.push({
+      count: 1,
+      options: []
     });
+
+    await this._updateTalents(
+      talents
+    );
 
   }
 
   async _addChoiceOption(event) {
 
-    const index = Number(event.currentTarget.dataset.index);
+    const index =
+      Number(
+        event.currentTarget.dataset.index
+      );
 
-    const talentsList = game.items
-      .filter(i => i.type === "talent")
-      .map(t => ({ id: t.id, name: t.name }));
+    await this._openSelector(
+      "talent",
+      async talentId => {
 
-    const app = new SkillSelectorApp({
-      skills: talentsList,
-      callback: async (talentId) => {
+        const talents =
+          this._getTalentData();
 
-        const base = this.document.system.startingTalents || {};
+        if (
+          !talents.choices[index]
+        ) {
 
-        const talents = {
-          fixed: Array.isArray(base.fixed) ? base.fixed : [],
-          choices: Array.isArray(base.choices) ? base.choices : [],
-          random: typeof base.random === "object" ? base.random : { tableId: "", count: 1 }
-        };
+          talents.choices[index] = {
+            count: 1,
+            options: []
+          };
 
-        const choices = [...talents.choices];
-        const group = choices[index] || { count: 1, options: [] };
+        }
 
-        const options = Array.isArray(group.options) ? [...group.options] : [];
+        talents.choices[index]
+          .options.push(
+            talentId
+          );
 
-        group.options = [...options, talentId];
-        choices[index] = group;
-
-        await this.document.update({
-          "system.startingTalents": {
-            ...talents,
-            choices
-          }
-        });
+        await this._updateTalents(
+          talents
+        );
 
       }
-    });
+    );
 
-    app.render(true);
   }
 
   async _removeChoiceOption(event) {
 
-    const index = Number(event.currentTarget.dataset.index);
-    const id = event.currentTarget.dataset.id;
+    const index =
+      Number(
+        event.currentTarget.dataset.index
+      );
 
-    const base = this.document.system.startingTalents || {};
+    const id =
+      event.currentTarget.dataset.id;
 
-    const talents = {
-      fixed: Array.isArray(base.fixed) ? base.fixed : [],
-      choices: Array.isArray(base.choices) ? base.choices : [],
-      random: typeof base.random === "object" ? base.random : { tableId: "", count: 1 }
-    };
+    const talents =
+      this._getTalentData();
 
-    const choices = [...talents.choices];
-    const group = choices[index];
+    const group =
+      talents.choices[index];
 
     if (!group) return;
 
-    const options = Array.isArray(group.options) ? [...group.options] : [];
+    group.options =
+      (group.options || [])
+        .filter(t => t !== id);
 
-    group.options = options.filter(t => t !== id);
-    choices[index] = group;
-
-    await this.document.update({
-      "system.startingTalents": {
-        ...talents,
-        choices
-      }
-    });
+    await this._updateTalents(
+      talents
+    );
 
   }
 

@@ -1,142 +1,381 @@
 <div class="sdp-item-sheet">
 
-<h1>
-  <input type="text" name="name" value="{{item.name}}" />
-</h1>
+{{> "systems/sdp/templates/partials/items/item-header-simple.hbs"}}
 
-<div class="spell-img">
-  <img 
-    src="{{item.img}}" 
-    data-edit="img" 
-    title="{{item.name}}"
-  />
-</div>
+<!-- ========================= -->
+<!-- TABS -->
+<!-- ========================= -->
 
-<h2>Spell</h2>
+<nav class="item-tabs">
 
-<div class="form-group">
-  <label>Magic Type</label>
-  <select name="system.magicType.value">
-  <option value="minor" {{#if (eq system.magicType.value "minor")}}selected{{/if}}>Minor</option>
-  <option value="advanced" {{#if (eq system.magicType.value "advanced")}}selected{{/if}}>Advanced</option>
-  <option value="superior" {{#if (eq system.magicType.value "superior")}}selected{{/if}}>Superior</option>
-</select>
-</div>
+  <button
+    type="button"
+    data-tab="description"
+    class="{{#if (eq activeTab 'description')}}active{{/if}}">
 
-<div class="form-group">
-  <label>Power (Mana Cost)</label>
-  <input type="number" name="system.power.value" value="{{system.power.value}}">
-</div>
+    Description
 
-<div class="form-group">
-  <label>Magic</label>
-  <input type="text" name="system.magic.value" value="{{system.magic.value}}">
-</div>
+  </button>
 
-<div class="form-group">
-  <label>Range (meters)</label>
-  <input type="text" name="system.range.value" value="{{system.range.value}}">
-</div>
+  <button
+    type="button"
+    data-tab="details"
+    class="{{#if (eq activeTab 'details')}}active{{/if}}">
 
-<h3>Duration</h3>
+    Details
 
-<div class="form-group">
-  <label>Concentration</label>
-  <input type="checkbox" name="system.concentration.value" {{checked system.concentration.value}}>
-</div>
+  </button>
 
-{{#unless system.concentration.value}}
+  <button
+    type="button"
+    data-tab="effects"
+    class="{{#if (eq activeTab 'effects')}}active{{/if}}">
 
-<div class="form-group">
-  <label>Value</label>
-  <input type="text" name="system.duration.value" value="{{system.duration.value}}">
-</div>
+    Effects
 
-<div class="form-group">
-  <label>Type</label>
-  <select name="system.duration.type">
-    {{selectOptions durationOptions selected=system.duration.type}}
-  </select>
-</div>
+  </button>
 
-<div class="form-group">
-  <label>Extendable</label>
-  <input type="checkbox" name="system.duration.extendable" {{checked system.duration.extendable}}>
-</div>
+</nav>
 
-{{/unless}}
+<!-- ========================= -->
+<!-- DESCRIPTION -->
+<!-- ========================= -->
 
-<h3>Target</h3>
+{{#if (eq activeTab "description")}}
 
-<div class="form-group">
-  <label>Area of Effect</label>
-  <input type="checkbox" name="system.aoe.value" {{checked system.aoe.value}}>
-</div>
-
-{{#if system.aoe.value}}
-
-<div class="form-group">
-  <label>Radius</label>
-  <input type="text" name="system.radius.value" value="{{system.radius.value}}">
-</div>
-
-{{else}}
-
-<div class="form-group">
-  <label>Targets</label>
-  <input type="number" name="system.target.value" value="{{system.target.value}}">
-</div>
+  {{> "systems/sdp/templates/partials/items/item-description-tab.hbs"}}
 
 {{/if}}
 
-<h3>Damage</h3>
+<!-- ========================= -->
+<!-- DETAILS -->
+<!-- ========================= -->
 
-<div class="form-group">
-  <label>Base</label>
-  <input type="number" name="system.damage.base.value" value="{{system.damage.base.value}}">
-</div>
+{{#if (eq activeTab "details")}}
 
-<div class="form-group">
-  <label>Dice</label>
-  <input type="text" name="system.damage.dice.value" value="{{system.damage.dice.value}}">
-</div>
+<div class="weapon-card">
 
-<div class="overcast-special-section">
+  <div class="weapon-card-title">
+    Spell
+  </div>
 
-  <h3>Overcast Special</h3>
+  <div class="weapon-grid">
 
-  <button type="button" class="add-overcast-special">
-    Add Effect
-  </button>
+    <div class="form-group">
 
-  <div class="overcast-special-list">
+      <label>Magic Type</label>
 
-    {{#each system.overcastSpecialEffects.value as |effect i|}}
-      <div class="overcast-special-item" data-index="{{i}}">
+      <select name="system.magicType.value">
 
+        <option
+          value="minor"
+          {{#if (eq system.magicType.value "minor")}}
+            selected
+          {{/if}}>
 
-        <input type="text"
-  name="system.overcastSpecialEffects.value.{{@index}}.label"
-  value="{{this.label}}"
-  placeholder="Effect name"/>
+          Minor
 
-<input type="text"
-  name="system.overcastSpecialEffects.value.{{@index}}.value"
-  value="{{this.value}}"
-  placeholder="WP / SB / 10"/>
+        </option>
 
-        <button type="button" class="remove-overcast-special">
-          X
-        </button>
+        <option
+          value="advanced"
+          {{#if (eq system.magicType.value "advanced")}}
+            selected
+          {{/if}}>
 
-      </div>
-    {{/each}}
+          Advanced
+
+        </option>
+
+        <option
+          value="superior"
+          {{#if (eq system.magicType.value "superior")}}
+            selected
+          {{/if}}>
+
+          Superior
+
+        </option>
+
+      </select>
+
+    </div>
+
+    <div class="form-group">
+
+      <label>Power</label>
+
+      <input
+        type="number"
+        name="system.power.value"
+        value="{{system.power.value}}">
+
+    </div>
+
+    <div class="form-group full-width">
+
+      <label>Magic</label>
+
+      <input
+        type="text"
+        name="system.magic.value"
+        value="{{system.magic.value}}">
+
+    </div>
+
+    <div class="form-group full-width">
+
+      <label>Range</label>
+
+      <input
+        type="text"
+        name="system.range.value"
+        value="{{system.range.value}}">
+
+    </div>
 
   </div>
 
 </div>
 
-<h3>Description</h3>
-<textarea name="system.description">{{system.description}}</textarea>
+<div class="weapon-card">
+
+  <div class="weapon-card-title">
+    Duration
+  </div>
+
+  <div class="weapon-grid">
+
+    <div class="compact-checkbox">
+
+      <input
+        type="checkbox"
+        name="system.concentration.value"
+        {{checked system.concentration.value}}>
+
+      <label>Concentration</label>
+
+    </div>
+
+    {{#unless system.concentration.value}}
+
+    <div class="form-group">
+
+      <label>Duration</label>
+
+      <input
+        type="text"
+        name="system.duration.value"
+        value="{{system.duration.value}}">
+
+    </div>
+
+    <div class="form-group">
+
+      <label>Type</label>
+
+      <select name="system.duration.type">
+
+        {{selectOptions
+          durationOptions
+          selected=system.duration.type}}
+
+      </select>
+
+    </div>
+
+    <div class="compact-checkbox">
+
+      <input
+        type="checkbox"
+        name="system.duration.extendable"
+        {{checked system.duration.extendable}}>
+
+      <label>Extendable</label>
+
+    </div>
+
+    {{/unless}}
+
+  </div>
+
+</div>
+
+<div class="weapon-card">
+
+  <div class="weapon-card-title">
+    Target
+  </div>
+
+  <div class="weapon-grid">
+
+    <div class="compact-checkbox">
+
+      <input
+        type="checkbox"
+        name="system.aoe.value"
+        {{checked system.aoe.value}}>
+
+      <label>Area of Effect</label>
+
+    </div>
+
+    {{#if system.aoe.value}}
+
+    <div class="form-group">
+
+      <label>Radius</label>
+
+      <input
+        type="text"
+        name="system.radius.value"
+        value="{{system.radius.value}}">
+
+    </div>
+
+    {{else}}
+
+    <div class="form-group">
+
+      <label>Targets</label>
+
+      <input
+        type="number"
+        name="system.target.value"
+        value="{{system.target.value}}">
+
+    </div>
+
+    {{/if}}
+
+  </div>
+
+</div>
+
+<div class="weapon-card">
+
+  <div class="weapon-card-title">
+    Damage
+  </div>
+
+  <div class="weapon-grid">
+
+    <div class="form-group">
+
+      <label>Base</label>
+
+      <input
+        type="number"
+        name="system.damage.base.value"
+        value="{{system.damage.base.value}}">
+
+    </div>
+
+    <div class="form-group">
+
+      <label>Dice</label>
+
+      <input
+        type="text"
+        name="system.damage.dice.value"
+        value="{{system.damage.dice.value}}">
+
+    </div>
+
+  </div>
+
+</div>
+
+<div class="weapon-card overcast-card">
+
+  <div class="weapon-card-title overcast-header">
+
+    <span>Overcast</span>
+
+    <button
+      type="button"
+      class="effect-create-button add-overcast-special">
+
+      ✚ Add Effect
+
+    </button>
+
+  </div>
+
+  <div class="overcast-special-list">
+
+    {{#if system.overcastSpecialEffects.value.length}}
+
+      {{#each system.overcastSpecialEffects.value as |effect i|}}
+
+      <div
+        class="overcast-special-item"
+        data-index="{{i}}">
+
+        <div class="overcast-fields">
+
+          <div class="form-group">
+
+            <label>Effect</label>
+
+            <input
+              type="text"
+              name="system.overcastSpecialEffects.value.{{@index}}.label"
+              value="{{this.label}}"
+              placeholder="Burning Radius">
+
+          </div>
+
+          <div class="form-group">
+
+            <label>Formula</label>
+
+            <input
+              type="text"
+              name="system.overcastSpecialEffects.value.{{@index}}.value"
+              value="{{this.value}}"
+              placeholder="WPB">
+
+          </div>
+
+        </div>
+
+        <button
+          type="button"
+          class="remove-overcast-special">
+
+          ✖
+
+        </button>
+
+      </div>
+
+      {{/each}}
+
+    {{else}}
+
+      <div class="empty-overcast">
+
+        No overcast effects yet
+
+      </div>
+
+    {{/if}}
+
+  </div>
+
+</div>
+
+{{/if}}
+
+<!-- ========================= -->
+<!-- EFFECTS -->
+<!-- ========================= -->
+
+{{#if (eq activeTab "effects")}}
+
+  {{> "systems/sdp/templates/partials/items/item-effects-tab.hbs"}}
+
+{{/if}}
 
 </div>

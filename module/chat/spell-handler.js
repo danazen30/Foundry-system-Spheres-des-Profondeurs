@@ -301,4 +301,91 @@ html.find(".place-aoe").click(async ev => {
   layer.on("mousedown", handler);
 });
 
+// =========================
+// RESET OVERCAST
+// =========================
+
+html.find(".reset-overcast").click(async ev => {
+
+  const card =
+    ev.currentTarget.closest(".sdp-spell");
+
+  if (!card) return;
+
+  // =========================
+  // RESET ALL VALUES
+  // =========================
+
+  card.querySelectorAll(
+    ".overcast-click"
+  ).forEach(el => {
+
+    const base =
+      Number(el.dataset.base || 0);
+
+    el.dataset.value = base;
+
+    const valueEl =
+      el.querySelector(".value");
+
+    if (valueEl) {
+      valueEl.innerHTML = base;
+    }
+
+  });
+
+  // =========================
+  // RESTORE OVERCAST
+  // =========================
+
+  const totalUsed =
+    Number(card.dataset.overcastUsed || 0);
+
+  const currentOvercast =
+    Number(card.dataset.overcast || 0);
+
+  const restored =
+    currentOvercast + totalUsed;
+
+  card.dataset.overcast =
+    restored;
+
+  card.dataset.overcastUsed =
+    0;
+
+  const overcastEl =
+    card.querySelector(
+      ".spell-overcast"
+    );
+
+  if (overcastEl) {
+
+    overcastEl.innerHTML =
+      `<strong>Overcast:</strong> ${restored}`;
+
+  }
+
+  // =========================
+  // UPDATE MESSAGE
+  // =========================
+
+  const message =
+    game.messages.get(
+      card.closest(".message")
+        .dataset.messageId
+    );
+
+  const wrapper =
+    document.createElement("div");
+
+  wrapper.appendChild(
+    card.cloneNode(true)
+  );
+
+  await message.update({
+    content: wrapper.innerHTML
+  });
+
+});
+
 }

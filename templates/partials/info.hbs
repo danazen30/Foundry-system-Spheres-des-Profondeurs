@@ -512,7 +512,7 @@
 
 </div>
 {{/unless}}
-{{#unless isLimitedObserver}}
+{{#if user.isGM}}
 <div class="resource-block note-block">
 
   <div class="note-header">
@@ -547,9 +547,8 @@
   </div>
 
 </div>
-</div>
 
-  {{/unless}}
+  {{/if}}
 {{#unless isNPC}}
   <!-- XP LOG -->
   <h3>XP Log</h3>

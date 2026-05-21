@@ -8,190 +8,159 @@ export class SdpArmorSheet extends SdpItemSheet {
     }
   };
 
-  _onRender(context, options) {
-  super._onRender(context, options);
+  async _prepareContext() {
 
-  const root = this.element;
+    const base =
+      await super._prepareContext();
 
-  root.querySelectorAll("[data-action]").forEach(el => {
+    const { ARMOR_TRAITS } =
+      CONFIG.SDP;
 
-    el.addEventListener("click", (event) => {
+    const traitsArray =
+      this.document.system.armorTraits ?? [];
 
-      const action = el.dataset.action;
+    const mapTraits = (type) => {
 
-      switch (action) {
+      return Object.entries(ARMOR_TRAITS)
 
-        case "create-effect":
-          this._createEffect();
-          break;
+        .filter(([_, v]) =>
+          v.type === type
+        )
 
-        case "edit-effect":
-          this._editEffect(event);
-          break;
+        .map(([key, value]) => {
 
-        case "delete-effect":
-          this._deleteEffect(event);
-          break;
-      }
+          const existing =
+            traitsArray.find(t => {
 
-    });
+              if (!t) return false;
 
-  });
+              if (typeof t === "string") {
+                return t === key;
+              }
 
-    // =========================
-  // IMAGE PICKER
-  // =========================
+              return t.key === key;
 
-  const img = root.querySelector(".armor-img img");
+            });
 
-  if (img) {
-    img.addEventListener("click", () => {
+          return {
+            key,
+            label: value.label,
+            description: value.description,
+            hasValue: value.hasValue,
+            checked: !!existing,
+            value: existing?.value || ""
+          };
 
-      new FilePicker({
-        type: "image",
-        current: this.document.img,
-        callback: async (path) => {
-          await this.document.update({ img: path });
-        }
-      }).render(true);
+        });
 
-    });
+    };
+
+    return {
+      ...base,
+      positiveArmorTraits:
+        mapTraits("positive"),
+
+      negativeArmorTraits:
+        mapTraits("negative")
+    };
+
   }
 
-}
+  _processFormData(event) {
 
-async _createEffect() {
-  await this.document.createEmbeddedDocuments("ActiveEffect", [{
-    name: "New Effect",
-    icon: "icons/svg/aura.svg",
-    changes: [],
-    flags: {
-      sdp: {
-        armorEffect: true
-      }
+    const form =
+      event.currentTarget;
+
+    const fd =
+      new FormData(form);
+
+    const formData =
+      Object.fromEntries(fd.entries());
+
+    const data =
+      foundry.utils.expandObject(formData);
+
+    if (!data.system) {
+      data.system = {};
     }
-  }]);
-}
 
-async _editEffect(event) {
-  const li = event.target.closest(".effect");
-  if (!li) return;
+    // =========================
+    // ITEM TRAITS
+    // =========================
 
-  const effect = this.document.effects.get(li.dataset.effectId);
-  if (effect) effect.sheet.render(true);
-}
+    const itemTraitsObj =
+      data.system.itemTraits || {};
 
-async _deleteEffect(event) {
-  const li = event.target.closest(".effect");
-  if (!li) return;
+    const finalItemTraits = [];
 
-  const effect = this.document.effects.get(li.dataset.effectId);
-  if (effect) await effect.delete();
-}
+    for (
+      const [key, t]
+      of Object.entries(itemTraitsObj)
+    ) {
 
-async _prepareContext() {
+      if (!t?.selected) continue;
 
-  const base = await super._prepareContext();
-
-  const { ARMOR_TRAITS } = CONFIG.SDP; // 🔥 IMPORTANT
-
-  const traitsArray = this.document.system.armorTraits ?? [];
-
-  const mapTraits = (type) => {
-  return Object.entries(ARMOR_TRAITS)
-    .filter(([_, v]) => v.type === type)
-    .map(([key, value]) => {
-
-      const existing = traitsArray.find(t => {
-        if (!t) return false;
-        if (typeof t === "string") return t === key;
-        return t.key === key;
+      finalItemTraits.push({
+        key,
+        value: t.value ?? ""
       });
 
-      return {
-        key,
-        label: value.label,
-        description: value.description,
-        hasValue: value.hasValue,
-        checked: !!existing,
-        value: existing?.value || ""
-      };
-    });
-};
+    }
 
-const positiveArmorTraits = mapTraits("positive");
-const negativeArmorTraits = mapTraits("negative");
-
-  return {
-  ...base,
-  positiveArmorTraits,
-  negativeArmorTraits,
-  effects: this.document.effects
-};
-
-}
-
-_processFormData(event) {
-
-  const form = event.currentTarget;
-  const fd = new FormData(form);
-  const formData = Object.fromEntries(fd.entries());
-
-  const data = foundry.utils.expandObject(formData);
-
-  if (!data.system) data.system = {};
-
-  // =========================
-  // ITEM TRAITS
-  // =========================
-
-  const itemTraitsObj = data.system.itemTraits || {};
-  const finalItemTraits = [];
-
-  for (const [key, t] of Object.entries(itemTraitsObj)) {
-
-    if (!t?.selected) continue;
-
-    finalItemTraits.push({
-      key,
-      value: t.value ?? ""
-    });
-  }
-
-  // =========================
-// SLOTS FIX (IMPORTANT)
-// =========================
-
-const slotKeys = ["head", "chest", "armLeft", "armRight", "legLeft", "legRight"];
-
-data.system.slots = data.system.slots || {};
-
-for (let key of slotKeys) {
-  data.system.slots[key] = !!data.system.slots[key];
-}
+    data.system.itemTraits =
+      finalItemTraits;
 
     // =========================
-// ARMOR TRAITS
-// =========================
+    // ARMOR TRAITS
+    // =========================
 
-const armorTraitsObj = data.system.armorTraits || {};
-const finalArmorTraits = [];
+    const armorTraitsObj =
+      data.system.armorTraits || {};
 
-for (const [key, t] of Object.entries(armorTraitsObj)) {
+    const finalArmorTraits = [];
 
-  if (!t?.selected) continue;
+    for (
+      const [key, t]
+      of Object.entries(armorTraitsObj)
+    ) {
 
-  finalArmorTraits.push({
-    key,
-    value: t.value ?? ""
-  });
-}
+      if (!t?.selected) continue;
 
-data.system.armorTraits = finalArmorTraits;
+      finalArmorTraits.push({
+        key,
+        value: t.value ?? ""
+      });
 
-  data.system.itemTraits = finalItemTraits;
+    }
 
-  return data;
-}
+    data.system.armorTraits =
+      finalArmorTraits;
+
+    // =========================
+    // SLOTS FIX
+    // =========================
+
+    const slotKeys = [
+      "head",
+      "chest",
+      "armLeft",
+      "armRight",
+      "legLeft",
+      "legRight"
+    ];
+
+    data.system.slots =
+      data.system.slots || {};
+
+    for (const key of slotKeys) {
+
+      data.system.slots[key] =
+        !!data.system.slots[key];
+
+    }
+
+    return data;
+
+  }
 
 }

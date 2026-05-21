@@ -1,44 +1,167 @@
 <div class="sdp-item-sheet">
 
-<h1>
-  <input type="text" name="name" value="{{item.name}}" />
-</h1>
+{{> "systems/sdp/templates/partials/items/item-header-simple.hbs"}}
 
-<div class="spell-img">
-  <img 
-    src="{{item.img}}" 
-    data-edit="img" 
-    title="{{item.name}}"
-  />
+<!-- ========================= -->
+<!-- TABS -->
+<!-- ========================= -->
+
+<nav class="item-tabs">
+
+  <button
+    type="button"
+    data-tab="description"
+    class="{{#if (eq activeTab 'description')}}active{{/if}}">
+
+    Description
+
+  </button>
+
+  <button
+    type="button"
+    data-tab="details"
+    class="{{#if (eq activeTab 'details')}}active{{/if}}">
+
+    Details
+
+  </button>
+
+</nav>
+
+<!-- ========================= -->
+<!-- DESCRIPTION -->
+<!-- ========================= -->
+
+{{#if (eq activeTab "description")}}
+
+  {{> "systems/sdp/templates/partials/items/item-description-tab.hbs"}}
+
+{{/if}}
+
+<!-- ========================= -->
+<!-- DETAILS -->
+<!-- ========================= -->
+
+{{#if (eq activeTab "details")}}
+
+<div class="weapon-card">
+
+  <div class="weapon-card-title">
+    Career
+  </div>
+
+  <div class="weapon-grid">
+
+    <div class="form-group">
+
+      <label>Status</label>
+
+      <input
+        type="text"
+        name="system.status"
+        value="{{system.status}}">
+
+    </div>
+
+    <div class="form-group">
+
+      <label>Level</label>
+
+      <input
+        type="number"
+        name="system.level"
+        value="{{system.level}}">
+
+    </div>
+
+    <div class="form-group full-width">
+
+      <label>Career Group</label>
+
+      <input
+        type="text"
+        name="system.careerGroup"
+        value="{{system.careerGroup}}">
+
+    </div>
+
+    <div class="form-group full-width">
+
+      <label>Standing</label>
+
+      <input
+        type="text"
+        name="system.standing"
+        value="{{system.standing}}">
+
+    </div>
+
+  </div>
+
 </div>
 
-<h2>Status</h2>
-<input type="text" name="system.status" value="{{system.status}}">
+<div class="weapon-card">
 
-<h2>Level</h2>
-<input type="number" name="system.level" value="{{system.level}}">
+  <div class="weapon-card-title">
+    Advances
+  </div>
 
-<h2>Characteristics</h2>
-<input type="text" name="system.characteristics" value="{{system.characteristics}}">
+  <div class="weapon-grid">
 
-<h2>Skills</h2>
-<input type="text" name="system.skills" value="{{system.skills}}">
+    <div class="form-group full-width">
 
-<h2>Talents</h2>
-<input type="text" name="system.talents" value="{{system.talents}}">
+      <label>Characteristics</label>
 
-<h2>Trappings</h2>
-<textarea name="system.trappings">{{system.trappings}}</textarea>
+      <input
+        type="text"
+        name="system.characteristics"
+        value="{{system.characteristics}}">
 
-<h2>Career Group</h2>
-<input type="text" name="system.careerGroup" value="{{system.careerGroup}}">
+    </div>
 
-<h2>Standing</h2>
-<input type="text" name="system.standing" value="{{system.standing}}">
+    <div class="form-group full-width">
 
-<div class="form-group">
-  <label>Description</label>
-  <textarea name="system.description">{{system.description}}</textarea>
+      <label>Skills</label>
+
+      <input
+        type="text"
+        name="system.skills"
+        value="{{system.skills}}">
+
+    </div>
+
+    <div class="form-group full-width">
+
+      <label>Talents</label>
+
+      <input
+        type="text"
+        name="system.talents"
+        value="{{system.talents}}">
+
+    </div>
+
+  </div>
+
 </div>
+
+<div class="weapon-card">
+
+  <div class="weapon-card-title">
+    Trappings
+  </div>
+
+  <div class="form-group">
+
+    <textarea
+      name="system.trappings"
+      rows="6"
+    >{{system.trappings}}</textarea>
+
+  </div>
+
+</div>
+
+{{/if}}
 
 </div>

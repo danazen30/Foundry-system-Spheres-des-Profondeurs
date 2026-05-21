@@ -1,28 +1,184 @@
 <div class="sdp-item-sheet">
 
-  <label>Name</label>
-  <input type="text" name="name" value="{{item.name}}" />
+{{> "systems/sdp/templates/partials/items/item-header-physical.hbs"}}
 
-<div class="container-img">
-  <img src="{{item.img}}" title="{{item.name}}" />
+<!-- ========================= -->
+<!-- TABS -->
+<!-- ========================= -->
+
+<nav class="item-tabs">
+
+  <button
+    type="button"
+    data-tab="description"
+    class="{{#if (eq activeTab 'description')}}active{{/if}}">
+
+    Description
+
+  </button>
+
+  <button
+    type="button"
+    data-tab="details"
+    class="{{#if (eq activeTab 'details')}}active{{/if}}">
+
+    Details
+
+  </button>
+
+  <button
+    type="button"
+    data-tab="effects"
+    class="{{#if (eq activeTab 'effects')}}active{{/if}}">
+
+    Effects
+
+  </button>
+
+</nav>
+
+<!-- ========================= -->
+<!-- DESCRIPTION -->
+<!-- ========================= -->
+
+{{#if (eq activeTab "description")}}
+
+  {{> "systems/sdp/templates/partials/items/item-description-tab.hbs"}}
+
+{{/if}}
+
+<!-- ========================= -->
+<!-- DETAILS -->
+<!-- ========================= -->
+
+{{#if (eq activeTab "details")}}
+
+<div class="weapon-card">
+
+  <div class="weapon-card-title">
+    Container
+  </div>
+
+  <div class="weapon-grid">
+
+    <div class="form-group">
+
+    <div class="form-group">
+
+      <label>Capacity</label>
+
+      <input
+        type="number"
+        name="system.capacity.value"
+        value="{{system.capacity.value}}">
+
+    </div>
+
+    <div class="form-group">
+
+      <label>Reduction</label>
+
+      <input
+        type="number"
+        step="0.1"
+        name="system.reduction.value"
+        value="{{system.reduction.value}}">
+
+    </div>
+
+  </div>
+
 </div>
 
-  <label>Quantity</label>
-  <input type="number" name="system.quantity.value" value="{{system.quantity.value}}" />
+<div class="weapon-card">
 
-  <label>Weight</label>
-  <input type="number" name="system.encumbrance.value" value="{{system.encumbrance.value}}" />
+  <div class="weapon-card-title">
+  </div>
 
-  <label>Capacity</label>
-  <input type="number" name="system.capacity.value" value="{{system.capacity.value}}" />
+  <div class="weapon-traits-layout">
 
-  <label>Reduction</label>
-  <input type="number" step="0.1" name="system.reduction.value" value="{{system.reduction.value}}" />
+    <!-- POSITIVE -->
 
-  <label>Price</label>
-  <input type="number" name="system.price.po" value="{{system.price.po}}" />
+    <div class="weapon-trait-block">
 
-  <label>Description</label>
-  <textarea name="system.description.value">{{system.description.value}}</textarea>
+      <h3>Positive Traits</h3>
+
+      <div class="weapon-traits-grid">
+
+        {{#each positiveItemTraits}}
+
+        <label class="trait-row">
+
+          <span class="trait-label">
+
+            <input
+              type="checkbox"
+              name="system.itemTraits"
+              value="{{this.key}}"
+              {{checked this.checked}}>
+
+            <span class="trait-name">
+              {{this.label}}
+            </span>
+
+          </span>
+
+        </label>
+
+        {{/each}}
+
+      </div>
+
+    </div>
+
+    <!-- NEGATIVE -->
+
+    <div class="weapon-trait-block">
+
+      <h3>Negative Traits</h3>
+
+      <div class="weapon-traits-grid">
+
+        {{#each negativeItemTraits}}
+
+        <label class="trait-row">
+
+          <span class="trait-label">
+
+            <input
+              type="checkbox"
+              name="system.itemTraits"
+              value="{{this.key}}"
+              {{checked this.checked}}>
+
+            <span class="trait-name">
+              {{this.label}}
+            </span>
+
+          </span>
+
+        </label>
+
+        {{/each}}
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+{{/if}}
+
+<!-- ========================= -->
+<!-- EFFECTS -->
+<!-- ========================= -->
+
+{{#if (eq activeTab "effects")}}
+
+  {{> "systems/sdp/templates/partials/items/item-effects-tab.hbs"}}
+
+{{/if}}
 
 </div>

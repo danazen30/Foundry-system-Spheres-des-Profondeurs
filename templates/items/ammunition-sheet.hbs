@@ -1,81 +1,117 @@
 <div class="sdp-item-sheet">
 
-<h1>
-  <input type="text" name="name" value="{{item.name}}" />
-</h1>
+{{> "systems/sdp/templates/partials/items/item-header-physical.hbs"}}
 
-<div class="ammo-img">
-  <img src="{{item.img}}" title="{{item.name}}" />
+<!-- ========================= -->
+<!-- TABS -->
+<!-- ========================= -->
+
+<nav class="item-tabs">
+
+  <button
+    type="button"
+    data-tab="description"
+    class="{{#if (eq activeTab 'description')}}active{{/if}}">
+
+    Description
+
+  </button>
+
+  <button
+    type="button"
+    data-tab="details"
+    class="{{#if (eq activeTab 'details')}}active{{/if}}">
+
+    Details
+
+  </button>
+
+</nav>
+
+<!-- ========================= -->
+<!-- DESCRIPTION -->
+<!-- ========================= -->
+
+{{#if (eq activeTab "description")}}
+
+  {{> "systems/sdp/templates/partials/items/item-description-tab.hbs"}}
+
+{{/if}}
+
+<!-- ========================= -->
+<!-- DETAILS -->
+<!-- ========================= -->
+
+{{#if (eq activeTab "details")}}
+
+<div class="weapon-card">
+
+  <div class="weapon-card-title">
+    Ammunition
+  </div>
+
+  <div class="weapon-grid">
+
+    <div class="form-group">
+
+      <label>Weapon Group</label>
+
+      <input
+        type="text"
+        name="system.weaponGroup"
+        value="{{system.weaponGroup}}">
+
+    </div>
+
+    <div class="form-group">
+
+      <label>Range Modifier</label>
+
+      <input
+        type="number"
+        name="system.rangeModifier"
+        value="{{system.rangeModifier}}">
+
+    </div>
+
+  </div>
+
 </div>
 
-<h3>Quantity</h3>
+<div class="weapon-card">
 
-<div class="form-group">
-  <input
-    type="number"
-    name="system.quantity.value"
-    value="{{system.quantity.value}}"
-    min="0"
-  >
+  <div class="weapon-card-title">
+    Damage
+  </div>
+
+  <div class="weapon-grid">
+
+    <div class="form-group">
+
+      <label>Flat Damage</label>
+
+      <input
+        type="number"
+        name="system.damage.base.value"
+        value="{{system.damage.base.value}}">
+
+    </div>
+
+    <div class="form-group">
+
+      <label>Damage Dice</label>
+
+      <input
+        type="text"
+        name="system.damage.dice.value"
+        value="{{system.damage.dice.value}}">
+
+    </div>
+
+  </div>
+
 </div>
 
-<label>Weight (per unit)</label>
-<input type="number" name="system.encumbrance.value" value="{{system.encumbrance.value}}" step="0.1">
-
-<h2>Ammunition</h2>
-
-<!-- ===================== -->
-<!-- WEAPON GROUP -->
-<!-- ===================== -->
-
-<div class="form-group">
-  <label>Weapon Group</label>
-  <input type="text" name="system.weaponGroup" value="{{system.weaponGroup}}">
-</div>
-
-<!-- ===================== -->
-<!-- DAMAGE -->
-<!-- ===================== -->
-
-<h3>Damage</h3>
-
-<div class="form-group">
-  <label>Flat</label>
-  <input type="number" name="system.damage.base.value" value="{{system.damage.base.value}}">
-</div>
-
-<div class="form-group">
-  <label>Dice</label>
-  <input type="text" name="system.damage.dice.value" value="{{system.damage.dice.value}}">
-</div>
-
-<!-- ===================== -->
-<!-- RANGE -->
-<!-- ===================== -->
-
-<h3>Range Modifier</h3>
-
-<div class="form-group">
-  <input type="number" name="system.rangeModifier" value="{{system.rangeModifier}}">
-  <p>(Can be negative)</p>
-</div>
-
-<!-- ===================== -->
-<!-- TRAITS / FLAWS -->
-<!-- ===================== -->
-
-<h3>Traits</h3>
-
-<div class="traits-list">
-  {{#each traits}}
-    <label title="{{this.description}}">
-      <input type="checkbox"
-             name="system.traits"
-             value="{{this.key}}"
-             {{#if this.checked}}checked{{/if}}>
-      {{this.label}}
-    </label>
-  {{/each}}
-</div>
+{{/if}}
 
 </div>

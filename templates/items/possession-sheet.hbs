@@ -1,50 +1,168 @@
 <div class="sdp-item-sheet">
 
-  <h2>{{item.name}}</h2>
+{{> "systems/sdp/templates/partials/items/item-header-physical.hbs"}}
 
-  <div class="possession-img">
-  <img src="{{item.img}}" title="{{item.name}}" />
+<!-- ========================= -->
+<!-- TABS -->
+<!-- ========================= -->
+
+<nav class="item-tabs">
+
+  <button
+    type="button"
+    data-tab="description"
+    class="{{#if (eq activeTab 'description')}}active{{/if}}">
+
+    Description
+
+  </button>
+
+  <button
+    type="button"
+    data-tab="details"
+    class="{{#if (eq activeTab 'details')}}active{{/if}}">
+
+    Details
+
+  </button>
+
+  <button
+    type="button"
+    data-tab="effects"
+    class="{{#if (eq activeTab 'effects')}}active{{/if}}">
+
+    Effects
+
+  </button>
+
+</nav>
+
+<!-- ========================= -->
+<!-- DESCRIPTION -->
+<!-- ========================= -->
+
+{{#if (eq activeTab "description")}}
+
+  {{> "systems/sdp/templates/partials/items/item-description-tab.hbs"}}
+
+{{/if}}
+
+<!-- ========================= -->
+<!-- DETAILS -->
+<!-- ========================= -->
+
+{{#if (eq activeTab "details")}}
+
+<div class="weapon-card">
+
+  <div class="weapon-card-title">
+    Traits
+  </div>
+
+  <div class="weapon-traits-layout">
+
+    <!-- POSITIVE -->
+
+    <div class="weapon-trait-block">
+
+      <h3>Positive Traits</h3>
+
+      <div class="weapon-traits-grid">
+
+        {{#each positiveItemTraits}}
+
+        <div class="trait-row">
+
+          <label class="trait-label">
+
+            <input
+              type="checkbox"
+              name="system.itemTraits"
+              value="{{this.key}}"
+              {{#if this.checked}}checked{{/if}}>
+
+            <span class="trait-name">
+              {{this.label}}
+            </span>
+
+          </label>
+
+          {{#if this.hasValue}}
+
+          <input
+            type="text"
+            class="trait-value"
+            name="system.itemTraitValues.{{this.key}}"
+            value="{{this.value}}">
+
+          {{/if}}
+
+        </div>
+
+        {{/each}}
+
+      </div>
+
+    </div>
+
+    <!-- NEGATIVE -->
+
+    <div class="weapon-trait-block">
+
+      <h3>Negative Traits</h3>
+
+      <div class="weapon-traits-grid">
+
+        {{#each negativeItemTraits}}
+
+        <div class="trait-row">
+
+          <label class="trait-label">
+
+            <input
+              type="checkbox"
+              name="system.itemTraits"
+              value="{{this.key}}"
+              {{#if this.checked}}checked{{/if}}>
+
+            <span class="trait-name">
+              {{this.label}}
+            </span>
+
+          </label>
+
+          {{#if this.hasValue}}
+
+          <input
+            type="text"
+            class="trait-value"
+            name="system.itemTraitValues.{{this.key}}"
+            value="{{this.value}}">
+
+          {{/if}}
+
+        </div>
+
+        {{/each}}
+
+      </div>
+
+    </div>
+
+  </div>
+
 </div>
 
-  <label>Quantity</label>
-  <input type="number" name="system.quantity.value" value="{{system.quantity.value}}" />
+{{/if}}
 
-  <label>Weight</label>
-  <input type="number" name="system.encumbrance.value" value="{{system.encumbrance.value}}" />
+<!-- ========================= -->
+<!-- EFFECTS -->
+<!-- ========================= -->
 
-  <label>Description</label>
-  <textarea name="system.description.value">{{system.description.value}}</textarea>
+{{#if (eq activeTab "effects")}}
 
-  <label>GM Notes</label>
-  <textarea name="system.gmNotes.value">{{system.gmNotes.value}}</textarea>
+  {{> "systems/sdp/templates/partials/items/item-effects-tab.hbs"}}
 
-  <label>Player Notes</label>
-  <textarea name="system.playerNotes.value">{{system.playerNotes.value}}</textarea>
-
-  <hr>
-
-<h3>Effects</h3>
-
-<ul class="effects-list">
-  {{#each effects as |effect|}}
-    <li class="effect" data-effect-id="{{effect.id}}">
-
-      <span>{{effect.name}}</span>
-
-      <button type="button" data-action="edit-effect">
-        Edit
-      </button>
-
-      <button type="button" data-action="delete-effect">
-        Delete
-      </button>
-
-    </li>
-  {{/each}}
-</ul>
-
-<button type="button" data-action="create-effect">
-  Add Effect
-</button>
+{{/if}}
 
 </div>

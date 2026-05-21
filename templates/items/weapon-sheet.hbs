@@ -32,216 +32,411 @@
 </nav>
 
 {{#if (eq activeTab "details")}}
-<h2>Weapon</h2>
 
-<div class="form-group">
-  <label>Weapon Category</label>
-  <select name="system.category">
-    {{selectOptions categoryOptions selected=system.category}}
-  </select>
+<!-- ========================= -->
+<!-- CORE -->
+<!-- ========================= -->
+
+<div class="weapon-card">
+
+  <div class="weapon-card-title">
+    Core
+  </div>
+
+  <div class="weapon-grid">
+
+    <div class="form-group">
+      <label>Category</label>
+
+      <select name="system.category">
+        {{selectOptions categoryOptions selected=system.category}}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Attack Type</label>
+
+      <select name="system.damageType">
+        {{#each damageTypeOptions}}
+          <option value="{{this.value}}"
+            {{#if (eq ../system.damageType this.value)}}selected{{/if}}>
+            {{this.label}}
+          </option>
+        {{/each}}
+      </select>
+    </div>
+
+    <div class="form-group full-width">
+      <label>Skill</label>
+
+      <input
+        type="text"
+        name="system.skill"
+        value="{{system.skill}}" />
+    </div>
+
+    <div class="form-group full-width">
+      <label>Weapon Group</label>
+
+      <input
+        type="text"
+        name="system.weaponGroup"
+        value="{{system.weaponGroup}}" />
+    </div>
+
+  </div>
+
 </div>
 
-<div class="form-group">
-  <label>Attack Type</label>
-<select name="system.damageType">
-  {{#each damageTypeOptions}}
-    <option value="{{this.value}}"
-      {{#if (eq ../system.damageType this.value)}}selected{{/if}}>
-      {{this.label}}
-    </option>
-  {{/each}}
-</select>
+<!-- ========================= -->
+<!-- COMBAT -->
+<!-- ========================= -->
 
-<div class="form-group">
-  <label>Skill</label>
-  <input type="text" name="system.skill" value="{{system.skill}}" />
+<div class="weapon-card">
+
+  <div class="weapon-card-title">
+    Combat
+  </div>
+
+  <div class="weapon-grid">
+
+    <div class="form-group">
+      <label>Damage Bonus</label>
+
+      <input
+        type="text"
+        name="system.damage"
+        value="{{system.damage}}">
+    </div>
+
+    <div class="form-group">
+      <label>Damage Dice</label>
+
+      <input
+        type="text"
+        name="system.damageDice"
+        value="{{system.damageDice}}">
+    </div>
+
+  </div>
+
 </div>
 
-<div class="form-group">
-  <label>Weapon Group</label>
-  <input type="text" name="system.weaponGroup" value="{{system.weaponGroup}}" />
+<!-- ========================= -->
+<!-- HANDLING -->
+<!-- ========================= -->
+
+<div class="weapon-card">
+
+  <div class="weapon-card-title">
+    Handling
+  </div>
+
+  <div class="weapon-grid">
+
+    <div class="compact-checkbox">
+      <input
+        type="checkbox"
+        name="system.offhand"
+        {{checked system.offhand}} />
+
+      <label>Offhand</label>
+    </div>
+
+    <div class="form-group">
+      <label>Handedness</label>
+
+      <select name="system.handedness">
+        {{selectOptions handednessOptions selected=system.handedness}}
+      </select>
+    </div>
+
+    {{#if (eq system.category "melee")}}
+
+    <div class="compact-checkbox">
+      <input
+        type="checkbox"
+        name="system.isDefenseWeapon"
+        {{checked system.isDefenseWeapon}}>
+
+      <label>Defense Weapon</label>
+    </div>
+
+    {{/if}}
+
+    <div class="compact-checkbox">
+      <input
+        type="checkbox"
+        name="system.equipped"
+        {{checked system.equipped}} />
+
+      <label>Equipped</label>
+    </div>
+
+    <div class="form-group full-width">
+      <label>Durability</label>
+
+      <div class="inline-fields">
+
+        <input
+          type="number"
+          name="system.durability.value"
+          value="{{system.durability.value}}">
+
+        <span>/</span>
+
+        <input
+          type="number"
+          name="system.durability.max"
+          value="{{system.durability.max}}">
+
+      </div>
+
+    </div>
+
+  </div>
+
 </div>
 
-<div class="form-group">
-  <label>Attack Bonus</label>
-  <input type="number" name="system.attackBonus" value="{{system.attackBonus}}" />
-</div>
-
-<div class="form-group">
-  <label>Parry Bonus</label>
-  <input type="number" name="system.parryBonus" value="{{system.parryBonus}}" />
-</div>
-
-<div class="form-group">
-  <label>Offhand</label>
-  <input type="checkbox" name="system.offhand" {{checked system.offhand}} />
-</div>
-
-<div class="form-group">
-  <label>Handedness</label>
-  <select name="system.handedness">
-    {{selectOptions handednessOptions selected=system.handedness}}
-  </select>
-</div>
-
-<div class="form-group">
-  <label>Damage Bonus</label>
-  <input type="text" name="system.damage" value="{{system.damage}}">
-</div>
-
-<div class="form-group">
-  <label>Damage Dice</label>
-  <input type="text" name="system.damageDice" value="{{system.damageDice}}">
-</div>
-
-{{#if (eq system.category "melee")}}
-
-<div class="form-group">
-  <label>Defense Weapon</label>
-  <input type="checkbox" name="system.isDefenseWeapon" {{checked system.isDefenseWeapon}}>
-</div>
-
-{{/if}}
+<!-- ========================= -->
+<!-- RANGED -->
+<!-- ========================= -->
 
 {{#if (eq system.category "ranged")}}
 
-<h3>Ranged Settings</h3>
+<div class="weapon-card">
 
-<div class="form-group">
-  <label>Range</label>
-  <input type="number" name="system.range" value="{{system.range}}">
-</div>
+  <div class="weapon-card-title">
+    Ranged
+  </div>
 
-<div class="form-group">
-  <label>Ammunition Group</label>
-  <input type="text" name="system.ammunitionGroup" value="{{system.ammunitionGroup}}">
-</div>
+  <div class="weapon-grid">
 
-<div class="form-group">
-  <label>Consumes Ammo</label>
-  <input type="checkbox" name="system.consumesAmmo" {{checked system.consumesAmmo}}>
-</div>
+    <div class="form-group">
+      <label>Range</label>
 
-<div class="form-group">
-  <label>Force Reload</label>
-  <input type="checkbox" name="system.forceReload" {{checked system.forceReload}}>
+      <input
+        type="number"
+        name="system.range"
+        value="{{system.range}}">
+    </div>
+
+    <div class="form-group full-width">
+      <label>Ammunition Group</label>
+
+      <input
+        type="text"
+        name="system.ammunitionGroup"
+        value="{{system.ammunitionGroup}}">
+    </div>
+
+    <div class="compact-checkbox">
+      <input
+        type="checkbox"
+        name="system.consumesAmmo"
+        {{checked system.consumesAmmo}}>
+
+      <label>Consumes Ammo</label>
+    </div>
+
+    <div class="compact-checkbox">
+      <input
+        type="checkbox"
+        name="system.forceReload"
+        {{checked system.forceReload}}>
+
+      <label>Force Reload</label>
+    </div>
+
+  </div>
+
 </div>
 
 {{/if}}
 
-<div class="form-group">
-  <label>Equipped</label>
-  <input type="checkbox" name="system.equipped" {{checked system.equipped}} />
-</div>
+<!-- ========================= -->
+<!-- TRAITS -->
+<!-- ========================= -->
 
-<div class="form-group">
-  <label>Durability</label>
-  <input type="number" name="system.durability.value" value="{{system.durability.value}}">
-  /
-  <input type="number" name="system.durability.max" value="{{system.durability.max}}">
-</div>
+<div class="weapon-traits-layout">
 
-<h3>Traits</h3>
+  <!-- ADVANTAGES -->
 
-<div class="traits-list">
-  <h3>Advantages</h3>
+  <div class="weapon-trait-block">
 
-{{#each positiveTraits}}
-    <div class="trait-row" title="{{this.description}}">
+    <h3>Advantages</h3>
 
-      <label class="trait-label">
-        <input type="checkbox"
-          name="system.traits.{{this.key}}.selected"
-          {{checked this.checked}} />
+    <div class="weapon-traits-grid">
 
-        <span class="trait-name">{{this.label}}</span>
-      </label>
+      {{#each positiveTraits}}
 
-      {{#if this.hasValue}}
-        <input type="text"
+      <div class="trait-row" title="{{this.description}}">
+
+        <label class="trait-label">
+
+          <input
+            type="checkbox"
+            name="system.traits.{{this.key}}.selected"
+            {{checked this.checked}} />
+
+          <span class="trait-name">
+            {{this.label}}
+          </span>
+
+        </label>
+
+        {{#if this.hasValue}}
+
+        <input
+          type="text"
           class="trait-value"
           name="system.traits.{{this.key}}.value"
           value="{{this.value}}"
           placeholder="0" />
-      {{/if}}
+
+        {{/if}}
+
+      </div>
+
+      {{/each}}
 
     </div>
-  {{/each}}
 
-<h3>Drawbacks</h3>
+  </div>
 
-{{#each negativeTraits}}
- <div class="trait-row" title="{{this.description}}">
+  <!-- DRAWBACKS -->
 
-      <label class="trait-label">
-        <input type="checkbox"
-          name="system.traits.{{this.key}}.selected"
-          {{checked this.checked}} />
+  <div class="weapon-trait-block">
 
-        <span class="trait-name">{{this.label}}</span>
-      </label>
+    <h3>Drawbacks</h3>
 
-      {{#if this.hasValue}}
-        <input type="text"
+    <div class="weapon-traits-grid">
+
+      {{#each negativeTraits}}
+
+      <div class="trait-row" title="{{this.description}}">
+
+        <label class="trait-label">
+
+          <input
+            type="checkbox"
+            name="system.traits.{{this.key}}.selected"
+            {{checked this.checked}} />
+
+          <span class="trait-name">
+            {{this.label}}
+          </span>
+
+        </label>
+
+        {{#if this.hasValue}}
+
+        <input
+          type="text"
           class="trait-value"
           name="system.traits.{{this.key}}.value"
           value="{{this.value}}"
           placeholder="0" />
-      {{/if}}
+
+        {{/if}}
+
+      </div>
+
+      {{/each}}
 
     </div>
-{{/each}}
-
-<h3>Item Traits</h3>
-
-<div class="traits-list">
-
-{{#each positiveItemTraits}}
-
-  <div class="trait-row" title="{{this.description}}">
-
-    <label>
-      <input type="checkbox"
-        name="system.itemTraits.{{this.key}}.selected"
-        {{checked this.checked}}>
-
-      {{this.label}}
-    </label>
-
-    {{#if this.hasValue}}
-      <input type="text"
-  class="trait-value"
-  name="system.itemTraits.{{this.key}}.value"
-  value="{{this.value}}">
-    {{/if}}
 
   </div>
 
-{{/each}}
+  <!-- ========================= -->
+<!-- ITEM TRAITS -->
+<!-- ========================= -->
 
-<h3>Item Flaws</h3>
+  <!-- ITEM TRAITS -->
 
-{{#each negativeItemTraits}}
+  <div class="weapon-trait-block">
 
-<div class="trait-row" title="{{this.description}}">
+    <h3>Item Traits</h3>
 
-    <label>
-      <input type="checkbox"
-        name="system.itemTraits.{{this.key}}.selected"
-        {{checked this.checked}}>
+    <div class="weapon-traits-grid">
 
-      {{this.label}}
-    </label>
+      {{#each positiveItemTraits}}
 
-    {{#if this.hasValue}}
-      <input type="text"
-  class="trait-value"
-  name="system.itemTraits.{{this.key}}.value"
-  value="{{this.value}}">
-    {{/if}}
+      <div class="trait-row" title="{{this.description}}">
+
+        <label class="trait-label">
+
+          <input
+            type="checkbox"
+            name="system.itemTraits.{{this.key}}.selected"
+            {{checked this.checked}}>
+
+          <span class="trait-name">
+            {{this.label}}
+          </span>
+
+        </label>
+
+        {{#if this.hasValue}}
+
+        <input
+          type="text"
+          class="trait-value"
+          name="system.itemTraits.{{this.key}}.value"
+          value="{{this.value}}">
+
+        {{/if}}
+
+      </div>
+
+      {{/each}}
+
+    </div>
 
   </div>
-  {{/each}}
+
+  <!-- ITEM FLAWS -->
+
+  <div class="weapon-trait-block">
+
+    <h3>Item Flaws</h3>
+
+    <div class="weapon-traits-grid">
+
+      {{#each negativeItemTraits}}
+
+      <div class="trait-row" title="{{this.description}}">
+
+        <label class="trait-label">
+
+          <input
+            type="checkbox"
+            name="system.itemTraits.{{this.key}}.selected"
+            {{checked this.checked}}>
+
+          <span class="trait-name">
+            {{this.label}}
+          </span>
+
+        </label>
+
+        {{#if this.hasValue}}
+
+        <input
+          type="text"
+          class="trait-value"
+          name="system.itemTraits.{{this.key}}.value"
+          value="{{this.value}}">
+
+        {{/if}}
+
+      </div>
+
+      {{/each}}
+
+    </div>
+
+  </div>
 
 </div>
 

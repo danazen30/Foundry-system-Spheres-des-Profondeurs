@@ -10,60 +10,109 @@ export class SdpAmmunitionSheet extends SdpItemSheet {
   };
 
   async _prepareContext() {
-    return {
-      item: this.document,
-      system: this.document.system,
 
-      traits: Object.entries(WEAPON_TRAITS).map(([key, value]) => ({
-      key,
-      label: value.label,
-      description: value.description,
-      checked: this.document.system.traits?.includes(key)
-    }))
+    const base =
+      await super._prepareContext();
+
+    const traitsArray =
+      this.document.system.traits ?? [];
+
+    const mapTraits = (type) => {
+
+      return Object.entries(WEAPON_TRAITS)
+
+        .filter(([_, value]) =>
+          value.type === type
+        )
+
+        .map(([key, value]) => ({
+
+          key,
+          label: value.label,
+          description: value.description,
+          hasValue: value.hasValue,
+
+          checked:
+            traitsArray.some(t => {
+
+              if (!t) return false;
+
+              if (typeof t === "string") {
+                return t === key;
+              }
+
+              return t.key === key;
+
+            }),
+
+          value:
+            traitsArray.find(t =>
+              typeof t === "object"
+              && t.key === key
+            )?.value || ""
+
+        }));
+
+    };
+
+    return {
+      ...base,
+
+      positiveWeaponTraits:
+        mapTraits("positive"),
+
+      negativeWeaponTraits:
+        mapTraits("negative")
     };
 
   }
 
-async _updateObject(event, formData) {
+  _processFormData(event) {
 
-  const data = foundry.utils.expandObject(formData);
+    const form =
+      event.currentTarget;
 
-  // 🔥 FIX IMAGE → on la garde
-  if (formData.img) {
-    data.img = formData.img;
+    const fd =
+      new FormData(form);
+
+    const formData =
+      Object.fromEntries(fd.entries());
+
+    const data =
+      foundry.utils.expandObject(formData);
+
+    if (!data.system) {
+      data.system = {};
+    }
+
+    // =========================
+    // WEAPON TRAITS
+    // =========================
+
+    const traitsObj =
+      data.system.traits || {};
+
+    const finalTraits = [];
+
+    for (
+      const [key, t]
+      of Object.entries(traitsObj)
+    ) {
+
+      if (!t?.selected) continue;
+
+      finalTraits.push({
+        key,
+        value: t.value ?? ""
+      });
+
+    }
+
+    data.system.traits =
+      finalTraits;
+
+    return data;
+
   }
-
-  if (data.system.traits && !Array.isArray(data.system.traits)) {
-    data.system.traits = [data.system.traits];
-  }
-
-  return super._updateObject(event, data);
-}
-
-_onRender(context, options) {
-  super._onRender(context, options);
-
-  const html = this.element;
-
-  // =========================
-  // IMAGE PICKER
-  // =========================
-
-  const img = html.querySelector(".ammo-img img");
-
-  if (img) {
-    img.addEventListener("click", () => {
-
-      new FilePicker({
-        type: "image",
-        current: this.document.img,
-        callback: async (path) => {
-          await this.document.update({ img: path });
-        }
-      }).render(true);
-
-    });
-  }
-}
 
 }

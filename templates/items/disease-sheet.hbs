@@ -1,31 +1,245 @@
 <div class="sdp-item-sheet">
 
-  <h2>{{item.name}}</h2>
+{{> "systems/sdp/templates/partials/items/item-header-simple.hbs"}}
 
-  <div class="weapon-img">
-  <img src="{{item.img}}" title="{{item.name}}" />
+<!-- ========================= -->
+<!-- TABS -->
+<!-- ========================= -->
+
+<nav class="item-tabs">
+
+  <button
+    type="button"
+    data-tab="description"
+    class="{{#if (eq activeTab 'description')}}active{{/if}}">
+
+    Description
+
+  </button>
+
+  <button
+    type="button"
+    data-tab="details"
+    class="{{#if (eq activeTab 'details')}}active{{/if}}">
+
+    Details
+
+  </button>
+
+  <button
+    type="button"
+    data-tab="effects"
+    class="{{#if (eq activeTab 'effects')}}active{{/if}}">
+
+    Effects
+
+  </button>
+
+</nav>
+
+<!-- ========================= -->
+<!-- DESCRIPTION -->
+<!-- ========================= -->
+
+{{#if (eq activeTab "description")}}
+
+  {{> "systems/sdp/templates/partials/items/item-description-tab.hbs"}}
+
+{{/if}}
+
+<!-- ========================= -->
+<!-- DETAILS -->
+<!-- ========================= -->
+
+{{#if (eq activeTab "details")}}
+
+<div class="weapon-card">
+
+  <div class="weapon-card-title">
+    Disease
+  </div>
+
+  <div class="disease-details-layout">
+
+    <!-- CONTRACTION -->
+
+    <div class="disease-row">
+
+      <div class="disease-label">
+        Contraction
+      </div>
+
+      <div class="disease-field">
+
+        <textarea
+          name="system.contraction"
+          rows="2"
+        >{{system.contraction}}</textarea>
+
+      </div>
+
+    </div>
+
+    <!-- INCUBATION -->
+
+    <div class="disease-row">
+
+      <div class="disease-label">
+        Incubation
+      </div>
+
+      <div class="disease-field disease-inline-field">
+
+        <input
+          type="text"
+          name="system.incubation.value"
+          value="{{system.incubation.value}}">
+
+        <select
+          name="system.incubation.unit">
+
+          <option
+            value="minutes"
+            {{#if (eq system.incubation.unit "minutes")}}
+              selected
+            {{/if}}>
+
+            Minutes
+
+          </option>
+
+          <option
+            value="hours"
+            {{#if (eq system.incubation.unit "hours")}}
+              selected
+            {{/if}}>
+
+            Hours
+
+          </option>
+
+          <option
+            value="days"
+            {{#if (eq system.incubation.unit "days")}}
+              selected
+            {{/if}}>
+
+            Days
+
+          </option>
+
+        </select>
+
+      </div>
+
+    </div>
+
+    <!-- DURATION -->
+
+    <div class="disease-row">
+
+      <div class="disease-label">
+        Duration
+      </div>
+
+      <div class="disease-field disease-inline-field">
+
+        <input
+          type="text"
+          name="system.duration.value"
+          value="{{system.duration.value}}">
+
+        <select
+          name="system.duration.unit">
+
+          <option
+            value="minutes"
+            {{#if (eq system.duration.unit "minutes")}}
+              selected
+            {{/if}}>
+
+            Minutes
+
+          </option>
+
+          <option
+            value="hours"
+            {{#if (eq system.duration.unit "hours")}}
+              selected
+            {{/if}}>
+
+            Hours
+
+          </option>
+
+          <option
+            value="days"
+            {{#if (eq system.duration.unit "days")}}
+              selected
+            {{/if}}>
+
+            Days
+
+          </option>
+
+        </select>
+
+      </div>
+
+    </div>
+
+    <!-- SYMPTOMS -->
+
+    <div class="disease-row">
+
+      <div class="disease-label">
+        Symptoms
+      </div>
+
+      <div class="disease-field">
+
+        <textarea
+          name="system.symptoms"
+          rows="3"
+        >{{system.symptoms}}</textarea>
+
+      </div>
+
+    </div>
+
+    <!-- PERMANENT -->
+
+    <div class="disease-row">
+
+      <div class="disease-label">
+        Permanent
+      </div>
+
+      <div class="disease-field disease-checkbox-field">
+
+        <input
+          type="text"
+          name="system.permanent"
+          {{checked system.permanent}}>
+
+      </div>
+
+    </div>
+
+  </div>
+
 </div>
 
-  <label>Description</label>
-  <textarea name="system.description.value">
-    {{system.description.value}}
-  </textarea>
+{{/if}}
 
-  <hr>
+<!-- ========================= -->
+<!-- EFFECTS -->
+<!-- ========================= -->
 
-  <h3>Effects</h3>
+{{#if (eq activeTab "effects")}}
 
-  <button data-action="create-effect">Add Effect</button>
+  {{> "systems/sdp/templates/partials/items/item-effects-tab.hbs"}}
 
-  <div class="effects">
-    {{#each effects}}
-      <div class="effect" data-effect-id="{{this.id}}">
-        <span>{{this.name}}</span>
-
-        <button data-action="edit-effect">Edit</button>
-        <button data-action="delete-effect">Delete</button>
-      </div>
-    {{/each}}
-  </div>
+{{/if}}
 
 </div>

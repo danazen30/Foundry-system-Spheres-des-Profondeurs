@@ -2,111 +2,155 @@ import { SdpItemSheet } from "./item-sheet.js";
 
 export class SdpSpellSheet extends SdpItemSheet {
 
+  constructor(...args) {
+
+    super(...args);
+
+    this.activeTab = "details";
+
+  }
+
   static PARTS = {
     sheet: {
-      template: "systems/sdp/templates/items/spell-sheet.hbs"
+      template:
+        "systems/sdp/templates/items/spell-sheet.hbs"
     }
   };
 
   async _prepareContext() {
-    return {
-      item: this.document,
-      system: this.document.system,
 
-      durationOptions: [
-        { value: "round", label: "Round" },
-        { value: "minute", label: "Minute" },
-        { value: "hour", label: "Hour" },
-        { value: "instant", label: "Instant" }
-      ]
-    };
+    const context =
+      await super._prepareContext();
+
+    context.durationOptions = [
+      {
+        value: "round",
+        label: "Round"
+      },
+      {
+        value: "minute",
+        label: "Minute"
+      },
+      {
+        value: "hour",
+        label: "Hour"
+      },
+      {
+        value: "instant",
+        label: "Instant"
+      }
+    ];
+
+    return context;
+
   }
 
-  // 🔥 V2 STYLE
-_onRender(context, options) {
-  super._onRender(context, options);
+  _onRender(context, options) {
 
-  const html = this.element;
+    super._onRender(
+      context,
+      options
+    );
 
-  // =========================
-  // ADD
-  // =========================
+    const root =
+      this.getRoot();
 
-  const btn = html.querySelector(".add-overcast-special");
+    // =========================
+    // ADD OVERCAST
+    // =========================
 
-  if (btn) {
-    btn.addEventListener("click", async ev => {
-
-      console.log("CLICK ADD OVERCAST"); // 🔥 DEBUG
-
-      let effects = this.document.system.overcastSpecialEffects?.value;
-
-if (!Array.isArray(effects)) {
-  effects = Object.values(effects || {});
-}
-
-effects = foundry.utils.duplicate(effects);
-
-      effects.push({
-  label: "New Effect",
-  value: "WP"
-});
-
-      await this.document.update({
-        "system.overcastSpecialEffects.value": effects
-      });
-
-    });
-  }
-
-  // =========================
-  // REMOVE
-  // =========================
-
-  html.querySelectorAll(".remove-overcast-special").forEach(btn => {
-
-    btn.addEventListener("click", async ev => {
-
-      const index = Number(
-        ev.currentTarget.closest(".overcast-special-item").dataset.index
+    const addBtn =
+      root.querySelector(
+        ".add-overcast-special"
       );
 
-      let effects = this.document.system.overcastSpecialEffects?.value;
+    if (addBtn) {
 
-if (!Array.isArray(effects)) effects = [];
+      addBtn.addEventListener(
+        "click",
+        async () => {
 
-effects = foundry.utils.duplicate(effects);
+          let effects =
+            this.document.system
+              .overcastSpecialEffects
+              ?.value;
 
-      effects.splice(index, 1);
+          if (!Array.isArray(effects)) {
 
-      await this.document.update({
-        "system.overcastSpecialEffects.value": effects
-      });
+            effects =
+              Object.values(
+                effects || {}
+              );
+
+          }
+
+          effects =
+            foundry.utils.duplicate(
+              effects
+            );
+
+          effects.push({
+            label: "New Effect",
+            value: "WP"
+          });
+
+          await this.document.update({
+            "system.overcastSpecialEffects.value":
+              effects
+          });
+
+        }
+      );
+
+    }
+
+    // =========================
+    // REMOVE OVERCAST
+    // =========================
+
+    root.querySelectorAll(
+      ".remove-overcast-special"
+    ).forEach(btn => {
+
+      btn.addEventListener(
+        "click",
+        async (event) => {
+
+          const index =
+            Number(
+              event.currentTarget
+                .closest(
+                  ".overcast-special-item"
+                )
+                .dataset.index
+            );
+
+          let effects =
+            this.document.system
+              .overcastSpecialEffects
+              ?.value;
+
+          if (!Array.isArray(effects)) {
+            effects = [];
+          }
+
+          effects =
+            foundry.utils.duplicate(
+              effects
+            );
+
+          effects.splice(index, 1);
+
+          await this.document.update({
+            "system.overcastSpecialEffects.value":
+              effects
+          });
+
+        }
+      );
 
     });
 
-  });
-
-  // =========================
-// IMAGE PICKER
-// =========================
-
-const img = html.querySelector(".spell-img img");
-
-if (img) {
-  img.addEventListener("click", () => {
-
-    new FilePicker({
-      type: "image",
-      current: this.document.img,
-      callback: async (path) => {
-        await this.document.update({ img: path });
-      }
-    }).render(true);
-
-  });
-}
-
-}
+  }
 
 }

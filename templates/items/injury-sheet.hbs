@@ -1,97 +1,135 @@
 <div class="sdp-item-sheet">
 
-<h1>
-  <input type="text" name="name" value="{{item.name}}" />
-</h1>
+{{> "systems/sdp/templates/partials/items/item-header-simple.hbs"}}
 
-<div class="weapon-img">
-  <img src="{{item.img}}" title="{{item.name}}" />
-</div>
+<!-- ========================= -->
+<!-- TABS -->
+<!-- ========================= -->
 
-<!-- ===================== -->
-<!-- CORE DATA -->
-<!-- ===================== -->
+<nav class="item-tabs">
 
-<div class="form-group">
-  <label>Severity</label>
-  <input type="text" name="system.severity" value="{{system.severity}}">
-</div>
+  <button
+    type="button"
+    data-tab="description"
+    class="{{#if (eq activeTab 'description')}}active{{/if}}">
 
-<div class="form-group">
-  <label>Location</label>
-  <input type="text" name="system.location" value="{{system.location}}">
-</div>
+    Description
 
-<div class="form-group">
-  <label>Consequence</label>
-  <input type="checkbox" name="system.consequence" {{checked system.consequence}}>
-</div>
+  </button>
 
-<div class="form-group">
-  <label>Duration (rounds)</label>
-  <input type="number" name="system.duration" value="{{system.duration}}">
-</div>
+  <button
+    type="button"
+    data-tab="details"
+    class="{{#if (eq activeTab 'details')}}active{{/if}}">
 
-<div class="form-group">
-  <label>Remove on delete</label>
-  <input type="checkbox" name="system.removeOnDelete" {{checked system.removeOnDelete}}>
-</div>
+    Details
 
-<!-- ===================== -->
+  </button>
+
+  <button
+    type="button"
+    data-tab="effects"
+    class="{{#if (eq activeTab 'effects')}}active{{/if}}">
+
+    Effects
+
+  </button>
+
+</nav>
+
+<!-- ========================= -->
 <!-- DESCRIPTION -->
-<!-- ===================== -->
+<!-- ========================= -->
 
-<div class="form-group">
-  <label>Description</label>
-  <textarea name="system.description">{{system.description}}</textarea>
+{{#if (eq activeTab "description")}}
+
+  {{> "systems/sdp/templates/partials/items/item-description-tab.hbs"}}
+
+{{/if}}
+
+<!-- ========================= -->
+<!-- DETAILS -->
+<!-- ========================= -->
+
+{{#if (eq activeTab "details")}}
+
+<div class="weapon-card">
+
+  <div class="weapon-card-title">
+    Injury
+  </div>
+
+  <div class="weapon-grid">
+
+    <div class="form-group">
+
+      <label>Severity</label>
+
+      <input
+        type="text"
+        name="system.severity"
+        value="{{system.severity}}">
+
+    </div>
+
+    <div class="form-group">
+
+      <label>Location</label>
+
+      <input
+        type="text"
+        name="system.location"
+        value="{{system.location}}">
+
+    </div>
+
+    <div class="compact-checkbox">
+
+      <input
+        type="checkbox"
+        name="system.consequence"
+        {{checked system.consequence}}>
+
+      <label>Consequence</label>
+
+    </div>
+
+    <div class="compact-checkbox">
+
+      <input
+        type="checkbox"
+        name="system.removeOnDelete"
+        {{checked system.removeOnDelete}}>
+
+      <label>Remove on Delete</label>
+
+    </div>
+
+    <div class="form-group full-width">
+
+      <label>Duration (Rounds)</label>
+
+      <input
+        type="number"
+        name="system.duration"
+        value="{{system.duration}}">
+
+    </div>
+
+  </div>
+
 </div>
 
-<div class="form-group">
-  <label>Player Notes</label>
-  <textarea name="system.playerNotes">{{system.playerNotes}}</textarea>
-</div>
+{{/if}}
 
-<div class="form-group">
-  <label>GM Notes</label>
-  <textarea name="system.gmNotes">{{system.gmNotes}}</textarea>
-</div>
-
-<!-- ===================== -->
+<!-- ========================= -->
 <!-- EFFECTS -->
-<!-- ===================== -->
+<!-- ========================= -->
 
-<h2>Effects</h2>
+{{#if (eq activeTab "effects")}}
 
-<button type="button" data-action="create-effect">
-  ➕ Add Effect
-</button>
+  {{> "systems/sdp/templates/partials/items/item-effects-tab.hbs"}}
 
-<ol class="effects-list">
-
-  {{#each effects}}
-
- <li class="effect" data-effect-id="{{this.id}}">
-
-    <div class="effect-name">
-      {{this.name}}
-    </div>
-
-    <div class="effect-controls">
-
-      <button type="button" data-action="edit-effect">
-        ✏️
-      </button>
-
-      <button type="button" data-action="delete-effect">
-        🗑️
-      </button>
-
-    </div>
-
-  </li>
-
-  {{/each}}
-
-</ol>
+{{/if}}
 
 </div>

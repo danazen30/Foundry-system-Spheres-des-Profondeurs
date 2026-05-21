@@ -1,4 +1,5 @@
 import { ITEM_TRAITS } from "../system/config.js";
+import { restoreItemScroll, registerEditorToggles, setupRichTextEditors, setupTextareaResize} from "../actors/actor-sheet-ui.js";
 
 const { ItemSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -9,13 +10,24 @@ export class SdpItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
 
   super(...args);
 
-  this.activeTab = "details";
+  this.activeTab = "description";
+
+  this._scrollPositions = {};
+
+  this._isRestoringScroll = false;
+
+}
+
+getRoot() {
+
+  return this.element?.querySelector?.(".window-content")
+    || this.element;
 
 }
 
 static DEFAULT_OPTIONS = {
  classes: ["sdp", "sheet", "item"],
-position: { width: 450, height: 450 },
+position: { width: 450, height: 500 },
 window: { resizable: true },
 form: { submitOnChange: true }
 };
@@ -54,12 +66,49 @@ const mapTraits = (type) => {
 const positiveItemTraits = mapTraits("positive");
 const negativeItemTraits = mapTraits("negative");
 
+      // =========================
+// EDITORS
+// =========================
+
+const description =
+  this.document.system.description ?? "";
+
+const playerNotes =
+  this.document.system.playerNotes ?? "";
+
+const gmNotes =
+  this.document.system.gmNotes ?? "";
+
+const editors = {
+
+
+  description:
+    await foundry.applications.ux.TextEditor
+      .enrichHTML(description, {
+        async: true
+      }),
+
+  playerNotes:
+    await foundry.applications.ux.TextEditor
+      .enrichHTML(playerNotes, {
+        async: true
+      }),
+
+  gmNotes:
+    await foundry.applications.ux.TextEditor
+      .enrichHTML(gmNotes, {
+        async: true
+      })
+};
+
   return {
   item: this.document,
   system: this.document.system,
   positiveItemTraits,
   negativeItemTraits,
-  activeTab: this.activeTab
+  activeTab: this.activeTab,
+  editors,
+  effects: this.document.effects
 };
 
 }
@@ -68,56 +117,219 @@ _onRender(context, options) {
 
   super._onRender(context, options);
 
-  const root = this.element;
+  const root = this.getRoot();
 
-  // =========================
-  // IMAGE PICKER
-  // =========================
+ const scrollEl =
+  root?.querySelector(".sdp-content")
+  || root?.querySelector(".window-content")
+  || root?.querySelector(".sheet-body")
+  || root?.querySelector(".tab")
+  || root?.querySelector('[data-application-part="sheet"]');
+
+if (scrollEl && !scrollEl.dataset.scrollRegistered) {
+
+  scrollEl.dataset.scrollRegistered = "true";
+
+  scrollEl.addEventListener("scroll", () => {
+
+    if (this._isRestoringScroll) {
+      return;
+    }
+
+    this._scrollPositions.main =
+      scrollEl.scrollTop;
+
+  });
+
+}
+
+  const oldScroll =
+  this._scrollPositions.main;
 
   const img =
     root.querySelector(".item-header-image img");
 
-  if (!img) return;
+  if (img) {
 
-  img.addEventListener("click", () => {
+    img.addEventListener("click", () => {
 
-    new FilePicker({
+      new foundry.applications.apps.FilePicker.implementation({
 
-      type: "image",
+        type: "image",
 
-      current: this.document.img,
+        current: this.document.img,
 
-      callback: async (path) => {
+        callback: async (path) => {
 
-        await this.document.update({
-          img: path
-        });
+          await this.document.update({
+            img: path
+          });
 
-      }
+        }
 
-    }).render(true);
+      }).render(true);
 
-  });
+    });
 
-  // =========================
-// TABS
-// =========================
-
-root.querySelectorAll("[data-tab]").forEach(tab => {
-
-  if (tab.dataset.tab === this.activeTab) {
-    tab.classList.add("active");
   }
 
-  tab.addEventListener("click", () => {
+  this._registerTabs(root);
 
-    this.activeTab = tab.dataset.tab;
+  registerEditorToggles(root);
 
-    this.render();
+  setupRichTextEditors(root);
+
+  setupTextareaResize(root);
+
+  root.querySelectorAll("[data-action]").forEach(el => {
+
+  el.addEventListener("click", (event) => {
+
+    const action =
+      el.dataset.action;
+
+    switch (action) {
+
+      case "create-effect":
+        this._createEffect();
+        break;
+
+      case "edit-effect":
+        this._editEffect(event);
+        break;
+
+      case "delete-effect":
+        this._deleteEffect(event);
+        break;
+
+    }
 
   });
 
 });
+
+  this._isRestoringScroll = true;
+
+requestAnimationFrame(() => {
+
+  restoreItemScroll(this);
+
+  requestAnimationFrame(() => {
+
+    this._isRestoringScroll = false;
+
+  });
+
+});
+
+}
+_registerTabs(root) {
+
+  root.querySelectorAll("[data-tab]").forEach(btn => {
+
+    if (btn.dataset.tab === this.activeTab) {
+      btn.classList.add("active");
+    }
+    else {
+      btn.classList.remove("active");
+    }
+
+    btn.addEventListener("click", () => {
+
+      this.activeTab = btn.dataset.tab;
+
+      this.render();
+
+    });
+
+  });
+
+}
+
+async _createEffect() {
+
+  await this.document.createEmbeddedDocuments(
+    "ActiveEffect",
+    [{
+      name: "New Effect",
+      icon: "icons/svg/aura.svg",
+      changes: []
+    }]
+  );
+
+}
+
+async _editEffect(event) {
+
+  const li =
+    event.target.closest(".effect");
+
+  if (!li) return;
+
+  const effect =
+    this.document.effects.get(
+      li.dataset.effectId
+    );
+
+  if (effect) {
+    effect.sheet.render(true);
+  }
+
+}
+
+async _deleteEffect(event) {
+
+  const li =
+    event.target.closest(".effect");
+
+  if (!li) return;
+
+  const effect =
+    this.document.effects.get(
+      li.dataset.effectId
+    );
+
+  if (effect) {
+    await effect.delete();
+  }
+
+}
+
+async _onChangeForm(formConfig, event) {
+
+  await super._onChangeForm(
+    formConfig,
+    event
+  );
+
+  const root = this.getRoot();
+
+  const proseMirrors =
+    root.querySelectorAll("prose-mirror");
+
+  const updates = {};
+
+  proseMirrors.forEach(editor => {
+
+    const name =
+      editor.getAttribute("name");
+
+    if (!name) return;
+
+    updates[name] =
+      editor.value || "";
+
+  });
+
+  if (
+    Object.keys(updates).length > 0
+  ) {
+
+    await this.document.update(
+      updates
+    );
+
+  }
 
 }
 

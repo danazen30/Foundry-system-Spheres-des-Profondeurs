@@ -1,85 +1,282 @@
 <div class="sdp-item-sheet">
 
-  <label>Name</label>
-  <input type="text" name="name" value="{{item.name}}" />
+{{> "systems/sdp/templates/partials/items/item-header-physical.hbs"}}
 
-<div class="clothing-img">
-  <img src="{{item.img}}" title="{{item.name}}" />
-</div>
-  <label>Equipped</label>
-  <input type="checkbox" name="system.equipped" {{checked system.equipped}} />
+<!-- ========================= -->
+<!-- TABS -->
+<!-- ========================= -->
 
-  <label>Quantity</label>
-  <input type="number" name="system.quantity.value" value="{{system.quantity.value}}" />
+<nav class="item-tabs">
 
-  <label>Weight</label>
-  <input type="number" name="system.encumbrance.value" value="{{system.encumbrance.value}}" />
+  <button
+    type="button"
+    data-tab="description"
+    class="{{#if (eq activeTab 'description')}}active{{/if}}">
 
-  <label>Price</label>
-  <input type="number" name="system.price.po" value="{{system.price.po}}" />
+    Description
 
-  <h2>Slots</h2>
+  </button>
 
-<div class="form-group">
-  <label>Head</label>
-  <input type="checkbox" name="system.slots.head" {{checked system.slots.head}}>
-</div>
+  <button
+    type="button"
+    data-tab="details"
+    class="{{#if (eq activeTab 'details')}}active{{/if}}">
 
-<div class="form-group">
-  <label>Chest</label>
-  <input type="checkbox" name="system.slots.chest" {{checked system.slots.chest}}>
-</div>
+    Details
 
-<div class="form-group">
-  <label>Left Arm</label>
-  <input type="checkbox" name="system.slots.armLeft" {{checked system.slots.armLeft}}>
-</div>
+  </button>
 
-<div class="form-group">
-  <label>Right Arm</label>
-  <input type="checkbox" name="system.slots.armRight" {{checked system.slots.armRight}}>
-</div>
+  <button
+    type="button"
+    data-tab="effects"
+    class="{{#if (eq activeTab 'effects')}}active{{/if}}">
 
-<div class="form-group">
-  <label>Left Leg</label>
-  <input type="checkbox" name="system.slots.legLeft" {{checked system.slots.legLeft}}>
-</div>
+    Effects
 
-<div class="form-group">
-  <label>Right Leg</label>
-  <input type="checkbox" name="system.slots.legRight" {{checked system.slots.legRight}}>
-</div>
+  </button>
 
-<label>Layer</label>
-<input type="number" name="system.layer" value="{{system.layer}}">
+</nav>
 
-  <label>Description</label>
-  <textarea name="system.description.value">{{system.description.value}}</textarea>
+<!-- ========================= -->
+<!-- DESCRIPTION -->
+<!-- ========================= -->
 
-  <hr>
+{{#if (eq activeTab "description")}}
 
-<h3>Active Effects</h3>
+  {{> "systems/sdp/templates/partials/items/item-description-tab.hbs"}}
 
-<div class="effects-list">
-  {{#each item.effects as |effect|}}
-    <div class="effect-row" data-effect-id="{{effect.id}}">
+{{/if}}
 
-      <input type="text" value="{{effect.name}}" disabled />
+<!-- ========================= -->
+<!-- DETAILS -->
+<!-- ========================= -->
 
-      <button type="button" data-action="editEffect" data-effect-id="{{effect.id}}">
-        Edit
-      </button>
+{{#if (eq activeTab "details")}}
 
-      <button type="button" data-action="deleteEffect" data-effect-id="{{effect.id}}">
-        Delete
-      </button>
+<div class="weapon-card">
+
+  <div class="weapon-card-title">
+    Clothing
+  </div>
+
+  <div class="weapon-grid">
+
+    <div class="compact-checkbox">
+
+      <input
+        type="checkbox"
+        name="system.equipped"
+        {{checked system.equipped}}>
+
+      <label>Equipped</label>
 
     </div>
-  {{/each}}
+
+    <div class="form-group">
+
+      <label>Layer</label>
+
+      <input
+        type="number"
+        name="system.layer"
+        value="{{system.layer}}">
+
+    </div>
+
+    <div class="form-group">
+
+      <label>Quantity</label>
+
+      <input
+        type="number"
+        name="system.quantity.value"
+        value="{{system.quantity.value}}">
+
+    </div>
+
+    <div class="form-group">
+
+      <label>Weight</label>
+
+      <input
+        type="number"
+        name="system.encumbrance.value"
+        value="{{system.encumbrance.value}}">
+
+    </div>
+
+  </div>
+
 </div>
 
-<button type="button" data-action="createEffect">
-  Add Effect
-</button>
+<div class="weapon-card">
+
+  <div class="weapon-card-title">
+    Slots
+  </div>
+
+  <div class="weapon-grid">
+
+    <div class="compact-checkbox">
+
+      <input
+        type="checkbox"
+        name="system.slots.head"
+        {{checked system.slots.head}}>
+
+      <label>Head</label>
+
+    </div>
+
+    <div class="compact-checkbox">
+
+      <input
+        type="checkbox"
+        name="system.slots.chest"
+        {{checked system.slots.chest}}>
+
+      <label>Chest</label>
+
+    </div>
+
+    <div class="compact-checkbox">
+
+      <input
+        type="checkbox"
+        name="system.slots.armLeft"
+        {{checked system.slots.armLeft}}>
+
+      <label>Left Arm</label>
+
+    </div>
+
+    <div class="compact-checkbox">
+
+      <input
+        type="checkbox"
+        name="system.slots.armRight"
+        {{checked system.slots.armRight}}>
+
+      <label>Right Arm</label>
+
+    </div>
+
+    <div class="compact-checkbox">
+
+      <input
+        type="checkbox"
+        name="system.slots.legLeft"
+        {{checked system.slots.legLeft}}>
+
+      <label>Left Leg</label>
+
+    </div>
+
+    <div class="compact-checkbox">
+
+      <input
+        type="checkbox"
+        name="system.slots.legRight"
+        {{checked system.slots.legRight}}>
+
+      <label>Right Leg</label>
+
+    </div>
+
+  </div>
+
+</div>
+
+<div class="weapon-card">
+
+  <div class="weapon-card-title">
+    Item Traits
+  </div>
+
+  <div class="weapon-traits-layout">
+
+    <!-- POSITIVE -->
+
+    <div class="weapon-trait-block">
+
+      <h3>Positive Traits</h3>
+
+      <div class="weapon-traits-grid">
+
+        {{#each positiveItemTraits}}
+
+        <label class="trait-row">
+
+          <span class="trait-label">
+
+            <input
+              type="checkbox"
+              name="system.itemTraits"
+              value="{{this.key}}"
+              {{checked this.checked}}>
+
+            <span class="trait-name">
+              {{this.label}}
+            </span>
+
+          </span>
+
+        </label>
+
+        {{/each}}
+
+      </div>
+
+    </div>
+
+    <!-- NEGATIVE -->
+
+    <div class="weapon-trait-block">
+
+      <h3>Negative Traits</h3>
+
+      <div class="weapon-traits-grid">
+
+        {{#each negativeItemTraits}}
+
+        <label class="trait-row">
+
+          <span class="trait-label">
+
+            <input
+              type="checkbox"
+              name="system.itemTraits"
+              value="{{this.key}}"
+              {{checked this.checked}}>
+
+            <span class="trait-name">
+              {{this.label}}
+            </span>
+
+          </span>
+
+        </label>
+
+        {{/each}}
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+{{/if}}
+
+<!-- ========================= -->
+<!-- EFFECTS -->
+<!-- ========================= -->
+
+{{#if (eq activeTab "effects")}}
+
+  {{> "systems/sdp/templates/partials/items/item-effects-tab.hbs"}}
+
+{{/if}}
 
 </div>

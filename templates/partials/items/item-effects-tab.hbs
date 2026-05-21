@@ -1,5 +1,58 @@
 <div class="item-effects-tab">
 
-  <p>No effects yet.</p>
+  <div class="effects-header">
+
+    <h2>Effects</h2>
+
+    <button
+      type="button"
+      class="effect-create-button"
+      data-action="create-effect">
+
+      ✚ Add Effect
+
+    </button>
+
+  </div>
+
+  <ol class="effects-list">
+
+    {{#each effects}}
+
+    <li
+      class="effect effect-row flexrow"
+      data-effect-id="{{this.id}}">
+
+      <div class="effect-name">
+        {{this.name}}
+      </div>
+
+      <div class="effect-controls">
+
+        <button
+          type="button"
+          class="effect-control"
+          data-action="edit-effect">
+
+          ✏️
+
+        </button>
+
+        <button
+          type="button"
+          class="effect-control"
+          data-action="delete-effect">
+
+          🗑️
+
+        </button>
+
+      </div>
+
+    </li>
+
+    {{/each}}
+
+  </ol>
 
 </div>

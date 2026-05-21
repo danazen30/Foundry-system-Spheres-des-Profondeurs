@@ -1,134 +1,103 @@
-const { ItemSheetV2 } = foundry.applications.sheets;
-const { HandlebarsApplicationMixin } = foundry.applications.api;
+import { SdpItemSheet } from "./item-sheet.js";
 
-export class SdpSignSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
-
-  static DEFAULT_OPTIONS = {
-    classes: ["sdp", "sheet", "item"],
-    position: { width: 400, height: 500 }
-  };
+export class SdpSignSheet extends SdpItemSheet {
 
   static PARTS = {
     sheet: {
-      template: "systems/sdp/templates/items/sign-sheet.hbs"
+      template:
+        "systems/sdp/templates/items/sign-sheet.hbs"
     }
   };
 
-  static LAYOUT = {
-    template: "templates/applications/sheet.hbs",
-    parts: ["sheet"]
-  };
-
   async _prepareContext() {
-    return {
-      item: this.document,
-      system: this.document.system
-    };
+
+    const context =
+      await super._prepareContext();
+
+    return context;
+
   }
 
-_onRender(context, options) {
-  super._onRender(context, options);
+  _onRender(context, options) {
 
-  const root = this.element;
+    super._onRender(
+      context,
+      options
+    );
 
-  // =========================
-  // DEBUG
-  // =========================
-  console.log("SIGN SHEET RENDERED");
+    const root =
+      this.getRoot();
 
-// =========================
-  // AUTO SAVE INPUT / TEXTAREA
-  // =========================
+    // =========================
+    // ADD LEVEL
+    // =========================
 
-  root.querySelectorAll("input, textarea").forEach(el => {
-    el.addEventListener("change", async (event) => {
+    root.querySelector(
+      ".add-level"
+    )?.addEventListener(
+      "click",
+      async () => {
 
-      const input = event.currentTarget;
-      const path = input.name;
-      let value = input.value;
+        const levels =
+          foundry.utils.deepClone(
+            this.document.system.levels || {}
+          );
 
-      // number safety
-      if (input.type === "number") {
-        value = Number(value);
+        const newLevel =
+          Object.keys(levels).length + 1;
+
+        levels[newLevel] = {
+
+          hp: "1d4",
+
+          damageBonus: "",
+
+          inspirationDice: "",
+
+          description: ""
+
+        };
+
+        await this.document.update({
+          "system.levels": levels
+        });
+
       }
+    );
 
-      await this.item.update({
-        [path]: value
-      });
+    // =========================
+    // DELETE LEVEL
+    // =========================
 
-    });
-  });
+    root.querySelectorAll(
+      ".delete-level"
+    ).forEach(btn => {
 
+      btn.addEventListener(
+        "click",
+        async (event) => {
 
-  // =========================
-  // INPUT UPDATE (SAFE V2)
-  // =========================
+          const level =
+            event.currentTarget
+              .closest(".level-block")
+              .dataset.level;
 
-  root.querySelectorAll("input").forEach(input => {
-    input.addEventListener("change", async (event) => {
+          const levels =
+            foundry.utils.deepClone(
+              this.document.system.levels || {}
+            );
 
-      const inputEl = event.currentTarget;
+          delete levels[level];
 
-      await this.document.update({
-        [inputEl.name]: inputEl.value
-      });
+          await this.document.update({
+            "system.levels": levels
+          });
 
-    });
-  });
-
-  // =========================
-  // ADD LEVEL (FIX)
-  // =========================
-
-  const addBtn = root.querySelector(".add-level");
-
-  console.log("ADD BTN:", addBtn); // 🔥 IMPORTANT
-
-  if (addBtn) {
-    addBtn.addEventListener("click", async () => {
-
-      console.log("CLICK ADD LEVEL"); // 🔥 IMPORTANT
-
-      const levels = foundry.utils.deepClone(this.document.system.levels || {});
-
-      const newLevel = Object.keys(levels).length + 1;
-
-      levels[newLevel] = {
-        hp: "1d4",
-        damageBonus: "",
-        inspirationDice: ""
-      };
-
-      await this.document.update({
-        "system.levels": levels
-      });
+        }
+      );
 
     });
+
   }
 
-  // =========================
-  // DELETE LEVEL
-  // =========================
-
-  root.querySelectorAll(".delete-level").forEach(btn => {
-
-    btn.addEventListener("click", async (ev) => {
-
-      const level = ev.currentTarget.closest(".level-block").dataset.level;
-
-      const levels = foundry.utils.deepClone(this.document.system.levels);
-
-      delete levels[level];
-
-      await this.document.update({
-        "system.levels": levels
-      });
-
-    });
-
-  });
-
 }
-
-}
-

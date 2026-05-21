@@ -1,30 +1,139 @@
 <div class="item-description-tab">
 
-  <div class="form-group">
+  <!-- DESCRIPTION -->
+  <div class="resource-block note-block">
 
-    <label>Description</label>
+    <div class="note-header">
 
-    <textarea
-      name="system.description">{{system.description}}</textarea>
+      <label>Description</label>
+
+      <button
+        type="button"
+        class="note-edit-btn"
+        data-action="toggleEditor"
+        data-target="description">
+
+        ✏️ Edit
+
+      </button>
+
+    </div>
+
+    <!-- DISPLAY -->
+    <div
+      class="note-display"
+      data-display="description">
+
+      {{{editors.description}}}
+
+    </div>
+
+    <!-- EDITOR -->
+    <div
+      class="note-editor"
+      data-editor="description"
+      style="display:none;">
+
+      <prose-mirror
+        name="system.description"
+        value="{{system.description}}">
+
+        {{{system.description}}}
+
+      </prose-mirror>
+
+    </div>
 
   </div>
 
-  <div class="form-group">
+  <!-- PLAYER NOTES -->
+  <div class="resource-block note-block">
 
-    <label>Player Notes</label>
+    <div class="note-header">
 
-    <textarea
-      name="system.playerNotes">{{system.playerNotes}}</textarea>
+      <label>Player Notes</label>
+
+      <button
+        type="button"
+        class="note-edit-btn"
+        data-action="toggleEditor"
+        data-target="playerNotes">
+
+        ✏️ Edit
+
+      </button>
+
+    </div>
+
+    <div
+      class="note-display"
+      data-display="playerNotes">
+
+      {{{editors.playerNotes}}}
+
+    </div>
+
+    <div
+      class="note-editor"
+      data-editor="playerNotes"
+      style="display:none;">
+
+      <prose-mirror
+        name="system.playerNotes"
+        value="{{system.playerNotes}}">
+
+        {{{system.playerNotes}}}
+
+      </prose-mirror>
+
+    </div>
 
   </div>
 
-  <div class="form-group">
+{{#if user.isGM}}
+  <!-- GM NOTES -->
+  <div class="resource-block note-block">
 
-    <label>GM Notes</label>
+    <div class="note-header">
 
-    <textarea
-      name="system.gmNotes">{{system.gmNotes}}</textarea>
+      <label>GM Notes</label>
+
+      <button
+        type="button"
+        class="note-edit-btn"
+        data-action="toggleEditor"
+        data-target="gmNotes">
+
+        ✏️ Edit
+
+      </button>
+
+    </div>
+
+    <div
+      class="note-display"
+      data-display="gmNotes">
+
+      {{{editors.gmNotes}}}
+
+    </div>
+
+    <div
+      class="note-editor"
+      data-editor="gmNotes"
+      style="display:none;">
+
+      <prose-mirror
+        name="system.gmNotes"
+        value="{{system.gmNotes}}">
+
+        {{{system.gmNotes}}}
+
+      </prose-mirror>
+
+    </div>
 
   </div>
+  {{/if}}
 
 </div>

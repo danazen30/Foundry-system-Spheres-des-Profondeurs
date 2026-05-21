@@ -75,16 +75,42 @@ export function restoreScroll(sheet) {
 
     if (!rootEl.isConnected) return;
 
-    const el = rootEl.querySelector(".sdp-content-inner");
+    const el =
+      rootEl.querySelector(".sdp-content-inner");
 
     if (!el) return;
 
     if (el.scrollHeight <= el.clientHeight) {
+
       requestAnimationFrame(tryRestoreScroll);
+
       return;
     }
 
-    el.scrollTop = sheet._scrollPositions.main || 0;
+    console.log(
+      "RESTORE BEFORE",
+      el.scrollTop,
+      "TARGET",
+      sheet._scrollPositions.main
+    );
+
+    el.scrollTop =
+      sheet._scrollPositions.main || 0;
+
+    console.log(
+      "RESTORE AFTER",
+      el.scrollTop
+    );
+
+    requestAnimationFrame(() => {
+
+      console.log(
+        "NEXT FRAME",
+        el.scrollTop,
+        document.activeElement
+      );
+
+    });
 
   };
 
@@ -604,7 +630,7 @@ function registerBooleanToggles(sheet, root) {
 
 }
 
-function registerEditorToggles(root) {
+export function registerEditorToggles(root) {
 
   root.querySelectorAll(
     '[data-action="toggleEditor"]'
@@ -652,7 +678,7 @@ function registerEditorToggles(root) {
 
 }
 
-function setupRichTextEditors(root) {
+export function setupRichTextEditors(root) {
 
   requestAnimationFrame(() => {
 
@@ -733,7 +759,7 @@ function setupRichTextEditors(root) {
 
 }
 
-function setupTextareaResize(root) {
+export function setupTextareaResize(root) {
 
   root.querySelectorAll("textarea").forEach(el => {
 
@@ -751,5 +777,27 @@ function setupTextareaResize(root) {
     el.addEventListener("input", resize);
 
   });
+
+}
+
+export function restoreItemScroll(sheet) {
+
+  const root =
+    sheet.getRoot?.() || sheet.element;
+
+  if (!root) return;
+
+  const el =
+    root.querySelector(".sdp-item-sheet");
+
+  if (!el) return;
+
+  console.log(
+    "RESTORE TO",
+    sheet._scrollPositions.main
+  );
+
+  el.scrollTop =
+    sheet._scrollPositions.main || 0;
 
 }
