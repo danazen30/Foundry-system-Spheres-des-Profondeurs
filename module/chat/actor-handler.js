@@ -87,6 +87,9 @@ const currencies = [
     name: "Platinum coin",
     type: "currency",
 
+    img:
+      "systems/sdp/assets/icons/currency/platinum.png",
+
     system: {
 
       denomination: {
@@ -98,8 +101,8 @@ const currencies = [
       },
 
       encumbrance: {
-  value: 0.001
-}
+        value: 0.001
+      }
 
     }
 
@@ -108,6 +111,9 @@ const currencies = [
   {
     name: "Gold coin",
     type: "currency",
+
+    img:
+      "systems/sdp/assets/icons/currency/gold.png",
 
     system: {
 
@@ -120,8 +126,8 @@ const currencies = [
       },
 
       encumbrance: {
-  value: 0.001
-}
+        value: 0.001
+      }
 
     }
 
@@ -130,6 +136,9 @@ const currencies = [
   {
     name: "Silver coin",
     type: "currency",
+
+    img:
+      "systems/sdp/assets/icons/currency/silver.png",
 
     system: {
 
@@ -142,8 +151,8 @@ const currencies = [
       },
 
       encumbrance: {
-  value: 0.001
-}
+        value: 0.001
+      }
 
     }
 
@@ -152,6 +161,9 @@ const currencies = [
   {
     name: "Copper coin",
     type: "currency",
+
+    img:
+      "systems/sdp/assets/icons/currency/copper.png",
 
     system: {
 
@@ -164,8 +176,8 @@ const currencies = [
       },
 
       encumbrance: {
-  value: 0.001
-}
+        value: 0.001
+      }
 
     }
 

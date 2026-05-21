@@ -1,5 +1,6 @@
 import { SdpRoll } from "../rolls/roll.js";
 import { SdpSpell } from "../combat/spell.js";
+import { SdpWorkEngine } from "../system/work-engine.js";
 
 import {
   getCost,
@@ -29,6 +30,8 @@ export function registerInteractionListeners(sheet, root) {
   registerContainers(sheet, root);
 
   registerDragAndDrop(sheet, root);
+
+  registerWork(sheet, root);
 
   registerSpellCasting(sheet, root);
 
@@ -565,6 +568,22 @@ function registerSpellCasting(sheet, root) {
         }
 
       });
+
+    });
+
+  });
+
+}
+
+function registerWork(sheet, root) {
+
+  root.querySelectorAll('[data-action="workCareer"]').forEach(el => {
+
+    el.addEventListener("click", async () => {
+
+      await SdpWorkEngine.work(
+        sheet.actor
+      );
 
     });
 
