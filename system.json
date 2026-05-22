@@ -36,15 +36,8 @@
       "label": "SDP Injuries",
       "system": "sdp",
       "path": "packs/injuries",
-      "type": "Item"
-    },
-
-    {
-      "name": "trait",
-      "label": "SDP Trait",
-      "system": "sdp",
-      "path": "packs/trait",
-      "type": "Item"
+      "type": "Item",
+      "banner": "systems/sdp/assets/icons/default-banner.png"
     },
 
     {
@@ -52,7 +45,8 @@
       "label": "SDP Talents",
       "system": "sdp",
       "path": "packs/talents",
-      "type": "Item"
+      "type": "Item",
+      "banner": "systems/sdp/assets/icons/default-banner.png"
     },
 
     {
@@ -60,15 +54,8 @@
       "label": "SDP Skills",
       "system": "sdp",
       "path": "packs/skills",
-      "type": "Item"
-    },
-
-    {
-      "name": "weapons",
-      "label": "SDP Weapons",
-      "system": "sdp",
-      "path": "packs/weapons",
-      "type": "Item"
+      "type": "Item",
+      "banner": "systems/sdp/assets/icons/default-banner.png"
     },
 
     {
@@ -76,7 +63,8 @@
       "label": "SDP species",
       "system": "sdp",
       "path": "packs/species",
-      "type": "Item" 
+      "type": "Item" ,
+      "banner": "systems/sdp/assets/icons/default-banner.png"
     },
 
     {
@@ -84,7 +72,8 @@
       "label": "SDP Careers",
       "system": "sdp",
       "path": "packs/careers",
-      "type": "Item"
+      "type": "Item",
+      "banner": "systems/sdp/assets/icons/default-banner.png"
     },
 
     {
@@ -92,63 +81,17 @@
       "label": "SDP Sign",
       "system": "sdp",
       "path": "packs/sign",
-      "type": "Item"
-    },
-
-    {
-      "name": "spell",
-      "label": "SDP Spell",
-      "system": "sdp",
-      "path": "packs/spell",
-      "type": "Item"
-    },
-
-    {
-      "name": "ammunition",
-      "label": "SDP Ammunition",
-      "system": "sdp",
-      "path": "packs/ammunition",
-      "type": "Item"
-    },
-
-    {
-      "name": "armor",
-      "label": "SDP Armor",
-      "system": "sdp",
-      "path": "packs/armor",
-      "type": "Item"
+      "type": "Item",
+      "banner": "systems/sdp/assets/icons/default-banner.png"
     },
 
     {
       "name": "possession",
-      "label": "SDP Possession",
+      "label": "SDP Possession Base",
       "system": "sdp",
       "path": "packs/possession",
-      "type": "Item"
-    },
-
-    {
-      "name": "disease",
-      "label": "SDP Disease",
-      "system": "sdp",
-      "path": "packs/disease",
-      "type": "Item"
-    },
-
-    {
-      "name": "clothing",
-      "label": "SDP Clothing",
-      "system": "sdp",
-      "path": "packs/clothing",
-      "type": "Item"
-    },
-
-    {
-      "name": "container",
-      "label": "SDP Container",
-      "system": "sdp",
-      "path": "packs/container",
-      "type": "Item"
+      "type": "Item",
+      "banner": "systems/sdp/assets/icons/default-banner.png"
     }
 
   ],
