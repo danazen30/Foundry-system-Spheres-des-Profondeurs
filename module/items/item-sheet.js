@@ -1,4 +1,4 @@
-import { ITEM_TRAITS } from "../system/config.js";
+import { ITEM_TRAITS, ARMOR_TRAITS} from "../system/config.js";
 import { restoreItemScroll, registerEditorToggles, setupRichTextEditors, setupTextareaResize} from "../actors/actor-sheet-ui.js";
 
 const { ItemSheetV2 } = foundry.applications.sheets;
@@ -40,31 +40,89 @@ static LAYOUT = {
 async _prepareContext() {
 
   const traitsArray = this.document.system.itemTraits ?? [];
+  const armorTraitsArray =
+  this.document.system.armorTraits ?? [];
 
-const mapTraits = (type) => {
-  return Object.entries(ITEM_TRAITS)
+const mapTraits = (
+  source,
+  traits,
+  type
+) => {
+
+  return Object.entries(source)
+
     .filter(([_, v]) => v.type === type)
+
     .map(([key, value]) => {
 
-      const existing = traitsArray.find(t => {
+      const existing = traits.find(t => {
+
         if (!t) return false;
-        if (typeof t === "string") return t === key;
+
+        if (typeof t === "string") {
+          return t === key;
+        }
+
         return t.key === key;
+
       });
 
       return {
+
         key,
-        label: value.label,
-        description: value.description,
-        hasValue: value.hasValue,
-        checked: !!existing,
-        value: existing?.value || ""
+
+        label:
+          game.i18n.localize(
+            value.label
+          ),
+
+        description:
+          game.i18n.localize(
+            value.description
+          ),
+
+        hasValue:
+          value.hasValue,
+
+        checked:
+          !!existing,
+
+        value:
+          existing?.value || ""
+
       };
+
     });
+
 };
 
-const positiveItemTraits = mapTraits("positive");
-const negativeItemTraits = mapTraits("negative");
+const positiveItemTraits =
+  mapTraits(
+    ITEM_TRAITS,
+    traitsArray,
+    "positive"
+  );
+
+const negativeItemTraits =
+  mapTraits(
+    ITEM_TRAITS,
+    traitsArray,
+    "negative"
+  );
+
+const positiveArmorTraits =
+  mapTraits(
+    ARMOR_TRAITS,
+    armorTraitsArray,
+    "positive"
+  );
+
+const negativeArmorTraits =
+  mapTraits(
+    ARMOR_TRAITS,
+    armorTraitsArray,
+    "negative"
+  );
 
       // =========================
 // EDITORS
@@ -106,9 +164,12 @@ const editors = {
   system: this.document.system,
   positiveItemTraits,
   negativeItemTraits,
+  positiveArmorTraits,
+negativeArmorTraits,
   activeTab: this.activeTab,
   editors,
-  effects: this.document.effects
+  effects: this.document.effects,
+  isGM: game.user.isGM
 };
 
 }
@@ -251,7 +312,7 @@ async _createEffect() {
   await this.document.createEmbeddedDocuments(
     "ActiveEffect",
     [{
-      name: "New Effect",
+      name: game.i18n.localize("SDP.NewEffect"),
       icon: "icons/svg/aura.svg",
       changes: []
     }]

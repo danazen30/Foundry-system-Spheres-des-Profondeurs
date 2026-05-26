@@ -13,7 +13,7 @@
     data-tab="description"
     class="{{#if (eq activeTab 'description')}}active{{/if}}">
 
-    Description
+    {{localize "SDP.TabDescription"}}
 
   </button>
 
@@ -22,7 +22,7 @@
     data-tab="details"
     class="{{#if (eq activeTab 'details')}}active{{/if}}">
 
-    Details
+    {{localize "SDP.TabDetails"}}
 
   </button>
 
@@ -31,7 +31,7 @@
     data-tab="effects"
     class="{{#if (eq activeTab 'effects')}}active{{/if}}">
 
-    Effects
+    {{localize "SDP.Effects"}}
 
   </button>
 
@@ -60,58 +60,58 @@
 <div class="weapon-card">
 
   <div class="weapon-card-title">
-    Base Attributes
+    {{localize "SDP.BaseAttributes"}}
   </div>
 
   <div class="specie-attributes-grid">
 
     <div class="form-group">
-      <label>MA</label>
+      <label>{{localize "SDP.AttributeAbbr.MeleeAbility"}}</label>
       <input type="number" name="system.baseAttributes.meleeAbility" value="{{system.baseAttributes.meleeAbility}}">
     </div>
 
     <div class="form-group">
-      <label>RA</label>
+      <label>{{localize "SDP.AttributeAbbr.RangedAbility"}}</label>
       <input type="number" name="system.baseAttributes.rangedAbility" value="{{system.baseAttributes.rangedAbility}}">
     </div>
 
     <div class="form-group">
-      <label>S</label>
+      <label>{{localize "SDP.AttributeAbbr.Strength"}}</label>
       <input type="number" name="system.baseAttributes.strength" value="{{system.baseAttributes.strength}}">
     </div>
 
     <div class="form-group">
-      <label>T</label>
+      <label>{{localize "SDP.AttributeAbbr.Toughness"}}</label>
       <input type="number" name="system.baseAttributes.toughness" value="{{system.baseAttributes.toughness}}">
     </div>
 
     <div class="form-group">
-      <label>I</label>
+      <label>{{localize "SDP.AttributeAbbr.Initiative"}}</label>
       <input type="number" name="system.baseAttributes.initiative" value="{{system.baseAttributes.initiative}}">
     </div>
 
     <div class="form-group">
-      <label>AG</label>
+      <label>{{localize "SDP.AttributeAbbr.Agility"}}</label>
       <input type="number" name="system.baseAttributes.agility" value="{{system.baseAttributes.agility}}">
     </div>
 
     <div class="form-group">
-      <label>DEX</label>
+      <label>{{localize "SDP.AttributeAbbr.Dexterity"}}</label>
       <input type="number" name="system.baseAttributes.dexterity" value="{{system.baseAttributes.dexterity}}">
     </div>
 
     <div class="form-group">
-      <label>INT</label>
+      <label>{{localize "SDP.AttributeAbbr.Intelligence"}}</label>
       <input type="number" name="system.baseAttributes.intelligence" value="{{system.baseAttributes.intelligence}}">
     </div>
 
     <div class="form-group">
-      <label>WP</label>
+      <label>{{localize "SDP.AttributeAbbr.Willpower"}}</label>
       <input type="number" name="system.baseAttributes.willpower" value="{{system.baseAttributes.willpower}}">
     </div>
 
     <div class="form-group">
-      <label>CHA</label>
+      <label>{{localize "SDP.AttributeAbbr.Charisma"}}</label>
       <input type="number" name="system.baseAttributes.charisma" value="{{system.baseAttributes.charisma}}">
     </div>
 
@@ -126,14 +126,14 @@
 <div class="weapon-card">
 
   <div class="weapon-card-title">
-    Movement
+    {{localize "SDP.Movement"}}
   </div>
 
   <div class="specie-movement-row">
 
     <div class="form-group">
 
-      <label>Walk</label>
+      <label>{{localize "SDP.Walk"}}</label>
 
       <input
         type="number"
@@ -155,7 +155,7 @@
   <div class="specie-card-header">
 
     <div class="weapon-card-title">
-      Starting Skills
+      {{localize "SDP.StartingSkills"}}
     </div>
 
     <button
@@ -163,7 +163,7 @@
       class="effect-create-button"
       data-action="add-skill">
 
-      ✚ Add Skill
+      ✚ {{localize "SDP.AddSkill"}}
 
     </button>
 
@@ -193,7 +193,7 @@
   </ul>
 
   <div class="specie-subtitle">
-    Skill Groups
+    {{localize "SDP.SkillGroups"}}
   </div>
 
   <div class="specie-group-list">
@@ -206,7 +206,7 @@
 
         <div class="form-group">
 
-          <label>Count</label>
+          <label>{{localize "SDP.Count"}}</label>
 
           <input
             type="number"
@@ -217,7 +217,7 @@
 
         <div class="form-group">
 
-          <label>Value</label>
+          <label>{{localize "SDP.Value"}}</label>
 
           <input
             type="number"
@@ -245,7 +245,7 @@
   <div class="specie-card-header">
 
     <div class="weapon-card-title">
-      Starting Talents
+      {{localize "SDP.StartingTalents"}}
     </div>
 
     <button
@@ -253,7 +253,7 @@
       class="effect-create-button"
       data-action="add-talent">
 
-      ✚ Add Talent
+      ✚ {{localize "SDP.AddTalent"}}
 
     </button>
 
@@ -287,7 +287,7 @@
   <div class="specie-card-header small-top">
 
     <div class="specie-subtitle">
-      Talent Choices
+      {{localize "SDP.TalentChoices"}}
     </div>
 
     <button
@@ -295,7 +295,7 @@
       class="effect-create-button"
       data-action="add-talent-choice">
 
-      ✚ Add Group
+      ✚ {{localize "SDP.AddGroup"}}
 
     </button>
 
@@ -309,7 +309,7 @@
 
       <div class="form-group">
 
-        <label>Choice Count</label>
+        <label>{{localize "SDP.ChoiceCount"}}</label>
 
         <input
           type="number"
@@ -325,7 +325,7 @@
         data-action="add-choice-option"
         data-index="{{@index}}">
 
-        ✚ Add Talent
+        ✚ {{localize "SDP.AddTalent"}}
 
       </button>
 
@@ -362,19 +362,19 @@
   <!-- RANDOM -->
 
   <div class="specie-subtitle">
-    Random Talents
+    {{localize "SDP.RandomTalents"}}
   </div>
 
   <div class="weapon-grid">
 
     <div class="form-group">
 
-      <label>Table</label>
+      <label>{{localize "SDP.Table"}}</label>
 
       <select class="random-table-select">
 
         <option value="">
-          -- None --
+          -- {{localize "SDP.None"}} --
         </option>
 
         {{#each tables}}
@@ -397,7 +397,7 @@
 
     <div class="form-group">
 
-      <label>Count</label>
+      <label>{{localize "SDP.Count"}}</label>
 
       <input
         type="number"

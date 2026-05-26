@@ -33,11 +33,40 @@ export class SdpCurrencySheet extends SdpItemSheet {
     };
 
     context.denominations = [
-      "platinum",
-      "gold",
-      "silver",
-      "copper"
-    ];
+
+  {
+    value: "platinum",
+    label:
+      game.i18n.localize(
+        "SDP.CurrencyPlatinum"
+      )
+  },
+
+  {
+    value: "gold",
+    label:
+      game.i18n.localize(
+        "SDP.CurrencyGold"
+      )
+  },
+
+  {
+    value: "silver",
+    label:
+      game.i18n.localize(
+        "SDP.CurrencySilver"
+      )
+  },
+
+  {
+    value: "copper",
+    label:
+      game.i18n.localize(
+        "SDP.CurrencyCopper"
+      )
+  }
+
+];
 
     return context;
 

@@ -1,6 +1,7 @@
 import { SdpRoll } from "../rolls/roll.js";
 import { SdpSpell } from "../combat/spell.js";
 import { SdpWorkEngine } from "../system/work-engine.js";
+import { SimpleDialog } from "../apps/simple-dialog.js";
 
 import {
   getCost,
@@ -34,6 +35,8 @@ export function registerInteractionListeners(sheet, root) {
   registerWork(sheet, root);
 
   registerSpellCasting(sheet, root);
+
+  registerTraitDialogs(root);
 
 }
 
@@ -219,9 +222,11 @@ function registerCareer(sheet, root) {
 
         if (available < cost) {
 
-          ui.notifications.warn(
-            "Not enough XP to complete career"
-          );
+         ui.notifications.warn(
+  game.i18n.localize(
+    "SDP.NotEnoughXPCompleteCareer"
+  )
+);
 
           event.currentTarget.checked = false;
 
@@ -240,7 +245,12 @@ function registerCareer(sheet, root) {
         await sheet._addXPLog({
           type: "spend",
           amount: cost,
-          target: `${item.name} (Career Completed)`,
+          target:
+  `${item.name} (${
+    game.i18n.localize(
+      "SDP.CareerCompleted"
+    )
+  })`,
           old: "",
           value: ""
         });
@@ -261,7 +271,12 @@ function registerCareer(sheet, root) {
         await sheet._addXPLog({
           type: "refund",
           amount: cost,
-          target: `${item.name} (Career Uncompleted)`,
+          target:
+  `${item.name} (${
+    game.i18n.localize(
+      "SDP.CareerUncompleted"
+    )
+  })`,
           old: "",
           value: ""
         });
@@ -289,7 +304,11 @@ function registerXPTooltips(sheet, root) {
     const cost =
       getCost("skill", current);
 
-    el.title = `Cost: ${cost} XP`;
+    el.title =
+  game.i18n.format(
+    "SDP.XPCost",
+    { cost }
+  );
 
   });
 
@@ -306,7 +325,11 @@ function registerXPTooltips(sheet, root) {
     const cost =
       getTalentCost(current);
 
-    el.title = `Cost: ${cost} XP`;
+  el.title =
+  game.i18n.format(
+    "SDP.XPCost",
+    { cost }
+  );
 
   });
 
@@ -584,6 +607,53 @@ function registerWork(sheet, root) {
       await SdpWorkEngine.work(
         sheet.actor
       );
+
+    });
+
+  });
+
+}
+
+function registerTraitDialogs(root) {
+
+  root.querySelectorAll(".trait-clickable").forEach(el => {
+
+    el.addEventListener("click", async (event) => {
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      const trait =
+        el.dataset.trait || "";
+
+      const description =
+        el.dataset.description ||
+        game.i18n.localize("SDP.NoDescription");
+
+      new SimpleDialog({
+
+        title: trait,
+
+        content: `
+          <div class="trait-dialog">
+
+            <h2>${trait}</h2>
+
+            <div class="trait-description">
+              ${description.replace(/\n/g, "<br>")}
+            </div>
+
+          </div>
+        `,
+
+        buttons: {
+          close: {
+            label:
+              game.i18n.localize("SDP.Close")
+          }
+        }
+
+      }).render(true);
 
     });
 

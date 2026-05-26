@@ -12,25 +12,23 @@ html.find(".spell-crit-success").off("click").on("click", ev => {
     content: `
       <div class="sdp-spell-result">
 
-        <h3>Critical Success</h3>
+        <h3>${game.i18n.localize("SDP.CriticalSuccess")}</h3>
 
         <ul>
 
           <li>
-            <strong>Critical Damage:</strong><br>
-            Double all damage dice rolled if the spell deals damage.
+            <strong>${game.i18n.localize("SDP.CriticalDamage")}:</strong><br>
+${game.i18n.localize("SDP.CriticalDamageDescription")}
           </li>
 
           <li>
-            <strong>Ambient Mana:</strong><br>
-            You draw mana from your surroundings (WPB meters).<br>
-            You may drain fauna, flora, or nearby humanoids.<br>
-            If insufficient, remaining cost is paid with health.
+           <strong>${game.i18n.localize("SDP.AmbientMana")}:</strong><br>
+${game.i18n.localize("SDP.AmbientManaDescription")}
           </li>
 
           <li>
-            <strong>Multiple Concentration:</strong><br>
-            You may sustain a second concentration spell.
+            <strong>${game.i18n.localize("SDP.MultipleConcentration")}:</strong><br>
+${game.i18n.localize("SDP.MultipleConcentrationDescription")}
           </li>
 
         </ul>
@@ -57,31 +55,54 @@ html.find(".spell-crit-success").off("click").on("click", ev => {
 
     const tableName =
   severity === "major"
-    ? "Major magical consequence"
-    : "Minor magical consequence";
+    ? game.i18n.localize("SDP.RollTableMajorMagicalConsequence")
+    : game.i18n.localize("SDP.RollTableMinorMagicalConsequence");
 
 const table = game.tables.getName(tableName);
 
 if (!table){
-  ui.notifications.error(`Table not found: ${tableName}`);
+  ui.notifications.error(
+  game.i18n.format(
+    "SDP.TableNotFound",
+    { table: tableName }
+  )
+);
   return;
 }
 
+// POTENTIEL BUG ICI
+const roll = await new Roll(formula).roll();
 await table.draw();
 
     let resultText = "";
 
     if (severity === "minor"){
-      resultText = `Minor magical backlash (${roll.total})`;
+      resultText = game.i18n.format(
+  "SDP.MinorMagicalBacklash",
+  { roll: roll.total }
+);
     } else {
-      resultText = `MAJOR magical catastrophe (${roll.total})`;
+      resultText = game.i18n.format(
+  "SDP.MajorMagicalCatastrophe",
+  { roll: roll.total }
+);
     }
 
     ChatMessage.create({
       content: `
-        <h3>Magical Consequence</h3>
-        <p><strong>Severity:</strong> ${severity.toUpperCase()}</p>
-        <p><strong>Roll:</strong> ${roll.total}</p>
+        <h3>${game.i18n.localize("SDP.MagicalConsequence")}</h3>
+        <p>
+  <strong>${game.i18n.localize("SDP.Severity")}:</strong>
+  ${game.i18n.localize(
+    severity === "major"
+      ? "SDP.MagicConsequenceMajor"
+      : "SDP.MagicConsequenceMinor"
+  )}
+</p>
+        <p>
+  <strong>${game.i18n.localize("SDP.Roll")}:</strong>
+  ${roll.total}
+</p>
         <p>${resultText}</p>
       `
     });
@@ -108,7 +129,7 @@ const type = el.dataset.type;
     // APPLY EFFECT
     // =========================
 
-    const apply = (selector, label) => {
+    const apply = (selector) => {
 
   const el = card.querySelector(selector);
   if (!el) return;
@@ -131,19 +152,31 @@ const type = el.dataset.type;
     switch(type){
 
       case "range":
-        apply(".spell-range", "Range");
+        apply(
+  ".spell-range",
+  game.i18n.localize("SDP.Range")
+);
         break;
 
       case "duration":
-        apply(".spell-duration", "Duration");
+        apply(
+  ".spell-duration",
+  game.i18n.localize("SDP.Duration")
+);
         break;
 
       case "target":
-        apply(".spell-target-count", "Targets");
+        apply(
+  ".spell-target-count",
+  game.i18n.localize("SDP.Targets")
+);
         break;
 
       case "aoe":
-        apply(".spell-radius", "Radius");
+        apply(
+  ".spell-radius",
+  game.i18n.localize("SDP.Radius")
+);
         break;
 
       case "special": {
@@ -181,7 +214,7 @@ const type = el.dataset.type;
 
     if (overcastEl){
       overcastEl.innerHTML =
-        `<strong>Overcast:</strong> ${overcast}`;
+        `<strong>${game.i18n.localize("SDP.Overcast")}:</strong> ${overcast}`;
     }
 
     // =========================
@@ -209,7 +242,9 @@ html.find(".overcast-special-btn").click(async ev => {
   let overcast = Number(card.dataset.overcast || 0);
 
   if (overcast < 1){
-    ui.notifications.warn("Not enough overcast");
+    ui.notifications.warn(
+  game.i18n.localize("SDP.NotEnoughOvercast")
+);
     return;
   }
 
@@ -224,9 +259,11 @@ const newValue = current + base;
 
   btn.dataset.value = newValue;
 
-  const label = btn.dataset.label;
+  const labelKey = btn.dataset.label;
 
-  btn.innerHTML = `${label}: ${newValue}`;
+btn.innerHTML = `
+${game.i18n.localize(labelKey)}: ${newValue}
+`;
 
   // =========================
   // UPDATE OVERCAST
@@ -240,7 +277,7 @@ const newValue = current + base;
 
   if (overcastEl){
     overcastEl.innerHTML =
-      `<strong>Overcast:</strong> ${overcast}`;
+      `<strong>${game.i18n.localize("SDP.Overcast")}:</strong> ${overcast}`;
   }
 
   // =========================
@@ -361,7 +398,7 @@ html.find(".reset-overcast").click(async ev => {
   if (overcastEl) {
 
     overcastEl.innerHTML =
-      `<strong>Overcast:</strong> ${restored}`;
+      `<strong>${game.i18n.localize("SDP.Overcast")}:</strong> ${restored}`;
 
   }
 

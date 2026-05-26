@@ -5,7 +5,7 @@
 
     <div class="note-header">
 
-      <label>Description</label>
+      <label>{{localize "SDP.TabDescription"}}</label>
 
       <button
         type="button"
@@ -13,7 +13,7 @@
         data-action="toggleEditor"
         data-target="description">
 
-        ✏️ Edit
+        ✏️ {{localize "SDP.Edit"}}
 
       </button>
 
@@ -51,7 +51,9 @@
 
     <div class="note-header">
 
-      <label>Player Notes</label>
+      <label>
+  {{localize "SDP.PlayerNotes"}}
+</label>
 
       <button
         type="button"
@@ -59,7 +61,7 @@
         data-action="toggleEditor"
         data-target="playerNotes">
 
-        ✏️ Edit
+        ✏️ {{localize "SDP.Edit"}}
 
       </button>
 
@@ -90,13 +92,15 @@
 
   </div>
 
-{{#if user.isGM}}
+{{#if isGM}}
   <!-- GM NOTES -->
   <div class="resource-block note-block">
 
     <div class="note-header">
 
-      <label>GM Notes</label>
+      <label>
+  {{localize "SDP.GMNotes"}}
+</label>
 
       <button
         type="button"
@@ -104,7 +108,7 @@
         data-action="toggleEditor"
         data-target="gmNotes">
 
-        ✏️ Edit
+        ✏️ {{localize "SDP.Edit"}}
 
       </button>
 

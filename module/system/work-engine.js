@@ -16,8 +16,8 @@ export class SdpWorkEngine {
     if (!career) {
 
       ui.notifications.warn(
-        "No current career"
-      );
+  game.i18n.localize("SDP.WarningNoCurrentCareer")
+);
 
       return;
     }
@@ -32,8 +32,8 @@ export class SdpWorkEngine {
     if (!workSkillName) {
 
       ui.notifications.warn(
-        "No work skill on career"
-      );
+  game.i18n.localize("SDP.WarningNoWorkSkill")
+);
 
       return;
     }
@@ -50,8 +50,10 @@ export class SdpWorkEngine {
     if (!skill) {
 
       ui.notifications.warn(
-        `Skill not found: ${workSkillName}`
-      );
+  game.i18n.format("SDP.WarningSkillNotFound", {
+    skill: workSkillName
+  })
+);
 
       return;
     }
@@ -96,14 +98,26 @@ export class SdpWorkEngine {
     if (parts.length < 2) {
 
       ui.notifications.warn(
-        "Invalid standing format"
-      );
+  game.i18n.localize("SDP.WarningInvalidStandingFormat")
+);
 
       return;
     }
 
     const tier =
-      parts[0].toLowerCase();
+  parts[0].toLowerCase();
+
+const tierMap = {
+  copper: "SDP.StandingCopper",
+  silver: "SDP.StandingSilver",
+  gold: "SDP.StandingGold",
+  platinum: "SDP.StandingPlatinum"
+};
+
+const localizedTier =
+  game.i18n.localize(
+    tierMap[tier] || tier
+  );
 
     const standingValue =
       Number(parts[1]);
@@ -169,9 +183,6 @@ export class SdpWorkEngine {
 // RENDER DICE HTML
 // =========================
 
-const testHTML =
-  await testRoll.render();
-
 const moneyHTML =
   await moneyRoll.render();
 
@@ -186,47 +197,50 @@ await ChatMessage.create({
       actor
     }),
 
-  content: `
+ content: `
 
-  <div class="sdp-work-roll">
+<div class="sdp-work-roll">
 
-    <h2>
-      Work
-    </h2>
+  <h2>
+    ${game.i18n.localize("SDP.WorkTitle")}
+  </h2>
 
-    <p>
-      <strong>Career:</strong>
-      ${career.name}
-    </p>
+  <p>
+    <strong>${game.i18n.localize("SDP.WorkCareerLabel")}</strong>
+    ${career.name}
+  </p>
 
-    <p>
-      <strong>Skill:</strong>
-      ${skill.name}
-    </p>
+  <p>
+    <strong>${game.i18n.localize("SDP.WorkSkillLabel")}</strong>
+    ${skill.name}
+  </p>
 
-    ${testHTML}
+  <p>
+  <strong>${game.i18n.localize("SDP.WorkRollLabel")}</strong>
+  ${testRoll.total}
+</p>
 
-    <p>
-      <strong>Target:</strong>
-      ${target}
-    </p>
+  <p>
+    <strong>${game.i18n.localize("SDP.WorkTargetLabel")}</strong>
+    ${target}
+  </p>
 
-    <p>
-      <strong>SL:</strong>
-      ${sl}
-    </p>
+  <p>
+    <strong>${game.i18n.localize("SDP.WorkSLLabel")}</strong>
+    ${sl}
+  </p>
 
-    ${moneyHTML}
+  ${moneyHTML}
 
-    <p>
-      <strong>Final Earnings:</strong>
-      ${finalMoney}
-      ${tier}
-    </p>
+  <p>
+    <strong>${game.i18n.localize("SDP.WorkFinalEarningsLabel")}</strong>
+    ${finalMoney}
+    ${localizedTier}
+  </p>
 
-  </div>
+</div>
 
-  `
+`
 
 });
 

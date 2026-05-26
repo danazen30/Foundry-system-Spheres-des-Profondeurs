@@ -29,7 +29,11 @@ const msg = game.messages.get(
 const targets = Array.from(game.user.targets);
 
 if (!targets.length) {
-  ui.notifications.warn("Select a target before defense");
+ui.notifications.warn(
+  game.i18n.localize(
+    "SDP.Warning.SelectTargetDefense"
+  )
+);
   return;
 }
 
@@ -224,13 +228,42 @@ console.log("SDP | Defense decision (FINAL)", {
              data-brutal="${card.dataset.brutal}"
              data-attack-message-id="${msg.id}">
 
-          <h3>${target.name} chooses defense</h3>
+          <h3>
+  ${target.name}
+  ${game.i18n.localize(
+    "SDP.ChoosesDefense"
+  )}
+</h3>
 
-          <p>Parry: ${parry}</p>
-          <p>Evasion: ${evasion}</p>
+<p>
+  ${game.i18n.localize("SDP.Parry")}
+  : ${parry}
+</p>
 
-          <button class="choose-defense" data-defense="parry">Parry</button>
-          <button class="choose-defense" data-defense="evasion">Evasion</button>
+<p>
+  ${game.i18n.localize("SDP.Evasion")}
+  : ${evasion}
+</p>
+
+<button
+  class="choose-defense"
+  data-defense="parry">
+
+  ${game.i18n.localize(
+    "SDP.Parry"
+  )}
+
+</button>
+
+<button
+  class="choose-defense"
+  data-defense="evasion">
+
+  ${game.i18n.localize(
+    "SDP.Evasion"
+  )}
+
+</button>
 
         </div>
         `
@@ -250,16 +283,42 @@ const result = attackScore > defense ? "HIT" : "MISS";
 
 await ChatMessage.create({
   content: `
-    <h3>Defense Resolution</h3>
+    <h3>
+  ${game.i18n.localize(
+    "SDP.DefenseResolution"
+  )}
+</h3>
 
-    <p>Target: ${target.name}</p>
+<p>
+  ${game.i18n.localize(
+    "SDP.Target"
+  )}: ${target.name}
+</p>
 
-    <p>Parry: ${parry}</p>
-    <p>Evasion: ${evasion}</p>
+<p>
+  ${game.i18n.localize(
+    "SDP.Parry"
+  )}: ${parry}
+</p>
 
-    <p>Defense Used: ${selected.toUpperCase()}</p>
+<p>
+  ${game.i18n.localize(
+    "SDP.Evasion"
+  )}: ${evasion}
+</p>
 
-    <p><strong>${result}</strong></p>
+<p>
+  ${game.i18n.localize(
+    "SDP.DefenseUsed"
+  )}:
+  ${game.i18n.localize(
+    selected === "parry"
+      ? "SDP.Parry"
+      : "SDP.Evasion"
+  )}
+</p>
+
+<p><strong>${result}</strong></p>
   `
 });
 
@@ -304,7 +363,13 @@ const hasEntangling = traits.some(t => t?.key === "entangling");
     const targets = Array.from(game.user.targets);
 
 if (!targets.length) {
-  ui.notifications.warn("Select a target before defense");
+
+  ui.notifications.warn(
+    game.i18n.localize(
+      "SDP.Warning.SelectTargetDefense"
+    )
+  );
+
   return;
 }
 
@@ -377,16 +442,50 @@ const result = attackScore > defense ? "HIT" : "MISS";
     // ===== UPDATE DEFENSE CARD =====
     await msg.update({
   content: `
-    <h3>Defense Resolution</h3>
+    <h3>
+  ${game.i18n.localize(
+    "SDP.DefenseResolution"
+  )}
+</h3>
 
-    <p>Target: ${target.name}</p>
+<p>
+  ${game.i18n.localize(
+    "SDP.Target"
+  )}: ${target.name}
+</p>
 
-    <p>Parry: ${parry}</p>
-    <p>Evasion: ${evasion}</p>
+<p>
+  ${game.i18n.localize(
+    "SDP.Parry"
+  )}: ${parry}
+</p>
 
-    <p>Defense Used: ${selected.toUpperCase()}</p>
+<p>
+  ${game.i18n.localize(
+    "SDP.Evasion"
+  )}: ${evasion}
+</p>
 
-    <p><strong>${result}</strong></p>
+<p>
+  ${game.i18n.localize(
+    "SDP.DefenseUsed"
+  )}:
+  ${game.i18n.localize(
+    selected === "parry"
+      ? "SDP.Parry"
+      : "SDP.Evasion"
+  )}
+</p>
+
+<p>
+  <strong>
+    ${game.i18n.localize(
+      result === "HIT"
+        ? "SDP.Hit"
+        : "SDP.Miss"
+    )}
+  </strong>
+</p>
   `
 });
 
@@ -410,27 +509,41 @@ html.find(".roll-critical-failure").click(async ev => {
 
   const tableKey = ev.currentTarget.dataset.table;
 
-  if (!tableKey) {
-    ui.notifications.warn("Missing critical table");
-    return;
-  }
+ if (!tableKey) {
+
+  ui.notifications.warn(
+    game.i18n.localize(
+      "SDP.Warning.MissingCriticalTable"
+    )
+  );
+
+  return;
+}
 
   // =========================
   // TABLE NAME
   // =========================
 
- let tableName = "";
+let tableConfig = null;
 
 switch (tableKey) {
 
   case "critical-attack-failure":
-    tableName = "Critical Attack Failure";
+
+    tableConfig =
+      CONFIG.SDP.rollTables
+        .criticalAttackFailure;
+
     break;
 
 }
 
-  if (!tableName) {
-    ui.notifications.warn("Critical table not configured");
+  if (!tableConfig) {
+    ui.notifications.warn(
+  game.i18n.localize(
+    "SDP.Warning.CriticalTableNotConfigured"
+  )
+);
     return;
   }
 
@@ -438,13 +551,37 @@ switch (tableKey) {
   // FIND TABLE
   // =========================
 
-  const table = game.tables.find(t => t.name === tableName);
+  const localizedTableName =
+  game.i18n.localize(
+    tableConfig.label
+  );
+
+const pack =
+  game.packs.get(
+    "sdp.rolltables"
+  );
+
+const tables =
+  await pack.getDocuments();
+
+const table = tables.find(t =>
+
+  t.flags?.sdp?.key === tableKey
+
+);
 
   if (!table) {
 
     ui.notifications.warn(
-      `Table not found: ${tableName}`
-    );
+
+  game.i18n.format(
+    "SDP.Warning.TableNotFound",
+    {
+      table: localizedTableName
+    }
+  )
+
+);
 
     return;
   }
@@ -468,23 +605,28 @@ html.on("click", ".roll-reload-critical", async ev => {
     speaker: ChatMessage.getSpeaker(),
 
     content: `
-      <div class="sdp-reload-critical">
+  <div class="sdp-reload-critical">
 
-        <h3>Reload Malfunction</h3>
+    <h3>
+      ${game.i18n.localize(
+        "SDP.ReloadMalfunction"
+      )}
+    </h3>
 
-        <p>
-          At the GM’s decision, depending on the weapon being used,
-          it may become damaged, jam, or even explode in your hands.
-        </p>
+    <p>
+      ${game.i18n.localize(
+        "SDP.ReloadMalfunctionText1"
+      )}
+    </p>
 
-        <p>
-          Its mechanism may also seize up and require maintenance
-          to be made operational again, or suffer any other malfunction
-          appropriate to the situation.
-        </p>
+    <p>
+      ${game.i18n.localize(
+        "SDP.ReloadMalfunctionText2"
+      )}
+    </p>
 
-      </div>
-    `
+  </div>
+`
   });
 
 });
@@ -575,7 +717,11 @@ if (hasTaille && selected === "parry" && targetId) {
       ChatMessage.create({
   content: `
     <div class="sdp-armor-damage">
-      <h4>Shield Damaged</h4>
+      <h4>
+  ${game.i18n.localize(
+    "SDP.ShieldDamaged"
+  )}
+</h4>
       <p>${shield.name} : ${current} → ${newValue}</p>
     </div>
   `
@@ -601,9 +747,36 @@ if (hasTaille && selected === "parry" && targetId) {
   // add result
   const resultBlock = document.createElement("div");
   resultBlock.innerHTML = `
-    <p>Defense Used: ${selected.toUpperCase()}</p>
-    <p><strong>${result}</strong></p>
-  `;
+
+  <p>
+
+    ${game.i18n.localize(
+      "SDP.DefenseUsed"
+    )}:
+
+    ${game.i18n.localize(
+      selected === "parry"
+        ? "SDP.Parry"
+        : "SDP.Evasion"
+    )}
+
+  </p>
+
+  <p>
+
+    <strong>
+
+      ${game.i18n.localize(
+        result === "HIT"
+          ? "SDP.Hit"
+          : "SDP.Miss"
+      )}
+
+    </strong>
+
+  </p>
+
+`;
   card.appendChild(resultBlock);
 
   // add damage button
@@ -615,7 +788,10 @@ if (hasTaille && selected === "parry" && targetId) {
     btn.dataset.target = targetId;
     btn.dataset.defenseType = selected; // 🔥 IMPORTANT
     btn.dataset.traits = traits;
-    btn.innerText = "Roll Damage";
+    btn.innerText =
+  game.i18n.localize(
+    "SDP.RollDamage"
+  );
 
     card.appendChild(btn);
   }

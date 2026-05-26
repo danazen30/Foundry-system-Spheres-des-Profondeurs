@@ -2,17 +2,17 @@
 
   <!-- 🔹 BASE SKILLS -->
   <div class="skills-block">
-    <h3>Basic Skills</h3>
+    <h3>{{localize "SDP.BasicSkills"}}</h3>
 
     <div class="skills-table-wrapper">
 
       <table class="skills-table">
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Char</th>
-            <th>Adv</th>
-            <th>Value</th>
+            <th>{{localize "SDP.Name"}}</th>
+<th>{{localize "SDP.CharAbbr"}}</th>
+<th>{{localize "SDP.AdvancesAbbr"}}</th>
+<th>{{localize "SDP.Value"}}</th>
             <th></th>
           </tr>
         </thead>
@@ -95,17 +95,17 @@
 
   <!-- 🔸 ADVANCED SKILLS -->
   <div class="skills-block">
-    <h3>Advanced Skills</h3>
+    <h3>{{localize "SDP.AdvancedSkills"}}</h3>
 
     <div class="skills-table-wrapper">
 
       <table class="skills-table">
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Char</th>
-            <th>Adv</th>
-            <th>Value</th>
+            <th>{{localize "SDP.Name"}}</th>
+<th>{{localize "SDP.CharAbbr"}}</th>
+<th>{{localize "SDP.AdvancesAbbr"}}</th>
+<th>{{localize "SDP.Value"}}</th>
             <th></th>
           </tr>
         </thead>
@@ -133,7 +133,7 @@
                     class="skill-advance-btn"
                     data-action="advanceSkill"
                     data-item-id="{{item.id}}"
-                    title="Cost: ? XP">
+                    title="{{localize 'SDP.AdvanceCostXP'}}">
 
                     {{#if (gte item.system.advances (multiply ../currentCareer.system.level 5))}}
                       ✔

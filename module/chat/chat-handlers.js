@@ -38,7 +38,11 @@ html.find(".sdp-opposed").click(ev => {
   const sl = Number(card.dataset.sl);
   const actorId = card.dataset.actor;
 const actorObj = game.actors.get(actorId);
-const actorName = actorObj?.name || "Unknown";
+const actorName =
+  actorObj?.name ||
+  game.i18n.localize(
+    "SDP.Unknown"
+  );
 
   game.sdp = game.sdp || {};
 
@@ -55,7 +59,16 @@ actorId: actorId,
       messageId: message.id
     };
 
-    ui.notifications.info(`${actorName} set as opposed reference`);
+    ui.notifications.info(
+
+  game.i18n.format(
+    "SDP.OpposedReferenceSet",
+    {
+      actor: actorName
+    }
+  )
+
+);
     return;
 
   }
@@ -69,25 +82,65 @@ actorId: actorId,
   let resultText;
 let finalSL = Math.abs(sl - base.SL);
 
-if(sl > base.SL){
-  resultText = `${actorName} wins`;
-}else if(sl < base.SL){
-  resultText = `${base.actor} wins`;
-}else{
-  resultText = "Draw";
+if (sl > base.SL) {
+
+  resultText =
+    game.i18n.format(
+      "SDP.ActorWins",
+      {
+        actor: actorName
+      }
+    );
+
+}
+
+else if (sl < base.SL) {
+
+  resultText =
+    game.i18n.format(
+      "SDP.ActorWins",
+      {
+        actor: base.actor
+      }
+    );
+
+}
+
+else {
+
+  resultText =
+    game.i18n.localize(
+      "SDP.Draw"
+    );
+
   finalSL = 0;
+
 }
 
   ChatMessage.create({
     whisper: ChatMessage.getWhisperRecipients("GM"),
     content: `
     
-    <h3>Opposed Test</h3>
+    <h3>
+  ${game.i18n.localize(
+    "SDP.OpposedTest"
+  )}
+</h3>
 
     <p>${base.actor} SL: ${base.SL}</p>
     <p>${actorName} SL: ${sl}</p>
 
-    <p><strong>Final SL: ${finalSL}</strong></p>
+    <p>
+
+  <strong>
+
+    ${game.i18n.localize(
+      "SDP.FinalSL"
+    )}: ${finalSL}
+
+  </strong>
+
+</p>
 
     <strong>${resultText}</strong>
     `
@@ -98,13 +151,25 @@ if(sl > base.SL){
 html.find(".sdp-stop-opposed").click(ev => {
 
   if(!game.sdp?.opposed){
-    ui.notifications.warn("No opposition active");
+    ui.notifications.warn(
+
+  game.i18n.localize(
+    "SDP.NoOppositionActive"
+  )
+
+);
     return;
   }
 
   game.sdp.opposed = null;
 
-  ui.notifications.info("Opposition cleared");
+ ui.notifications.info(
+
+  game.i18n.localize(
+    "SDP.OppositionCleared"
+  )
+
+);
 
 });
 
@@ -141,10 +206,22 @@ html.find(".apply-rest").click(async ev => {
   });
 
   // 💬 feedback visuel
-  button.innerText = "Applied";
+  button.innerText =
+  game.i18n.localize(
+    "SDP.Applied"
+  );
   button.style.opacity = "0.5";
 
-  ui.notifications.info(`${actor.name} recovered resources`);
+  ui.notifications.info(
+
+  game.i18n.format(
+    "SDP.ResourcesRecovered",
+    {
+      actor: actor.name
+    }
+  )
+
+);
 
 });
 

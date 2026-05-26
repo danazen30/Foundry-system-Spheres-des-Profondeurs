@@ -3,7 +3,6 @@ import { SdpRoll } from "../rolls/roll.js";
 import { WEAPON_TRAITS } from "../system/config.js";
 import { getHitLocationLabel } from "../combat/hit-location.js";
 
-
 export function registerEditHandlers(html, message) {
 
   // =========================
@@ -19,19 +18,19 @@ export function registerEditHandlers(html, message) {
 
     new SimpleDialog({
 
-      title: "Edit Roll",
+      title: game.i18n.localize("SDP.EditRoll"),
 
       content: `
-        <label>Target</label>
+        <label>${game.i18n.localize("SDP.Target")}</label>
         <input type="number" name="target" value="${currentTarget}"/>
 
-        <label>Roll</label>
+        <label>${game.i18n.localize("SDP.Roll")}</label>
         <input type="number" name="roll" value="${currentRoll}"/>
       `,
 
       buttons: {
         apply: {
-          label: "Apply",
+          label: game.i18n.localize("SDP.Apply"),
           callback: async (app) => {
 
             const newTarget = Number(
@@ -67,11 +66,11 @@ if (newRoll === 100) {
 let critText = "";
 
 if (crit.success){
-  critText = `<p style="color:green"><strong>CRITICAL SUCCESS</strong></p>`;
+  critText = `<p style="color:green"><strong>${game.i18n.localize("SDP.CriticalSuccess")}</strong></p>`;
 }
 
 if (crit.failure){
-  critText = `<p style="color:red"><strong>CRITICAL FAILURE</strong></p>`;
+  critText = `<p style="color:red"><strong>${game.i18n.localize("SDP.CriticalFailure")}</strong></p>`;
 }
 
             const message = game.messages.get(
@@ -93,18 +92,35 @@ if (crit.failure){
 
   <h3>${label}</h3>
 
-  <button class="edit-roll">Edit</button>
+  <button class="edit-roll">
+  ${game.i18n.localize("SDP.Edit")}
+</button>
 
-  <p>Target: ${newTarget} (${oldTarget})</p>
-  <p>Roll: ${newRoll} (${oldRoll})</p>
-  <p>SL: ${SL} (${game.sdp.Roll.getSLLabel(SL)})</p>
+  <p>
+  ${game.i18n.localize("SDP.Target")}:
+  ${newTarget} (${oldTarget})
+</p>
+  <p>
+  ${game.i18n.localize("SDP.Roll")}:
+  ${newRoll} (${oldRoll})
+</p>
+  <p>
+  ${game.i18n.localize("SDP.SL")}:
+  ${SL} (${game.sdp.Roll.getSLLabel(SL)})
+</p>
 
-  <p><strong>${success ? "SUCCESS" : "FAILURE"}</strong></p>
+  <p><strong>${success
+  ? game.i18n.localize("SDP.Success")
+  : game.i18n.localize("SDP.Failure")}</strong></p>
 
 ${critText}
 
-  <button class="sdp-opposed">Oppose</button>
-  <button class="sdp-stop-opposed">Stop Oppose</button>
+  <button class="sdp-opposed">
+  ${game.i18n.localize("SDP.Oppose")}
+</button>
+  <button class="sdp-stop-opposed">
+  ${game.i18n.localize("SDP.StopOppose")}
+</button>
 
 </div>
 `;
@@ -136,21 +152,21 @@ ${critText}
 
     new SimpleDialog({
 
-      title: "Edit Attack",
+      title: game.i18n.localize("SDP.EditAttack"),
 
       content: `
       ${(card.dataset.type === "ranged" || card.dataset.type === "spell") ? `
-        <label>Target</label>
+        <strong>${game.i18n.localize("SDP.Target")}:</strong>
         <input type="number" name="target" value="${card.dataset.testtarget || 0}"/>
       ` : ""}
 
-      <label>Roll</label>
+      <strong>${game.i18n.localize("SDP.Roll")}:</strong>
       <input type="number" name="roll" value="${roll}"/>
       `,
 
       buttons: {
         apply: {
-          label: "Apply",
+          label: game.i18n.localize("SDP.Apply"),
           callback: async (app) => {
             let newHtml = "";
 
@@ -265,18 +281,18 @@ const hasDowngradeTalent = actor.items.some(i => {
 
 const targetEl = card.querySelector(".spell-target");
 if (targetEl){
-  targetEl.innerHTML = `<strong>Target:</strong> ${target}`;
+  targetEl.innerHTML = `<strong>${game.i18n.localize("SDP.Target")}:</strong> ${target}`;
 }
 
 const rollEl = card.querySelector(".spell-roll");
 if (rollEl){
-  rollEl.innerHTML = `<strong>Roll:</strong> ${newRoll}`;
+  rollEl.innerHTML = `<strong>${game.i18n.localize("SDP.Roll")}:</strong> ${newRoll}`;
 }
 
 const slEl = card.querySelector(".spell-sl");
 if (slEl){
   slEl.innerHTML =
-    `<strong>SL:</strong> ${SL} (${game.sdp.Roll.getSLLabel(SL)})`;
+    `<strong>${game.i18n.localize("SDP.SL")}:</strong> ${SL} (${game.sdp.Roll.getSLLabel(SL)})`;
 }
 
 let overcastEl = card.querySelector(".spell-overcast");
@@ -290,13 +306,18 @@ if (!overcastEl && overcast > 0){
 if (overcastEl){
   overcastEl.innerHTML =
     overcast > 0
-      ? `<strong>Overcast:</strong> ${overcast}`
+      ? `<strong>${game.i18n.localize("SDP.Overcast")}:</strong> ${overcast}`
       : "";
 }
 
 const resultEl = card.querySelector(".spell-result");
 if (resultEl){
-  resultEl.innerHTML = `<strong>${success ? "SUCCESS" : "FAILURE"}</strong>`;
+  resultEl.innerHTML = `
+<strong>
+${success
+  ? game.i18n.localize("SDP.Success")
+  : game.i18n.localize("SDP.Failure")}
+</strong>`;
 }
 
   // =========================
@@ -324,8 +345,16 @@ if (!consequenceEl){
 }
 
 if (magicConsequence){
+
+  const localizedSeverity =
+    game.i18n.localize(
+      magicConsequence === "major"
+        ? "SDP.MagicConsequenceMajor"
+        : "SDP.MagicConsequenceMinor"
+    );
+
   consequenceEl.innerHTML =
-    `<strong>Magical Consequence:</strong> ${magicConsequence.toUpperCase()}`;
+    `<strong>${game.i18n.localize("SDP.MagicalConsequence")}:</strong> ${localizedSeverity}`;
 } else {
   consequenceEl.innerHTML = "";
 }
@@ -334,7 +363,7 @@ if (crit.success){
   critBlock.innerHTML = `
     <p>
       <strong class="spell-crit-success clickable">
-        CRITICAL SUCCESS
+        ${game.i18n.localize("SDP.CriticalSuccess")}
       </strong>
     </p>`;
 }
@@ -344,7 +373,7 @@ else if (crit.failure){
     <p>
       <strong class="spell-crit-failure clickable"
         data-severity="${magicConsequence || "minor"}">
-        CRITICAL FAILURE
+        ${game.i18n.localize("SDP.CriticalFailure")}
       </strong>
     </p>`;
 }
@@ -454,16 +483,16 @@ if (newRoll === 100) {
 
 let critText = "";
               if(crit.success){
-                critText = `<p><strong>CRITICAL SUCCESS</strong></p>`;
+                critText = `<p><strong>${game.i18n.localize("SDP.CriticalSuccess")}</strong></p>`;
               }
               if (crit.failure) {
 
   critText = `
-    <p><strong>CRITICAL FAILURE</strong></p>
+    <p><strong>${game.i18n.localize("SDP.CriticalFailure")}</strong></p>
 
     <button class="roll-critical-failure"
       data-table="critical-attack-failure">
-      Roll Critical Failure
+      ${game.i18n.localize("SDP.RollCriticalFailure")}
     </button>
   `;
 }
@@ -477,7 +506,10 @@ if (crit.failure && itemTraits.some(t => t.key === "flawed")) {
     "system.durability.value": 0
   });
 
-  critText += `<p><strong>${item.name} breaks due to its fragility!</strong></p>`;
+  critText += `<p><strong>${game.i18n.format(
+  "SDP.ItemBreaksFragility",
+  { item: item.name }
+)}</strong></p>`;
 }
 
 // =========================
@@ -508,7 +540,7 @@ if (isImpaling && isRound && newRoll <= target) {
                   data-weapon="${card.dataset.weapon}"
                   data-ammo="${ammoId || ""}"
                   data-target="${card.dataset.target}">
-                  Roll Damage
+                  ${game.i18n.localize("SDP.RollDamage")}
                 </button>
                 `;
               }
@@ -528,38 +560,61 @@ if (isImpaling && isRound && newRoll <= target) {
      data-brutal="${card.dataset.brutal}"
      data-traits='${JSON.stringify(traits)}'>
 
-  <h3>${actor.name} shoots with ${weapon.name}</h3>
+  <h3>
+  ${game.i18n.format(
+    "SDP.ActorShootsWithWeapon",
+    {
+      actor: actor.name,
+      weapon: weapon.name
+    }
+  )}
+</h3>
 
-  <button class="edit-attack">Edit</button>
+  <button class="edit-attack">
+  ${game.i18n.localize("SDP.Edit")}
+</button>
 
   ${traitsData.length ? `
   <div class="weapon-traits">
-    <strong>Traits:</strong>
+    <strong>${game.i18n.localize("SDP.Traits")}:</strong>
     ${traitsData.map(t => `
       <span class="trait-tag"
   data-trait="${t.key}"
   data-value="${t.value || ""}">
-        ${t.label}${t.value ? ` (${t.value})` : ""}
+        ${game.i18n.localize(t.label)}${t.value ? ` (${t.value})` : ""}
       </span>
     `).join("")}
   </div>
 ` : ""}
 
-  <p>Target: ${finalTarget}</p>
-  <p>Roll: ${newRoll} (${oldRoll})</p>
-  <p>SL: ${SL} (${game.sdp.Roll.getSLLabel(SL)})</p>
+  <p>
+  ${game.i18n.localize("SDP.Target")}:
+  ${finalTarget}
+</p>
+
+<p>
+  ${game.i18n.localize("SDP.Roll")}:
+  ${newRoll} (${oldRoll})
+</p>
+
+<p>
+  ${game.i18n.localize("SDP.SL")}:
+  ${SL} (${game.sdp.Roll.getSLLabel(SL)})
+</p>
 
   ${critText}
 
 <p>
-Hit Location:
+${game.i18n.localize("SDP.HitLocation")}:
 ${getHitLocationLabel(
   card.dataset.locationProfile || "humanoid",
   card.dataset.location
 )}
 </p>
 
-  <p><strong>${success ? "HIT" : "MISS"}</strong></p>
+  <p><strong>${success
+  ? game.i18n.localize("SDP.Hit")
+  : game.i18n.localize("SDP.Miss")}</strong></p>
 
   ${damageButton}
 
@@ -626,16 +681,16 @@ if (newRoll === 100) {
 
               let critText = "";
               if(crit.success){
-                critText = `<p><strong>CRITICAL SUCCESS</strong></p>`;
+                critText = `<p><strong>${game.i18n.localize("SDP.CriticalSuccess")}</strong></p>`;
               }
               if (crit.failure) {
 
   critText = `
-    <p><strong>CRITICAL FAILURE</strong></p>
+    <p><strong>${game.i18n.localize("SDP.CriticalFailure")}</strong></p>
 
     <button class="roll-critical-failure"
       data-table="critical-attack-failure">
-      Roll Critical Failure
+      ${game.i18n.localize("SDP.RollCriticalFailure")}
     </button>
   `;
 }
@@ -649,7 +704,10 @@ if (crit.failure && itemTraits.some(t => t.key === "flawed")) {
     "system.durability.value": 0
   });
 
-  critText += `<p><strong>${item.name} breaks due to its fragility!</strong></p>`;
+  critText += `<p><strong>${game.i18n.format(
+  "SDP.ItemBreaksFragility",
+  { item: item.name }
+)}</strong></p>`;
 }
 
 // =========================
@@ -687,28 +745,49 @@ if (isImpaling && isRound && successCheck) {
      data-brutal="${card.dataset.brutal}"
      data-traits='${JSON.stringify(traits)}'>
 
-  <h3>${actor.name} attacks with ${weapon.name}</h3>
+ <h3>
+${game.i18n.format(
+  "SDP.ActorAttacksWithWeapon",
+  {
+    actor: actor.name,
+    weapon: weapon.name
+  }
+)}
+</h3>
 
-  <button class="edit-attack">Edit</button>
+  <button class="edit-attack">
+  ${game.i18n.localize("SDP.Edit")}
+</button>
 
   ${traitsData.length ? `
   <div class="weapon-traits">
-    <strong>Traits:</strong>
+    <strong>${game.i18n.localize("SDP.Traits")}:</strong>
     ${traitsData.map(t => `
       <span class="trait-tag"
         data-trait="${t.key}">
-        ${t.label}${t.value ? ` (${t.value})` : ""}
+        ${game.i18n.localize(t.label)}${t.value ? ` (${t.value})` : ""}
       </span>
     `).join("")}
   </div>
 ` : ""}
 
-  <p>Roll: ${newRoll} (${oldRoll})</p>
-  <p>SL: ${SL}</p>
-  <p>Attack Score: ${attackScore} (${oldAttack})</p>
+  <p>
+  ${game.i18n.localize("SDP.Roll")}:
+  ${newRoll} (${oldRoll})
+</p>
 
 <p>
-Location:
+  ${game.i18n.localize("SDP.SL")}:
+  ${SL}
+</p>
+
+<p>
+  ${game.i18n.localize("SDP.AttackScore")}:
+  ${attackScore} (${oldAttack})
+</p>
+
+<p>
+${game.i18n.localize("SDP.Location")}:
 ${getHitLocationLabel(
   card.dataset.locationProfile || "humanoid",
   card.dataset.location
@@ -717,7 +796,7 @@ ${getHitLocationLabel(
 
   ${critText}
 
-  <button class="apply-defense">Apply Defense</button>
+  <button class="apply-defense">${game.i18n.localize("SDP.ApplyDefense")}</button>
 
 </div>
 `;
@@ -757,15 +836,15 @@ const trait = WEAPON_TRAITS[traitKey];
   const content = `
   <div class="sdp-trait-card">
     <h3>
-      ${trait.label}
-      ${traitValue ? `(${traitValue})` : ""}
-    </h3>
+  ${game.i18n.localize(trait.label)}
+  ${traitValue ? `(${traitValue})` : ""}
+</h3>
 
     ${traitValue ? `
-      <p><strong>Value:</strong> ${traitValue}</p>
+      <p><strong>${game.i18n.localize("SDP.Value")}:</strong> ${traitValue}</p>
     ` : ""}
 
-    <p>${trait.description}</p>
+    <p>${game.i18n.localize(trait.description)}</p>
   </div>
 `;
 

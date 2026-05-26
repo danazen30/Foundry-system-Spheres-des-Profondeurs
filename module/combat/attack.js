@@ -5,7 +5,6 @@ import { WEAPON_TRAITS } from "../system/config.js";
 import { ITEM_TRAITS } from "../system/config.js";
 import { SdpSizeEngine } from "../system/size-engine.js";
 
-
 export class SdpAttack {
 
 static async attackTest(actor, weapon, attackValue){
@@ -29,7 +28,11 @@ const stunned = actor.system.conditions?.stunned || 0;
 
 if(stunned > 0){
 
-  ui.notifications.warn(`${actor.name} is stunned and cannot attack`);
+  ui.notifications.warn(
+  game.i18n.format("SDP.StunnedCannotAttack", {
+    actor: actor.name
+  })
+);
   return;
 
 }
@@ -147,11 +150,15 @@ if (weapon.system.currentAmmo) {
   ammo = actor.items.get(weapon.system.currentAmmo);
 
   if (!ammo) {
-    ui.notifications.warn("Invalid ammunition selected");
+    ui.notifications.warn(
+  game.i18n.localize("SDP.InvalidAmmunitionSelected")
+);
     return;
   }
 } else if (weapon.system.consumesAmmo) {
-  ui.notifications.warn("No ammunition selected");
+  ui.notifications.warn(
+  game.i18n.localize("SDP.NoAmmunitionSelected")
+);
   return;
 }
 
@@ -167,7 +174,8 @@ const base = actor._getBestWeaponSkill(weapon);
 // =========================
 
 let rangeModifier = 0;
-let rangeLabel = "Unknown";
+let rangeLabel =
+  game.i18n.localize("SDP.Unknown");
 let measuredDistance = 0;
 
 const targetToken = targets[0];
@@ -230,7 +238,9 @@ const bands = CONFIG.SDP.rangeBands;
 
   } else {
 
-    ui.notifications.warn("Target is out of range");
+    ui.notifications.warn(
+  game.i18n.localize("SDP.TargetOutOfRange")
+);
     return;
 
   }
@@ -323,16 +333,31 @@ const finalTraits = [...activePositiveTraits, ...negativeTraits];
 // =========================
 
 const displayTraits = [
-  ...activePositiveTraits.map(t => ({
-    ...t,
-    label: getTraitConfig(t.key)?.label || t.key,
-    type: "positive"
-  })),
-  ...negativeTraits.map(t => ({
-    ...t,
-    label: getTraitConfig(t.key)?.label || t.key,
-    type: "negative"
-  }))
+  ...activePositiveTraits.map(t => {
+
+    const labelKey =
+      getTraitConfig(t.key)?.label || t.key;
+
+    return {
+      ...t,
+      label: game.i18n.localize(labelKey),
+      type: "positive"
+    };
+
+  }),
+
+  ...negativeTraits.map(t => {
+
+    const labelKey =
+      getTraitConfig(t.key)?.label || t.key;
+
+    return {
+      ...t,
+      label: game.i18n.localize(labelKey),
+      type: "negative"
+    };
+
+  })
 ];
 
 const traitsHTML = displayTraits.map(t => {
@@ -398,7 +423,8 @@ if (weapon.system.offhand) {
 }
 
 // 🔥 juste pour affichage
-let source = "Ranged Ability";
+let source =
+  game.i18n.localize("SDP.RangedAbility");
 
 if (bestSkill) {
   source = bestSkill.name;
@@ -432,7 +458,11 @@ if (weapon.system.category === "ranged") {
       // 🔥 SECURITE
       if (current <= 0) {
 
-        ui.notifications.warn(`${ammo.name} is empty`);
+        ui.notifications.warn(
+  game.i18n.format("SDP.AmmoEmpty", {
+    ammo: ammo.name
+  })
+);
         return;
 
       }
@@ -451,7 +481,9 @@ if (weapon.system.category === "ranged") {
 
     } else {
 
-      ui.notifications.warn("No ammunition selected");
+      ui.notifications.warn(
+  game.i18n.localize("SDP.NoAmmunitionSelected")
+);
       return;
 
     }
@@ -468,7 +500,11 @@ if (weapon.system.category === "ranged") {
 
     if (current <= 0) {
 
-      ui.notifications.warn(`${weapon.name} is depleted`);
+      ui.notifications.warn(
+  game.i18n.format("SDP.WeaponDepleted", {
+    weapon: weapon.name
+  })
+);
       return;
 
     }
@@ -525,7 +561,14 @@ if (crit.failure && itemTraits.some(t => t.key === "flawed")) {
     weapon: weapon.name
   });
 
-  breakText = `<p><strong>${weapon.name} breaks due to its fragility!</strong></p>`;
+  breakText = `
+<p>
+  <strong>
+    ${game.i18n.format("SDP.WeaponBreaksFragility", {
+      weapon: weapon.name
+    })}
+  </strong>
+</p>`;
 }
 
 const isImpaling = finalTraits.some(t => t.key === "impaling");
@@ -592,17 +635,17 @@ const talentsHTML =
 let critText = "";
 
 if (crit.success) {
-  critText = `<p><strong>CRITICAL SUCCESS</strong></p>`;
+  critText = `<p><strong>${game.i18n.localize("SDP.CriticalSuccess")}</strong></p>`;
 }
 
 if (crit.failure) {
 
   critText = `
-    <p><strong>CRITICAL FAILURE</strong></p>
+    <p><strong>${game.i18n.localize("SDP.CriticalFailure")}</strong></p>
 
     <button class="roll-critical-failure"
       data-table="critical-attack-failure">
-      Roll Critical Failure
+      ${game.i18n.localize("SDP.RollCriticalFailure")}
     </button>
   `;
 }
@@ -618,7 +661,7 @@ if (crit.failure) {
         data-weapon="${weapon.id}"
         data-ammo="${ammo?.id || ""}"
         data-target="${targetId ?? ""}">
-        Roll Damage
+        ${game.i18n.localize("SDP.RollDamage")}
       </button>
       `;
 
@@ -656,15 +699,20 @@ if (finalTraits.some(t => t.key === "reload")) {
      data-traits='${JSON.stringify(normalizedTraits)}'
      data-damagetype="${weapon.system.damageType || "slashing"}">
 
-  <h3>${actor.name} shoots with ${weapon.name}</h3>
+  <h3>
+  ${game.i18n.format("SDP.ShootsWith", {
+    actor: actor.name,
+    weapon: weapon.name
+  })}
+</h3>
 
-  <button class="edit-attack">Edit</button>
+  <button class="edit-attack">${game.i18n.localize("SDP.Edit")}</button>
 
 ${displayTraits.length ? `
 <div class="weapon-traits">
 
   ${displayTraits.some(t => t.type === "positive") ? `
-    <div><strong>Advantages:</strong>
+    <div><strong>${game.i18n.localize("SDP.Advantages")}:</strong>
       ${displayTraits
         .filter(t => t.type === "positive")
         .map(t => `<span class="trait-tag">${t.label}</span>`)
@@ -673,7 +721,7 @@ ${displayTraits.length ? `
   ` : ""}
 
   ${displayTraits.some(t => t.type === "negative") ? `
-    <div><strong>Drawbacks:</strong>
+    <div><strong>${game.i18n.localize("SDP.Drawbacks")}:</strong>
       ${displayTraits
         .filter(t => t.type === "negative")
         .map(t => `<span class="trait-tag negative">${t.label}</span>`)
@@ -684,23 +732,32 @@ ${displayTraits.length ? `
 </div>
 ` : ""}
 
-  <p>Test: ${source}</p>
-  <p>Target: ${targetValue}</p>
-  <p>Range: ${rangeLabel} (${Math.round(measuredDistance)}m)</p>
-  <p>Roll: ${result}</p>
-  ${inspiration > 0 ? `<p>Inspiration: +${inspiration}</p>` : ""}
-  <p>SL: ${SL} (${SdpRoll.getSLLabel(SL)})</p>
+  <p>${game.i18n.localize("SDP.Test")}: ${source}</p>
+  <p>${game.i18n.localize("SDP.Target")}: ${targetValue}</p>
+  <p>${game.i18n.localize("SDP.Range")}: ${rangeLabel} (${Math.round(measuredDistance)}m)</p>
+  <p>${game.i18n.localize("SDP.Roll")}: ${result}</p>
+  ${inspiration > 0 ? `<p>${game.i18n.localize("SDP.Inspiration")}: +${inspiration}</p>` : ""}
+  <p>
+  ${game.i18n.localize("SDP.SuccessLevel")}:
+  ${SL}
+  (${SdpRoll.getSLLabel(SL)})
+</p>
   
   ${critText}
   ${breakText}
 
   <p>
-Hit Location:
-${hitProfile.locations?.[hitLocation.location]?.label || hitLocation.location}
+${game.i18n.localize("SDP.HitLocation")}:
+${game.i18n.localize(
+  hitProfile.locations?.[hitLocation.location]?.label
+    || hitLocation.location
+)}
 (${hitLocation.roll.total})
 </p>
 ${talentsHTML}
-  <p><strong>${success ? "HIT" : "MISS"}</strong></p>
+  <p><strong>${success
+  ? game.i18n.localize("SDP.Hit")
+  : game.i18n.localize("SDP.Miss")}</strong></p>
 
   ${damageButton}
 
@@ -878,13 +935,27 @@ if (crit.failure && itemTraits.some(t => t.key === "flawed")) {
     weapon: weapon.name
   });
 
-  breakText = `<p><strong>${weapon.name} breaks due to its fragility!</strong></p>`;
+  breakText = `
+<p>
+  <strong>
+    ${game.i18n.format("SDP.WeaponBreaksFragility", {
+      weapon: weapon.name
+    })}
+  </strong>
+</p>`;
 }
-const traitsData = normalizedTraits.map(t => ({
-  key: t.key,
-  label: WEAPON_TRAITS?.[t.key]?.label || t.key,
-  value: t.value
-}));
+const traitsData = normalizedTraits.map(t => {
+
+  const labelKey =
+    WEAPON_TRAITS?.[t.key]?.label || t.key;
+
+  return {
+    key: t.key,
+    label: game.i18n.localize(labelKey),
+    value: t.value
+  };
+
+});
 
 let fastBonus = 0;
 
@@ -957,17 +1028,17 @@ context = SdpTraitEngine.applyAttackTraits(context);
  let critText = "";
 
 if (crit.success) {
-  critText = `<p><strong>CRITICAL SUCCESS</strong></p>`;
+  critText = `<p><strong>${game.i18n.localize("SDP.CriticalSuccess")}</strong></p>`;
 }
 
 if (crit.failure) {
 
   critText = `
-    <p><strong>CRITICAL FAILURE</strong></p>
+    <p><strong>${game.i18n.localize("SDP.CriticalFailure")}</strong></p>
 
     <button class="roll-critical-failure"
       data-table="critical-attack-failure">
-      Roll Critical Failure
+      ${game.i18n.localize("SDP.RollCriticalFailure")}
     </button>
   `;
 }
@@ -1018,13 +1089,20 @@ const talentsHTML =
      data-traits='${JSON.stringify(normalizedTraits)}'
      data-damagetype="${weapon.system.damageType || "slashing"}">
 
-  <h3>${actor.name} attacks with ${weapon.name}</h3>
+  <h3>
+  ${game.i18n.format("SDP.AttacksWith", {
+    actor: actor.name,
+    weapon: weapon.name
+  })}
+</h3>
 
-  <button class="edit-attack">Edit</button>
+  <button class="edit-attack">
+  ${game.i18n.localize("SDP.Edit")}
+</button>
 
   ${traitsData.length ? `
   <div class="weapon-traits">
-    <strong>Traits:</strong>
+    <strong>${game.i18n.localize("SDP.Traits")}:</strong>
     ${traitsData.map(t => `
       <span class="trait-tag"
       data-trait="${t.key}"
@@ -1035,21 +1113,26 @@ const talentsHTML =
   </div>
 ` : ""}
 
-  <p>Roll: ${result}</p>
-  <p>SL: ${SL}</p>
-  ${inspiration > 0 ? `<p>Inspiration: +${inspiration}</p>` : ""}
+  <p>${game.i18n.localize("SDP.Roll")}: ${result}</p>
+  <p>${game.i18n.localize("SDP.SuccessLevel")}: ${SL}</p>
+  ${inspiration > 0 ? `<p>${game.i18n.localize("SDP.Inspiration")}: +${inspiration}</p>` : ""}
   <p>
-Location:
-${hitProfile.locations?.[hitLocation.location]?.label || hitLocation.location}
+${game.i18n.localize("SDP.HitLocation")}:
+${game.i18n.localize(
+  hitProfile.locations?.[hitLocation.location]?.label
+    || hitLocation.location
+)}
 (${hitLocation.roll.total})
 </p>
   ${critText}
   ${breakText}
-  ${dialogMods.charge ? "<p>Charge</p>" : ""}
+  ${dialogMods.charge
+  ? `<p>${game.i18n.localize("SDP.Charge")}</p>`
+  : ""}
   ${talentsHTML}
-  <p>Attack Score: ${attackScore}</p>
+  <p>${game.i18n.localize("SDP.AttackScore")}: ${attackScore}</p>
 
- <button class="apply-defense">Apply Defense</button>
+ <button class="apply-defense">${game.i18n.localize("SDP.ApplyDefense")}</button>
 
 </div>
 `;
@@ -1155,32 +1238,39 @@ const newProgress = weapon.system.reloadProgress + progressGain;
 let critText = "";
 
 if (crit.success) {
-  critText = `<p><strong>CRITICAL SUCCESS</strong></p>`;
+  critText = `<p><strong>${game.i18n.localize("SDP.CriticalSuccess")}</strong></p>`;
 }
 
 if (crit.failure) {
 
   critText = `
-    <p><strong>CRITICAL FAILURE</strong></p>
+    <p><strong>${game.i18n.localize("SDP.CriticalFailure")}</strong></p>
 
     <button class="roll-reload-critical">
-      Reload Malfunction
+      ${game.i18n.localize("SDP.ReloadMalfunction")}
     </button>
   `;
 }
 
   const html = `
 <div class="sdp-reload">
-  <h3>${actor.name} reloads ${weapon.name}</h3>
+  <h3>
+  ${game.i18n.format("SDP.ReloadsWeapon", {
+    actor: actor.name,
+    weapon: weapon.name
+  })}
+</h3>
 
-  <p>Target: ${targetValue}</p>
-  <p>Roll: ${result}</p>
-  <p>SL: ${SL}</p>
+  <p>${game.i18n.localize("SDP.Target")}: ${targetValue}</p>
+  <p>${game.i18n.localize("SDP.Roll")}: ${result}</p>
+  <p>${game.i18n.localize("SDP.SuccessLevel")}: ${SL}</p>
 ${critText}
 
-  <p>Progress: ${newProgress}/${target}</p>
+  <p>${game.i18n.localize("SDP.Progress")}: ${newProgress}/${target}</p>
 
-  <p><strong>${loaded ? "RELOADED" : "LOADING..."}</strong></p>
+  <p><strong>${loaded
+  ? game.i18n.localize("SDP.Reloaded")
+  : game.i18n.localize("SDP.Loading")}</strong></p>
 </div>
 `;
 

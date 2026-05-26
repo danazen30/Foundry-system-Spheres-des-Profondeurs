@@ -1,7 +1,7 @@
 {
   "id": "sdp",
   "title": "Spheres of the Depths",
-  "description": "A custom tabletop RPG system for Foundry VTT",
+  "description": "Spheres of the Depths",
   "version": "0.0.1",
   "compatibility": {
     "minimum": "13",
@@ -27,74 +27,95 @@
   "download": "",
   "socket": true,
 
+  "languages": [
+  {
+    "lang": "en",
+    "name": "English",
+    "path": "lang/en.json"
+  },
+  {
+    "lang": "fr",
+    "name": "Français",
+    "path": "lang/fr.json"
+  }
+],
+
   "initiative": "1d20 + @attributes.initiative.value",
 
   "packs": [
 
-    {
-      "name": "injuries",
-      "label": "SDP Injuries",
-      "system": "sdp",
-      "path": "packs/injuries",
-      "type": "Item",
-      "banner": "systems/sdp/assets/icons/default-banner.png"
-    },
+  {
+    "name": "injuries",
+    "label": "SDP.Pack.Injuries",
+    "system": "sdp",
+    "path": "packs/injuries",
+    "type": "Item",
+    "banner": "systems/sdp/assets/icons/default-banner.png"
+  },
 
-    {
-      "name": "talents",
-      "label": "SDP Talents",
-      "system": "sdp",
-      "path": "packs/talents",
-      "type": "Item",
-      "banner": "systems/sdp/assets/icons/default-banner.png"
-    },
+  {
+    "name": "talents",
+    "label": "SDP.Pack.Talents",
+    "system": "sdp",
+    "path": "packs/talents",
+    "type": "Item",
+    "banner": "systems/sdp/assets/icons/default-banner.png"
+  },
 
-    {
-      "name": "skills",
-      "label": "SDP Skills",
-      "system": "sdp",
-      "path": "packs/skills",
-      "type": "Item",
-      "banner": "systems/sdp/assets/icons/default-banner.png"
-    },
+  {
+    "name": "skills",
+    "label": "SDP.Pack.Skills",
+    "system": "sdp",
+    "path": "packs/skills",
+    "type": "Item",
+    "banner": "systems/sdp/assets/icons/default-banner.png"
+  },
 
-    {
-      "name": "species",
-      "label": "SDP species",
-      "system": "sdp",
-      "path": "packs/species",
-      "type": "Item" ,
-      "banner": "systems/sdp/assets/icons/default-banner.png"
-    },
+  {
+    "name": "species",
+    "label": "SDP.Pack.Species",
+    "system": "sdp",
+    "path": "packs/species",
+    "type": "Item",
+    "banner": "systems/sdp/assets/icons/default-banner.png"
+  },
 
-    {
-      "name": "careers",
-      "label": "SDP Careers",
-      "system": "sdp",
-      "path": "packs/careers",
-      "type": "Item",
-      "banner": "systems/sdp/assets/icons/default-banner.png"
-    },
+  {
+    "name": "careers",
+    "label": "SDP.Pack.Careers",
+    "system": "sdp",
+    "path": "packs/careers",
+    "type": "Item",
+    "banner": "systems/sdp/assets/icons/default-banner.png"
+  },
 
-    {
-      "name": "sign",
-      "label": "SDP Sign",
-      "system": "sdp",
-      "path": "packs/sign",
-      "type": "Item",
-      "banner": "systems/sdp/assets/icons/default-banner.png"
-    },
+  {
+    "name": "sign",
+    "label": "SDP.Pack.Signs",
+    "system": "sdp",
+    "path": "packs/sign",
+    "type": "Item",
+    "banner": "systems/sdp/assets/icons/default-banner.png"
+  },
 
-    {
-      "name": "possession",
-      "label": "SDP Possession Base",
-      "system": "sdp",
-      "path": "packs/possession",
-      "type": "Item",
-      "banner": "systems/sdp/assets/icons/default-banner.png"
-    }
+  {
+    "name": "possession",
+    "label": "SDP.Pack.Possessions",
+    "system": "sdp",
+    "path": "packs/possession",
+    "type": "Item",
+    "banner": "systems/sdp/assets/icons/default-banner.png"
+  },
 
-  ],
+  {
+    "name": "rolltables",
+    "label": "SDP Roll Tables",
+    "path": "packs/rolltables",
+    "type": "RollTable",
+    "system": "sdp"
+  }
+
+],
 
   "relationships": {
   "requires": [
@@ -132,22 +153,54 @@
       }
     },
     "Item": {
-      "skill": {},
-      "talent": {},
-      "weapon": {},
-      "armor": {},
-      "spell": {},
-      "injury": {},
-      "specie": {},
-      "career": {},
-      "sign":{},
-      "ammunition": {},
-      "possession": {},
-      "disease": {},
-      "trait": {},
-      "clothing": {},
-      "container": {},
-      "currency": {}
-    }
+  "skill": {
+    "label": "TYPES.Item.skill"
+  },
+  "talent": {
+    "label": "TYPES.Item.talent"
+  },
+  "weapon": {
+    "label": "TYPES.Item.weapon"
+  },
+  "armor": {
+    "label": "TYPES.Item.armor"
+  },
+  "spell": {
+    "label": "TYPES.Item.spell"
+  },
+  "injury": {
+    "label": "TYPES.Item.injury"
+  },
+  "specie": {
+    "label": "TYPES.Item.specie"
+  },
+  "career": {
+    "label": "TYPES.Item.career"
+  },
+  "sign": {
+    "label": "TYPES.Item.sign"
+  },
+  "ammunition": {
+    "label": "TYPES.Item.ammunition"
+  },
+  "possession": {
+    "label": "TYPES.Item.possession"
+  },
+  "disease": {
+    "label": "TYPES.Item.disease"
+  },
+  "trait": {
+    "label": "TYPES.Item.trait"
+  },
+  "clothing": {
+    "label": "TYPES.Item.clothing"
+  },
+  "container": {
+    "label": "TYPES.Item.container"
+  },
+  "currency": {
+    "label": "TYPES.Item.currency"
+  }
+}
   }
 }

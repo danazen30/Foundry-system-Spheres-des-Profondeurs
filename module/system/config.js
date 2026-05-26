@@ -16,31 +16,31 @@ export const SDP = {
   rangeBands: {
 
     pointBlank: {
-      label: "Point Blank",
+  label: "SDP.RangePointBlank",
       multiplier: 0.1,
       modifier: 30
     },
 
     short: {
-      label: "Short",
+  label: "SDP.RangeShort",
       multiplier: 0.5,
       modifier: 10
     },
 
-    normal: {
-      label: "Normal",
+   normal: {
+  label: "SDP.RangeNormal",
       multiplier: 1,
       modifier: 0
     },
 
     long: {
-      label: "Long",
+  label: "SDP.RangeLong",
       multiplier: 2,
       modifier: -10
     },
 
     extreme: {
-      label: "Extreme",
+  label: "SDP.RangeExtreme",
       multiplier: 3,
       modifier: -30
     }
@@ -64,20 +64,35 @@ SDP.ATTRIBUTE_ABBREVIATIONS = {
   charisma: "C"
 };
 
+SDP.ATTRIBUTE_LABELS = {
+
+  meleeAbility: "SDP.MeleeAbility",
+  rangedAbility: "SDP.RangedAbility",
+  strength: "SDP.Strength",
+  toughness: "SDP.Toughness",
+  initiative: "SDP.Initiative",
+  agility: "SDP.Agility",
+  dexterity: "SDP.Dexterity",
+  intelligence: "SDP.Intelligence",
+  willpower: "SDP.Willpower",
+  charisma: "SDP.Charisma"
+
+};
+
 export const DAMAGE_TYPES = {
-  slashing: "Slashing",
-  piercing: "Piercing",
-  bludgeoning: "Bludgeoning"
+  slashing: "SDP.DamageTypeSlashing",
+  piercing: "SDP.DamageTypePiercing",
+  bludgeoning: "SDP.DamageTypeBludgeoning"
 };
 
 CONFIG.SDP.hitLocations = {
 
-  head: "Head",
-  body: "Body",
-  rightArm: "Right Arm",
-  leftArm: "Left Arm",
-  rightLeg: "Right Leg",
-  leftLeg: "Left Leg"
+  head: "SDP.HitLocationHead",
+  body: "SDP.HitLocationBody",
+  rightArm: "SDP.HitLocationRightArm",
+  leftArm: "SDP.HitLocationLeftArm",
+  rightLeg: "SDP.HitLocationRightLeg",
+  leftLeg: "SDP.HitLocationLeftLeg"
 
 };
 
@@ -96,7 +111,7 @@ CONFIG.SDP.hitLocationProfiles = {
 
   humanoid: {
 
-    label: "Humanoid",
+    label: "SDP.ProfileHumanoid",
 
     table: {
       1: "head",
@@ -116,32 +131,32 @@ CONFIG.SDP.hitLocationProfiles = {
     locations: {
 
       head: {
-        label: "Head",
+        label: "SDP.HitLocationHead",
         modifier: -30
       },
 
       body: {
-        label: "Body",
+        label: "SDP.HitLocationBody",
         modifier: -10
       },
 
       rightArm: {
-        label: "Right Arm",
+        label: "SDP.HitLocationRightArm",
         modifier: -20
       },
 
       leftArm: {
-        label: "Left Arm",
+        label: "SDP.HitLocationLeftArm",
         modifier: -20
       },
 
       rightLeg: {
-        label: "Right Leg",
+        label: "SDP.HitLocationRightLeg",
         modifier: -20
       },
 
       leftLeg: {
-        label: "Left Leg",
+        label: "SDP.HitLocationLeftLeg",
         modifier: -20
       }
 
@@ -151,7 +166,7 @@ CONFIG.SDP.hitLocationProfiles = {
 
   serpent: {
 
-    label: "Serpent",
+    label: "SDP.ProfileSerpent",
 
     table: {
       1: "head",
@@ -171,12 +186,12 @@ CONFIG.SDP.hitLocationProfiles = {
     locations: {
 
       head: {
-        label: "Head",
+        label: "SDP.HitLocationHead",
         modifier: -30
       },
 
       body: {
-        label: "Body",
+        label: "SDP.HitLocationBody",
         modifier: -10
       },
 
@@ -189,20 +204,20 @@ SDP.hitLocationProfiles = CONFIG.SDP.hitLocationProfiles;
 
 SDP.conditions = {
 
-  staggering: "Staggering",
-  stunned: "Stunned",
-  bleeding: "Bleeding",
-  poisoned: "Poisoned",
-  burning: "Burning",
-  exhausted: "Exhausted",
-  deafened: "Deafened",
-  prone: "Prone",
-  shaken: "Shaken",
-  frightened: "Frightened",
-  entangled: "Entangled",
-  unconscious: "Unconscious",
-  dying: "Dying",
-  surprised: "Surprised"
+  staggering: "SDP.ConditionStaggering",
+  stunned: "SDP.ConditionStunned",
+  bleeding: "SDP.ConditionBleeding",
+  poisoned: "SDP.ConditionPoisoned",
+  burning: "SDP.ConditionBurning",
+  exhausted: "SDP.ConditionExhausted",
+  deafened: "SDP.ConditionDeafened",
+  prone: "SDP.ConditionProne",
+  shaken: "SDP.ConditionShaken",
+  frightened: "SDP.ConditionFrightened",
+  entangled: "SDP.ConditionEntangled",
+  unconscious: "SDP.ConditionUnconscious",
+  dying: "SDP.ConditionDying",
+  surprised: "SDP.ConditionSurprised"
 
 };
 
@@ -215,201 +230,152 @@ SDP.turnConditions = {
 };
 
 CONFIG.SDP.magicTypes = {
-  minor: "Minor",
-  advanced: "Advanced",
-  superior: "Superior"
+  minor: "SDP.MagicMinor",
+  advanced: "SDP.MagicAdvanced",
+  superior: "SDP.MagicSuperior"
 };
+
+SDP.rollTables = {
+
+  criticalAttackFailure: {
+    key: "critical-attack-failure",
+    label: "SDP.RollTableCriticalAttackFailure"
+  },
+
+  minorMagicalConsequence: {
+    key: "minor-magical-consequence",
+    label: "SDP.RollTableMinorMagicalConsequence"
+  },
+
+  majorMagicalConsequence: {
+    key: "major-magical-consequence",
+    label: "SDP.RollTableMajorMagicalConsequence"
+  }
+};
+
 
 SDP.conditionConfig = {
 
   stunned: {
+    label: "SDP.ConditionStunned",
     type: "stack",
     modifier: -10,
     attackBonusAgainst: 1,
     trigger: "startTurn",
     test: "resistance",
     onRecover: "exhausted",
-    description: `You have taken a blow to the head; you are disoriented or confused. 
-    Your ears are ringing, and nothing really makes sense anymore. 
-    You are unable to perform your Action during your turn, and you cannot run. 
-    You also suffer a -10 penalty to all Tests, and any opponent attempting to hit you in melee combat gains a +1 bonus to hit.
-
-    You may suffer from this same Condition multiple times; it is also possible to gain several instances of the same Condition from a single event. 
-    At the end of each round, you may attempt an Intermediate Resistance Test (+0). 
-    On a success, remove 1 Stunned Condition, and each SL (Success Level) achieved allows you to remove 1 additional Stunned Condition. 
-    Once all Stunned Conditions have been removed, gain +1 Exhausted Condition.`
+    description: "SDP.ConditionStunnedDescription"
   },
 
   bleeding: {
+    label: "SDP.ConditionBleeding",
     type: "stack",
     trigger: "endTurn",
     damagePerStack: 1,
-    description: `You are bleeding heavily. Lose 1 Wound at the end of each round, ignoring all modifiers. 
-    If you reach 0 Wounds, you no longer lose additional Wounds and immediately fall unconscious (gaining the Unconscious Condition) due to blood loss. 
-    At the end of each round, you have a 10% chance to die per Bleeding Condition you have; for example, if you suffer from 3 Bleeding Conditions, 
-    you will die from blood loss on a result of 1-30.
-
-    You cannot regain consciousness until all Bleeding Conditions are removed. 
-    A Bleeding Condition can be removed by: a successful Heal Test, where each SL (Success Level) removes an additional Bleeding Condition; or by any spell that restores Wounds, 
-    removing 1 Bleeding Condition per Wound healed. Once all Bleeding Conditions are removed, gain +1 Exhausted Condition.`
+    description: "SDP.ConditionBleedingDescription"
   },
 
   staggered: {
+    label: "SDP.ConditionStaggered",
     type: "state",
-    description: `A state between being fine and being dazed. 
-    A staggered character can take only a single simple action or a move action each round (but not both, and not a complex action).`
+    description: "SDP.ConditionStaggeredDescription"
   },
 
   poisoned: {
+    label: "SDP.ConditionPoisoned",
     type: "stack",
     trigger: "endTurn",
     damagePerStack: 1,
     modifier: -10,
     test: "resistance",
     onRecover: "exhausted",
-    description: `You have been poisoned or injected with venom. The difficulty of all Tests made to eliminate the poison is determined by the specific poison or venom involved.
-     At the end of each round, lose 1 Wound, ignoring all modifiers. In addition, you suffer a -10 penalty to all Tests.
-
-    If you reach 0 Wounds while Poisoned, you cannot recover any Wounds as long as you still have any Poisoned Conditions. 
-    At the end of each round, you may attempt a Resistance Test. On a success, remove one Poisoned Condition, and each SL (Success Level) 
-    allows you to remove one additional Poisoned Condition. A Heal Test can achieve the same result. Once all Poisoned Conditions have been removed, gain +1 Exhausted Condition.
-
-    If you fall Unconscious while Poisoned, make a death survival test as for Bleeding: for example, if you have 2 stacks, 
-    you will die on a roll of 1-20—and you die in horrible agony.`
+    description: "SDP.ConditionPoisonedDescription"
   },
 
   burning: {
+    label: "SDP.ConditionBurning",
     type: "stack",
     trigger: "endTurn",
     dicePerStack: "d6",
     armor:"lowest",
-    description: `You have caught fire! Though perhaps not completely yet. This Condition can only be applied if you are flammable—for example, 
-    wearing clothing that can catch fire—but certain magical or divine effects may also set you ablaze even if you are not normally combustible.
-
-    At the end of each round, you suffer 1d6 Wounds, modified by your AP (Armor Points), to a minimum of 1 Wound. For each additional On Fire Condition you suffer, 
-    add +1d6 damage; thus, if you have 3 On Fire Conditions, you suffer 3d6 Wounds.
-
-    A single On Fire Condition can be removed with an Athletics Test, and each SL (Success Level) achieved allows you to remove one additional On Fire Condition. 
-    The difficulty of the Test is adjusted based on the circumstances: it is easier to extinguish the flames by rolling in sand than in the middle of a kitchen full of oil.`
+    description: "SDP.ConditionBurningDescription"
   },
 
   exhausted: {
+    label: "SDP.ConditionExhausted",
     type: "stack",
     modifier: -10,
-    description: `You are exhausted or stressed; either way, you need rest. You suffer a –10 penalty to all Tests.
-
-    To remove an Exhausted Condition, you normally require rest, a spell, or a divine effect. However, 
-    in some situations—such as when the Condition is caused by carrying too much weight—making adjustments (for example, carrying fewer items) may allow you to remove the Condition.
-
-    Be careful: if the number of Exhausted Conditions reaches your Toughness Bonus, you collapse to the ground and gain the Unconscious Condition.`
+    description: "SDP.ConditionExhaustedDescription"
   },
 
   deafened: {
+    label: "SDP.ConditionDeafened",
     type: "stack",
     modifier: -10,
     attackBonusAgainst : 1,
     trigger: "endTurn",
     removePerTurn: 1,
-    description: `Whether due to a thunderous noise or a blow to the head, you can no longer hear properly. You suffer a -10 penalty to all Tests involving hearing, 
-    and any opponent attacking you in close combat gains an additional +1 bonus to hit (this bonus does not increase with multiple Deafened Conditions).
-
-    One Deafened Condition is removed at the end of each round after the first, often replaced by lingering tinnitus.`
-
+    description: "SDP.ConditionDeafenedDescription"
   },
 
   prone: {
+    label: "SDP.ConditionProne",
     type: "state",
-    description: `You are on the ground, likely because you have no Wounds remaining, have fallen, or have been struck by something very large. During your turn, 
-    your Movement can only be used to stand up or to crawl up to half your Movement in meters.
-
-    Any opponent attempting to attack you in melee gains a +2 bonus to hit. The Prone Condition does not stack—you are either Prone or you are not.
-
-    Standing up is considered a move action and provokes an opportunity attack (however, if an ally is engaged in melee with the enemy, no opportunity attack is triggered).`
-
+    description: "SDP.ConditionProneDescription"
   },
 
   shaken: {
+    label: "SDP.ConditionShaken",
     type : "state",
     modifier: -10,
-    description: `The character suffers a –1 penalty to attack rolls, as well as a –10 penalty to skill and characteristic Tests. 
-    Being Shaken represents a lesser state of fear than being Frightened or Panicked.
-
-    Shaken lasts until the source of the fear is no longer a threat, at which point it grants an Exhausted Condition. This effect is removed if the Frightened Condition is applied.`
+    description: "SDP.ConditionShakenDescription"
   },
 
   frightened: {
+    label: "SDP.ConditionFrightened",
     type: "state",
     modifier: -30,
     trigger: "endTurn",
     test: "calm",
-    description: `A Frightened character flees from the source of their fear as quickly as possible. If no escape is available, they may fight. 
-    They suffer a -3 penalty to attack rolls, as well as to skill and characteristic Tests. 
-    They may use their powers and spells to escape, and will inevitably do so if no other option is available.
-
-    You cannot make any Tests to recover from this Condition while you are Engaged with an enemy. If you are not Engaged, 
-    at the end of each round you may attempt a Cool Test to remove the Frightened Condition. The difficulty varies depending on the situation and the threat. 
-    It is easier to regain your composure if you are hiding behind a barrel at the end of a dead-end alley far from danger (Easy +20) 
-    than if you are just a few strides away from a drooling demon demanding your blood (Very Hard -30).
-
-    This Condition is similar to being Shaken, except that the character does everything possible to flee. When Frightened ends, the Shaken Condition is applied.`
- 
+    description: "SDP.ConditionFrightenedDescription"
   },
 
   slowed: {
+    label: "SDP.ConditionSlowed",
     type: "stack",
     movementPenalty: 1,
-    description: `You are slowed. The source of your slowing reduces your Movement by 1 per stack. If your Movement is reduced to 0, you gain the Entangled Condition.`
- 
+    description: "SDP.ConditionSlowedDescription"
   },
 
   entangled: {
+    label: "SDP.ConditionEntangled",
     type: "state",
     trigger: "startTurn",
     test: "strength",
-    description: `You are hindered by something that restricts your movement; this could be ropes, a web, or even an opponent's bulging biceps. 
-    During your turn, you cannot use your Movement.
-
-    You may use your Action to remove the Entangled Condition by succeeding on an opposed Strength Test against the source of the entanglement. 
-    The difficulty varies depending on the situation. If this Condition was caused by Slowed, a success removes the Entangled Condition, and each SL (Success Level) 
-    reduces some of the Slowed stacks.`
+    description: "SDP.ConditionEntangledDescription"
   },
 
   unconscious: {
+    label: "SDP.ConditionUnconscious",
     type: "state",
-    description: `You are knocked out, unconscious, or otherwise incapacitated. You can do absolutely nothing on your turn and have no awareness of your surroundings.
-
-    An attacker targeting you gains the benefit of the “I Will Not Fail!” rule without needing to spend a Resilience Point; alternatively, at the GM's discretion, 
-    a melee attack automatically kills you. Any ranged attack is also an automatic success and deals damage as if the attacker were at point-blank range.
-
-    The Unconscious Condition does not stack—you are either Unconscious or you are not. Recovering from this Condition will often depend on the circumstances that caused it. 
-    If you spend a Resolve Point to remove the Unconscious Condition but are still subject to its cause, you gain a new Unconscious Condition at the end of the round.
-
-    When you remove the Unconscious Condition, you gain the Prone and Exhausted Conditions.`
+    description: "SDP.ConditionUnconsciousDescription"
   },
 
   dying: {
+    label: "SDP.ConditionDying",
     type: "state",
     trigger: "startTurn",
     test: "dying",
-    description: `The character is unconscious and dying. A creature with a negative number of Wounds that is not stabilized is considered to be dying. 
-    A dying creature cannot take any actions.
-
-    At the start of each of its turns, every round, until it becomes stabilized or dies, the character must make a Resistance Test. 
-    A stabilized character does not need to make this test. If the test is failed, the character loses 1 additional Wound.
-
-    A dying creature dies when its negative Wounds total equals its WT (Wound Threshold).
-
-    To stabilize the character, a successful Heal Test or a healing spell is required.`
+    description: "SDP.ConditionDyingDescription"
   },
 
   surprised: {
+    label: "SDP.ConditionSurprised",
     type: "state",
     trigger: "endTurn",
     removePerTurn: 1,
     attackBonusAgainst: 3,
-    description: `You are caught off guard and cannot act during your turn. Melee attacks against you gain a +3 bonus to hit.
-
-    The Condition is removed at the end of your round or after the first time you are targeted by an attack.`
+    description: "SDP.ConditionSurprisedDescription"
   }
 
 };
@@ -417,306 +383,243 @@ SDP.conditionConfig = {
 export const WEAPON_TRAITS = {
 
   defensive: {
-    label: "Defensive",
+    label: "SDP.WeaponTraitDefensive",
     type: "positive",
-    description: `Designed to intercept blows and protect their wielder, these defensive weapons excel at parrying attacks.
-    If you use such a weapon, you gain a +1 bonus to your Parry.`,
+    description: "SDP.WeaponTraitDefensiveDescription",
     hasValue: false
   },
 
   fast: {
-    label: "Fast",
+    label: "SDP.WeaponTraitFast",
     type: "positive",
-    description: `Fast weapons are designed to strike with such swiftness that parrying is not an option, leaving the opponent pierced before they have been able to react.
-    The wielder of a Fast weapon may choose to attack outside the normal initiative order, whether to strike first, last, or at a moment of their choosing.
-    Additionally, a character attacked by a Fast weapon suffers a -1 penalty to parry and evasion.
-    Two opponents equipped with Fast weapons act according to the normal initiative order (relative to each other).
-    A Fast weapon can never be Slow (the Slow property takes precedence).`,
+    description: "SDP.WeaponTraitFastDescription",
     hasValue: false
   },
 
   impaling: {
-    label: "Impaling",
+    label: "SDP.WeaponTraitImpaling",
     type: "positive",
-    description: `Impaling weapons, provided they hit, inflict a critical hit on any result divisible by 10 (for example: 10, 20, 30, etc.).
-    If the impalement comes from a ranged weapon, the ammunition used becomes firmly lodged in the target’s body.
-    Arrows and bolts require an Intermediate Healing Test to be removed; bullets require a surgeon (see the Surgery Talent).
-    Each arrow or bullet that is not removed prevents the recovery of 1 Wound.`,
+    description: "SDP.WeaponTraitImpalingDescription",
     hasValue: false
   },
 
   light: {
-    label: "Light",
+    label: "SDP.WeaponTraitLight",
     type: "positive",
-    description: "Light weapons are small and easy to handle, allowing you to attack with another Light weapon during the same turn.",
+    description: "SDP.WeaponTraitLightDescription",
     hasValue: false
   },
 
   semiLight: {
-    label: "Semi-Light",
+    label: "SDP.WeaponTraitSemiLight",
     type: "positive",
-    description: "Semi-light weapons can only be used to attack alongside a Light weapon during the same turn.",
+    description: "SDP.WeaponTraitSemiLightDescription",
     hasValue: false
   },
 
   versatile: {
-    label: "Versatile",
+    label: "SDP.WeaponTraitVersatile",
     type: "positive",
-    description: `Versatile weapons can be held with two hands in order to apply greater force.
-    When used with two hands, their damage increases and this may add or modify the skill(s) that can be used.
-    For example, a weapon that uses the Melee (Axe) skill, when wielded with two hands, may also use the Two-Handed Melee skill.
-    The value indicated after “Versatile” corresponds to the die used for two-handed damage.`,
+    description: "SDP.WeaponTraitVersatileDescription",
     hasValue: true
   },
 
   stunning: {
-    label: "Stunning",
+    label: "SDP.WeaponTraitStunning",
     type: "positive",
-    description: `Stunning weapons are particularly effective at forcing enemies to submit.
-    The rating corresponds to the bonus you gain when attempting to stun a target.
-    If you strike the head with a stunning weapon, perform an opposed test using the melee skill used, based on Strength, against the target’s Resilience.
-    If you win the test, your opponent gains the Stunned condition (if the degree of success reaches +6, the target falls unconscious).
-    The rating represents any modifiers applied when attempting to stun the target.`,
+    description: "SDP.WeaponTraitStunningDescription",
     hasValue: true
   },
 
   bleeding: {
-    label: "Bleeding",
+    label: "SDP.WeaponTraitBleeding",
     type: "positive",
-    description: `Designed to tear flesh and draw blood, this weapon excels at inflicting open wounds.
-    A weapon with this trait can cause a bleeding effect on the target.
-    The rating indicates the minimum result required on a die roll to trigger this effect, and it can stack if multiple dice are rolled.
-    For versatile weapons, the corresponding value is indicated after it.`,
+    description: "SDP.WeaponTraitBleedingDescription",
     hasValue: true
   },
 
   impactful: {
-    label: "Impactful",
+    label: "SDP.WeaponTraitImpactful",
     type: "positive",
-    description: `Some weapons can inflict devastating damage due to their weight or design.
-    The Impact trait only activates on a charge: if you hit, add the die indicated by the rating to the damage.
-    A Harmless weapon can never also be Impact (Harmless takes precedence).
-    Impact applies only to melee weapons.`,
+    description: "SDP.WeaponTraitImpactfulDescription",
     hasValue: true
   },
 
   entangling: {
-    label: "Entangling",
+    label: "SDP.WeaponTraitEntangling",
     type: "positive",
-    description: `Entangling weapons, often made of long chains ending in weighted heads, are particularly difficult to parry effectively.
-    Attacks made with this type of weapon impose a -1 penalty to the target’s Parry, as strikes can wrap over shields, around blades, and have an unpredictable reach.`,
+    description: "SDP.WeaponTraitEntanglingDescription",
     hasValue: false
   },
 
   devastating: {
-    label: "Devastating",
+    label: "SDP.WeaponTraitDevastating",
     type: "positive",
-    description: `hese weapons generally deal heavy damage when they hit their target.
-    You may reroll one or more damage dice, but you must keep the new results.`,
+    description: "SDP.WeaponTraitDevastatingDescription",
     hasValue: false
   },
 
-  size: {
-    label: "Size",
+  sundering: {
+    label: "SDP.WeaponTraitSundering",
     type: "positive",
-    description: `Forged to split steel and shatter defenses, these cutting weapons slice through armor with terrifying ease.
-    If you hit an opponent, you deal 1 point of damage to the struck piece of armor or shield while also wounding the target.`,
+    description: "SDP.WeaponTraitSunderingDescription",
     hasValue: false
   },
 
   finesse: {
-    label: "Finesse",
+    label: "SDP.WeaponTraitFinesse",
     type: "positive",
-    description: `Precise and elegant, these weapons reward skill and agility over sheer brute strength.
-    When making an attack with a finesse weapon, you may choose to apply either your Strength or Dexterity modifier to your attack and damage rolls.
-    The same modifier applies to both rolls.`,
+    description: "SDP.WeaponTraitFinesseDescription",
     hasValue: false
   },
 
   antiLarge: {
-    label: "Anti-Large",
+    label: "SDP.WeaponTraitAntiLarge",
     type: "positive",
-    description: `Designed to keep enemies at bay and break even the fiercest charges, these weapons excel against mounted foes and large creatures.
-    They allow attacks at a range of 4 meters, or even up to 6 meters.
-    They gain a +2 bonus to hit against larger creatures, in addition to the base bonus.
-    When a mounted character charges with such a weapon, its value is doubled (double both the dice and the bonuses; for example, 1d6 +2 becomes 2d6 +4).`,
+    description: "SDP.WeaponTraitAntiLargeDescription",
     hasValue: false
   },
 
   trapBlade: {
-    label: "Trap Blade",
+    label: "SDP.WeaponTraitTrapBlade",
     type: "positive",
-    description: `Each time you defend with such a weapon and the opponent’s attack fails, you may perform an opposed Strength test with a +20 bonus.
-    If the test succeeds, you may either disarm your opponent or remove 1 point of durability from their weapon.
-    On a critical success, you may remove 5 durability points from their weapon or send it flying far away.`,
+    description: "SDP.WeaponTraitTrapBladeDescription",
     hasValue: false
   },
 
-  entangling: {
-    label: "Entangling",
+  ensnaring: {
+    label: "SDP.WeaponTraitEnsnaring",
     type: "positive",
-    description: `Flexible and insidious, your weapon coils around its targets to hinder their movements.
-    Any opponent successfully hit by this weapon gains the Entangled condition, with a Strength value equal to your Strength characteristic.
-    While you are entangling an opponent, you cannot use the weapon to make other attacks.
-    You may end this effect at any time.`,
+    description: "SDP.WeaponTraitEnsnaringDescription",
     hasValue: false
   },
 
   precise: {
-    label: "Precise",
+    label: "SDP.WeaponTraitPrecise",
     type: "positive",
-    description: `Deadly accurate, this weapon is designed to strike its target where others would fail.
-    You gain a +1 SL bonus to your attack roll.`,
+    description: "SDP.WeaponTraitPreciseDescription",
     hasValue: false
   },
 
-  protectrice: {
-    label: "Protectrice",
+  protective: {
+    label: "SDP.WeaponTraitProtective",
     type: "positive",
-    description: `A true barrier between you and danger, this weapon surrounds you with constant protection against incoming attacks.
-    If you use this weapon to defend yourself, you are considered to benefit from its PA rating on all parts of your body.
-    If your weapon has a Protective rating of 2 or higher (for example: Protective 2 or Protective 3), you may also oppose projectiles coming from your line of sight.
-    The attacker must meet or exceed the weapon's Protective rating in DR to successfully hit you.`,
+    description: "SDP.WeaponTraitProtectiveDescription",
     hasValue: true
   },
 
   pistol: {
-    label: "Pistol",
+    label: "SDP.WeaponTraitPistol",
     type: "positive",
-    description: `Small and quick to use, it fits easily in one hand and can be drawn in an instant, even in the thick of melee.
-    You may use this weapon to attack in close combat, applying the rules of melee combat.`,
+    description: "SDP.WeaponTraitPistolDescription",
     hasValue: false
   },
 
   explosion: {
-    label: "Explosion",
+    label: "SDP.WeaponTraitExplosion",
     type: "positive",
-    description: `Designed to unleash a sudden blast, this weapon spreads its destructive force to all those nearby.
-    All characters within a number of meters equal to the rating from the point of impact suffer the weapon’s damage and gain all conditions inflicted by it.`,
+    description: "SDP.WeaponTraitExplosionDescription",
     hasValue: true
   },
 
   blackPowder: {
-    label: "Black Powder",
+    label: "SDP.WeaponTraitBlackPowder",
     type: "positive",
-    description: `The thunder of gunfire, followed by smoke and confusion, is enough to shake even the steadiest minds.
-    If you are targeted by a black powder weapon, you must succeed on an Easy (+20) Composure Test or gain the Frightened condition, even if the shot misses you.
-    If it is not your first time facing it, or if you expected it, you instead gain the Shaken condition.`,
+    description: "SDP.WeaponTraitBlackPowderDescription",
     hasValue: false
   },
 
   imprecise: {
-    label: "Imprecise",
+    label: "SDP.WeaponTraitImprecise",
     type: "negative",
-    description: `Heavy or difficult to handle, these weapons sacrifice accuracy for raw power or unwieldy design.
-    You suffer a -1 DR penalty when using this weapon to attack.
-    An Imprecise weapon can never also be Precise (Imprecise takes precedence).`,
+    description: "SDP.WeaponTraitImpreciseDescription",
     hasValue: false
   },
 
   inoffensive: {
-    label: "Inoffensive",
-    description: `ll-suited for piercing defenses, these weapons struggle to breach even the most basic armor.
-    All AP values are doubled against Harmless weapons.
-    Additionally, you do not automatically inflict the minimum of 1 Wound on a successful hit in combat.`,
+    label: "SDP.WeaponTraitInoffensive",
+    description: "SDP.WeaponTraitInoffensiveDescription",
     hasValue: false,
     type: "negative"
   },
 
   slow: {
-    label: "Slow",
-    description: `Heavy and cumbersome, these weapons require time and commitment to wield effectively.
-    Characters using Slow weapons always strike last in a round, regardless of Initiative order.
-    Additionally, you suffer a -1 penalty to your attack rolls.`,
+    label: "SDP.WeaponTraitSlow",
+    description: "SDP.WeaponTraitSlowDescription",
     hasValue: false,
     type: "negative"
   },
 
   reload: {
-  label: "Reload",
-  description: `Demanding and temperamental, this weapon requires time and precision before it can unleash its power.
-  The weapon must be loaded before it can be fired.
-  An unloaded weapon with this drawback requires an Extended Projectile Test appropriate to its weapon group, and you must reach a total DR equal to its rating to reload it.
-  If you are interrupted while reloading, you must start over from the beginning.`,
-  hasValue: true,
-  type: "negative"
-},
-
-  dangerous: {
-    label: "Dangerous",
-    description: `Unstable and dangerous, these weapons are as likely to harm their wielder as their enemies.
-    All tests have their critical failure range increased by 10, shifting from 96-100 to 86-100.`,
-    hasValue: false,
+    label: "SDP.WeaponTraitReload",
+    description: "SDP.WeaponTraitReloadDescription",
+    hasValue: true,
     type: "negative"
   },
+
+  dangerous: {
+    label: "SDP.WeaponTraitDangerous",
+    description: "SDP.WeaponTraitDangerousDescription",
+    hasValue: false,
+    type: "negative"
+  }
 
 };
 
 export const ITEM_TRAITS = {
 
   refined: {
-    label: "Refined",
-    description: `Finely crafted and designed to draw the eye, this item reflects a distinct taste for refinement.
-    This trait is a symbol of social status and may be taken multiple times.
-    The higher its quality, the more impressive the result.`,
+    label: "SDP.ItemTraitRefined",
+    description: "SDP.ItemTraitRefinedDescription",
     type: "positive",
-    type: "positive",
-    hasValue: true,
+    hasValue: true
   },
 
   lightweight: {
-    label: "Lightweight",
-    description: `Ingeniously designed to combine efficiency and lightness, this item seems to defy the limits of its material.
-    Its weight is reduced by half.`,
+    label: "SDP.ItemTraitLightweight",
+    description: "SDP.ItemTraitLightweightDescription",
     type: "positive",
     hasValue: false
   },
 
   practical: {
-    label: "Practical",
-    description: `Crafted with exceptional expertise, this item combines efficiency and handling without compromise.
-    Any test made using this item gains a +10 bonus.
-    If it is plate or mail armor, its stealth penalties are reduced.`,
+    label: "SDP.ItemTraitPractical",
+    description: "SDP.ItemTraitPracticalDescription",
     type: "positive",
     hasValue: false
   },
 
   durable: {
-    label: "Durable",
-    description: `Reinforced with ingenuity and built to endure, this item withstands even the harshest trials.
-    It gains additional durability equal to its rating.`,
+    label: "SDP.ItemTraitDurable",
+    description: "SDP.ItemTraitDurableDescription",
     type: "positive",
     hasValue: false
   },
 
   flawed: {
-    label: "Flawed",
-    description: `Poorly made and hastily assembled, this item bears the mark of an amateur… or a careless fraud.
-    The item breaks when used during any critical failure.
-    Likewise, a Makeshift armor breaks if a Critical Hit is suffered on the location it protects.`,
+    label: "SDP.ItemTraitFlawed",
+    description: "SDP.ItemTraitFlawedDescription",
     type: "negative",
     hasValue: false
   },
 
-  laid: {
-    label: "Ugly",
-    description: `Lacking any sense of aesthetics, this item offends the eye and reflects its maker's poor taste.
-    Ugly items draw negative attention, and related Social tests may suffer a -10 penalty.`,
-    type: "negative"
+  ugly: {
+    label: "SDP.ItemTraitUgly",
+    description: "SDP.ItemTraitUglyDescription",
+    type: "negative",
+    hasValue: false
   },
 
   impractical: {
-    label: "Impractical",
-    description: `Poorly designed and awkward to use, this item hinders its wielder more than it helps.
-    A failed test using this poorly made item suffers a -10 penalty.
-    Additionally, penalties from wearing Unreliable armor are doubled.`,
-    type: "negative"
+    label: "SDP.ItemTraitImpractical",
+    description: "SDP.ItemTraitImpracticalDescription",
+    type: "negative",
+    hasValue: false
   },
 
   bulky: {
-    label: "Bulky",
-    description: `Cumbersome and difficult to carry, this item makes its presence known as much as it slows its wielder.
-    The item's weight is increased by 1.5x (small trinkets generally cannot have this drawback).`,
+    label: "SDP.ItemTraitBulky",
+    description: "SDP.ItemTraitBulkyDescription",
     type: "negative",
     hasValue: false
   }
@@ -726,97 +629,81 @@ export const ITEM_TRAITS = {
 export const ARMOR_TRAITS = {
 
   flexible: {
-    label: "Flexible",
+    label: "SDP.ArmorTraitFlexible",
     type: "positive",
-    description: `Flexible and discreet, this armor conforms to the body's movements and can be worn beneath heavier protection.
-    A Flexible armor can be worn under a layer of non-Flexible armor if you wish.
-    In that case, you gain the benefits of both.`,
+    description: "SDP.ArmorTraitFlexibleDescription",
     hasValue: false
   },
 
   padded: {
-    label: "Padded",
+    label: "SDP.ArmorTraitPadded",
     type: "positive",
-    description: `Designed to absorb the most violent impacts, this padding dampens blunt blows at the cost of increased weight.
-    It reduces blunt damage by an amount equal to 2x the armor's AP.
-    However, the armor's weight is increased by 1.5x.`,
+    description: "SDP.ArmorTraitPaddedDescription",
     hasValue: false
   },
 
   dense: {
-    label: "Dense",
+    label: "SDP.ArmorTraitDense",
     type: "positive",
-    description: `Thick and rigid, this armor offers formidable resistance to blades, dulling even the deepest cuts.
-    Slashing damage is reduced by an amount equal to 2x the armor's AP (before or after AP is applied).
-    However, the armor's weight is increased by 1.5x.`,
+    description: "SDP.ArmorTraitDenseDescription",
     hasValue: false
   },
 
   layered: {
-    label: "Layered",
+    label: "SDP.ArmorTraitLayered",
     type: "positive",
-    description: `Made of carefully stacked layers, this armor disperses impact force and effectively resists piercing attacks.
-    Piercing damage is reduced by an amount equal to 2x the armor's AP.
-    However, the armor's weight is increased by 1.5x.`,
+    description: "SDP.ArmorTraitLayeredDescription",
     hasValue: false
   },
 
   robust: {
-    label: "Robust",
+    label: "SDP.ArmorTraitRobust",
     type: "positive",
-    description: `Built to endure the harshest trials, this item withstands the first blows without faltering.
-    It ignores the first loss of durability or AP.
-    However, maintenance is required to regain this benefit once it has been used.`,
+    description: "SDP.ArmorTraitRobustDescription",
     hasValue: false
   },
 
   encumbering: {
-    label: "Encumbering",
+    label: "SDP.ArmorTraitEncumbering",
     type: "negative",
-    description: `Heavy and rigid, these greaves hinder movement and weigh down every step.
-    You suffer a -1 penalty to your movement.`,
+    description: "SDP.ArmorTraitEncumberingDescription",
     hasValue: false
   },
 
   defective: {
-    label: "Defective",
+    label: "SDP.ArmorTraitDefective",
     type: "negative",
-    description: `Poorly crafted, weakened, or poorly maintained, this armor reveals weaknesses that enemies can ruthlessly exploit.
-    It suffers a -1 AP penalty per rating on all locations.`,
+    description: "SDP.ArmorTraitDefectiveDescription",
     hasValue: true
   },
 
   restrictive: {
-    label: "Restrictive",
+    label: "SDP.ArmorTraitRestrictive",
     type: "negative",
-    description: `Rigid and constraining, these bracers hinder fluid movement and limit the wearer’s dexterity.
-    You suffer a -10 penalty to Dexterity.`,
+    description: "SDP.ArmorTraitRestrictiveDescription",
     hasValue: false
   },
 
   heavy: {
-    label: "Heavy",
+    label: "SDP.ArmorTraitHeavy",
     type: "negative",
-    description: `Massive and burdensome, this item weighs heavily on your body and hinders your every movement.
-    For every 20 kilograms, you suffer a -10 penalty to Agility.`,
+    description: "SDP.ArmorTraitHeavyDescription",
     hasValue: true
   },
 
   conspicuous: {
-    label: "Conspicuous",
+    label: "SDP.ArmorTraitConspicuous",
     type: "negative",
-    description: `Noisy and imposing, this armor betrays your every movement with the clatter of metal and its lack of subtlety.
-    You suffer a -10 penalty to Stealth.`,
+    description: "SDP.ArmorTraitConspicuousDescription",
     hasValue: false
   },
 
   limitedVision: {
-    label: "Limited Vision",
+    label: "SDP.ArmorTraitLimitedVision",
     type: "negative",
-    description: `Narrow and restrictive, this piece limits your vision and reduces your awareness of the environment.
-    You suffer a -10 penalty to Perception.`,
+    description: "SDP.ArmorTraitLimitedVisionDescription",
     hasValue: false
-  },
+  }
 
 };
 
@@ -824,7 +711,7 @@ SDP.sizes = {
 
   
     tiny: {
-    label: "Tiny",
+    label: "SDP.SizeTiny",
     order: 0,
     strength: -30,
     toughness: -30,
@@ -833,7 +720,7 @@ SDP.sizes = {
   },
 
     verySmall: {
-    label: "Very Small",
+    label: "SDP.SizeVerySmall",
     order: 1,
     strength: -20,
     toughness: -20,
@@ -842,7 +729,7 @@ SDP.sizes = {
   },
 
   small: {
-    label: "Small",
+    label: "SDP.SizeSmall",
     order: 2,
     strength: -10,
     toughness: -10,
@@ -851,7 +738,7 @@ SDP.sizes = {
   },
 
   average: {
-    label: "Average",
+    label: "SDP.SizeAverage",
     order: 3,
     strength: 0,
     toughness: 0,
@@ -860,7 +747,7 @@ SDP.sizes = {
   },
 
   large: {
-    label: "Large",
+    label: "SDP.SizeLarge",
     order: 4,
     strength: 10,
     toughness: 10,
@@ -869,7 +756,7 @@ SDP.sizes = {
   },
 
   enormous: {
-    label: "Enormous",
+    label: "SDP.SizeEnormous",
     order: 5,
     strength: 20,
     toughness: 20,
@@ -878,7 +765,7 @@ SDP.sizes = {
   },
 
   gigantic: {
-    label: "Gigantic",
+    label: "SDP.SizeGigantic",
     order: 6,
     strength: 30,
     toughness: 30,

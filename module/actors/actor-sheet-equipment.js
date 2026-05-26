@@ -124,12 +124,14 @@ export function prepareWeapons(actor) {
 
       return {
         key: t.key,
-        label: traitConfig?.label || t.key,
+        label: traitConfig?.label
+  ? game.i18n.localize(traitConfig.label)
+  : t.key,
         value: t.value,
         type: traitConfig?.type || "neutral",
-        description:
-          traitConfig?.description ||
-          "No description",
+        descriptionKey:
+  traitConfig?.description ||
+  "SDP.NoDescription",
 
         disabled: (
           t.key !== "protectrice" &&
@@ -157,7 +159,9 @@ export function prepareWeapons(actor) {
 
     w.displaySkill = displaySkills.length
       ? displaySkills.join(", ")
-      : "No skill";
+      : game.i18n.localize(
+    "SDP.NoSkill"
+  );
 
   }
 
@@ -211,12 +215,14 @@ export function prepareArmors(actor) {
 
       allTraits.push({
         key,
-        label: config?.label || key,
+        label: config?.label
+  ? game.i18n.localize(config.label)
+  : key,
         value,
         type: config?.type || "neutral",
-        description:
-          config?.description ||
-          "No description"
+        descriptionKey:
+  config?.description ||
+  "SDP.NoDescription",
       });
 
     }
@@ -243,7 +249,12 @@ export function prepareArmors(actor) {
 
       allTraits.push({
         key,
-        label: config?.label || key,
+        label: config?.label
+  ? game.i18n.localize(config.label)
+  : key,
+  descriptionKey:
+  config?.description ||
+  "SDP.NoDescription",
         value,
         type: config?.type || "neutral"
       });

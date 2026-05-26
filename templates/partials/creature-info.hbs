@@ -7,28 +7,28 @@
     <div class="creature-info-card">
 
       <div class="creature-info-title">
-        📏 Size
+        📏 {{localize "SDP.Size"}}
       </div>
 
-     <div class="creature-size-value">
+      <div class="creature-size-value">
 
-  <select name="system.size">
+        <select name="system.size">
 
-    {{#each config.sizes as |size key|}}
+          {{#each config.sizes as |size key|}}
 
-      <option
-        value="{{key}}"
-        {{#if (eq ../system.size key)}}selected{{/if}}>
+            <option
+              value="{{key}}"
+              {{#if (eq ../system.size key)}}selected{{/if}}>
 
-        {{size.label}}
+              {{localize size.label}}
 
-      </option>
+            </option>
 
-    {{/each}}
+          {{/each}}
 
-  </select>
+        </select>
 
-</div>
+      </div>
 
     </div>
 
@@ -36,7 +36,7 @@
     <div class="creature-info-card">
 
       <div class="creature-info-title">
-        🧬 Traits
+        🧬 {{localize "SDP.Traits"}}
       </div>
 
       <div class="creature-traits-list">
@@ -54,7 +54,7 @@
         {{else}}
 
           <div class="creature-empty">
-            No traits
+            {{localize "SDP.NoTraits"}}
           </div>
 
         {{/if}}
@@ -64,153 +64,154 @@
     </div>
 
     <!-- DEFENSE MODE -->
-<div class="creature-info-card">
+    <div class="creature-info-card">
 
-  <div class="creature-info-title">
-    🛡️ Defense
-  </div>
+      <div class="creature-info-title">
+        🛡️ {{localize "SDP.Defense"}}
+      </div>
 
-  <div class="creature-size-value">
+      <div class="creature-size-value">
 
-    <select name="system.combat.defenseMode">
+        <select name="system.combat.defenseMode">
 
-      <option
-        value="auto"
-        {{#if (eq system.combat.defenseMode "auto")}}
-          selected
-        {{/if}}>
+          <option
+            value="auto"
+            {{#if (eq system.combat.defenseMode "auto")}}
+              selected
+            {{/if}}>
 
-        Auto
+            {{localize "SDP.Auto"}}
 
-      </option>
+          </option>
 
-      <option
-        value="evasion"
-        {{#if (eq system.combat.defenseMode "evasion")}}
-          selected
-        {{/if}}>
+          <option
+            value="evasion"
+            {{#if (eq system.combat.defenseMode "evasion")}}
+              selected
+            {{/if}}>
 
-        Evasion Only
+            {{localize "SDP.EvasionOnly"}}
 
-      </option>
+          </option>
 
-      <option
-        value="parry"
-        {{#if (eq system.combat.defenseMode "parry")}}
-          selected
-        {{/if}}>
+          <option
+            value="parry"
+            {{#if (eq system.combat.defenseMode "parry")}}
+              selected
+            {{/if}}>
 
-        Parry Only
+            {{localize "SDP.ParryOnly"}}
 
-      </option>
+          </option>
 
-    </select>
+        </select>
 
-  </div>
+      </div>
 
-</div>
+    </div>
 
   </div>
 
   <!-- RIGHT -->
   <div class="creature-info-right">
 
-   <!-- PLAYER NOTES -->
-<div class="creature-info-card">
+    <!-- PLAYER NOTES -->
+    <div class="creature-info-card">
 
-  <div class="note-header">
+      <div class="note-header">
 
-    <label>📖 Player Notes</label>
+        <label>📖 {{localize "SDP.PlayerNotes"}}</label>
 
-    {{#if canEditPlayerNotes}}
-    <button
-      type="button"
-      class="note-edit-btn"
-      data-action="toggleEditor"
-      data-target="creaturePlayerNotes">
+        {{#if canEditPlayerNotes}}
+        <button
+          type="button"
+          class="note-edit-btn"
+          data-action="toggleEditor"
+          data-target="creaturePlayerNotes">
 
-      ✏️ Edit
+          ✏️ {{localize "SDP.Edit"}}
 
-    </button>
+        </button>
+        {{/if}}
+
+      </div>
+
+      <!-- DISPLAY -->
+      <div
+        class="creature-note-display"
+        data-display="creaturePlayerNotes">
+
+        {{{system.details.playerNotes.value}}}
+
+      </div>
+
+      <!-- EDITOR -->
+      <div
+        class="creature-note-editor"
+        data-editor="creaturePlayerNotes"
+        style="display:none;">
+
+        <prose-mirror
+          name="system.details.playerNotes.value"
+          value="{{system.details.playerNotes.value}}">
+
+          {{{system.details.playerNotes.value}}}
+
+        </prose-mirror>
+
+      </div>
+
+    </div>
+
+    {{#if user.isGM}}
+    <!-- GM NOTES -->
+    <div class="creature-info-card">
+
+      <div class="note-header">
+
+        <label>🔒 {{localize "SDP.GMNotes"}}</label>
+
+        <button
+          type="button"
+          class="note-edit-btn"
+          data-action="toggleEditor"
+          data-target="creatureGMNotes">
+
+          ✏️ {{localize "SDP.Edit"}}
+
+        </button>
+
+      </div>
+
+      <!-- DISPLAY -->
+      <div
+        class="creature-note-display"
+        data-display="creatureGMNotes">
+
+        {{{system.details.gmNotes.value}}}
+
+      </div>
+
+      <!-- EDITOR -->
+      <div
+        class="creature-note-editor"
+        data-editor="creatureGMNotes"
+        style="display:none;">
+
+        <prose-mirror
+          name="system.details.gmNotes.value"
+          value="{{system.details.gmNotes.value}}">
+
+          {{{system.details.gmNotes.value}}}
+
+        </prose-mirror>
+
+      </div>
+
+    </div>
+
     {{/if}}
 
   </div>
-
-  <!-- DISPLAY -->
-  <div
-    class="creature-note-display"
-    data-display="creaturePlayerNotes">
-
-    {{{system.details.playerNotes.value}}}
-
-  </div>
-
-  <!-- EDITOR -->
-  <div
-    class="creature-note-editor"
-    data-editor="creaturePlayerNotes"
-    style="display:none;">
-
-    <prose-mirror
-      name="system.details.playerNotes.value"
-      value="{{system.details.playerNotes.value}}">
-
-      {{{system.details.playerNotes.value}}}
-
-    </prose-mirror>
-
-  </div>
-
-</div>
-
-{{#if user.isGM}}
-    <!-- GM NOTES -->
-<div class="creature-info-card">
-
-  <div class="note-header">
-
-    <label>🔒 GM Notes</label>
-
-    <button
-      type="button"
-      class="note-edit-btn"
-      data-action="toggleEditor"
-      data-target="creatureGMNotes">
-
-      ✏️ Edit
-
-    </button>
-
-  </div>
-
-  <!-- DISPLAY -->
-  <div
-    class="creature-note-display"
-    data-display="creatureGMNotes">
-
-    {{{system.details.gmNotes.value}}}
-
-  </div>
-
-  <!-- EDITOR -->
-  <div
-    class="creature-note-editor"
-    data-editor="creatureGMNotes"
-    style="display:none;">
-
-    <prose-mirror
-      name="system.details.gmNotes.value"
-      value="{{system.details.gmNotes.value}}">
-
-      {{{system.details.gmNotes.value}}}
-
-    </prose-mirror>
-
-  </div>
-
-</div>
-
-  </div>
-  {{/if}}
 
 </div>

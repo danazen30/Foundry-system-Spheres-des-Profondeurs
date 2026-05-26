@@ -1,6 +1,6 @@
 <div class="tab-effects">
 
-<h3>Conditions</h3>
+<h3>{{localize "SDP.Conditions"}}</h3>
 
 <!-- 🔢 NUMERIC CONDITIONS -->
 <table class="conditions-table numeric">
@@ -11,9 +11,9 @@
           <th 
   class="condition-header"
   data-key="{{key}}"
-  data-description="{{lookup (lookup ../config.conditionConfig key) 'description'}}"
+  data-description="{{localize (lookup (lookup ../config.conditionConfig key) 'description')}}"
 >
-  {{key}}
+  {{localize (lookup (lookup ../config.conditionConfig key) "label")}}
 </th>
         {{/unless}}
       {{/each}}
@@ -58,9 +58,9 @@
           <th 
   class="condition-header"
   data-key="{{key}}"
-  data-description="{{lookup (lookup ../config.conditionConfig key) 'description'}}"
+  data-description="{{localize (lookup (lookup ../config.conditionConfig key) 'description')}}"
 >
-  {{key}}
+  {{localize (lookup (lookup ../config.conditionConfig key) "label")}}
 </th>
         {{/if}}
       {{/each}}
@@ -97,16 +97,16 @@
 
   <!-- INJURIES -->
   {{#if injuries.length}}
-<h3>Injuries</h3>
+<h3>{{localize "SDP.Injuries"}}</h3>
 
 <table class="effects-table">
   <thead>
     <tr>
       <th></th>
-      <th>Name</th>
-      <th>Severity</th>
-      <th>Location</th>
-      <th>Duration</th>
+      <th>{{localize "SDP.Name"}}</th>
+<th>{{localize "SDP.Severity"}}</th>
+<th>{{localize "SDP.Location"}}</th>
+<th>{{localize "SDP.Duration"}}</th>
       <th></th>
     </tr>
   </thead>
@@ -140,13 +140,13 @@
 
 <!-- TRAITS -->
 {{#if traits.length}}
-<h3>Traits</h3>
+<h3>{{localize "SDP.Traits"}}</h3>
 
 <table class="effects-table">
   <thead>
     <tr>
       <th></th>
-      <th>Name</th>
+      <th>{{localize "SDP.Name"}}</th>
       <th></th>
     </tr>
   </thead>
@@ -175,13 +175,13 @@
 
 <!-- DISEASES -->
 {{#if diseases.length}}
-<h3>Diseases</h3>
+<h3>{{localize "SDP.Diseases"}}</h3>
 
 <table class="effects-table">
   <thead>
     <tr>
       <th></th>
-      <th>Name</th>
+      <th>{{localize "SDP.Name"}}</th>
       <th></th>
     </tr>
   </thead>

@@ -20,18 +20,18 @@
   <!-- ======================================== -->
 
   {{#if meleeWeapons.length}}
-  <h2>Inventaire</h2>
+  <h2>{{localize "SDP.Inventory"}}</h2>
 
   <table class="weapons-table melee-table">
     <thead>
       <tr>
         <th></th>
-        <th>Name</th>
-        <th>Equip</th>
-        <th>Offhand</th>
-        <th>Defense</th>
-        <th>Qty</th>
-        <th>Weight</th>
+        <th>{{localize "SDP.Name"}}</th>
+<th>{{localize "SDP.Equip"}}</th>
+<th>{{localize "SDP.Offhand"}}</th>
+<th>{{localize "SDP.Defense"}}</th>
+<th>{{localize "SDP.QuantityShort"}}</th>
+<th>{{localize "SDP.Weight"}}</th>
         <th></th>
       </tr>
     </thead>
@@ -101,11 +101,11 @@
           <div class="weapon-line main-line">
 
             <div>
-              <strong>Skill:</strong> {{item.displaySkill}}
+              <strong>{{localize "SDP.Skill"}}:</strong> {{item.displaySkill}}
             </div>
 
             <div>
-              <strong>Damage:</strong>
+              <strong>{{localize "SDP.Damage"}}:</strong>
               {{item.system.damage}}
 
               {{#if item.system.damageDice}}
@@ -115,7 +115,7 @@
 
             <div class="traits-inline">
 
-              <strong>Traits:</strong>
+              <strong>{{localize "SDP.Traits"}}:</strong>
 
               {{#each item.displayTraits}}
               <span
@@ -160,12 +160,12 @@
     <thead>
       <tr>
         <th></th>
-        <th>Name</th>
-        <th>Ammo</th>
-        <th>Equip</th>
-        <th>Offhand</th>
-        <th>Qty</th>
-        <th>Weight</th>
+        <th>{{localize "SDP.Name"}}</th>
+<th>{{localize "SDP.Ammo"}}</th>
+<th>{{localize "SDP.Equip"}}</th>
+<th>{{localize "SDP.Offhand"}}</th>
+<th>{{localize "SDP.QuantityShort"}}</th>
+<th>{{localize "SDP.Weight"}}</th>
         <th></th>
       </tr>
     </thead>
@@ -193,7 +193,9 @@
             data-item-id="{{item.id}}"
           >
 
-            <option value="">-- Aucun --</option>
+            <option value="">
+  -- {{localize "SDP.None"}} --
+</option>
 
             {{#each item.compatibleAmmo}}
             <option
@@ -252,7 +254,7 @@
           <div class="weapon-line main-line">
 
             <div>
-              <strong>Range:</strong>
+              <strong>{{localize "SDP.Range"}}:</strong>
               {{item.system.range}}
             </div>
 
@@ -314,12 +316,12 @@
     <thead>
       <tr>
         <th></th>
-        <th>Name</th>
-        <th>Group</th>
-        <th>Damage</th>
-        <th>Range Mod</th>
-        <th>Qty</th>
-        <th>Weight</th>
+        <th>{{localize "SDP.Name"}}</th>
+<th>{{localize "SDP.Group"}}</th>
+<th>{{localize "SDP.Damage"}}</th>
+<th>{{localize "SDP.RangeModifier"}}</th>
+<th>{{localize "SDP.QuantityShort"}}</th>
+<th>{{localize "SDP.Weight"}}</th>
         <th></th>
       </tr>
     </thead>
@@ -375,16 +377,16 @@
     <thead>
       <tr>
         <th></th>
-        <th>Name</th>
-        <th>Head</th>
-        <th>Body</th>
-        <th>L Arm</th>
-        <th>R Arm</th>
-        <th>L Leg</th>
-        <th>R Leg</th>
-        <th>Worn</th>
-        <th>Qty</th>
-        <th>Weight</th>
+        <th>{{localize "SDP.Name"}}</th>
+<th>{{localize "SDP.Head"}}</th>
+<th>{{localize "SDP.Body"}}</th>
+<th>{{localize "SDP.LeftArmShort"}}</th>
+<th>{{localize "SDP.RightArmShort"}}</th>
+<th>{{localize "SDP.LeftLegShort"}}</th>
+<th>{{localize "SDP.RightLegShort"}}</th>
+<th>{{localize "SDP.Worn"}}</th>
+<th>{{localize "SDP.QuantityShort"}}</th>
+<th>{{localize "SDP.Weight"}}</th>
         <th></th>
       </tr>
     </thead>
@@ -442,7 +444,7 @@
 
           <div class="traits-inline">
 
-            <strong>Traits:</strong>
+            <strong>{{localize "SDP.Traits"}}:</strong>
 
             {{#each item.displayArmorTraits}}
             <span
@@ -486,9 +488,9 @@
     <thead>
       <tr>
         <th></th>
-        <th>Name</th>
-        <th>Qty</th>
-        <th>Weight</th>
+        <th>{{localize "SDP.Name"}}</th>
+<th>{{localize "SDP.QuantityShort"}}</th>
+<th>{{localize "SDP.Weight"}}</th>
         <th></th>
       </tr>
     </thead>
@@ -591,10 +593,10 @@
 <thead>
 <tr>
   <th></th>
-  <th>Name</th>
-  <th>Equipped</th>
-  <th>Qty</th>
-  <th>Weight</th>
+  <th>{{localize "SDP.Name"}}</th>
+<th>{{localize "SDP.Equipped"}}</th>
+<th>{{localize "SDP.QuantityShort"}}</th>
+<th>{{localize "SDP.Weight"}}</th>
   <th></th>
 </tr>
 </thead>
@@ -660,10 +662,10 @@
 <thead>
 <tr>
   <th></th>
-  <th>Name</th>
-  <th>Qty</th>
-  <th>Weight</th>
-  <th>Capacity</th>
+  <th>{{localize "SDP.Name"}}</th>
+<th>{{localize "SDP.QuantityShort"}}</th>
+<th>{{localize "SDP.Weight"}}</th>
+<th>{{localize "SDP.Capacity"}}</th>
   <th></th>
 </tr>
 </thead>
@@ -740,10 +742,10 @@
 <thead>
 <tr>
   <th></th>
-  <th>Name</th>
-  <th>Qty</th>
-  <th>Weight</th>
-  <th>Type</th>
+  <th>{{localize "SDP.Name"}}</th>
+<th>{{localize "SDP.QuantityShort"}}</th>
+<th>{{localize "SDP.Weight"}}</th>
+<th>{{localize "SDP.Type"}}</th>
   <th></th>
 </tr>
 </thead>

@@ -6,9 +6,9 @@
 <!-- MODIFIERS -->
 <!-- ===================== -->
 
-<h3>Modifiers</h3>
+<h3>{{localize "SDP.Modifiers"}}</h3>
 
-<label>Difficulty</label>
+<label>{{localize "SDP.Difficulty"}}</label>
 <select name="difficulty">
   <option value="60">+60</option>
   <option value="40">+40</option>
@@ -21,12 +21,13 @@
   <option value="-60">-60</option>
 </select>
 
-<label>Custom</label>
+<label>{{localize "SDP.Custom"}}</label>
 <input type="number" name="customMod" value="0">
 
 <div class="modifier-box">
 
-  Modifier: <span id="totalModifier">0</span>
+  {{localize "SDP.Modifier"}}:
+  <span id="totalModifier">0</span>
 
   <div class="modifier-tooltip">
     {{#each modifiers}}
@@ -38,25 +39,59 @@
 
 {{#if (and (eq type "skill") (not isAttribute))}}
 
-<h3>Attribute</h3>
+<h3>{{localize "SDP.Attributes"}}</h3>
 
 <select name="attributeOverride">
-  <option value="">Default</option>
-  <option value="meleeAbility">Melee Ability</option>
-  <option value="rangedAbility">Ranged Ability</option>
-  <option value="strength">Strength</option>
-  <option value="toughness">Toughness</option>
-  <option value="initiative">Initiative</option>
-  <option value="agility">Agility</option>
-  <option value="dexterity">Dexterity</option>
-  <option value="intelligence">Intelligence</option>
-  <option value="willpower">Willpower</option>
-  <option value="charisma">Charisma</option>
+
+  <option value="">
+    {{localize "SDP.Default"}}
+  </option>
+
+  <option value="meleeAbility">
+    {{localize "SDP.MeleeAbility"}}
+  </option>
+
+  <option value="rangedAbility">
+    {{localize "SDP.RangedAbility"}}
+  </option>
+
+  <option value="strength">
+    {{localize "SDP.Strength"}}
+  </option>
+
+  <option value="toughness">
+    {{localize "SDP.Toughness"}}
+  </option>
+
+  <option value="initiative">
+    {{localize "SDP.Initiative"}}
+  </option>
+
+  <option value="agility">
+    {{localize "SDP.Agility"}}
+  </option>
+
+  <option value="dexterity">
+    {{localize "SDP.Dexterity"}}
+  </option>
+
+  <option value="intelligence">
+    {{localize "SDP.Intelligence"}}
+  </option>
+
+  <option value="willpower">
+    {{localize "SDP.Willpower"}}
+  </option>
+
+  <option value="charisma">
+    {{localize "SDP.Charisma"}}
+  </option>
+
 </select>
 
 {{/if}}
 
-<h3>Talents</h3>
+<h3>{{localize "SDP.Talents"}}</h3>
 
 {{#each talents}}
 <label>
@@ -73,53 +108,64 @@
 {{/each}}
 
 <!-- ===================== -->
-<!-- INSPIRATION (GLOBAL) -->
+<!-- INSPIRATION -->
 <!-- ===================== -->
 
 {{#if inspirationDice}}
 <div class="inspiration-block">
-  <h3>Inspiration</h3>
 
-  <p>Dice: {{inspirationDice}}</p>
+  <h3>{{localize "SDP.Inspiration"}}</h3>
+
+  <p>
+    {{localize "SDP.Dice"}}:
+    {{inspirationDice}}
+  </p>
 
   <button data-action="rollInspiration">
-    Roll Inspiration
+    {{localize "SDP.RollInspiration"}}
   </button>
 
   {{#if inspirationResult}}
-    <p><strong>Bonus SL:</strong> +{{inspirationResult}}</p>
+    <p>
+      <strong>
+        {{localize "SDP.BonusSL"}}:
+      </strong>
+      +{{inspirationResult}}
+    </p>
   {{/if}}
 
 </div>
 {{/if}}
 
 <!-- ===================== -->
-<!-- COMBAT ONLY -->
+<!-- COMBAT -->
 <!-- ===================== -->
 
 {{#if (or isAttack isSpell)}}
 
-<h3>Combat</h3>
+<h3>{{localize "SDP.Combat"}}</h3>
 
-<label>Hit Table</label>
+<label>{{localize "SDP.HitTable"}}</label>
 
 <select name="hitLocationProfile">
 
   {{#each hitProfiles}}
 
     <option value="{{@key}}">
-      {{this.label}}
-    </option>
+  {{localize this.label}}
+</option>
 
   {{/each}}
 
 </select>
 
-<label>Target</label>
+<label>{{localize "SDP.Target"}}</label>
 
 <select name="location">
 
-  <option value="">Random</option>
+  <option value="">
+    {{localize "SDP.Random"}}
+  </option>
 
   {{#each hitLocations}}
 
@@ -134,27 +180,29 @@
 
 <label>
   <input type="checkbox" name="brutal">
-  Brutal Strike
+  {{localize "SDP.BrutalStrike"}}
 </label>
 
 <label>
   <input type="checkbox" name="charge">
-  Charge (+1 melee attack)
+  {{localize "SDP.ChargeAttack"}}
 </label>
 
 {{#if hasFinesseTrait}}
 <label>
   <input type="checkbox" name="finesse"/>
-  Use Finesse (DEX)
+  {{localize "SDP.UseFinesse"}}
 </label>
 {{/if}}
 
 {{/if}}
 
 <!-- ===================== -->
-<!-- BUTTON (TOUJOURS VISIBLE) -->
+<!-- BUTTON -->
 <!-- ===================== -->
 
-<button data-action="roll">Roll</button>
+<button data-action="roll">
+  {{localize "SDP.Roll"}}
+</button>
 
 </div>

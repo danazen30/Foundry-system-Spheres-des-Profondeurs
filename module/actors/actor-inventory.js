@@ -60,19 +60,28 @@ let encumbranceState = {
 if (ratio > 3) {
   encumbranceState = {
     level: 3,
-    label: "Immobile"
+    label:
+  game.i18n.localize(
+    "SDP.Encumbrance.Immobile"
+  )
   };
 }
 else if (ratio > 2) {
   encumbranceState = {
     level: 2,
-    label: "-20 Agility, -2 Move, +2 Exhausted (if prolonged)"
+    label:
+  game.i18n.localize(
+    "SDP.Encumbrance.Heavy"
+  )
   };
 }
 else if (ratio > 1) {
   encumbranceState = {
     level: 1,
-    label: "-10 Agility, -1 Move, +1 Exhausted (if prolonged)"
+    label:
+  game.i18n.localize(
+    "SDP.Encumbrance.Light"
+  )
   };
 }
 

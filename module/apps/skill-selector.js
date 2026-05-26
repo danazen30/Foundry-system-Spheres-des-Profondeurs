@@ -17,6 +17,8 @@ export class SkillSelectorApp extends HandlebarsApplicationMixin(ApplicationV2) 
 
   constructor(options = {}) {
     super(options);
+     this.options.window.title =
+    game.i18n.localize("SDP.SelectSkill");
 
     this.skills = options.skills || [];
     this.callback = options.callback;

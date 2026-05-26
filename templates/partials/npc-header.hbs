@@ -16,20 +16,21 @@
 {{#unless isLimitedObserver}}
    <!-- LEVEL -->
 <div class="npc-level">
-  Level : {{actor.system.details.level}}
+  {{localize "SDP.Level"}} : {{actor.system.details.level}}
 </div>
 
 <!-- ENCUMBRANCE -->
 <div class="npc-top-right">
   <div class="encumbrance">
     <span>
-      ⚖️ {{system.resources.encumbrance.value}} /
+      ⚖️ {{localize "SDP.Encumbrance"}}
+      {{system.resources.encumbrance.value}} /
       {{system.resources.encumbrance.max}}
     </span>
 
     {{#if system.resources.encumbrance.state.label}}
       <span class="encumbrance-warning">
-        {{system.resources.encumbrance.state.label}}
+        {{localize system.resources.encumbrance.state.label}}
       </span>
     {{/if}}
     </div>
@@ -48,7 +49,9 @@
       <!-- HEALTH -->
       <div class="resource-box resource-bar">
         <div class="resource-top">
-          <div class="resource-label">❤️ Health :</div>
+          <div class="resource-label">
+            ❤️ {{localize "SDP.Health"}} :
+          </div>
 
           <div class="resource-values">
             <input
@@ -71,7 +74,9 @@
       <!-- MANA -->
       <div class="resource-box resource-bar">
         <div class="resource-top">
-          <div class="resource-label">🔵 Mana :</div>
+          <div class="resource-label">
+            🔵 {{localize "SDP.Mana"}} :
+          </div>
 
           <div class="resource-values">
             <input
@@ -100,22 +105,22 @@
       <div class="resource-box derived-grid">
 
         <div class="derived-cell">
-          <label>⚔️ Attack</label>
+          <label>⚔️ {{localize "SDP.Attack"}}</label>
           <span>{{system.derived.attack.value}}</span>
         </div>
 
         <div class="derived-cell">
-          <label>🌀 Evasion</label>
+          <label>🌀 {{localize "SDP.Evasion"}}</label>
           <span>{{system.derived.evasion.value}}</span>
         </div>
 
         <div class="derived-cell">
-          <label>🛡️ Parry</label>
+          <label>🛡️ {{localize "SDP.Parry"}}</label>
           <span>{{system.derived.parry.value}}</span>
         </div>
 
         <div class="derived-cell">
-          <label>💢 Wound</label>
+          <label>💢 {{localize "SDP.WoundLabel"}}</label>
           <span>{{system.derived.woundThreshold.value}}</span>
         </div>
 
@@ -125,9 +130,17 @@
       <div class="movement-header-box">
         <div class="movement-grid">
 
-          <div class="movement-header">Move</div>
-          <div class="movement-header">Walk</div>
-          <div class="movement-header">Run</div>
+          <div class="movement-header">
+            {{localize "SDP.Move"}}
+          </div>
+
+          <div class="movement-header">
+            {{localize "SDP.Walk"}}
+          </div>
+
+          <div class="movement-header">
+            {{localize "SDP.Run"}}
+          </div>
 
           <input
             type="number"

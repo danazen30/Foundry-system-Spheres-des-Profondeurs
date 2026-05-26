@@ -13,16 +13,16 @@ export class SdpActor extends Actor {
     // =====================
 
     const defaultAttributes = {
-      meleeAbility: { label: "MA", name: "Strength", initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
-      rangedAbility: { label: "RA", name: "rangedAbility",initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
-      strength: { label: "S", name: "strength",initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
-      toughness: { label: "T", name: "toughness",initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
-      initiative: { label: "I", name: "initiative",initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
-      agility: { label: "A", name: "agility",initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
-      dexterity: { label: "D", name: "dexterity",initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
-      intelligence: { label: "Int", name: "intelligence",initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
-      willpower: { label: "WP", name: "willpower",initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
-      charisma: { label: "C", name: "charisma",initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 }
+      meleeAbility: { label: game.i18n.localize("SDP.AttributeAbbr.MeleeAbility"), name: game.i18n.localize("SDP.Attribute.Strength"), initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
+      rangedAbility: { label: game.i18n.localize("SDP.AttributeAbbr.RangedAbility"), name: game.i18n.localize("SDP.Attribute.RangedAbility"),initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
+      strength: { label: game.i18n.localize("SDP.AttributeAbbr.Strength"), name: game.i18n.localize("SDP.Attribute.Strength"),initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
+      toughness: { label: game.i18n.localize("SDP.AttributeAbbr.Toughness"), name: game.i18n.localize("SDP.Attribute.Toughness"),initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
+      initiative: { label: game.i18n.localize("SDP.AttributeAbbr.Initiative"), name: game.i18n.localize("SDP.Attribute.Initiative"),initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
+      agility: { label: game.i18n.localize("SDP.AttributeAbbr.Agility"), name: game.i18n.localize("SDP.Attribute.Agility"),initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
+      dexterity: { label: game.i18n.localize("SDP.AttributeAbbr.Dexterity"), name: game.i18n.localize("SDP.Attribute.Dexterity"),initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
+      intelligence: { label: game.i18n.localize("SDP.AttributeAbbr.Intelligence"), name: game.i18n.localize("SDP.Attribute.Intelligence"),initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
+      willpower: { label: game.i18n.localize("SDP.AttributeAbbr.Willpower"), name: game.i18n.localize("SDP.Attribute.Willpower"),initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 },
+      charisma: { label: game.i18n.localize("SDP.AttributeAbbr.Charisma"), name: game.i18n.localize("SDP.Attribute.Charisma"),initial: 20, advances: 0, modifier: 0, levelBonus: 0, value: 20, bonus: 2 }
     };
 
     system.attributes ??= {};

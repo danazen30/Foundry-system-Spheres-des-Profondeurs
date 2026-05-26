@@ -670,13 +670,51 @@ async _addXPLog(entry) {
   let label = "";
 
   if (entry.type === "spend") {
-  label = `${entry.target} (${entry.old} → ${entry.value}) : -${entry.amount} XP (${spent} / ${total})${entry.reason ? " - " + entry.reason : ""}`;
+
+  label = game.i18n.format(
+    "SDP.XPLog.Spend",
+    {
+      target: entry.target,
+      old: entry.old,
+      value: entry.value,
+      amount: entry.amount,
+      spent,
+      total,
+      reason: entry.reason || ""
+    }
+  );
+
 }
+
 else if (entry.type === "refund") {
-  label = `${entry.target} (${entry.old} → ${entry.value}) : +${entry.amount} XP (${spent} / ${total})${entry.reason ? " - " + entry.reason : ""}`;
+
+  label = game.i18n.format(
+    "SDP.XPLog.Refund",
+    {
+      target: entry.target,
+      old: entry.old,
+      value: entry.value,
+      amount: entry.amount,
+      spent,
+      total,
+      reason: entry.reason || ""
+    }
+  );
+
 }
+
 else if (entry.type === "gain") {
-  label = `+${entry.amount} XP (${spent} / ${total}) - ${entry.reason || ""}`;
+
+  label = game.i18n.format(
+    "SDP.XPLog.Gain",
+    {
+      amount: entry.amount,
+      spent,
+      total,
+      reason: entry.reason || ""
+    }
+  );
+
 }
 
   log.unshift({
@@ -778,8 +816,8 @@ else if (data.type === "JournalEntry") {
 if (!pageId) {
 
   ui.notifications.warn(
-    "No valid journal page found"
-  );
+  game.i18n.localize("SDP.Notifications.NoValidJournalPage")
+);
 
   return;
 
@@ -792,7 +830,7 @@ await this.actor.setFlag(
 );
 
 ui.notifications.info(
-  "Journal page linked to NPC"
+  game.i18n.localize("SDP.Notifications.JournalLinkedToNpc")
 );
 
 this.render();
@@ -839,7 +877,9 @@ async _castSpell(event) {
   const mana = actor.system.resources.mana.value;
 
   if (mana < cost) {
-    ui.notifications.warn("Not enough mana");
+    ui.notifications.warn(
+  game.i18n.localize("SDP.Notifications.NotEnoughMana")
+);
     return;
   }
 
@@ -1066,19 +1106,23 @@ if (game.dice3d) {
          data-mana="${mana}"
          data-used="false">
 
-      <h3>${type === "short" ? "Short Rest" : "Long Rest"}</h3>
+      <h3>${
+  type === "short"
+    ? game.i18n.localize("SDP.Rest.Short")
+    : game.i18n.localize("SDP.Rest.Long")
+}</h3>
 
       <div class="dice-block">
-        <p><strong>HP:</strong></p>
+        <p><strong>${game.i18n.localize("SDP.Actor.HP")}:</strong></p>
         ${hpHTML}
 
-        <p><strong>Mana:</strong></p>
+        <p><strong>${game.i18n.localize("SDP.Actor.Mana")}:</strong></p>
         ${manaHTML}
       </div>
 
       <button class="apply-rest">
-        Apply Rest
-      </button>
+  ${game.i18n.localize("SDP.Rest.Apply")}
+</button>
 
     </div>
     `

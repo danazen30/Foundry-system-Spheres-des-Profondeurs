@@ -25,7 +25,11 @@ export function registerXPListeners(sheet, root) {
       const available = xp.total - xp.spent;
 
       if (available < cost) {
-        ui.notifications.warn("Not enough XP");
+        ui.notifications.warn(
+  game.i18n.localize(
+    "SDP.Warning.NotEnoughXP"
+  )
+);
         return;
       }
 
@@ -107,7 +111,11 @@ export function registerXPListeners(sheet, root) {
       const available = xp.total - xp.spent;
 
       if (available < cost) {
-        ui.notifications.warn("Not enough XP");
+        ui.notifications.warn(
+  game.i18n.localize(
+    "SDP.Warning.NotEnoughXP"
+  )
+);
         return;
       }
 
@@ -122,7 +130,9 @@ export function registerXPListeners(sheet, root) {
       await sheet._addXPLog({
         type: "spend",
         amount: cost,
-        target: key,
+        target: game.i18n.localize(
+  CONFIG.SDP.ATTRIBUTE_LABELS[key]
+),
         old: current,
         value: current + 1
       });
@@ -158,7 +168,9 @@ export function registerXPListeners(sheet, root) {
       await sheet._addXPLog({
         type: "refund",
         amount: cost,
-        target: key,
+        target: game.i18n.localize(
+  CONFIG.SDP.ATTRIBUTE_LABELS[key]
+),
         old: current,
         value: newValue
       });
@@ -187,14 +199,22 @@ export function registerXPListeners(sheet, root) {
       const available = xp.total - xp.spent;
 
       if (available < cost) {
-        ui.notifications.warn("Not enough XP");
+        ui.notifications.warn(
+  game.i18n.localize(
+    "SDP.Warning.NotEnoughXP"
+  )
+);
         return;
       }
 
       const max = getTalentMax(actor, item);
 
       if (current >= max) {
-        ui.notifications.warn("Talent already at max");
+        ui.notifications.warn(
+  game.i18n.localize(
+    "SDP.Warning.TalentMax"
+  )
+);
         return;
       }
 
@@ -287,28 +307,42 @@ export function registerXPListeners(sheet, root) {
       input.value = oldValue;
 
       new SimpleDialog({
-        title: "XP Change",
+        title:
+  game.i18n.localize(
+    "SDP.Dialog.XPChangeTitle"
+  ),
 
         content: `
-          <p>
-            Change:
-            ${diff > 0 ? "+" : ""}${diff} XP
-          </p>
+  <p>
+    ${game.i18n.localize(
+      "SDP.XPChange"
+    )} :
+    ${diff > 0 ? "+" : ""}${diff} XP
+  </p>
 
-          <label>Reason</label>
+  <label>
+    ${game.i18n.localize(
+      "SDP.Reason"
+    )}
+  </label>
 
-          <input
-            type="text"
-            id="xp-reason"
-            placeholder="Reason..."
-          />
-        `,
+  <input
+    type="text"
+    id="xp-reason"
+    placeholder="${game.i18n.localize(
+      "SDP.PlaceholderReason"
+    )}"
+  />
+`,
 
         buttons: {
 
           confirm: {
 
-            label: "Apply",
+            label:
+  game.i18n.localize(
+    "SDP.Apply"
+  ),
 
             callback: async (app) => {
 
@@ -356,7 +390,10 @@ export function registerXPListeners(sheet, root) {
           },
 
           cancel: {
-            label: "Cancel"
+            label:
+  game.i18n.localize(
+    "SDP.Cancel"
+  )
           }
 
         }
@@ -380,7 +417,11 @@ export function registerXPListeners(sheet, root) {
 
     const cost = getCost("attribute", current);
 
-    el.title = `Cost: ${cost} XP`;
+   el.title =
+  game.i18n.format(
+    "SDP.XPCost",
+    { cost }
+  );
 
   });
 

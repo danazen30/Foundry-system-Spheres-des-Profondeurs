@@ -6,7 +6,7 @@
       type="text"
       name="name"
       value="{{item.name}}"
-      placeholder="Item Name"
+      placeholder="{{localize 'SDP.ItemName'}}"
     />
   </div>
 
@@ -33,18 +33,22 @@
           <!-- TYPE -->
           <div class="meta-field">
 
-            <label>Type</label>
+            <label>
+  {{localize "SDP.Type"}}
+</label>
 
             <div class="meta-value">
-              {{item.type}}
-            </div>
+  {{localize (concat "TYPES.Item." item.type)}}
+</div>
 
           </div>
 
           <!-- PRICE -->
           <div class="meta-field price-field">
 
-            <label>Price</label>
+            <label>
+  {{localize "SDP.Price"}}
+</label>
 
             <div class="price-grid">
 
@@ -88,7 +92,9 @@
           <!-- QUANTITY -->
           <div class="meta-field qty-field">
 
-            <label>Qty</label>
+            <label>
+  {{localize "SDP.Quantity"}}
+</label>
 
             <input
               type="number"
@@ -101,7 +107,9 @@
           <!-- WEIGHT -->
           <div class="meta-field weight-field">
 
-            <label>Weight</label>
+           <label>
+  {{localize "SDP.Weight"}}
+</label>
 
             <input
               type="number"

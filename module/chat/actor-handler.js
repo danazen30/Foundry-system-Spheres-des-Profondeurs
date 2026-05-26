@@ -26,24 +26,24 @@ Hooks.on("createActor", async (actor) => {
     return;
   }
 
-// =========================
-// SKILLS PACK
-// =========================
+  // =========================
+  // SKILLS PACK
+  // =========================
 
-const skillsPack =
-  game.packs.get("sdp.skills");
+  const skillsPack =
+    game.packs.get("sdp.skills");
 
   if (!skillsPack) {
 
-  console.error(
-    "SDP | skills pack not found"
-  );
+    console.error(
+      "SDP | skills pack not found"
+    );
 
-  return;
-}
+    return;
+  }
 
   const skillDocs =
-  await skillsPack.getDocuments();
+    await skillsPack.getDocuments();
 
   // =========================
   // BASIC SKILLS
@@ -62,146 +62,162 @@ const skillsPack =
 
   });
 
-  // =========================
-  // DEFAULT ADVANCED
-  // =========================
-
-  const defaultAdvancedSkills = [
-    "Stealth"
-  ];
-
-  const advancedSkills =
-  skillDocs.filter(skill =>
-      defaultAdvancedSkills.includes(
-        skill.name
-      )
-    );
-
-    // =========================
-// DEFAULT CURRENCIES
+ // =========================
+// DEFAULT ADVANCED
 // =========================
 
-const currencies = [
-
-  {
-    name: "Platinum coin",
-    type: "currency",
-
-    img:
-      "systems/sdp/assets/icons/currency/platinum.png",
-
-    system: {
-
-      denomination: {
-        value: "platinum"
-      },
-
-      quantity: {
-        value: 0
-      },
-
-      encumbrance: {
-        value: 0.001
-      }
-
-    }
-
-  },
-
-  {
-    name: "Gold coin",
-    type: "currency",
-
-    img:
-      "systems/sdp/assets/icons/currency/gold.png",
-
-    system: {
-
-      denomination: {
-        value: "gold"
-      },
-
-      quantity: {
-        value: 0
-      },
-
-      encumbrance: {
-        value: 0.001
-      }
-
-    }
-
-  },
-
-  {
-    name: "Silver coin",
-    type: "currency",
-
-    img:
-      "systems/sdp/assets/icons/currency/silver.png",
-
-    system: {
-
-      denomination: {
-        value: "silver"
-      },
-
-      quantity: {
-        value: 0
-      },
-
-      encumbrance: {
-        value: 0.001
-      }
-
-    }
-
-  },
-
-  {
-    name: "Copper coin",
-    type: "currency",
-
-    img:
-      "systems/sdp/assets/icons/currency/copper.png",
-
-    system: {
-
-      denomination: {
-        value: "copper"
-      },
-
-      quantity: {
-        value: 0
-      },
-
-      encumbrance: {
-        value: 0.001
-      }
-
-    }
-
-  }
-
+const defaultAdvancedSkills = [
+  "stealth"
 ];
+
+const advancedSkills =
+  skillDocs.filter(skill =>
+    defaultAdvancedSkills.includes(
+      skill.system.key
+    )
+  );
+
+  // =========================
+  // DEFAULT CURRENCIES
+  // =========================
+
+  const currencies = [
+
+    {
+      name:
+        game.i18n.localize(
+          "SDP.CurrencyPlatinum"
+        ),
+
+      type: "currency",
+
+      img:
+        "systems/sdp/assets/icons/currency/platinum.png",
+
+      system: {
+
+        denomination: {
+          value: "platinum"
+        },
+
+        quantity: {
+          value: 0
+        },
+
+        encumbrance: {
+          value: 0.001
+        }
+
+      }
+
+    },
+
+    {
+      name:
+        game.i18n.localize(
+          "SDP.CurrencyGold"
+        ),
+
+      type: "currency",
+
+      img:
+        "systems/sdp/assets/icons/currency/gold.png",
+
+      system: {
+
+        denomination: {
+          value: "gold"
+        },
+
+        quantity: {
+          value: 0
+        },
+
+        encumbrance: {
+          value: 0.001
+        }
+
+      }
+
+    },
+
+    {
+      name:
+        game.i18n.localize(
+          "SDP.CurrencySilver"
+        ),
+
+      type: "currency",
+
+      img:
+        "systems/sdp/assets/icons/currency/silver.png",
+
+      system: {
+
+        denomination: {
+          value: "silver"
+        },
+
+        quantity: {
+          value: 0
+        },
+
+        encumbrance: {
+          value: 0.001
+        }
+
+      }
+
+    },
+
+    {
+      name:
+        game.i18n.localize(
+          "SDP.CurrencyCopper"
+        ),
+
+      type: "currency",
+
+      img:
+        "systems/sdp/assets/icons/currency/copper.png",
+
+      system: {
+
+        denomination: {
+          value: "copper"
+        },
+
+        quantity: {
+          value: 0
+        },
+
+        encumbrance: {
+          value: 0.001
+        }
+
+      }
+
+    }
+
+  ];
 
   // =========================
   // CREATE
   // =========================
 
- const toCreate = [
+  const toCreate = [
 
-  ...basicSkills,
+    ...basicSkills,
 
-  ...advancedSkills,
+    ...advancedSkills,
 
-  ...currencies
+    ...currencies
 
-].map(item =>
-  item.toObject
-    ? item.toObject()
-    : item
-);
+  ].map(item =>
+    item.toObject
+      ? item.toObject()
+      : item
+  );
 
   if (!toCreate.length) {
     return;
@@ -213,7 +229,9 @@ const currencies = [
   );
 
   console.log(
-    "SDP | Default skills added",
+    game.i18n.localize(
+      "SDP.LogDefaultSkillsAdded"
+    ),
     {
       actor: actor.name,
       type: actor.type,

@@ -63,9 +63,10 @@ export function getHitLocationLabel(profileKey, location) {
     const profile =
         getHitLocationProfile(profileKey);
 
-    return (
+    const label =
         profile.locations?.[location]?.label ||
-        location
-    );
+        location;
+
+    return game.i18n.localize(label);
 
 }

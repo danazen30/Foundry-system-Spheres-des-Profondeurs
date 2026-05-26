@@ -1,13 +1,17 @@
 <div class="sdp-dialog">
 
-  <label>Skill</label>
+  <label>{{localize "SDP.Skill"}}</label>
 
   <select id="skill-select">
     {{#each skills}}
-      <option value="{{this.id}}">{{this.name}}</option>
+      <option value="{{this.id}}">
+        {{this.name}}
+      </option>
     {{/each}}
   </select>
 
-  <button id="confirm">Add</button>
+  <button id="confirm">
+    {{localize "SDP.Add"}}
+  </button>
 
 </div>

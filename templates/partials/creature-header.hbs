@@ -31,19 +31,19 @@
         <div class="resource-top">
 
           <div class="resource-label">
-            ❤️ Health
+            ❤️ {{localize "SDP.Health"}}
           </div>
 
           <div class="resource-values">
 
             <input
-  type="number"
-  name="system.health.value"
-  value="{{system.health.value}}">
+              type="number"
+              name="system.health.value"
+              value="{{system.health.value}}">
 
-<span>
-  / {{system.health.max}}
-</span>
+            <span>
+              / {{system.health.max}}
+            </span>
 
           </div>
 
@@ -64,7 +64,7 @@
         <div class="resource-top">
 
           <div class="resource-label">
-            🔵 Mana
+            🔵 {{localize "SDP.Mana"}}
           </div>
 
           <div class="resource-values">
@@ -100,22 +100,22 @@
       <div class="resource-box derived-grid">
 
         <div class="derived-cell">
-          <label>⚔️ Attack</label>
+          <label>⚔️ {{localize "SDP.Attack"}}</label>
           <span>{{system.derived.attack.value}}</span>
         </div>
 
         <div class="derived-cell">
-          <label>🌀 Evasion</label>
+          <label>🌀 {{localize "SDP.Evasion"}}</label>
           <span>{{system.derived.evasion.value}}</span>
         </div>
 
         <div class="derived-cell">
-          <label>🛡️ Parry</label>
+          <label>🛡️ {{localize "SDP.Parry"}}</label>
           <span>{{system.derived.parry.value}}</span>
         </div>
 
         <div class="derived-cell">
-          <label>💢 Wound</label>
+          <label>💢 {{localize "SDP.WoundLabel"}}</label>
           <span>{{system.derived.woundThreshold.value}}</span>
         </div>
 
@@ -126,9 +126,17 @@
 
         <div class="movement-grid">
 
-          <div class="movement-header">Move</div>
-          <div class="movement-header">Walk</div>
-          <div class="movement-header">Run</div>
+          <div class="movement-header">
+            {{localize "SDP.Move"}}
+          </div>
+
+          <div class="movement-header">
+            {{localize "SDP.Walk"}}
+          </div>
+
+          <div class="movement-header">
+            {{localize "SDP.Run"}}
+          </div>
 
           <input
             type="number"

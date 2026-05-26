@@ -6,6 +6,8 @@ export class LevelUpApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
   constructor(actor, level) {
   super();
+  this.options.window.title =
+  game.i18n.localize("SDP.LevelUp");
   this.actor = actor;
   this.level = level;
   this.baseHP = 0;
@@ -93,7 +95,7 @@ return {
 
   roll.toMessage({
     speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-    flavor: `LEVEL HP (${dice})`
+    flavor: `${game.i18n.localize("SDP.LevelHP")} (${dice})`
   });
 
 });
@@ -116,7 +118,7 @@ root.querySelector('[data-action="sign-roll"]')?.addEventListener("click", async
 
   roll.toMessage({
     speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-    flavor: `SIGN HP (${this.signDice})`
+    flavor: `${game.i18n.localize("SDP.SignHP")} (${this.signDice})`
   });
 
 });
@@ -156,12 +158,16 @@ async _applyLevel(choice) {
   if (choice !== "confirm") return;
 
   if (!this.hasRolledBase) {
-    ui.notifications.warn("Choose base HP first");
+    ui.notifications.warn(
+  game.i18n.localize("SDP.ChooseBaseHPFirst")
+);
     return;
   }
 
   if (this.signDice && this.signHP === 0) {
-    ui.notifications.warn("Choose sign HP first");
+    ui.notifications.warn(
+  game.i18n.localize("SDP.ChooseSignHPFirst")
+);
     return;
   }
 

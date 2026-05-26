@@ -13,7 +13,7 @@
     data-tab="description"
     class="{{#if (eq activeTab 'description')}}active{{/if}}">
 
-    Description
+    {{localize "SDP.TabDescription"}}
 
   </button>
 
@@ -22,7 +22,7 @@
     data-tab="details"
     class="{{#if (eq activeTab 'details')}}active{{/if}}">
 
-    Details
+    {{localize "SDP.TabDetails"}}
 
   </button>
 
@@ -47,14 +47,14 @@
 <div class="weapon-card">
 
   <div class="weapon-card-title">
-    Sign
+    {{localize "TYPES.Item.sign"}}
   </div>
 
   <div class="weapon-grid">
 
     <div class="form-group full-width">
 
-      <label>Attribute</label>
+      <label>{{localize "SDP.Attributes"}}</label>
 
       <input
         type="text"
@@ -72,14 +72,14 @@
   <div class="overcast-header">
 
     <div class="weapon-card-title">
-      Levels
+      {{localize "SDP.Levels"}}
     </div>
 
     <button
       type="button"
       class="effect-create-button add-level">
 
-      ✚ Add Level
+      ✚ {{localize "SDP.AddLevel"}}
 
     </button>
 
@@ -102,14 +102,14 @@
       </button>
 
       <div class="sign-level-title">
-        Level {{key}}
+        {{localize "SDP.Level"}} {{key}}
       </div>
 
       <div class="sign-level-grid">
 
         <div class="form-group">
 
-          <label>HP Dice</label>
+          <label>{{localize "SDP.HPDice"}}</label>
 
           <input
             type="text"
@@ -121,7 +121,7 @@
 
         <div class="form-group">
 
-          <label>Damage Bonus</label>
+          <label>{{localize "SDP.DamageBonus"}}</label>
 
           <input
             type="text"
@@ -132,7 +132,7 @@
 
         <div class="form-group full-width">
 
-          <label>Inspiration Dice</label>
+          <label>{{localize "SDP.InspirationDice"}}</label>
 
           <input
             type="text"
@@ -143,7 +143,7 @@
 
         <div class="form-group full-width">
 
-          <label>Description</label>
+          <label>{{localize "SDP.TabDescription"}}</label>
 
           <textarea
             class="sign-description"

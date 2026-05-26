@@ -13,7 +13,7 @@
     data-tab="description"
     class="{{#if (eq activeTab 'description')}}active{{/if}}">
 
-    Description
+    {{localize "SDP.TabDescription"}}
 
   </button>
 
@@ -22,7 +22,7 @@
     data-tab="details"
     class="{{#if (eq activeTab 'details')}}active{{/if}}">
 
-    Details
+    {{localize "SDP.TabDetails"}}
 
   </button>
 
@@ -31,7 +31,7 @@
     data-tab="effects"
     class="{{#if (eq activeTab 'effects')}}active{{/if}}">
 
-    Effects
+    {{localize "SDP.Effects"}}
 
   </button>
 
@@ -56,14 +56,14 @@
 <div class="weapon-card">
 
   <div class="weapon-card-title">
-    Injury
+    {{localize "TYPES.Item.injury"}}
   </div>
 
   <div class="weapon-grid">
 
     <div class="form-group">
 
-      <label>Severity</label>
+      <label>{{localize "SDP.Severity"}}</label>
 
       <input
         type="text"
@@ -74,7 +74,7 @@
 
     <div class="form-group">
 
-      <label>Location</label>
+      <label>{{localize "SDP.Location"}}</label>
 
       <input
         type="text"
@@ -90,7 +90,7 @@
         name="system.consequence"
         {{checked system.consequence}}>
 
-      <label>Consequence</label>
+      <label>{{localize "SDP.Consequence"}}</label>
 
     </div>
 
@@ -101,13 +101,13 @@
         name="system.removeOnDelete"
         {{checked system.removeOnDelete}}>
 
-      <label>Remove on Delete</label>
+      <label>{{localize "SDP.RemoveOnDelete"}}</label>
 
     </div>
 
     <div class="form-group full-width">
 
-      <label>Duration (Rounds)</label>
+      <label>{{localize "SDP.DurationRounds"}}</label>
 
       <input
         type="number"

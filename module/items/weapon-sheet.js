@@ -17,21 +17,69 @@ export class SdpWeaponSheet extends SdpItemSheet {
     ...base, // 🔥 garde itemTraits
 
     damageTypeOptions: [
-  { value: "slashing", label: "Slashing" },
-  { value: "piercing", label: "Piercing" },
-  { value: "bludgeoning", label: "Bludgeoning" }
+  {
+    value: "slashing",
+    label:
+      game.i18n.localize(
+        "SDP.DamageTypeSlashing"
+      )
+  },
+  {
+    value: "piercing",
+    label:
+      game.i18n.localize(
+        "SDP.DamageTypePiercing"
+      )
+  },
+  {
+    value: "bludgeoning",
+    label:
+      game.i18n.localize(
+        "SDP.DamageTypeBludgeoning"
+      )
+  }
 ],
 
     categoryOptions: [
-      { value: "melee", label: "Melee" },
-      { value: "ranged", label: "Ranged" }
-    ],
+  {
+    value: "melee",
+    label:
+      game.i18n.localize(
+        "SDP.CategoryMelee"
+      )
+  },
+  {
+    value: "ranged",
+    label:
+      game.i18n.localize(
+        "SDP.CategoryRanged"
+      )
+  }
+],
 
     handednessOptions: [
-      { value: "one", label: "One Hand" },
-      { value: "two", label: "Two Hands" },
-      { value: "special", label: "Special" }
-    ],
+  {
+    value: "one",
+    label:
+      game.i18n.localize(
+        "SDP.HandednessOne"
+      )
+  },
+  {
+    value: "two",
+    label:
+      game.i18n.localize(
+        "SDP.HandednessTwo"
+      )
+  },
+  {
+    value: "special",
+    label:
+      game.i18n.localize(
+        "SDP.HandednessSpecial"
+      )
+  }
+],
 
     positiveTraits: Object.entries(WEAPON_TRAITS)
       .filter(([_, v]) => v.type === "positive")

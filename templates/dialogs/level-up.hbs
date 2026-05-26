@@ -1,32 +1,43 @@
 <div class="level-up-container" style="max-height: 350px; overflow-y: auto;">
 
-  <h2>Level Up → {{level}}</h2>
+  <h2>
+    {{localize "SDP.LevelUp"}}
+    → {{level}}
+  </h2>
 
-  <p>Health Gain:</p>
+  <p>{{localize "SDP.HealthGain"}}:</p>
 
   <button data-action="roll">
-    Roll {{dice}}
+    {{localize "SDP.Roll"}} {{dice}}
   </button>
 
   <button data-action="average">
-    Take Average ({{average}})
+    {{localize "SDP.TakeAverage"}} ({{average}})
   </button>
 
 {{#if (ne signDice null)}}
   <hr>
 
-  <h3>Sign Bonus</h3>
+  <h3>{{localize "SDP.SignBonus"}}</h3>
 
-  <p>Dice: {{signDice}}</p>
+  <p>
+    {{localize "SDP.Dice"}}:
+    {{signDice}}
+  </p>
 
-  <button data-action="sign-roll">Roll Sign</button>
-  <button data-action="sign-average">Average Sign ({{signAverage}})</button>
+  <button data-action="sign-roll">
+    {{localize "SDP.RollSign"}}
+  </button>
+
+  <button data-action="sign-average">
+    {{localize "SDP.AverageSign"}} ({{signAverage}})
+  </button>
 {{/if}}
 
 <hr>
 
 <button data-action="confirm">
-  Confirm Level Up
+  {{localize "SDP.ConfirmLevelUp"}}
 </button>
 
 </div>

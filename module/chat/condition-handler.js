@@ -38,14 +38,54 @@ html.find(".stunned-roll").click(async ev => {
   roll.toMessage({
     speaker: ChatMessage.getSpeaker({actor}),
     flavor: `
-    <h3>Stunned Test</h3>
+    <h3>
+  ${game.i18n.localize(
+    "SDP.StunnedTest"
+  )}
+</h3>
 
-    <p>Target: ${target}</p>
-    <p>Roll: ${result}</p>
-    <p>SL: ${SL}</p>
+    <p>
+  ${game.i18n.localize(
+    "SDP.Target"
+  )}: ${target}
+</p>
 
-    <p><strong>Stacks removed: ${removed}</strong></p>
-    ${newStack === 0 ? "<p><strong>Exhausted gained</strong></p>" : ""}
+<p>
+  ${game.i18n.localize(
+    "SDP.Roll"
+  )}: ${result}
+</p>
+
+<p>
+  ${game.i18n.localize(
+    "SDP.SL"
+  )}: ${SL}
+</p>
+
+    <p>
+
+  <strong>
+
+    ${game.i18n.localize(
+      "SDP.StacksRemoved"
+    )}: ${removed}
+
+  </strong>
+
+</p>
+    ${newStack === 0
+  ? `
+  <p>
+    <strong>
+
+      ${game.i18n.localize(
+        "SDP.ExhaustedGained"
+      )}
+    </strong>
+  </p>
+  `
+  : ""
+}
     `
   });
 await actor.update({
@@ -58,7 +98,7 @@ await actor.update({
 // =========================
 
 if(newStack === 0){
-  await SdpConditionEngine.add(actor, "exhausted", 1);
+  await game.sdp.conditions.add(actor, "exhausted", 1);
 }
 
 });
@@ -112,21 +152,60 @@ await actor.update({
   roll.toMessage({
     speaker: ChatMessage.getSpeaker({actor}),
     flavor: `
-    <h3>Poison Test</h3>
-    <p>Target: ${target}</p>
-    <p>Roll: ${result}</p>
-    <p>SL: ${SL}</p>
-    <p><strong>Stacks removed: ${removed}</strong></p>
-    ${newTotal === 0 ? "<p><strong>Exhausted gained</strong></p>" : ""}
+    <h3>
+  ${game.i18n.localize(
+    "SDP.PoisonTest"
+  )}
+</h3>
+    <p>
+  ${game.i18n.localize(
+    "SDP.Target"
+  )}: ${target}
+</p>
+
+<p>
+  ${game.i18n.localize(
+    "SDP.Roll"
+  )}: ${result}
+</p>
+
+<p>
+  ${game.i18n.localize(
+    "SDP.SL"
+  )}: ${SL}
+</p>
+    <p>
+
+  <strong>
+
+    ${game.i18n.localize(
+      "SDP.StacksRemoved"
+    )}: ${removed}
+
+  </strong>
+
+</p>
+    ${newTotal === 0
+  ? `
+  <p>
+
+    <strong>
+
+      ${game.i18n.localize(
+        "SDP.ExhaustedGained"
+      )}
+
+    </strong>
+
+  </p>
+  `
+  : ""
+}
     `
   });
 
-  await actor.update({
-  [`system.conditions.${conditionKey}`]: newTotal
-});
-
   if(newTotal === 0){
-  await SdpConditionEngine.add(actor, "exhausted", 1);
+  await game.sdp.conditions.add(actor, "exhausted", 1);
 }
 
 });
@@ -166,13 +245,36 @@ if(success){
   });
 
   consequenceText = `
-  <p><strong>Frightened removed</strong></p>
-  <p>Shaken applied</p>
+  <p>
+
+  <strong>
+
+    ${game.i18n.localize(
+      "SDP.FrightenedRemoved"
+    )}
+
+  </strong>
+
+</p>
+
+<p>
+  ${game.i18n.localize(
+    "SDP.ShakenApplied"
+  )}
+</p>
   `;
 
 }else{
 
-  consequenceText = `<p>Frightened remains</p>`;
+  consequenceText = `
+
+<p>
+  ${game.i18n.localize(
+    "SDP.FrightenedRemains"
+  )}
+</p>
+
+`;
 
 }
 
@@ -181,13 +283,41 @@ await roll.toMessage({
   speaker: ChatMessage.getSpeaker({actor}),
 
   flavor: `
-  <h3>Calm Test</h3>
+  <h3>
+  ${game.i18n.localize(
+    "SDP.CalmTest"
+  )}
+</h3>
 
-  <p>Target: ${target}</p>
-  <p>Roll: ${result}</p>
-  <p>SL: ${SL}</p>
+  <p>
+  ${game.i18n.localize(
+    "SDP.Target"
+  )}: ${target}
+</p>
 
-  <p><strong>${success ? "SUCCESS" : "FAILURE"}</strong></p>
+<p>
+  ${game.i18n.localize(
+    "SDP.Roll"
+  )}: ${result}
+</p>
+
+<p>
+  ${game.i18n.localize(
+    "SDP.SL"
+  )}: ${SL}
+</p>
+
+  <p>
+  <strong>
+
+    ${game.i18n.localize(
+      success
+        ? "SDP.Success"
+        : "SDP.Failure"
+    )}
+
+  </strong>
+</p>
 
   ${consequenceText}
   `
@@ -241,13 +371,36 @@ html.find(".strength-roll").click(async ev => {
     });
 
     consequenceText = `
-    <p><strong>Entangled removed</strong></p>
-    <p>Slowed removed: ${removed}</p>
+    <p>
+
+  <strong>
+
+    ${game.i18n.localize(
+      "SDP.EntangledRemoved"
+    )}
+
+  </strong>
+
+</p>
+
+<p>
+  ${game.i18n.localize(
+    "SDP.SlowedRemoved"
+  )}: ${removed}
+</p>
     `;
 
   }else{
 
-    consequenceText = `<p>Still entangled</p>`;
+    consequenceText = `
+
+<p>
+  ${game.i18n.localize(
+    "SDP.StillEntangled"
+  )}
+</p>
+
+`;
 
   }
 
@@ -256,14 +409,43 @@ html.find(".strength-roll").click(async ev => {
     speaker: ChatMessage.getSpeaker({actor}),
 
     flavor: `
-    <h3>Strength Test</h3>
+    <h3>
+  ${game.i18n.localize(
+    "SDP.StrengthTest"
+  )}
+</h3>
 
-    <p>Target: ${target}</p>
-    <p>Roll: ${result}</p>
-    <p>SL: ${SL}</p>
+    <p>
+  ${game.i18n.localize(
+    "SDP.Target"
+  )}: ${target}
+</p>
 
-    <p><strong>${success ? "SUCCESS" : "FAILURE"}</strong></p>
+<p>
+  ${game.i18n.localize(
+    "SDP.Roll"
+  )}: ${result}
+</p>
 
+<p>
+  ${game.i18n.localize(
+    "SDP.SL"
+  )}: ${SL}
+</p>
+
+    <p>
+
+  <strong>
+
+    ${game.i18n.localize(
+      success
+        ? "SDP.Success"
+        : "SDP.Failure"
+    )}
+
+  </strong>
+
+</p>
     ${consequenceText}
     `
 
@@ -305,7 +487,15 @@ html.find(".dying-roll").click(async ev => {
       "system.health.value": newHP
     });
 
-    hpLossText = `<p>Lose 1 Health</p>`;
+    hpLossText = `
+
+<p>
+  ${game.i18n.localize(
+    "SDP.LoseOneHealth"
+  )}
+</p>
+
+`;
 
   }
 
@@ -329,18 +519,63 @@ html.find(".dying-roll").click(async ev => {
     if(deathRoll.total <= deathChance){
 
       deathText = `
-      <p><strong>Death Check</strong></p>
-      <p>Chance: ${deathChance}%</p>
-      <p>Roll: ${deathRoll.total}</p>
-      <p><strong>${actor.name} dies in agony.</strong></p>
+      <p>
+
+  <strong>
+
+    ${game.i18n.localize(
+      "SDP.DeathCheck"
+    )}
+
+  </strong>
+
+</p>
+      <p>
+  ${game.i18n.localize(
+    "SDP.Chance"
+  )}: ${deathChance}%
+</p>
+
+<p>
+  ${game.i18n.localize(
+    "SDP.Roll"
+  )}: ${deathRoll.total}
+</p>
+      <p>
+
+  <strong>
+
+    ${game.i18n.format(
+      "SDP.ActorDiesInAgony",
+      {
+        actor: actor.name
+      }
+    )}
+
+  </strong>
+
+</p>
       `;
 
     }else{
 
       deathText = `
-      <p>Death Check: ${deathChance}%</p>
-      <p>Roll: ${deathRoll.total}</p>
-      <p>Survived</p>
+      <p>
+  ${game.i18n.localize(
+    "SDP.DeathCheck"
+  )}: ${deathChance}%
+</p>
+
+<p>
+  ${game.i18n.localize(
+    "SDP.Roll"
+  )}: ${deathRoll.total}
+</p>
+      <p>
+  ${game.i18n.localize(
+    "SDP.Survived"
+  )}
+</p>
       `;
 
     }
@@ -352,12 +587,37 @@ html.find(".dying-roll").click(async ev => {
     speaker: ChatMessage.getSpeaker({actor}),
 
     flavor: `
-    <h3>Dying Test</h3>
+    <h3>
+  ${game.i18n.localize(
+    "SDP.DyingTest"
+  )}
+</h3>
 
-    <p>Target: ${target}</p>
-    <p>Roll: ${result}</p>
+    <p>
+  ${game.i18n.localize(
+    "SDP.Target"
+  )}: ${target}
+</p>
 
-    <p><strong>${success ? "SUCCESS" : "FAILURE"}</strong></p>
+<p>
+  ${game.i18n.localize(
+    "SDP.Roll"
+  )}: ${result}
+</p>
+
+    <p>
+
+  <strong>
+
+    ${game.i18n.localize(
+      success
+        ? "SDP.Success"
+        : "SDP.Failure"
+    )}
+
+  </strong>
+
+</p>
 
     ${hpLossText}
 
@@ -379,9 +639,22 @@ if(Math.abs(actor.system.health.value) > threshold){
   await ChatMessage.create({
 
     content: `
-    <h3>Death</h3>
+    <h3>
+  ${game.i18n.localize(
+    "SDP.Death"
+  )}
+</h3>
 
-    <p>${actor.name} dies from their wounds.</p>
+<p>
+
+  ${game.i18n.format(
+    "SDP.ActorDiesFromWounds",
+    {
+      actor: actor.name
+    }
+  )}
+
+</p>
     `
   });
 

@@ -109,16 +109,35 @@ return SL + bonus;
 
 static getSLLabel(SL){
 
-if (SL >= 6) return "Spectacular Success";
-if (SL >= 4) return "Impressive Success";
-if (SL >= 2) return "Success";
-if (SL >= 0) return "Minor Success";
+if (SL >= 6) {
+  return game.i18n.localize("SDP.SpectacularSuccess");
+}
 
-if (SL <= -6) return "Spectacular Failure";
-if (SL <= -4) return "Impressive Failure";
-if (SL <= -2) return "Failure";
+if (SL >= 4) {
+  return game.i18n.localize("SDP.ImpressiveSuccess");
+}
 
-return "Minor Failure";
+if (SL >= 2) {
+  return game.i18n.localize("SDP.Success");
+}
+
+if (SL >= 0) {
+  return game.i18n.localize("SDP.MinorSuccess");
+}
+
+if (SL <= -6) {
+  return game.i18n.localize("SDP.SpectacularFailure");
+}
+
+if (SL <= -4) {
+  return game.i18n.localize("SDP.ImpressiveFailure");
+}
+
+if (SL <= -2) {
+  return game.i18n.localize("SDP.Failure");
+}
+
+return game.i18n.localize("SDP.MinorFailure");
 }
 
 static getOvercast(SL){

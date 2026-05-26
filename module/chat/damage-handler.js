@@ -72,7 +72,12 @@ if (!targetId) {
 
       if (newValue === 0) {
         ChatMessage.create({
-          content: `<p><strong>${weapon.name} breaks!</strong></p>`
+         content: `<p><strong>${game.i18n.format(
+  "SDP.WeaponBreaks",
+  {
+    weapon: weapon.name
+  }
+)}</strong></p>`
         });
       }
     }
@@ -138,19 +143,47 @@ await roll.toMessage({
      data-target="${targetId}"
      data-location="${location}">
 
-      <h3>Damage Roll (Devastating)</h3>
-      <p>Attacker: ${actor.name}</p>
-      <p>Weapon: ${weapon.name}</p>
+      <h3>
+  ${game.i18n.localize(
+    "SDP.DamageRollDevastating"
+  )}
+</h3>
+
+<p>
+  ${game.i18n.localize(
+    "SDP.Attacker"
+  )}: ${actor.name}
+</p>
+
+<p>
+  ${game.i18n.localize(
+    "SDP.Weapon"
+  )}: ${weapon.name}
+</p>
 
       <div class="dice-container">
         ${diceHTML}
       </div>
 
-      <p class="damage-total"><strong>Total: ${damage}</strong></p>
+      <p class="damage-total">
 
-      <button class="validate-damage">
-        Validate Damage
-      </button>
+  <strong>
+
+    ${game.i18n.localize(
+      "SDP.Total"
+    )}: ${damage}
+
+  </strong>
+
+</p>
+
+<button class="validate-damage">
+
+  ${game.i18n.localize(
+    "SDP.ValidateDamage"
+  )}
+
+</button>
 
     </div>
   `
@@ -166,11 +199,28 @@ await roll.toMessage({
   roll.toMessage({
     speaker: ChatMessage.getSpeaker({actor}),
     flavor: `
-    <h3>Damage Roll</h3>
-    <p>Attacker: ${actor.name}</p>
-    <p>Weapon: ${weapon.name}</p>
-    <p>
-Location:
+    <h3>
+  ${game.i18n.localize(
+    "SDP.DamageRoll"
+  )}
+</h3>
+
+<p>
+  ${game.i18n.localize(
+    "SDP.Attacker"
+  )}: ${actor.name}
+</p>
+
+<p>
+  ${game.i18n.localize(
+    "SDP.Weapon"
+  )}: ${weapon.name}
+</p>
+
+<p>
+  ${game.i18n.localize(
+    "SDP.Location"
+  )}:
 ${getHitLocationLabel(
   card.dataset.locationProfile || "humanoid",
   location
@@ -188,14 +238,46 @@ ${getHitLocationLabel(
   await roll.toMessage({
     speaker: ChatMessage.getSpeaker({actor}),
     flavor: `
-      <h3>Damage Roll (Brutal Strike)</h3>
-      <p>Attacker: ${actor.name}</p>
-      <p>Weapon: ${weapon.name}</p>
-      <p><strong>Weapon:</strong> ${weaponDetail || "—"} (MAX)</p>
-      <p><strong>Other damage:</strong>
-  ${SB ? `${SB} (SB)` : ""}
+      <h3>
+  ${game.i18n.localize(
+    "SDP.DamageRollBrutalStrike"
+  )}
+</h3>
+      <p>
+
+  <strong>
+
+    ${game.i18n.localize(
+      "SDP.Weapon"
+    )}:
+
+  </strong>
+
+  ${game.i18n.localize(
+  "SDP.WeaponDice"
+)}: ${game.i18n.localize(
+  "SDP.Max"
+)}
+</p>
+
+<p>
+
+  <strong>
+
+    ${game.i18n.localize(
+      "SDP.OtherDamage"
+    )}:
+
+  </strong>
+
+  ${SB ? `${SB} (${game.i18n.localize(
+  "SDP.StrengthBonusShort"
+)})` : ""}
   ${SB && baseWeapon ? " + " : ""}
-  ${baseWeapon ? `${baseWeapon} (base)` : ""}
+  ${baseWeapon ? `${baseWeapon} (${game.i18n.localize(
+  "SDP.Base"
+)})` : ""}
+
 </p>
     `
   });
@@ -206,11 +288,46 @@ ${getHitLocationLabel(
   ChatMessage.create({
     speaker: ChatMessage.getSpeaker({actor}),
     content: `
-      <h3>Damage Roll (Brutal Strike)</h3>
-      <p>Attacker: ${actor.name}</p>
-      <p>Weapon: ${weapon.name}</p>
-      <p><strong>Weapon Dice: MAX</strong></p>
-      <p><strong>Total Damage: ${damage}</strong></p>
+      <h3>
+  ${game.i18n.localize(
+    "SDP.DamageRollBrutalStrike"
+  )}
+</h3>
+
+<p>
+  ${game.i18n.localize(
+    "SDP.Attacker"
+  )}: ${actor.name}
+</p>
+
+<p>
+  ${game.i18n.localize(
+    "SDP.Weapon"
+  )}: ${weapon.name}
+</p>
+      <p>
+
+  <strong>
+
+    ${game.i18n.localize(
+      "SDP.WeaponDice"
+    )}: MAX
+
+  </strong>
+
+</p>
+
+<p>
+
+  <strong>
+
+    ${game.i18n.localize(
+      "SDP.TotalDamage"
+    )}: ${damage}
+
+  </strong>
+
+</p>
     `
   });
 
@@ -230,7 +347,11 @@ if (card.classList.contains("sdp-spell")) {
   targets = Array.from(game.user.targets);
 
   if (!targets.length) {
-    ui.notifications.warn("Select at least one target");
+    ui.notifications.warn(
+  game.i18n.localize(
+    "SDP.Warning.SelectTarget"
+  )
+);
     return;
   }
 
@@ -249,7 +370,11 @@ if (card.classList.contains("sdp-spell")) {
     targets = Array.from(game.user.targets);
 
     if (!targets.length) {
-      ui.notifications.warn("Select a target before applying damage");
+      ui.notifications.warn(
+  game.i18n.localize(
+    "SDP.Warning.SelectTargetBeforeDamage"
+  )
+);
       return;
     }
 
@@ -262,23 +387,46 @@ if (card.classList.contains("sdp-spell")) {
             <div class="damage-card"
             data-location-profile="${card.dataset.locationProfile || "humanoid"}"
            data-traits='${card.dataset.traits || "[]"}'>
-      <h3>Damage Resolution</h3>
-      <p>
-Location:
+      <h3>
+  ${game.i18n.localize(
+    "SDP.DamageResolution"
+  )}
+</h3>
+<p>
+  ${game.i18n.localize(
+    "SDP.Location"
+  )}:
 ${getHitLocationLabel(
   card.dataset.locationProfile || "humanoid",
   location
 )}
 </p>
-      <p>Raw Damage: ${damage}</p>
-      <p>Armor: ${armor}</p>
-      <p>Final Damage: ${finalDamage}</p>
+</p>
+      <p>
+  ${game.i18n.localize(
+    "SDP.RawDamage"
+  )}: ${damage}
+</p>
+
+<p>
+  ${game.i18n.localize(
+    "SDP.Armor"
+  )}: ${armor}
+</p>
+
+<p>
+  ${game.i18n.localize(
+    "SDP.FinalDamage"
+  )}: ${finalDamage}
+</p>
       <button class="apply-damage"
         data-target="${card.classList.contains("sdp-spell") ? "" : targetId}"
         data-damage="${finalDamage}"
         data-location="${location}"
         data-critical="${critical}">
-        Apply Damage
+        ${game.i18n.localize(
+  "SDP.ApplyDamage"
+)}
       </button>
       </div>
       `,
@@ -332,7 +480,12 @@ for (const armor of armors) {
   });
 
   ChatMessage.create({
-    content: `<p><strong>${armor.name} breaks due to its fragility!</strong></p>`
+    content: `<p><strong>${game.i18n.format(
+  "SDP.ArmorBreaksFragility",
+  {
+    armor: armor.name
+  }
+)}</strong></p>`
   });
 
   break;
@@ -346,7 +499,11 @@ if (!targetId) {
   const targets = Array.from(game.user.targets);
 
   if (!targets.length) {
-    ui.notifications.warn("Select target(s) before applying damage");
+    ui.notifications.warn(
+  game.i18n.localize(
+    "SDP.Warning.SelectTargetBeforeDamage"
+  )
+);
     return;
   }
 
@@ -402,7 +559,11 @@ if (hasTaille) {
       ChatMessage.create({
         content: `
           <div class="sdp-armor-damage">
-            <h4>Armor Damaged</h4>
+            <h4>
+  ${game.i18n.localize(
+    "SDP.ArmorDamaged"
+  )}
+</h4>
             ${armorLogs.map(a => `
               <p>${a.name} : ${a.before} → ${a.after}</p>
             `).join("")}
@@ -429,19 +590,61 @@ const { finalDamage, armor, newHealth, current, severity } = result;
     <div class="sdp-damage-result">
       <h4>${token.actor.name}</h4>
       <p>
-Location:
+  ${game.i18n.localize(
+    "SDP.Location"
+  )}:
 ${getHitLocationLabel(
   "humanoid",
   location
 )}
 </p>
-      <p>Damage: ${damage}</p>
-      <p>Armor: ${armor}</p>
-      <p><strong>Final: ${finalDamage}</strong></p>
-      <p>HP: ${current} → ${newHealth}</p>
+      <p>
+  ${game.i18n.localize(
+    "SDP.Damage"
+  )}: ${damage}
+</p>
+
+<p>
+  ${game.i18n.localize(
+    "SDP.Armor"
+  )}: ${armor}
+</p>
+
+<p>
+
+  <strong>
+
+    ${game.i18n.localize(
+      "SDP.Final"
+    )}: ${finalDamage}
+
+  </strong>
+
+</p>
+
+<p>
+  ${game.i18n.localize(
+    "SDP.HP"
+  )}: ${current} → ${newHealth}
+</p>
       ${
   severity
-    ? `<p><strong>Injury Severity:</strong> ${severity}</p>`
+    ? `
+<p>
+
+  <strong>
+
+    ${game.i18n.localize(
+  "SDP.InjurySeverity"
+)}:
+${game.i18n.localize(
+  `SDP.Wound.${severity.charAt(0).toUpperCase() + severity.slice(1)}`
+)}
+
+  </strong>
+
+</p>
+`
     : ""
 }
     </div>
@@ -510,7 +713,11 @@ if (hasTaille && targetId) {
       ChatMessage.create({
         content: `
           <div class="sdp-armor-damage">
-            <h4>Armor Damaged</h4>
+            <h4>
+  ${game.i18n.localize(
+    "SDP.ArmorDamaged"
+  )}
+</h4>
             ${armorLogs.map(a => `
               <p>${a.name} : ${a.before} → ${a.after}</p>
             `).join("")}
@@ -541,6 +748,15 @@ const {
   severity
 } = result;
 
+const severityKey =
+  `SDP.Wound.${severity.charAt(0).toUpperCase() + severity.slice(1)}`;
+
+console.log("SDP | SEVERITY DEBUG", {
+  severity,
+  severityKey,
+  translated: game.i18n.localize(severityKey)
+});
+
 
 if(severity){
 
@@ -564,26 +780,47 @@ if(severity){
          data-location="${location}"
          data-severity="${severity}">
 
-      <h3>Injury Sustained</h3>
+      <h3>
+  ${game.i18n.localize(
+    "SDP.InjurySustained"
+  )}
+</h3>
 
       <p>
-Location:
+  ${game.i18n.localize(
+    "SDP.Location"
+  )}:
 ${getHitLocationLabel(
   "humanoid",
   location
 )}
 </p>
-      <p>Severity: ${severity}</p>
+      <p>
+  ${game.i18n.localize(
+    "SDP.Severity"
+  )}:
+  ${game.i18n.localize(severityKey)}
+</p>
 
       ${injury ? `
         <div class="injury-preview">
           <p><strong>${injury.name}</strong></p>
           <p>${injury.system.description || ""}</p>
         </div>
-      ` : "<p>No injury found</p>"}
+      ` : `
+<p>
+  ${game.i18n.localize(
+    "SDP.NoInjuryFound"
+  )}
+</p>
+`}
 
-      <button class="apply-injury">Apply Injury</button>
-      <button class="roll-resistance">Roll Resistance</button>
+      <button class="apply-injury">${game.i18n.localize(
+  "SDP.ApplyInjury"
+)}</button>
+      <button class="roll-resistance">${game.i18n.localize(
+  "SDP.RollResistance"
+)}</button>
 
     </div>
     `
@@ -597,11 +834,35 @@ ${getHitLocationLabel(
 
     await message.update({
   content: `
-  <h3>Damage Resolution</h3>
-  <p>Target: ${actor.name}</p>
+  <h3>
+  ${game.i18n.localize(
+    "SDP.DamageResolution"
+  )}
+</h3>
+
+<p>
+  ${game.i18n.localize(
+    "SDP.Target"
+  )}: ${actor.name}
+</p>
   ${
     severity
-      ? `<p><strong>Severity:</strong> ${severity}</p>`
+      ? `
+<p>
+
+  <strong>
+
+    ${game.i18n.localize(
+  "SDP.InjurySeverity"
+)}:
+${game.i18n.localize(
+  `SDP.Wound.${severity.charAt(0).toUpperCase() + severity.slice(1)}`
+)}
+
+  </strong>
+
+</p>
+`
       : ""
   }
   <p><strong>${current} → ${newHealth}</strong></p>
@@ -631,7 +892,9 @@ try {
 
   // 🔥 bloque reroll multiple
   if (dice[index].rerolled) {
-    ui.notifications.warn("This die has already been rerolled");
+    ui.notifications.warn(game.i18n.localize(
+  "SDP.Warning.DieAlreadyRerolled"
+));
     return;
   }
 
@@ -696,7 +959,15 @@ card.dataset.dice = JSON.stringify(dice);
 
 card.querySelector(".dice-container").innerHTML = diceHTML;
 card.querySelector(".damage-total").innerHTML =
-  `<strong>Total: ${newTotal}</strong>`;
+  `
+<strong>
+
+  ${game.i18n.localize(
+    "SDP.Total"
+  )}: ${newTotal}
+
+</strong>
+`;
 })
 
 html.on("click", ".validate-damage", async ev => {
@@ -719,7 +990,11 @@ html.on("click", ".validate-damage", async ev => {
     targets = Array.from(game.user.targets);
 
     if (!targets.length) {
-      ui.notifications.warn("Select at least one target");
+      ui.notifications.warn(
+  game.i18n.localize(
+    "SDP.Warning.SelectTarget"
+  )
+);
       return;
     }
 
@@ -746,23 +1021,50 @@ html.on("click", ".validate-damage", async ev => {
 
   await ChatMessage.create({
     content: `
-      <h3>Damage Resolution</h3>
-      <p>
-Location:
+      <h3>
+  ${game.i18n.localize(
+    "SDP.DamageResolution"
+  )}
+</h3>
+
+<p>
+  ${game.i18n.localize(
+    "SDP.Location"
+  )}:
 ${getHitLocationLabel(
   card.dataset.locationProfile || "humanoid",
   location
 )}
 </p>
-      <p>Raw Damage: ${damage}</p>
-      <p>Armor: ${armor}</p>
-      <p>Final Damage: ${finalDamage}</p>
-      <button class="apply-damage"
-        data-target="${targetId || ""}"
-        data-damage="${finalDamage}"
-        data-location="${location}">
-        Apply Damage
-      </button>
+
+<p>
+  ${game.i18n.localize(
+    "SDP.RawDamage"
+  )}: ${damage}
+</p>
+
+<p>
+  ${game.i18n.localize(
+    "SDP.Armor"
+  )}: ${armor}
+</p>
+
+<p>
+  ${game.i18n.localize(
+    "SDP.FinalDamage"
+  )}: ${finalDamage}
+</p>
+
+<button class="apply-damage"
+  data-target="${targetId || ""}"
+  data-damage="${finalDamage}"
+  data-location="${location}">
+
+  ${game.i18n.localize(
+    "SDP.ApplyDamage"
+  )}
+
+</button>
     `,
     whisper: ChatMessage.getWhisperRecipients("GM")
   });

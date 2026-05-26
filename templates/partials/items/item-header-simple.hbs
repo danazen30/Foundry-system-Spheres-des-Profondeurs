@@ -17,7 +17,8 @@
         <input
           type="text"
           name="name"
-          value="{{item.name}}" />
+          value="{{item.name}}"
+          placeholder="{{localize 'SDP.ItemName'}}" />
 
       </div>
 
@@ -27,10 +28,10 @@
 
           <div class="meta-field">
 
-            <label>Type</label>
+            <label>{{localize "SDP.Type"}}</label>
 
             <div class="meta-value">
-              {{item.type}}
+              {{localize (concat "TYPES.Item." item.type)}}
             </div>
 
           </div>

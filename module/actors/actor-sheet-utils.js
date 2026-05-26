@@ -410,7 +410,7 @@ function registerTraitDialogs(root) {
       title: label,
       content: `
         <div class="trait-dialog">
-          <p>${desc}</p>
+          <p>${desc || game.i18n.localize("SDP.NoDescription")}</p>
         </div>
       `,
       buttons: {
@@ -464,7 +464,7 @@ function registerCurrencyControls(sheet, root) {
 
 }
 
-function registerConditionDetails(root) {
+export function registerConditionDetails(root) {
 
   root.querySelectorAll(".condition-header").forEach(el => {
 
@@ -495,8 +495,13 @@ function registerConditionDetails(root) {
         return;
       }
 
-      content.innerHTML =
-        `<strong>${key}</strong><br>${description}`;
+      const label =
+  game.i18n.localize(
+    SDP.conditionConfig?.[key]?.label || key
+  );
+
+content.innerHTML =
+  `<strong>${label}</strong><br>${description}`;
 
       content.dataset.key = key;
 

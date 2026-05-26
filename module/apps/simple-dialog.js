@@ -28,7 +28,11 @@ export class SimpleDialog extends HandlebarsApplicationMixin(ApplicationV2) {
 
   constructor({ title, content, buttons }) {
     super({
-      window: { title: title || "Dialog" }
+      window: {
+  title:
+    title ||
+    game.i18n.localize("SDP.Dialog")
+}
     });
 
     this.content = content;

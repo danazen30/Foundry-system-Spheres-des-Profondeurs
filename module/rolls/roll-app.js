@@ -13,7 +13,14 @@ export class SdpRollApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
     this.actor = actor;
     this.type = type;
-    this.label = label;
+    this.label =
+  typeof label === "string" && label.startsWith("SDP.")
+    ? game.i18n.localize(label)
+    : label;
+    console.log("ROLL LABEL", {
+  raw: label,
+  localized: this.label
+});
     this.target = target;
     this.weapon = weapon;
     this.spellData = spellData;
@@ -21,14 +28,16 @@ export class SdpRollApp extends HandlebarsApplicationMixin(ApplicationV2) {
     this.inspirationResult = 0;
 
     this.signEffects = actor.getSignEffects();
+    this.options.window.title =
+  game.i18n.localize("SDP.Roll");
   }
 
   static DEFAULT_OPTIONS = {
   id: "sdp-roll-app",
   window: {
-    title: "Roll",
-    resizable: true
-  },
+  title: "Roll",
+  resizable: true
+},
   position: {
     width: 400,
     height: "auto",
@@ -88,8 +97,15 @@ async _prepareContext() {
   const modifiers = [];
   this._conditionMod = conditionMod;
   // custom / difficulty (placeholder UI)
-  modifiers.push({ label: "Custom", value: 0 });
-  modifiers.push({ label: "Difficulty", value: 0 });
+  modifiers.push({
+  label: game.i18n.localize("SDP.Custom"),
+  value: 0
+});
+
+modifiers.push({
+  label: game.i18n.localize("SDP.Difficulty"),
+  value: 0
+});
 
   // conditions réelles
   for (const c of conditionDetails) {
@@ -136,7 +152,7 @@ const sizeModifier =
   if (sizeModifier !== 0) {
 
     modifiers.push({
-      label: "Size",
+      label: game.i18n.localize("SDP.Size"),
       value: sizeModifier
     });
 
@@ -168,7 +184,7 @@ const sizeModifier =
   if (sizeModifier !== 0) {
 
     modifiers.push({
-      label: "Target Size",
+      label: game.i18n.localize("SDP.TargetSize"),
       value: sizeModifier
     });
 
@@ -270,7 +286,7 @@ const finalRange =
     }
 
     modifiers.push({
-      label: `Range (${rangeLabel})`,
+      label: `${game.i18n.localize("SDP.Range")} (${rangeLabel})`,
       value: rangeModifier
     });
 
@@ -296,35 +312,35 @@ if (this.weapon) {
     const key = t.key;
 
     if (key === "precise") {
-      modifiers.push({ label: "Precise", value: 10 });
+      modifiers.push({ label: game.i18n.localize("SDP.Precise"), value: 10 });
     }
 
     if (key === "imprecise") {
-      modifiers.push({ label: "Imprecise", value: -10 });
+      modifiers.push({ label: game.i18n.localize("SDP.Imprecise"), value: -10 });
     }
 
     if (key === "practical") {
-      modifiers.push({ label: "Practical", value: 10 });
+      modifiers.push({ label: game.i18n.localize("SDP.Practical"), value: 10 });
     }
 
     if (key === "impractical") {
-      modifiers.push({ label: "Impractical", value: -10 });
+      modifiers.push({ label: game.i18n.localize("SDP.Impractical"), value: -10 });
     }
 
     if (key === "fast") {
-  modifiers.push({ label: "Fast", value: 10 });
+  modifiers.push({ label: game.i18n.localize("SDP.Fast"), value: 10 });
 }
 
 if (key === "slow") {
-  modifiers.push({ label: "Slow", value: -10 });
+  modifiers.push({ label: game.i18n.localize("SDP.Slow"), value: -10 });
 }
 
 if (key === "accurate") {
-  modifiers.push({ label: "Accurate", value: 10 });
+  modifiers.push({ label: game.i18n.localize("SDP.Accurate"), value: 10 });
 }
 
 if (key === "unbalanced") {
-  modifiers.push({ label: "Unbalanced", value: -10 });
+  modifiers.push({ label: game.i18n.localize("SDP.Unbalanced"), value: -10 });
 }
 
   }
@@ -349,12 +365,18 @@ const hitProfile =
 const hitLocations = Object.entries(
   hitProfile?.locations || {}
 ).map(([key, data]) => ({
+
   key,
-  label: data.label,
+
+  label: game.i18n.localize(
+    data.label || key
+  ),
+
   modifier:
     data.modifier >= 0
       ? `+${data.modifier}`
       : data.modifier
+
 }));
 
 const hasFinesseTrait =
@@ -454,7 +476,8 @@ profileSelect?.addEventListener("change", (ev) => {
 
   const randomOption = document.createElement("option");
   randomOption.value = "";
-  randomOption.textContent = "Random";
+  randomOption.textContent =
+  game.i18n.localize("SDP.Random");
 
   locationSelect.appendChild(randomOption);
 
@@ -465,7 +488,7 @@ profileSelect?.addEventListener("change", (ev) => {
     option.value = key;
 
     option.textContent =
-      `${data.label} (${data.modifier})`;
+  `${game.i18n.localize(data.label || key)} (${data.modifier})`;
 
     locationSelect.appendChild(option);
   }
@@ -496,7 +519,7 @@ updatePreview();
 
       roll.toMessage({
         speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-        flavor: `Inspiration (${dice})`
+        flavor: `${game.i18n.localize("SDP.Inspiration")} (${dice})`
       });
 
       this.render();
@@ -733,24 +756,45 @@ await roll.toMessage({
 
     <h3>${this.label}</h3>
 
-    <button class="edit-roll">Edit</button>
+    <button class="edit-roll">
+  ${game.i18n.localize("SDP.Edit")}
+</button>
 
-    <p><strong>Target:</strong> ${target}</p>
-    <p><strong>Roll:</strong> ${result}</p>
-    ${this.inspirationResult ? `<p>Inspiration: +${this.inspirationResult}</p>` : ""}
-    <p><strong>SL:</strong> ${SL} (${game.sdp.Roll.getSLLabel(SL)})</p>
+    <p>
+  <strong>${game.i18n.localize("SDP.Target")}:</strong>
+  ${target}
+</p>
+    <p>
+  <strong>${game.i18n.localize("SDP.Roll")}:</strong>
+  ${result}
+</p>
+   ${this.inspirationResult ? `
+<p>
+  ${game.i18n.localize("SDP.Inspiration")}:
+  +${this.inspirationResult}
+</p>
+` : ""}
+    <p>
+<strong>${game.i18n.localize("SDP.SuccessLevel")}:</strong>
+${SL} (${game.sdp.Roll.getSLLabel(SL)})</p>
     ${talentsHTML}
 
     <p>
-      <strong>Result:</strong> 
-      ${success ? "SUCCESS" : "FAILURE"}
+      <strong>${game.i18n.localize("SDP.Result")}:</strong>
+      ${success
+  ? game.i18n.localize("SDP.Success")
+  : game.i18n.localize("SDP.Failure")}
     </p>
 
     ${crit.success ? "<p style='color:green'>CRITICAL SUCCESS</p>" : ""}
     ${crit.failure ? "<p style='color:red'>CRITICAL FAILURE</p>" : ""}
 
-    <button class="sdp-opposed">Oppose</button>
-    <button class="sdp-stop-opposed">Stop Oppose</button>
+    <button class="sdp-opposed">
+  ${game.i18n.localize("SDP.Oppose")}
+</button>
+    <button class="sdp-stop-opposed">
+  ${game.i18n.localize("SDP.StopOppose")}
+</button>
 
   </div>
   `
@@ -768,22 +812,30 @@ if (game.sdp?.opposed) {
   let finalSL = Math.abs(SL - base.SL);
 
   if (SL > base.SL) {
-    resultText = `${this.actor.name} wins`;
+    resultText =
+  `${this.actor.name} ${game.i18n.localize("SDP.Wins")}`;
   } else if (SL < base.SL) {
-    resultText = `${base.actor} wins`;
+    resultText =
+  `${base.actor} ${game.i18n.localize("SDP.Wins")}`;
   } else {
-    resultText = "Draw";
+    resultText =
+  game.i18n.localize("SDP.Draw");
     finalSL = 0;
   }
 
   await ChatMessage.create({
     content: `
-      <h3>Opposed Test</h3>
+      <h3>${game.i18n.localize("SDP.OpposedTest")}</h3>
 
       <p>${base.actor} SL: ${base.SL}</p>
       <p>${this.actor.name} SL: ${SL}</p>
 
-      <p><strong>Final SL: ${finalSL}</strong></p>
+      <p>
+<strong>
+${game.i18n.localize("SDP.FinalSL")}:
+${finalSL}
+</strong>
+</p>
 
       <strong>${resultText}</strong>
     `

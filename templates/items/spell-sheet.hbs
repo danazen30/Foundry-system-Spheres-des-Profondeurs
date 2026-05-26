@@ -13,7 +13,7 @@
     data-tab="description"
     class="{{#if (eq activeTab 'description')}}active{{/if}}">
 
-    Description
+    {{localize "SDP.TabDescription"}}
 
   </button>
 
@@ -22,7 +22,7 @@
     data-tab="details"
     class="{{#if (eq activeTab 'details')}}active{{/if}}">
 
-    Details
+    {{localize "SDP.TabDetails"}}
 
   </button>
 
@@ -31,7 +31,7 @@
     data-tab="effects"
     class="{{#if (eq activeTab 'effects')}}active{{/if}}">
 
-    Effects
+    {{localize "SDP.Effects"}}
 
   </button>
 
@@ -56,14 +56,14 @@
 <div class="weapon-card">
 
   <div class="weapon-card-title">
-    Spell
+    {{localize "TYPES.Item.spell"}}
   </div>
 
   <div class="weapon-grid">
 
     <div class="form-group">
 
-      <label>Magic Type</label>
+      <label>{{localize "SDP.MagicType"}}</label>
 
       <select name="system.magicType.value">
 
@@ -73,7 +73,7 @@
             selected
           {{/if}}>
 
-          Minor
+          {{localize "SDP.MagicMinor"}}
 
         </option>
 
@@ -83,7 +83,7 @@
             selected
           {{/if}}>
 
-          Advanced
+          {{localize "SDP.MagicAdvanced"}}
 
         </option>
 
@@ -93,7 +93,7 @@
             selected
           {{/if}}>
 
-          Superior
+          {{localize "SDP.MagicSuperior"}}
 
         </option>
 
@@ -103,7 +103,7 @@
 
     <div class="form-group">
 
-      <label>Power</label>
+      <label>{{localize "SDP.Power"}}</label>
 
       <input
         type="number"
@@ -114,7 +114,7 @@
 
     <div class="form-group full-width">
 
-      <label>Magic</label>
+      <label>{{localize "SDP.Magic"}}</label>
 
       <input
         type="text"
@@ -125,7 +125,7 @@
 
     <div class="form-group full-width">
 
-      <label>Range</label>
+      <label>{{localize "SDP.Range"}}</label>
 
       <input
         type="text"
@@ -141,7 +141,7 @@
 <div class="weapon-card">
 
   <div class="weapon-card-title">
-    Duration
+    {{localize "SDP.Duration"}}
   </div>
 
   <div class="weapon-grid">
@@ -153,7 +153,7 @@
         name="system.concentration.value"
         {{checked system.concentration.value}}>
 
-      <label>Concentration</label>
+      <label>{{localize "SDP.Concentration"}}</label>
 
     </div>
 
@@ -161,7 +161,7 @@
 
     <div class="form-group">
 
-      <label>Duration</label>
+      <label>{{localize "SDP.Duration"}}</label>
 
       <input
         type="text"
@@ -172,7 +172,7 @@
 
     <div class="form-group">
 
-      <label>Type</label>
+      <label>{{localize "SDP.Type"}}</label>
 
       <select name="system.duration.type">
 
@@ -191,7 +191,7 @@
         name="system.duration.extendable"
         {{checked system.duration.extendable}}>
 
-      <label>Extendable</label>
+      <label>{{localize "SDP.Extendable"}}</label>
 
     </div>
 
@@ -204,7 +204,7 @@
 <div class="weapon-card">
 
   <div class="weapon-card-title">
-    Target
+    {{localize "SDP.Target"}}
   </div>
 
   <div class="weapon-grid">
@@ -216,7 +216,7 @@
         name="system.aoe.value"
         {{checked system.aoe.value}}>
 
-      <label>Area of Effect</label>
+      <label>{{localize "SDP.AreaOfEffect"}}</label>
 
     </div>
 
@@ -224,7 +224,7 @@
 
     <div class="form-group">
 
-      <label>Radius</label>
+      <label>{{localize "SDP.Radius"}}</label>
 
       <input
         type="text"
@@ -237,7 +237,7 @@
 
     <div class="form-group">
 
-      <label>Targets</label>
+      <label>{{localize "SDP.Targets"}}</label>
 
       <input
         type="number"
@@ -255,14 +255,14 @@
 <div class="weapon-card">
 
   <div class="weapon-card-title">
-    Damage
+    {{localize "SDP.Damage"}}
   </div>
 
   <div class="weapon-grid">
 
     <div class="form-group">
 
-      <label>Base</label>
+      <label>{{localize "SDP.Base"}}</label>
 
       <input
         type="number"
@@ -273,7 +273,7 @@
 
     <div class="form-group">
 
-      <label>Dice</label>
+      <label>{{localize "SDP.Dice"}}</label>
 
       <input
         type="text"
@@ -290,13 +290,13 @@
 
   <div class="weapon-card-title overcast-header">
 
-    <span>Overcast</span>
+    <span>{{localize "SDP.Overcast"}}</span>
 
     <button
       type="button"
       class="effect-create-button add-overcast-special">
 
-      ✚ Add Effect
+      ✚ {{localize "SDP.AddEffect"}}
 
     </button>
 
@@ -316,19 +316,19 @@
 
           <div class="form-group">
 
-            <label>Effect</label>
+            <label>{{localize "SDP.Effect"}}</label>
 
             <input
               type="text"
               name="system.overcastSpecialEffects.value.{{@index}}.label"
               value="{{this.label}}"
-              placeholder="Burning Radius">
+              placeholder="{{localize 'SDP.OvercastEffectPlaceholder'}}">
 
           </div>
 
           <div class="form-group">
 
-            <label>Formula</label>
+            <label>{{localize "SDP.Formula"}}</label>
 
             <input
               type="text"
@@ -356,7 +356,7 @@
 
       <div class="empty-overcast">
 
-        No overcast effects yet
+        {{localize "SDP.NoOvercastEffects"}}
 
       </div>
 

@@ -2,14 +2,14 @@
 
   <div class="effects-header">
 
-    <h2>Effects</h2>
+    <h2>{{localize "SDP.Effects"}}</h2>
 
     <button
       type="button"
       class="effect-create-button"
       data-action="create-effect">
 
-      ✚ Add Effect
+      ✚ {{localize "SDP.AddEffect"}}
 
     </button>
 
@@ -32,7 +32,8 @@
         <button
           type="button"
           class="effect-control"
-          data-action="edit-effect">
+          data-action="edit-effect"
+          title="{{localize 'SDP.Edit'}}">
 
           ✏️
 
@@ -41,7 +42,8 @@
         <button
           type="button"
           class="effect-control"
-          data-action="delete-effect">
+          data-action="delete-effect"
+          title="{{localize 'SDP.Delete'}}">
 
           🗑️
 

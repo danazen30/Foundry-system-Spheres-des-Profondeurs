@@ -13,7 +13,7 @@
     data-tab="description"
     class="{{#if (eq activeTab 'description')}}active{{/if}}">
 
-    Description
+    {{localize "SDP.TabDescription"}}
 
   </button>
 
@@ -22,7 +22,7 @@
     data-tab="details"
     class="{{#if (eq activeTab 'details')}}active{{/if}}">
 
-    Details
+    {{localize "SDP.TabDetails"}}
 
   </button>
 
@@ -47,14 +47,14 @@
 <div class="weapon-card">
 
   <div class="weapon-card-title">
-    Ammunition
+    {{localize "TYPES.Item.ammunition"}}
   </div>
 
   <div class="weapon-grid">
 
     <div class="form-group">
 
-      <label>Weapon Group</label>
+      <label>{{localize "SDP.WeaponGroup"}}</label>
 
       <input
         type="text"
@@ -65,7 +65,7 @@
 
     <div class="form-group">
 
-      <label>Range Modifier</label>
+      <label>{{localize "SDP.RangeModifier"}}</label>
 
       <input
         type="number"
@@ -81,14 +81,14 @@
 <div class="weapon-card">
 
   <div class="weapon-card-title">
-    Damage
+    {{localize "SDP.Damage"}}
   </div>
 
   <div class="weapon-grid">
 
     <div class="form-group">
 
-      <label>Flat Damage</label>
+      <label>{{localize "SDP.FlatDamage"}}</label>
 
       <input
         type="number"
@@ -99,7 +99,7 @@
 
     <div class="form-group">
 
-      <label>Damage Dice</label>
+      <label>{{localize "SDP.DamageDice"}}</label>
 
       <input
         type="text"

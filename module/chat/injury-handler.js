@@ -34,7 +34,9 @@ html.find(".apply-injury").click(async ev => {
   const injury = await getInjuryFromPack(location, severity);
 
   if (!injury) {
-    ui.notifications.warn("No injury found");
+    ui.notifications.warn(
+  game.i18n.localize("SDP.NoInjuryFound")
+);
     return;
   }
 
@@ -69,11 +71,22 @@ html.find(".roll-resistance").click(async ev => {
   await roll.toMessage({
     speaker: ChatMessage.getSpeaker({actor}),
     flavor: `
-      <h3>Resistance Test</h3>
-      <p>Severity: ${severity}</p>
-      <p>Target: ${target}</p>
-      <p>Roll: ${result}</p>
-      <p><strong>${success ? "SUCCESS" : "FAILURE"}</strong></p>
+      <h3>${game.i18n.localize("SDP.ResistanceTest")}</h3>
+      <p>
+  ${game.i18n.localize("SDP.Severity")}:
+  ${game.i18n.localize(
+    `SDP.InjurySeverity${severity.charAt(0).toUpperCase() + severity.slice(1)}`
+  )}
+</p>
+      <p>${game.i18n.localize("SDP.Target")}: ${target}</p>
+      <p>${game.i18n.localize("SDP.Roll")}: ${result}</p>
+      <p>
+  <strong>
+    ${success
+      ? game.i18n.localize("SDP.Success")
+      : game.i18n.localize("SDP.Failure")}
+  </strong>
+</p>
     `
   });
 
@@ -95,12 +108,12 @@ if (!success) {
        data-location="${location}"
        data-severity="${severity}">
 
-    <h3>Resistance Failed</h3>
+    <h3>${game.i18n.localize("SDP.ResistanceFailed")}</h3>
 
-    <p>Additional consequence triggered</p>
+    <p>${game.i18n.localize("SDP.AdditionalConsequenceTriggered")}</p>
 
     <button class="apply-consequence">
-      Apply Consequence
+      ${game.i18n.localize("SDP.ApplyConsequence")}
     </button>
 
     ${consequence ? `
@@ -108,7 +121,7 @@ if (!success) {
         <p><strong>${consequence.name}</strong></p>
         <p>${consequence.system.description || ""}</p>
       </div>
-    ` : "<p>No consequence found</p>"}
+    ` : `<p>${game.i18n.localize("SDP.NoConsequenceFound")}</p>`}
 
   </div>
   `
@@ -131,7 +144,9 @@ html.find(".apply-consequence").click(async ev => {
   const consequence = await getInjuryFromPack(location, severity, true);
 
   if (!consequence) {
-    ui.notifications.warn("No consequence found");
+    ui.notifications.warn(
+  game.i18n.localize("SDP.NoConsequenceFound")
+);
     return;
   }
 

@@ -20,57 +20,87 @@ export class SdpSkillSheet extends SdpItemSheet {
 
     context.characteristicOptions = [
 
-      {
-        value: "meleeAbility",
-        label: "Melee Ability"
-      },
+  {
+    value: "meleeAbility",
+    label:
+      game.i18n.localize(
+        "SDP.CharacteristicMeleeAbility"
+      )
+  },
 
-      {
-        value: "rangedAbility",
-        label: "Ranged Ability"
-      },
+  {
+    value: "rangedAbility",
+    label:
+      game.i18n.localize(
+        "SDP.CharacteristicRangedAbility"
+      )
+  },
 
-      {
-        value: "strength",
-        label: "Strength"
-      },
+  {
+    value: "strength",
+    label:
+      game.i18n.localize(
+        "SDP.CharacteristicStrength"
+      )
+  },
 
-      {
-        value: "toughness",
-        label: "Toughness"
-      },
+  {
+    value: "toughness",
+    label:
+      game.i18n.localize(
+        "SDP.CharacteristicToughness"
+      )
+  },
 
-      {
-        value: "initiative",
-        label: "Initiative"
-      },
+  {
+    value: "initiative",
+    label:
+      game.i18n.localize(
+        "SDP.CharacteristicInitiative"
+      )
+  },
 
-      {
-        value: "agility",
-        label: "Agility"
-      },
+  {
+    value: "agility",
+    label:
+      game.i18n.localize(
+        "SDP.CharacteristicAgility"
+      )
+  },
 
-      {
-        value: "dexterity",
-        label: "Dexterity"
-      },
+  {
+    value: "dexterity",
+    label:
+      game.i18n.localize(
+        "SDP.CharacteristicDexterity"
+      )
+  },
 
-      {
-        value: "intelligence",
-        label: "Intelligence"
-      },
+  {
+    value: "intelligence",
+    label:
+      game.i18n.localize(
+        "SDP.CharacteristicIntelligence"
+      )
+  },
 
-      {
-        value: "willpower",
-        label: "Willpower"
-      },
+  {
+    value: "willpower",
+    label:
+      game.i18n.localize(
+        "SDP.CharacteristicWillpower"
+      )
+  },
 
-      {
-        value: "charisma",
-        label: "Charisma"
-      }
+  {
+    value: "charisma",
+    label:
+      game.i18n.localize(
+        "SDP.CharacteristicCharisma"
+      )
+  }
 
-    ];
+];
 
     return context;
 

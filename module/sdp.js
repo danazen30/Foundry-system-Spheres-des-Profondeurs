@@ -212,12 +212,91 @@ registerChatHandlers();
 /* READY                                     */
 /* ========================================= */
 
-Hooks.once("ready", () => {
-  console.log("SDP READY", game.user.name);
-  console.log(
-  "REGISTERING SDP SOCKET",
-  game.user.name
+Hooks.once("ready", async () => {
+
+  game.system.description =
+    game.i18n.localize(
+      "SDP.SystemDescription"
+    );
+
+  // =========================
+  // LOCALIZE ROLLTABLE PACK
+  // =========================
+
+  const pack =
+    game.packs.get("sdp.rolltables");
+
+  if (pack) {
+
+    pack.metadata.label =
+      game.i18n.localize(
+        "SDP.RollTablePackLabel"
+      );
+
+    await pack.getIndex({
+  fields: [
+    "flags.sdp.key"
+  ]
+});
+
+console.log(
+  "SDP DEBUG | PACK INDEX",
+  pack.index
 );
+
+for (const entry of pack.index) {
+
+  console.log(
+    "SDP DEBUG | ENTRY BEFORE",
+    foundry.utils.deepClone(entry)
+  );
+
+  const key =
+    entry.flags?.sdp?.key;
+
+  console.log(
+    "SDP DEBUG | ENTRY KEY",
+    key
+  );
+
+  if (
+    key === "critical-attack-failure"
+  ) {
+
+    const localized =
+      game.i18n.localize(
+        "SDP.RollTableCriticalAttackFailure"
+      );
+
+    console.log(
+      "SDP DEBUG | LOCALIZED VALUE",
+      localized
+    );
+
+    // =========================
+    // TEST 1
+    // =========================
+
+    entry.name = localized;
+
+    console.log(
+      "SDP DEBUG | ENTRY AFTER NAME",
+      foundry.utils.deepClone(entry)
+    );
+
+  }
+
+}
+
+console.log(
+  "SDP DEBUG | FINAL INDEX",
+  pack.index
+);
+
+ui.compendium.render(true);
+
+  }
+
 
   game.sdp = game.sdp || {};
   game.sdp.conditions = SdpConditionEngine;

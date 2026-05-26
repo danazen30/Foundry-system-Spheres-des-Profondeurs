@@ -13,7 +13,7 @@
     data-tab="description"
     class="{{#if (eq activeTab 'description')}}active{{/if}}">
 
-    Description
+    {{localize "SDP.TabDescription"}}
 
   </button>
 
@@ -22,7 +22,7 @@
     data-tab="details"
     class="{{#if (eq activeTab 'details')}}active{{/if}}">
 
-    Details
+    {{localize "SDP.TabDetails"}}
 
   </button>
 
@@ -31,7 +31,7 @@
     data-tab="effects"
     class="{{#if (eq activeTab 'effects')}}active{{/if}}">
 
-    Effects
+    {{localize "SDP.Effects"}}
 
   </button>
 
@@ -56,14 +56,14 @@
 <div class="weapon-card">
 
   <div class="weapon-card-title">
-    Armor
+    {{localize "TYPES.Item.armor"}}
   </div>
 
   <div class="weapon-grid">
 
     <div class="form-group">
 
-      <label>Worn</label>
+      <label>{{localize "SDP.Worn"}}</label>
 
       <input
         type="checkbox"
@@ -74,7 +74,7 @@
 
     <div class="form-group">
 
-      <label>Layer</label>
+      <label>{{localize "SDP.Layer"}}</label>
 
       <input
         type="number"
@@ -90,38 +90,38 @@
 <div class="weapon-card">
 
   <div class="weapon-card-title">
-    Armor Points
+    {{localize "SDP.ArmorPoints"}}
   </div>
 
   <div class="weapon-grid">
 
     <div class="form-group">
-      <label>Head</label>
+      <label>{{localize "SDP.HitLocationHead"}}</label>
       <input type="number" name="system.AP.head" value="{{system.AP.head}}">
     </div>
 
     <div class="form-group">
-      <label>Body</label>
+      <label>{{localize "SDP.HitLocationBody"}}</label>
       <input type="number" name="system.AP.body" value="{{system.AP.body}}">
     </div>
 
     <div class="form-group">
-      <label>Left Arm</label>
+      <label>{{localize "SDP.HitLocationLeftArm"}}</label>
       <input type="number" name="system.AP.leftArm" value="{{system.AP.leftArm}}">
     </div>
 
     <div class="form-group">
-      <label>Right Arm</label>
+      <label>{{localize "SDP.HitLocationRightArm"}}</label>
       <input type="number" name="system.AP.rightArm" value="{{system.AP.rightArm}}">
     </div>
 
     <div class="form-group">
-      <label>Left Leg</label>
+      <label>{{localize "SDP.HitLocationLeftLeg"}}</label>
       <input type="number" name="system.AP.leftLeg" value="{{system.AP.leftLeg}}">
     </div>
 
     <div class="form-group">
-      <label>Right Leg</label>
+      <label>{{localize "SDP.HitLocationRightLeg"}}</label>
       <input type="number" name="system.AP.rightLeg" value="{{system.AP.rightLeg}}">
     </div>
 
@@ -132,7 +132,7 @@
 <div class="weapon-card">
 
   <div class="weapon-card-title">
-    Durability
+    {{localize "SDP.Durability"}}
   </div>
 
   <div class="inline-fields">
@@ -156,39 +156,39 @@
 <div class="weapon-card">
 
   <div class="weapon-card-title">
-    Slots
+    {{localize "SDP.Slots"}}
   </div>
 
   <div class="weapon-grid">
 
     <label class="compact-checkbox">
       <input type="checkbox" name="system.slots.head" {{checked system.slots.head}}>
-      Head
+      {{localize "SDP.HitLocationHead"}}
     </label>
 
     <label class="compact-checkbox">
       <input type="checkbox" name="system.slots.chest" {{checked system.slots.chest}}>
-      Chest
+      {{localize "SDP.Chest"}}
     </label>
 
     <label class="compact-checkbox">
       <input type="checkbox" name="system.slots.armLeft" {{checked system.slots.armLeft}}>
-      Left Arm
+      {{localize "SDP.HitLocationLeftArm"}}
     </label>
 
     <label class="compact-checkbox">
       <input type="checkbox" name="system.slots.armRight" {{checked system.slots.armRight}}>
-      Right Arm
+      {{localize "SDP.HitLocationRightArm"}}
     </label>
 
     <label class="compact-checkbox">
       <input type="checkbox" name="system.slots.legLeft" {{checked system.slots.legLeft}}>
-      Left Leg
+      {{localize "SDP.HitLocationLeftLeg"}}
     </label>
 
     <label class="compact-checkbox">
       <input type="checkbox" name="system.slots.legRight" {{checked system.slots.legRight}}>
-      Right Leg
+      {{localize "SDP.HitLocationRightLeg"}}
     </label>
 
   </div>
@@ -198,14 +198,14 @@
 <div class="weapon-card">
 
   <div class="weapon-card-title">
-    Armor Traits
+    {{localize "SDP.ArmorTraits"}}
   </div>
 
   <div class="weapon-traits-layout">
 
     <div class="weapon-trait-block">
 
-      <h3>Advantages</h3>
+      <h3>{{localize "SDP.Advantages"}}</h3>
 
       <div class="weapon-traits-grid">
 
@@ -213,7 +213,7 @@
 
         <div
           class="trait-row"
-          title="{{this.description}}">
+          title="{{localize this.description}}">
 
           <div class="trait-label">
 
@@ -223,8 +223,8 @@
               {{checked this.checked}}>
 
             <span class="trait-name">
-              {{this.label}}
-            </span>
+  {{localize this.label}}
+</span>
 
           </div>
 
@@ -248,7 +248,7 @@
 
     <div class="weapon-trait-block">
 
-      <h3>Drawbacks</h3>
+      <h3>{{localize "SDP.Drawbacks"}}</h3>
 
       <div class="weapon-traits-grid">
 
@@ -256,7 +256,7 @@
 
         <div
           class="trait-row"
-          title="{{this.description}}">
+          title="{{localize this.description}}">
 
           <div class="trait-label">
 
@@ -266,8 +266,8 @@
               {{checked this.checked}}>
 
             <span class="trait-name">
-              {{this.label}}
-            </span>
+  {{localize this.label}}
+</span>
 
           </div>
 
@@ -296,14 +296,14 @@
 <div class="weapon-card">
 
   <div class="weapon-card-title">
-    Item Traits
+    {{localize "SDP.ItemTraits"}}
   </div>
 
   <div class="weapon-traits-layout">
 
     <div class="weapon-trait-block">
 
-      <h3>Advantages</h3>
+      <h3>{{localize "SDP.Advantages"}}</h3>
 
       <div class="weapon-traits-grid">
 
@@ -346,7 +346,7 @@
 
     <div class="weapon-trait-block">
 
-      <h3>Drawbacks</h3>
+      <h3>{{localize "SDP.Drawbacks"}}</h3>
 
       <div class="weapon-traits-grid">
 

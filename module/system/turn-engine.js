@@ -41,13 +41,17 @@ export class SdpTurnEngine {
                data-actor="${actor.id}"
                data-condition="${key}">
 
-            <h3>${key}</h3>
+            <h3>${game.i18n.localize(config.label)}</h3>
 
-            <p>${actor.name} suffers ${key} (${stack})</p>
+<p>${game.i18n.format("SDP.ChatConditionSuffers", {
+  actor: actor.name,
+  condition: game.i18n.localize(config.label),
+  stack: stack
+})}</p>
 
-            <button class="stunned-roll">
-              Roll Resistance
-            </button>
+<button class="stunned-roll">
+  ${game.i18n.localize("SDP.RollResistance")}
+</button>
 
           </div>
           `
@@ -70,13 +74,15 @@ export class SdpTurnEngine {
                data-actor="${actor.id}"
                data-condition="${key}">
 
-            <h3>Entangled</h3>
+            <h3>${game.i18n.localize("SDP.ConditionEntangled")}</h3>
 
-            <p>${actor.name} is entangled.</p>
+<p>${game.i18n.format("SDP.ChatActorEntangled", {
+  actor: actor.name
+})}</p>
 
-            <button class="strength-roll">
-              Roll Strength
-            </button>
+<button class="strength-roll">
+  ${game.i18n.localize("SDP.RollStrength")}
+</button>
 
           </div>
           `
@@ -98,13 +104,15 @@ export class SdpTurnEngine {
           <div class="sdp-dying-test"
                data-actor="${actor.id}">
 
-            <h3>Dying</h3>
+            <h3>${game.i18n.localize("SDP.ConditionDying")}</h3>
 
-            <p>${actor.name} is dying.</p>
+<p>${game.i18n.format("SDP.ChatActorDying", {
+  actor: actor.name
+})}</p>
 
-            <button class="dying-roll">
-              Roll Resistance
-            </button>
+<button class="dying-roll">
+  ${game.i18n.localize("SDP.RollResistance")}
+</button>
 
           </div>
           `
@@ -133,11 +141,17 @@ export class SdpTurnEngine {
           speaker: ChatMessage.getSpeaker({actor}),
 
           content: `
-          <h3>${key}</h3>
+          <h3>${game.i18n.localize(config.label)}</h3>
 
-          <p>${actor.name} suffers ${damage} damage.</p>
+<p>${game.i18n.format("SDP.ChatActorSuffersDamage", {
+  actor: actor.name,
+  damage: damage
+})}</p>
 
-          <p>Health: ${current} → ${newHealth}</p>
+<p>${game.i18n.format("SDP.ChatHealthChange", {
+  current: current,
+  newHealth: newHealth
+})}</p>
           `
         });
 
@@ -162,7 +176,9 @@ export class SdpTurnEngine {
         });
 
         await roll.toMessage({
-          flavor: `${key} damage`
+          flavor: game.i18n.format("SDP.ChatConditionDamage", {
+  condition: game.i18n.localize(config.label)
+})
         });
 
       }
@@ -182,7 +198,10 @@ export class SdpTurnEngine {
     if (duration - 1 === 0) {
 
       ChatMessage.create({
-        content: `${item.name} ends on ${actor.name}`
+       content: game.i18n.format("SDP.ChatInjuryEnds", {
+  injury: item.name,
+  actor: actor.name
+})
       });
 
       await item.delete();
@@ -236,8 +255,12 @@ if(config.removePerTurn){
       speaker: ChatMessage.getSpeaker({actor}),
 
       content: `
-      <h3>${key}</h3>
-      <p>${actor.name} is no longer ${key}.</p>
+      <h3>${game.i18n.localize(config.label)}</h3>
+
+<p>${game.i18n.format("SDP.ChatNoLongerCondition", {
+  actor: actor.name,
+  condition: game.i18n.localize(config.label)
+})}</p>
       `
     });
 
@@ -259,9 +282,17 @@ if(config.removePerTurn){
         speaker: ChatMessage.getSpeaker({actor}),
 
         content: `
-        <h3>${key}</h3>
-        <p>${actor.name} recovers from ${key}</p>
-        <p>Stacks: ${stack} → ${newStack}</p>
+        <h3>${game.i18n.localize(config.label)}</h3>
+
+<p>${game.i18n.format("SDP.ChatRecoverCondition", {
+  actor: actor.name,
+  condition: game.i18n.localize(config.label)
+})}</p>
+
+<p>${game.i18n.format("SDP.ChatStacksChange", {
+  old: stack,
+  newValue: newStack
+})}</p>
         `
       });
 
@@ -287,13 +318,17 @@ if(config.test === "resistance"){
          data-condition="${key}"
          data-stack="${stack}">
 
-      <h3>${key}</h3>
+      <h3>${game.i18n.localize(config.label)}</h3>
 
-      <p>${actor.name} suffers ${key} (${stack})</p>
+<p>${game.i18n.format("SDP.ChatConditionSuffers", {
+  actor: actor.name,
+  condition: game.i18n.localize(config.label),
+  stack: stack
+})}</p>
 
-      <button class="poison-roll">
-        Roll Resistance
-      </button>
+<button class="poison-roll">
+  ${game.i18n.localize("SDP.RollResistance")}
+</button>
 
     </div>
     `
@@ -328,11 +363,17 @@ if(config.damagePerStack){
       speaker: ChatMessage.getSpeaker({actor}),
 
       content: `
-      <h3>${key}</h3>
+      <h3>${game.i18n.localize(config.label)}</h3>
 
-      <p>${actor.name} loses ${damage} health.</p>
+<p>${game.i18n.format("SDP.ChatActorLosesHealth", {
+  actor: actor.name,
+  damage: damage
+})}</p>
 
-      <p>Health: ${current} → ${newHealth}</p>
+<p>${game.i18n.format("SDP.ChatHealthChange", {
+  current: current,
+  newHealth: newHealth
+})}</p>
       `
     });
 
@@ -349,7 +390,9 @@ if(config.damagePerStack){
 
         await roll.toMessage({
           speaker: ChatMessage.getSpeaker({actor}),
-          flavor: `<h3>${key} damage</h3>`
+          flavor: `<h3>${game.i18n.format("SDP.ChatConditionDamage", {
+  condition: game.i18n.localize(config.label)
+})}</h3>`
         });
 
         const rawDamage = roll.total;
@@ -398,17 +441,33 @@ if(config.damagePerStack){
         await ChatMessage.create({
 
           content: `
-          <h3>Burning Resolution</h3>
+<h3>${game.i18n.localize("SDP.BurningResolution")}</h3>
 
-          <p>Target: ${actor.name}</p>
+<p>${game.i18n.format("SDP.TargetLabel", {
+  actor: actor.name
+})}</p>
 
-          <p>Raw Damage: ${rawDamage}</p>
-          <p>Lowest Armor: ${lowestArmor}</p>
+<p>${game.i18n.format("SDP.RawDamageLabel", {
+  damage: rawDamage
+})}</p>
 
-          <p><strong>Final Damage: ${finalDamage}</strong></p>
+<p>${game.i18n.format("SDP.LowestArmorLabel", {
+  armor: lowestArmor
+})}</p>
 
-          <p>Health: ${current} → ${newHealth}</p>
-          `,
+<p>
+  <strong>
+    ${game.i18n.format("SDP.FinalDamageLabel", {
+      damage: finalDamage
+    })}
+  </strong>
+</p>
+
+<p>${game.i18n.format("SDP.ChatHealthChange", {
+  current: current,
+  newHealth: newHealth
+})}</p>
+`,
 
           whisper: ChatMessage.getWhisperRecipients("GM")
 

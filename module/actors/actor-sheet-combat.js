@@ -42,7 +42,14 @@ registerWeaponToggle(
       // =========================
 
       if (!weapon.system.equipped) {
-        ui.notifications.warn(`${weapon.name} is not equipped`);
+        ui.notifications.warn(
+  game.i18n.format(
+    "SDP.Notifications.WeaponNotEquipped",
+    {
+      weapon: weapon.name
+    }
+  )
+);
         return;
       }
 
@@ -57,7 +64,14 @@ registerWeaponToggle(
         weaponQty !== null &&
         weaponQty <= 0
       ) {
-        ui.notifications.warn(`${weapon.name} is depleted`);
+        ui.notifications.warn(
+  game.i18n.format(
+    "SDP.Notifications.WeaponDepleted",
+    {
+      weapon: weapon.name
+    }
+  )
+);
         return;
       }
 
@@ -71,7 +85,11 @@ registerWeaponToggle(
       ) {
 
         if (!weapon.system.currentAmmo) {
-          ui.notifications.warn("No ammunition selected");
+          ui.notifications.warn(
+  game.i18n.localize(
+    "SDP.Notifications.NoAmmunitionSelected"
+  )
+);
           return;
         }
 
@@ -80,14 +98,22 @@ registerWeaponToggle(
         );
 
         if (!ammo) {
-          ui.notifications.warn("Ammunition not found");
+          ui.notifications.warn(
+  game.i18n.localize(
+    "SDP.Notifications.AmmunitionNotFound"
+  )
+);
           return;
         }
 
         const qty = ammo.system.quantity?.value ?? 0;
 
         if (qty <= 0) {
-          ui.notifications.warn("No ammunition left");
+          ui.notifications.warn(
+  game.i18n.localize(
+    "SDP.Notifications.NoAmmunitionLeft"
+  )
+);
           return;
         }
       }
@@ -137,14 +163,21 @@ registerWeaponToggle(
       const mana = actor.system.resources.mana.value;
 
       if (mana < cost) {
-        ui.notifications.warn("Not enough mana");
+        ui.notifications.warn(
+  game.i18n.localize(
+    "SDP.Notifications.NotEnoughMana"
+  )
+);
         return;
       }
 
       const bestSkill =
         SdpSpell._getBestSpellSkill(actor, spell);
 
-      let skillLabel = "Intelligence";
+      let skillLabel =
+  game.i18n.localize(
+    "SDP.CharacteristicIntelligence"
+  );
 
       let skillValue =
         actor.system.attributes.intelligence.value;
@@ -280,7 +313,11 @@ registerWeaponToggle(
 
       if (hasTwoHanded) {
 
-        ui.notifications.warn("2H weapon already equipped");
+        ui.notifications.warn(
+  game.i18n.localize(
+    "SDP.Notifications.TwoHandedAlreadyEquipped"
+  )
+);
 
         checkbox.checked = false;
 
@@ -297,8 +334,10 @@ registerWeaponToggle(
         if (hasOther) {
 
           ui.notifications.warn(
-            "Cannot equip 2H with other weapons"
-          );
+  game.i18n.localize(
+    "SDP.Notifications.CannotEquipTwoHanded"
+  )
+);
 
           checkbox.checked = false;
 
@@ -324,7 +363,11 @@ registerWeaponToggle(
 
       if (oneHandedCount >= 2) {
 
-        ui.notifications.warn("Max 2 one-hand weapons");
+        ui.notifications.warn(
+  game.i18n.localize(
+    "SDP.Notifications.MaxOneHandWeapons"
+  )
+);
 
         checkbox.checked = false;
 
@@ -415,7 +458,11 @@ function registerOffhandToggle(root, actor) {
 
       if (!item || !item.system.equipped) {
 
-        ui.notifications.warn("Weapon must be equipped");
+        ui.notifications.warn(
+  game.i18n.localize(
+    "SDP.Notifications.WeaponMustBeEquipped"
+  )
+);
 
         checkbox.checked = false;
 
@@ -610,8 +657,13 @@ function registerWeaponToggle(sheet, root, actor) {
         event.preventDefault();
 
         ui.notifications.warn(
-          `${actor.name} is stunned and cannot attack`
-        );
+  game.i18n.format(
+    "SDP.Notifications.ActorStunnedCannotAttack",
+    {
+      actor: actor.name
+    }
+  )
+);
 
         return;
 
@@ -631,8 +683,13 @@ function registerWeaponToggle(sheet, root, actor) {
       if (!weapon.system.equipped) {
 
         ui.notifications.warn(
-          `${weapon.name} is not equipped`
-        );
+  game.i18n.format(
+    "SDP.Notifications.WeaponNotEquipped",
+    {
+      weapon: weapon.name
+    }
+  )
+);
 
         return;
 
@@ -652,8 +709,13 @@ function registerWeaponToggle(sheet, root, actor) {
       ) {
 
         ui.notifications.warn(
-          `${weapon.name} is depleted`
-        );
+  game.i18n.format(
+    "SDP.Notifications.WeaponDepleted",
+    {
+      weapon: weapon.name
+    }
+  )
+);
 
         return;
 
@@ -671,8 +733,10 @@ function registerWeaponToggle(sheet, root, actor) {
         if (!weapon.system.currentAmmo) {
 
           ui.notifications.warn(
-            "No ammunition selected"
-          );
+  game.i18n.localize(
+    "SDP.Notifications.NoAmmunitionSelected"
+  )
+);
 
           return;
 
@@ -685,8 +749,10 @@ function registerWeaponToggle(sheet, root, actor) {
         if (!ammo) {
 
           ui.notifications.warn(
-            "Ammunition not found"
-          );
+  game.i18n.localize(
+    "SDP.Notifications.AmmunitionNotFound"
+  )
+);
 
           return;
 
@@ -697,9 +763,11 @@ function registerWeaponToggle(sheet, root, actor) {
 
         if (qty <= 0) {
 
-          ui.notifications.warn(
-            "No ammunition left"
-          );
+         ui.notifications.warn(
+  game.i18n.localize(
+    "SDP.Notifications.NoAmmunitionLeft"
+  )
+);
 
           return;
 

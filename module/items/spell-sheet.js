@@ -23,23 +23,35 @@ export class SdpSpellSheet extends SdpItemSheet {
       await super._prepareContext();
 
     context.durationOptions = [
-      {
-        value: "round",
-        label: "Round"
-      },
-      {
-        value: "minute",
-        label: "Minute"
-      },
-      {
-        value: "hour",
-        label: "Hour"
-      },
-      {
-        value: "instant",
-        label: "Instant"
-      }
-    ];
+  {
+    value: "round",
+    label:
+      game.i18n.localize(
+        "SDP.DurationRound"
+      )
+  },
+  {
+    value: "minute",
+    label:
+      game.i18n.localize(
+        "SDP.DurationMinute"
+      )
+  },
+  {
+    value: "hour",
+    label:
+      game.i18n.localize(
+        "SDP.DurationHour"
+      )
+  },
+  {
+    value: "instant",
+    label:
+      game.i18n.localize(
+        "SDP.DurationInstant"
+      )
+  }
+];
 
     return context;
 
@@ -90,7 +102,10 @@ export class SdpSpellSheet extends SdpItemSheet {
             );
 
           effects.push({
-            label: "New Effect",
+            label:
+  game.i18n.localize(
+    "SDP.NewEffect"
+  ),
             value: "WP"
           });
 

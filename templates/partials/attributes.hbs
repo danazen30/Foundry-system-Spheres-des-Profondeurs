@@ -1,99 +1,151 @@
 <table class="attributes-table">
 
   <thead>
+
     <tr>
+
       <th></th>
+
       {{#each attributes as |attr|}}
+
         <th>
+
           {{attr.label}}
 
           {{#if ../currentCareer}}
+
             {{#if (includes ../currentCareer.system.characteristics attr.key)}}
+
               <button
                 class="attr-advance-btn"
                 data-action="advanceAttribute"
                 data-attr="{{attr.key}}"
-                title="Cost: ? XP">
+                title="{{localize 'SDP.AdvanceCostXP'}}">
 
                 {{#if (gte attr.advances (multiply ../currentCareer.system.level 5))}}
+
                   ✔
+
                 {{else}}
+
                   +
+
                 {{/if}}
 
               </button>
+
             {{/if}}
+
           {{/if}}
 
         </th>
+
       {{/each}}
+
     </tr>
+
   </thead>
 
   <tbody>
 
     <!-- INIT -->
+
     <tr>
-      <td><strong>Init</strong></td>
+
+      <td>
+        <strong>{{localize "SDP.InitialAbbr"}}</strong>
+      </td>
+
       {{#each attributes as |attr|}}
+
         <td>
-          <input type="number"
-                 value="{{attr.initial}}"
-                 name="system.attributes.{{attr.key}}.initial">
+
+          <input
+            type="number"
+            value="{{attr.initial}}"
+            name="system.attributes.{{attr.key}}.initial">
+
         </td>
+
       {{/each}}
+
     </tr>
 
     <!-- ADV -->
-<tr>
-  <td><strong>Adv</strong></td>
 
-  {{#each attributes as |attr|}}
-    <td>
+    <tr>
 
-      <input
-        type="number"
-        value="{{attr.advances}}"
-        name="system.attributes.{{attr.key}}.advances"
-        data-dtype="Number"
-        step="1"
-        {{#unless @root.user.isGM}}readonly{{/unless}}
-      >
+      <td>
+        <strong>{{localize "SDP.AdvancesAbbr"}}</strong>
+      </td>
 
-    </td>
-  {{/each}}
-</tr>
+      {{#each attributes as |attr|}}
 
-<!-- MOD -->
-<tr>
-  <td><strong>Mod</strong></td>
+        <td>
 
-  {{#each attributes as |attr|}}
-    <td>
+          <input
+            type="number"
+            value="{{attr.advances}}"
+            name="system.attributes.{{attr.key}}.advances"
+            data-dtype="Number"
+            step="1"
+            {{#unless @root.user.isGM}}
+              readonly
+            {{/unless}}>
 
-      <input
-        type="number"
-        class="attr-modifier-input"
-        data-key="{{attr.key}}"
-        value="{{attr.modifier}}"
-      >
+        </td>
 
-    </td>
-  {{/each}}
-</tr>
+      {{/each}}
+
+    </tr>
+
+    <!-- MOD -->
+
+    <tr>
+
+      <td>
+        <strong>{{localize "SDP.ModifierAbbr"}}</strong>
+      </td>
+
+      {{#each attributes as |attr|}}
+
+        <td>
+
+          <input
+            type="number"
+            class="attr-modifier-input"
+            data-key="{{attr.key}}"
+            value="{{attr.modifier}}">
+
+        </td>
+
+      {{/each}}
+
+    </tr>
 
     <!-- FINAL -->
+
     <tr>
-      <td><strong>Final</strong></td>
+
+      <td>
+        <strong>{{localize "SDP.FinalAbbr"}}</strong>
+      </td>
+
       {{#each attributes as |attr|}}
+
         <td>
-          <input type="number"
-                 value="{{attr.value}}"
-                 readonly
-                 data-action="rollAttribute"
-                 data-attr="{{attr.key}}">
+
+          <input
+            type="number"
+            value="{{attr.value}}"
+            readonly
+            data-action="rollAttribute"
+            data-attr="{{attr.key}}">
+
         </td>
+
       {{/each}}
+
     </tr>
 
   </tbody>

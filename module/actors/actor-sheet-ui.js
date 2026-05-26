@@ -1,6 +1,6 @@
 import { SimpleDialog } from "../apps/simple-dialog.js";
 import { SdpConditionEngine } from "../system/condition-engine.js";
-import { registerArmorRows, registerTalentRows} from "./actor-sheet-utils.js";
+import { registerArmorRows, registerTalentRows, registerConditionDetails} from "./actor-sheet-utils.js";
 
 export function registerUIListeners(sheet, root) {
 
@@ -23,6 +23,8 @@ registerEditorToggles(root);
 setupRichTextEditors(root);
 
 setupTextareaResize(root);
+
+registerConditionDetails(root);
 
 }
 
@@ -367,19 +369,30 @@ function registerDeleteItem(sheet, root) {
       if (!item) return;
 
       new SimpleDialog({
-        title: "Delete Item",
+        title:
+  game.i18n.localize(
+    "SDP.Dialog.DeleteItemTitle"
+  ),
 
         content: `
-          <div class="confirm-delete">
-            <p>Are you sure you want to delete:</p>
-            <p><strong>${item.name}</strong> ?</p>
-          </div>
-        `,
+  <div class="confirm-delete">
+    <p>
+      ${game.i18n.localize(
+        "SDP.Dialog.DeleteItemConfirm"
+      )}
+    </p>
+
+    <p><strong>${item.name}</strong> ?</p>
+  </div>
+`,
 
         buttons: {
 
           confirm: {
-            label: "Delete",
+            label:
+  game.i18n.localize(
+    "SDP.Delete"
+  ),
 
             callback: async () => {
               await item.delete();
@@ -387,7 +400,10 @@ function registerDeleteItem(sheet, root) {
           },
 
           cancel: {
-            label: "Cancel"
+            label:
+  game.i18n.localize(
+    "SDP.Cancel"
+  )
           }
 
         }
@@ -660,7 +676,11 @@ export function registerEditorToggles(root) {
         display.style.display = "block";
 
         event.currentTarget.textContent =
-          "✏️ Edit";
+          `✏️ ${
+  game.i18n.localize(
+    "SDP.Edit"
+  )
+}`;
 
       } else {
 
@@ -668,7 +688,11 @@ export function registerEditorToggles(root) {
         display.style.display = "none";
 
         event.currentTarget.textContent =
-          "✔ Close";
+          `✔ ${
+  game.i18n.localize(
+    "SDP.Close"
+  )
+}`;
 
       }
 

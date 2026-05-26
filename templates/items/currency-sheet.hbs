@@ -13,7 +13,7 @@
     data-tab="description"
     class="{{#if (eq activeTab 'description')}}active{{/if}}">
 
-    Description
+    {{localize "SDP.TabDescription"}}
 
   </button>
 
@@ -22,7 +22,7 @@
     data-tab="details"
     class="{{#if (eq activeTab 'details')}}active{{/if}}">
 
-    Details
+    {{localize "SDP.TabDetails"}}
 
   </button>
 
@@ -47,28 +47,30 @@
 <div class="weapon-card">
 
   <div class="weapon-card-title">
-    Currency
+    {{localize "SDP.CurrencyTitle"}}
   </div>
 
   <div class="weapon-grid">
 
     <div class="form-group">
 
-      <label>Type</label>
+      <label>
+  {{localize "SDP.CurrencyType"}}
+</label>
 
       <select name="system.denomination.value">
 
         {{#each denominations}}
 
         <option
-          value="{{this}}"
-          {{#if (eq this ../system.denomination.value)}}
-            selected
-          {{/if}}>
+  value="{{this.value}}"
+  {{#if (eq this.value ../system.denomination.value)}}
+    selected
+  {{/if}}>
 
-          {{this}}
+  {{this.label}}
 
-        </option>
+</option>
 
         {{/each}}
 
@@ -78,7 +80,9 @@
 
     <div class="form-group">
 
-      <label>Quantity</label>
+      <label>
+  {{localize "SDP.CurrencyQuantity"}}
+</label>
 
       <input
         type="number"
@@ -89,7 +93,9 @@
 
     <div class="form-group">
 
-      <label>Weight</label>
+      <label>
+  {{localize "SDP.CurrencyWeight"}}
+</label>
 
       <input
         type="number"
@@ -100,7 +106,9 @@
 
     <div class="form-group">
 
-      <label>Value</label>
+      <label>
+  {{localize "SDP.CurrencyValue"}}
+</label>
 
       <input
         type="text"

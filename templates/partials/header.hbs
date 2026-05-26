@@ -20,7 +20,7 @@
         <!-- ⚖️ ENCUMBRANCE -->
         <div class="encumbrance">
           <span>
-            ⚖️ Encumbrance
+            ⚖️ {{localize "SDP.Encumbrance"}}
             {{system.resources.encumbrance.value}} /
             {{system.resources.encumbrance.max}}
           </span>
@@ -38,7 +38,7 @@
           <!-- LEVEL -->
           <div class="level-block">
             <div class="level-label">
-              Level {{actor.system.details.level}}
+              {{localize "SDP.Level"}} {{actor.system.details.level}}
             </div>
 
             <div class="level-bar">
@@ -57,9 +57,9 @@
           <div class="movement-header-box">
             <div class="movement-grid">
 
-              <div class="movement-header">Move</div>
-              <div class="movement-header">Walk</div>
-              <div class="movement-header">Run</div>
+              <div class="movement-header">{{localize "SDP.Move"}}</div>
+<div class="movement-header">{{localize "SDP.Walk"}}</div>
+<div class="movement-header">{{localize "SDP.Run"}}</div>
 
               <input type="number" class="movement-value" value="{{system.resources.movement.current}}">
               <div class="movement-value">{{system.resources.movement.walk}}</div>
@@ -78,7 +78,7 @@
     <div class="corruption-box">
 
       <div class="corruption-line">
-        ☠️ Corruption
+        ☠️ {{localize "SDP.Corruption"}}
       </div>
 
       <div class="corruption-value">
@@ -132,7 +132,9 @@
 
       <div class="resource-box resource-bar">
         <div class="resource-top">
-          <div class="resource-label">❤️ Health :</div>
+          <div class="resource-label">
+  ❤️ {{localize "SDP.Health"}} :
+</div>
           <div class="resource-values">
             <input type="number" name="system.health.value" value="{{system.health.value}}">
             <span>/ {{system.health.max}}</span>
@@ -148,7 +150,9 @@
 
       <div class="resource-box resource-bar">
         <div class="resource-top">
-          <div class="resource-label">🔵 Mana :</div>
+          <div class="resource-label">
+  🔵 {{localize "SDP.Mana"}} :
+</div>
           <div class="resource-values">
             <input type="number" name="system.resources.mana.value" value="{{system.resources.mana.value}}">
             <span>/ {{system.resources.mana.max}}</span>
@@ -167,22 +171,22 @@
     <!-- DERIVED -->
     <div class="resource-box derived-grid">
       <div class="derived-cell">
-        <label>⚔️ Attack</label>
+        <label>⚔️ {{localize "SDP.Attack"}}</label>
         <span>{{system.derived.attack.value}}</span>
       </div>
 
       <div class="derived-cell">
-        <label>🌀 Evasion</label>
+        <label>🌀 {{localize "SDP.Evasion"}}</label>
         <span>{{system.derived.evasion.value}}</span>
       </div>
 
       <div class="derived-cell">
-        <label>🛡️ Parry</label>
+        <label>🛡️ {{localize "SDP.Parry"}}</label>
         <span>{{system.derived.parry.value}}</span>
       </div>
 
       <div class="derived-cell">
-        <label>💢 Wound</label>
+        <label>💢 {{localize "SDP.WoundLabel"}}</label>
         <span>{{system.derived.woundThreshold.value}}</span>
       </div>
     </div>
@@ -191,22 +195,22 @@
     <!-- SECONDARY -->
     <div class="resource-box secondary-box">
       <div class="secondary-item">
-        <label>Fortune</label>
+        <label>{{localize "SDP.Fortune"}}</label>
         <input type="number" name="system.resources.fortune.value" value="{{system.resources.fortune.value}}">
       </div>
 
       <div class="secondary-item">
-        <label>Resolve</label>
+        <label>{{localize "SDP.Resolve"}}</label>
         <input type="number" name="system.resources.resolve.value" value="{{system.resources.resolve.value}}">
       </div>
 
       <div class="secondary-item">
-        <label>Fate</label>
+        <label>{{localize "SDP.Fate"}}</label>
         <input type="number" name="system.resources.fate.value" value="{{system.resources.fate.value}}">
       </div>
 
       <div class="secondary-item">
-        <label>Resilience</label>
+        <label>{{localize "SDP.Resilience"}}</label>
         <input type="number" name="system.resources.resilience.value" value="{{system.resources.resilience.value}}">
       </div>
     </div>

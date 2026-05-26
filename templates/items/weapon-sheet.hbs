@@ -12,21 +12,27 @@
     type="button"
     data-tab="description"
     class="{{#if (eq activeTab 'description')}}active{{/if}}">
-    Description
+
+    {{localize "SDP.TabDescription"}}
+
   </button>
 
   <button
     type="button"
     data-tab="details"
     class="{{#if (eq activeTab 'details')}}active{{/if}}">
-    Details
+
+    {{localize "SDP.TabDetails"}}
+
   </button>
 
   <button
     type="button"
     data-tab="effects"
     class="{{#if (eq activeTab 'effects')}}active{{/if}}">
-    Effects
+
+    {{localize "SDP.Effects"}}
+
   </button>
 
 </nav>
@@ -40,48 +46,65 @@
 <div class="weapon-card">
 
   <div class="weapon-card-title">
-    Core
+    {{localize "SDP.Core"}}
   </div>
 
   <div class="weapon-grid">
 
     <div class="form-group">
-      <label>Category</label>
+
+      <label>{{localize "SDP.Category"}}</label>
 
       <select name="system.category">
         {{selectOptions categoryOptions selected=system.category}}
       </select>
+
     </div>
 
     <div class="form-group">
-      <label>Attack Type</label>
+
+      <label>{{localize "SDP.AttackType"}}</label>
 
       <select name="system.damageType">
+
         {{#each damageTypeOptions}}
-          <option value="{{this.value}}"
-            {{#if (eq ../system.damageType this.value)}}selected{{/if}}>
+
+          <option
+            value="{{this.value}}"
+            {{#if (eq ../system.damageType this.value)}}
+              selected
+            {{/if}}>
+
             {{this.label}}
+
           </option>
+
         {{/each}}
+
       </select>
+
     </div>
 
     <div class="form-group full-width">
-      <label>Skill</label>
+
+      <label>{{localize "SDP.Skill"}}</label>
 
       <input
         type="text"
         name="system.skill"
         value="{{system.skill}}" />
+
     </div>
 
     <div class="form-group full-width">
-      <label>Weapon Group</label>
+
+      <label>{{localize "SDP.WeaponGroup"}}</label>
 
       <input
         type="text"
         name="system.weaponGroup"
         value="{{system.weaponGroup}}" />
+
     </div>
 
   </div>
@@ -95,27 +118,31 @@
 <div class="weapon-card">
 
   <div class="weapon-card-title">
-    Combat
+    {{localize "SDP.Combat"}}
   </div>
 
   <div class="weapon-grid">
 
     <div class="form-group">
-      <label>Damage Bonus</label>
+
+      <label>{{localize "SDP.DamageBonus"}}</label>
 
       <input
         type="text"
         name="system.damage"
         value="{{system.damage}}">
+
     </div>
 
     <div class="form-group">
-      <label>Damage Dice</label>
+
+      <label>{{localize "SDP.DamageDice"}}</label>
 
       <input
         type="text"
         name="system.damageDice"
         value="{{system.damageDice}}">
+
     </div>
 
   </div>
@@ -129,52 +156,61 @@
 <div class="weapon-card">
 
   <div class="weapon-card-title">
-    Handling
+    {{localize "SDP.Handling"}}
   </div>
 
   <div class="weapon-grid">
 
     <div class="compact-checkbox">
+
       <input
         type="checkbox"
         name="system.offhand"
         {{checked system.offhand}} />
 
-      <label>Offhand</label>
+      <label>{{localize "SDP.Offhand"}}</label>
+
     </div>
 
     <div class="form-group">
-      <label>Handedness</label>
+
+      <label>{{localize "SDP.Handedness"}}</label>
 
       <select name="system.handedness">
         {{selectOptions handednessOptions selected=system.handedness}}
       </select>
+
     </div>
 
     {{#if (eq system.category "melee")}}
 
     <div class="compact-checkbox">
+
       <input
         type="checkbox"
         name="system.isDefenseWeapon"
         {{checked system.isDefenseWeapon}}>
 
-      <label>Defense Weapon</label>
+      <label>{{localize "SDP.DefenseWeapon"}}</label>
+
     </div>
 
     {{/if}}
 
     <div class="compact-checkbox">
+
       <input
         type="checkbox"
         name="system.equipped"
         {{checked system.equipped}} />
 
-      <label>Equipped</label>
+      <label>{{localize "SDP.Equipped"}}</label>
+
     </div>
 
     <div class="form-group full-width">
-      <label>Durability</label>
+
+      <label>{{localize "SDP.Durability"}}</label>
 
       <div class="inline-fields">
 
@@ -207,45 +243,53 @@
 <div class="weapon-card">
 
   <div class="weapon-card-title">
-    Ranged
+    {{localize "SDP.Ranged"}}
   </div>
 
   <div class="weapon-grid">
 
     <div class="form-group">
-      <label>Range</label>
+
+      <label>{{localize "SDP.Range"}}</label>
 
       <input
         type="number"
         name="system.range"
         value="{{system.range}}">
+
     </div>
 
     <div class="form-group full-width">
-      <label>Ammunition Group</label>
+
+      <label>{{localize "SDP.AmmunitionGroup"}}</label>
 
       <input
         type="text"
         name="system.ammunitionGroup"
         value="{{system.ammunitionGroup}}">
+
     </div>
 
     <div class="compact-checkbox">
+
       <input
         type="checkbox"
         name="system.consumesAmmo"
         {{checked system.consumesAmmo}}>
 
-      <label>Consumes Ammo</label>
+      <label>{{localize "SDP.ConsumesAmmo"}}</label>
+
     </div>
 
     <div class="compact-checkbox">
+
       <input
         type="checkbox"
         name="system.forceReload"
         {{checked system.forceReload}}>
 
-      <label>Force Reload</label>
+      <label>{{localize "SDP.ForceReload"}}</label>
+
     </div>
 
   </div>
@@ -264,13 +308,13 @@
 
   <div class="weapon-trait-block">
 
-    <h3>Advantages</h3>
+    <h3>{{localize "SDP.Advantages"}}</h3>
 
     <div class="weapon-traits-grid">
 
       {{#each positiveTraits}}
 
-      <div class="trait-row" title="{{this.description}}">
+      <div class="trait-row" title="{{localize this.description}}">
 
         <label class="trait-label">
 
@@ -280,7 +324,7 @@
             {{checked this.checked}} />
 
           <span class="trait-name">
-            {{this.label}}
+            {{localize this.label}}
           </span>
 
         </label>
@@ -308,13 +352,13 @@
 
   <div class="weapon-trait-block">
 
-    <h3>Drawbacks</h3>
+    <h3>{{localize "SDP.Drawbacks"}}</h3>
 
     <div class="weapon-traits-grid">
 
       {{#each negativeTraits}}
 
-      <div class="trait-row" title="{{this.description}}">
+      <div class="trait-row" title="{{localize this.description}}">
 
         <label class="trait-label">
 
@@ -324,7 +368,7 @@
             {{checked this.checked}} />
 
           <span class="trait-name">
-            {{this.label}}
+            {{localize this.label}}
           </span>
 
         </label>
@@ -348,21 +392,17 @@
 
   </div>
 
-  <!-- ========================= -->
-<!-- ITEM TRAITS -->
-<!-- ========================= -->
-
   <!-- ITEM TRAITS -->
 
   <div class="weapon-trait-block">
 
-    <h3>Item Traits</h3>
+    <h3>{{localize "SDP.ItemTraits"}}</h3>
 
     <div class="weapon-traits-grid">
 
       {{#each positiveItemTraits}}
 
-      <div class="trait-row" title="{{this.description}}">
+      <div class="trait-row" title="{{localize this.description}}">
 
         <label class="trait-label">
 
@@ -372,7 +412,7 @@
             {{checked this.checked}}>
 
           <span class="trait-name">
-            {{this.label}}
+            {{localize this.label}}
           </span>
 
         </label>
@@ -399,13 +439,13 @@
 
   <div class="weapon-trait-block">
 
-    <h3>Item Flaws</h3>
+    <h3>{{localize "SDP.ItemFlaws"}}</h3>
 
     <div class="weapon-traits-grid">
 
       {{#each negativeItemTraits}}
 
-      <div class="trait-row" title="{{this.description}}">
+      <div class="trait-row" title="{{localize this.description}}">
 
         <label class="trait-label">
 
@@ -415,7 +455,7 @@
             {{checked this.checked}}>
 
           <span class="trait-name">
-            {{this.label}}
+            {{localize this.label}}
           </span>
 
         </label>

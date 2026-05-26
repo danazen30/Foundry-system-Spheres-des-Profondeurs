@@ -1,50 +1,50 @@
 <div class="tab-info">
 
   <!-- DETAILS -->
-  <h3>Details</h3>
+<h3>{{localize "SDP.Details"}}</h3>
 
   <div class="details">
 
   <!-- PHYSICAL -->
   <div class="details-group">
-    <h4>Physical</h4>
+    <h4>{{localize "SDP.Physical"}}</h4>
 
     <div class="details-grid">
 
       <div class="resource-row">
-        <label>Age</label>
+        <label>{{localize "SDP.Age"}}</label>
         <input type="text" name="system.details.age.value" value="{{system.details.age.value}}">
       </div>
 
       <div class="resource-row">
-        <label>Height</label>
+        <label>{{localize "SDP.Height"}}</label>
         <input type="text" name="system.details.height.value" value="{{system.details.height.value}}">
       </div>
 
       <div class="resource-row">
-        <label>Weight</label>
+        <label>{{localize "SDP.Weight"}}</label>
         <input type="text" name="system.details.weight.value" value="{{system.details.weight.value}}">
       </div>
 
       <div class="resource-row">
-        <label>Hair</label>
+        <label>{{localize "SDP.Hair"}}</label>
         <input type="text" name="system.details.hairColor.value" value="{{system.details.hairColor.value}}">
       </div>
 
       <div class="resource-row">
-        <label>Eyes</label>
+        <label>{{localize "SDP.Eyes"}}</label>
         <input type="text" name="system.details.eyeColor.value" value="{{system.details.eyeColor.value}}">
       </div>
 
       <div class="resource-row">
-        <label>Mark</label>
+        <label>{{localize "SDP.Mark"}}</label>
         <input type="text" name="system.details.distinguishingMark.value" value="{{system.details.distinguishingMark.value}}">
       </div>
 
     </div>
 
 <div class="resource-row">
-  <label>Size</label>
+  <label>{{localize "SDP.Size"}}</label>
 
   <select name="system.details.size.value">
 
@@ -54,7 +54,7 @@
         value="{{key}}"
         {{#if (eq @root.system.details.size.value key)}}selected{{/if}}>
 
-        {{size.label}}
+        {{localize size.label}}
 
       </option>
 
@@ -68,30 +68,30 @@
 
   <!-- ORIGIN -->
   <div class="details-group">
-    <h4>Origin</h4>
+    <h4>{{localize "SDP.Origin"}}</h4>
 
     <div class="details-grid">
 
       <div class="resource-row">
-        <label>Species</label>
+        <label>{{localize "SDP.Species"}}</label>
         {{#if species}}
           <span>{{species.name}}</span>
         {{else}}
-          <span>None</span>
+          <span>{{localize "SDP.None"}}</span>
         {{/if}}
       </div>
 
       <div class="resource-row">
-        <label>Sign</label>
+        <label>{{localize "SDP.Sign"}}</label>
         {{#if sign}}
           <span>{{sign.name}}</span>
         {{else}}
-          <span>No Sign</span>
+          <span>{{localize "SDP.NoSign"}}</span>
         {{/if}}
       </div>
 
       <div class="resource-row">
-        <label>Ascendant</label>
+        <label>{{localize "SDP.Ascendant"}}</label>
         <input type="text" name="system.details.ascending.value" value="{{system.details.ascending.value}}">
       </div>
 
@@ -101,22 +101,22 @@
 
   <!-- STATUS -->
   <div class="details-group">
-    <h4>Status</h4>
+    <h4>{{localize "SDP.Status"}}</h4>
 
     <div class="details-grid">
 
       <div class="resource-row">
-        <label>Career</label>
+        <label>{{localize "SDP.Career"}}</label>
         <textarea name="system.details.career.value">{{system.details.career.value}}</textarea>
       </div>
 
       <div class="resource-row">
-  <label>Career Group</label>
+  <label>{{localize "SDP.CareerGroup"}}</label>
   <textarea name="system.details.careerGroup.value">{{system.details.careerGroup.value}}</textarea>
 </div>
 
       <div class="resource-row">
-        <label>Standing</label>
+        <label>{{localize "SDP.Standing"}}</label>
         <input type="text" name="system.details.standing.value" value="{{system.details.standing.value}}">
       </div>
 
@@ -132,9 +132,9 @@
     <thead>
       <tr>
         <th></th>
-        <th>Careers</th>
-        <th>Current</th>
-        <th>Completed</th>
+        <th>{{localize "SDP.Careers"}}</th>
+        <th>{{localize "SDP.Current"}}</th>
+        <th>{{localize "SDP.Completed"}}</th>
         <th></th>
       </tr>
     </thead>
@@ -182,13 +182,13 @@
 
   <div class="resource-row">
 
-  <label>Work</label>
+  <label>{{localize "SDP.Work"}}</label>
 
   <button
     type="button"
     data-action="workCareer">
 
-    Work
+    {{localize "SDP.Work"}}
 
   </button>
 
@@ -196,14 +196,14 @@
 
   <!-- EXPERIENCE -->
   {{#unless isNPC}}
-  <h3>Experience</h3>
+  <h3>{{localize "SDP.Experience"}}</h3>
 
   <div class="xp-container">
 
     <div class="xp-summary">
 
   <div class="xp-cell">
-    <label>Total</label>
+    <label>{{localize "SDP.Total"}}</label>
     <input
       type="number"
       value="{{xp.total}}"
@@ -213,7 +213,7 @@
   </div>
 
   <div class="xp-cell">
-    <label>Spent</label>
+    <label>{{localize "SDP.Spent"}}</label>
     <input
       type="number"
       value="{{xp.spent}}"
@@ -223,7 +223,7 @@
   </div>
 
   <div class="xp-cell">
-    <label>Available</label>
+    <label>{{localize "SDP.Available"}}</label>
     <input
       type="number"
       value="{{xp.available}}"
@@ -239,7 +239,7 @@
         {{#if xpBar.nextXP}}
           / {{xpBar.nextXP}}
         {{else}}
-          (MAX)
+          ({{localize "SDP.Max"}})
         {{/if}}
       </div>
 
@@ -258,24 +258,30 @@
           <li class="level-entry">
 
   <div class="level-main">
-    <strong>Level {{this.level}}</strong>
+    <strong>{{localize "SDP.Level"}} {{this.level}}</strong>
 
     <div class="level-stats">
       {{#if this.hp}}
-        <span class="lvl-stat hp">+{{this.hp}} HP</span>
+        <span class="lvl-stat hp">
+  +{{this.hp}} {{localize "SDP.HP"}}
+</span>
       {{/if}}
 
       {{#if this.damageBonus}}
-        <span class="lvl-stat dmg">+{{this.damageBonus}} DMG</span>
+        <span class="lvl-stat dmg">
+  +{{this.damageBonus}} {{localize "SDP.DMG"}}
+</span>
       {{/if}}
 
       {{#if this.inspirationDice}}
-        <span class="lvl-stat insp">+{{this.inspirationDice}} Insp</span>
+       <span class="lvl-stat insp">
+  +{{this.inspirationDice}} {{localize "SDP.Inspiration"}}
+</span>
       {{/if}}
 
       {{#if this.hpRoll}}
   <span class="lvl-stat dice">
-    +{{this.hpRoll}} HP ({{this.hitDice}})
+    +{{this.hpRoll}} {{localize "SDP.HP"}} ({{this.hitDice}})
   </span>
 {{/if}}
     </div>
@@ -289,7 +295,7 @@
         {{/each}}
       </ul>
     {{else}}
-      <p>No level progression yet</p>
+      <p>{{localize "SDP.NoLevelProgression"}}</p>
     {{/if}}
 
   </div>
@@ -300,7 +306,7 @@
   {{#if canLevelUp}}
     <div class="level-up">
       <button data-action="levelUp">
-        Level Up Available → {{availableLevel}}
+        {{localize "SDP.LevelUpAvailable"}} → {{availableLevel}}
       </button>
     </div>
   {{/if}}
@@ -309,44 +315,44 @@
 <div class="ambitions">
 
   <!-- PERSONAL -->
-  <h4>Personal Ambitions</h4>
+  <h4>{{localize "SDP.PersonalAmbitions"}}</h4>
 
   <div class="resource-row">
-    <label>Short Term</label>
+    <label>{{localize "SDP.ShortTerm"}}</label>
     <input type="text" name="system.details.personalAmbitions.shortTerm"
            value="{{system.details.personalAmbitions.shortTerm}}">
   </div>
 
   <div class="resource-row">
-    <label>Long Term</label>
+    <label>{{localize "SDP.LongTerm"}}</label>
     <input type="text" name="system.details.personalAmbitions.longTerm"
            value="{{system.details.personalAmbitions.longTerm}}">
   </div>
 
   <!-- PARTY -->
-  <h4>Group Ambitions</h4>
+  <h4>{{localize "SDP.GroupAmbitions"}}</h4>
 
   <div class="resource-row">
-    <label>Name</label>
+    <label>{{localize "SDP.Name"}}</label>
     <input type="text" name="system.details.partyAmbitions.name"
            value="{{system.details.partyAmbitions.name}}">
   </div>
 
   <div class="resource-row">
-    <label>Short Term</label>
+    <label>{{localize "SDP.ShortTerm"}}</label>
     <input type="text" name="system.details.partyAmbitions.shortTerm"
            value="{{system.details.partyAmbitions.shortTerm}}">
   </div>
 
   <div class="resource-row">
-    <label>Long Term</label>
+    <label>{{localize "SDP.LongTerm"}}</label>
     <input type="text" name="system.details.partyAmbitions.longTerm"
            value="{{system.details.partyAmbitions.longTerm}}">
   </div>
 
   <!-- MOTIVATION -->
   <div class="resource-row">
-    <label>Motivation</label>
+    <label>{{localize "SDP.Motivation"}}</label>
     <input type="text" name="system.details.motivation.value"
            value="{{system.details.motivation.value}}">
   </div>
@@ -354,7 +360,7 @@
 </div>
 {{/unless}}
 
-<h3>Notes & Background</h3>
+<h3>{{localize "SDP.NotesBackground"}}</h3>
 
 <div class="notes-section">
 
@@ -364,7 +370,7 @@
 
   <div class="note-header">
 
-    <label>Shared NPC Notes</label>
+    <label>{{localize "SDP.SharedNpcNotes"}}</label>
 
     <div class="note-actions">
 
@@ -375,7 +381,7 @@
         data-action="toggleEditor"
         data-target="sharedNpcNotes">
 
-        ✏️ Edit
+        ✏️ {{localize "SDP.Edit"}}
 
       </button>
       {{/if}}
@@ -398,7 +404,7 @@
   {{#if sharedJournal}}
 
     <p>
-      Linked Journal:
+      {{localize "SDP.LinkedJournal"}}:
       <strong>
   {{sharedJournal.name}}
   →
@@ -441,7 +447,7 @@
 
     <div class="empty-drop-zone">
 
-      Drop a Journal here
+      {{localize "SDP.DropJournalHere"}}
 
     </div>
 
@@ -455,14 +461,14 @@
 <div class="resource-block note-block">
 
   <div class="note-header">
-    <label>Biography</label>
+    <label>{{localize "SDP.Biography"}}</label>
 
     <button
       type="button"
       class="note-edit-btn"
       data-action="toggleEditor"
       data-target="biography">
-      ✏️ Edit
+      ✏️ {{localize "SDP.Edit"}}
     </button>
   </div>
 
@@ -491,7 +497,7 @@
 <div class="resource-block note-block">
 
   <div class="note-header">
-    <label>Player Notes</label>
+    <label>{{localize "SDP.PlayerNotes"}}</label>
 
     {{#if canEditPlayerNotes}}
     <button
@@ -499,7 +505,7 @@
       class="note-edit-btn"
       data-action="toggleEditor"
       data-target="playerNotes">
-      ✏️ Edit
+      ✏️ {{localize "SDP.Edit"}}
     </button>
     {{/if}}
 
@@ -530,14 +536,14 @@
 <div class="resource-block note-block">
 
   <div class="note-header">
-    <label>GM Notes</label>
+    <label>{{localize "SDP.GMNotes"}}</label>
 
     <button
       type="button"
       class="note-edit-btn"
       data-action="toggleEditor"
       data-target="gmNotes">
-      ✏️ Edit
+      ✏️ {{localize "SDP.Edit"}}
     </button>
   </div>
 
@@ -565,7 +571,7 @@
   {{/if}}
 {{#unless isNPC}}
   <!-- XP LOG -->
-  <h3>XP Log</h3>
+  <h3>{{localize "SDP.XPLogTitle"}}</h3>
 
   <ul class="xp-log">
 
@@ -576,7 +582,7 @@
         </li>
       {{/each}}
     {{else}}
-      <li>No XP activity</li>
+      <li>{{localize "SDP.NoXPActivity"}}</li>
     {{/if}}
 
   </ul>

@@ -1,16 +1,16 @@
 <div class="tab-magic">
 
   <!-- MINOR SPELLS -->
-  <h3>Minor Spells</h3>
+  <h3>{{localize "SDP.MinorSpells"}}</h3>
 
   <table class="spells-table">
     <thead>
       <tr>
         <th></th>
-        <th>Name</th>
-        <th>Mana</th>
-        <th>Mem</th>
-        <th>Actions</th>
+        <th>{{localize "SDP.Name"}}</th>
+<th>{{localize "SDP.Mana"}}</th>
+<th>{{localize "SDP.Memory"}}</th>
+<th>{{localize "SDP.Actions"}}</th>
       </tr>
     </thead>
 
@@ -132,16 +132,16 @@
 
 
   <!-- ADVANCED SPELLS -->
-  <h3>Advanced Spells</h3>
+  <h3>{{localize "SDP.AdvancedSpells"}}</h3>
 
   <table class="spells-table">
     <thead>
       <tr>
         <th></th>
-        <th>Name</th>
-        <th>Mana</th>
-        <th>Mem</th>
-        <th>Actions</th>
+        <th>{{localize "SDP.Name"}}</th>
+<th>{{localize "SDP.Mana"}}</th>
+<th>{{localize "SDP.Memory"}}</th>
+<th>{{localize "SDP.Actions"}}</th>
       </tr>
     </thead>
 
@@ -265,16 +265,16 @@
 
 
   <!-- SUPERIOR SPELLS -->
-  <h3>Superior Spells</h3>
+  <h3>{{localize "SDP.SuperiorSpells"}}</h3>
 
   <table class="spells-table">
     <thead>
       <tr>
         <th></th>
-        <th>Name</th>
-        <th>Mana</th>
-        <th>Mem</th>
-        <th>Actions</th>
+        <th>{{localize "SDP.Name"}}</th>
+<th>{{localize "SDP.Mana"}}</th>
+<th>{{localize "SDP.Memory"}}</th>
+<th>{{localize "SDP.Actions"}}</th>
       </tr>
     </thead>
 
@@ -323,20 +323,26 @@
 
     <div class="spell-detail-box">
 
-  <p><strong>Magic:</strong> {{spell.system.magic.value}}</p>
-  <p><strong>Range:</strong> {{spell.system.range.value}}</p>
+  <p>
+  <strong>{{localize "SDP.Magic"}}:</strong>
+  {{spell.system.magic.value}}
+</p>
+  <p>
+  <strong>{{localize "SDP.Range"}}:</strong>
+  {{spell.system.range.value}}
+</p>
 
   <!-- ========================= -->
   <!-- DURATION -->
   <!-- ========================= -->
   <p>
-  <strong>Duration:</strong>
+  <strong>{{localize "SDP.Duration"}}:</strong>
   {{#if spell.system.concentration.value}}
-    Concentration
+    {{localize "SDP.Concentration"}}
   {{else}}
     {{spell.system.duration.value}}
     {{spell.system.duration.type}}
-    {{#if spell.system.duration.extendable}} (Extendable){{/if}}
+    {{#if spell.system.duration.extendable}} ({{localize "SDP.Extendable"}}){{/if}}
   {{/if}}
 </p>
 
@@ -344,18 +350,22 @@
   <!-- TARGET -->
   <!-- ========================= -->
   <p>
-  <strong>Target:</strong>
+  <strong>{{localize "SDP.Target"}}:</strong>
   {{#if spell.system.aoe.value}}
-    Area of Effect (Radius: {{spell.system.radius.value}})
+    {{localize "SDP.AreaOfEffect"}}
+({{localize "SDP.Radius"}}:
+{{spell.system.radius.value}})
   {{else}}
-    {{spell.system.target.value}} target(s)
+    {{spell.system.target.value}}
+{{localize "SDP.Targets"}}
   {{/if}}
 </p>
 
   <!-- ========================= -->
   <!-- DAMAGE -->
   <!-- ========================= -->
-  <p><strong>Damage:</strong>
+  <p>
+  <strong>{{localize "SDP.Damage"}}:</strong>
     {{spell.system.damage.base.value}}
     {{spell.system.damage.dice.value}}
   </p>
@@ -366,7 +376,7 @@
 {{#each spell.system.overcastSpecialEffects.value as |effect|}}
   {{#if @first}}
     <div class="overcast-line">
-      <strong>Overcast Special:</strong>
+      <strong>{{localize "SDP.SpecialOvercast"}}:</strong>
       <ul>
   {{/if}}
 

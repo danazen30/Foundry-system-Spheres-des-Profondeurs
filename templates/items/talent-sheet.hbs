@@ -13,7 +13,7 @@
     data-tab="description"
     class="{{#if (eq activeTab 'description')}}active{{/if}}">
 
-    Description
+    {{localize "SDP.TabDescription"}}
 
   </button>
 
@@ -22,7 +22,7 @@
     data-tab="details"
     class="{{#if (eq activeTab 'details')}}active{{/if}}">
 
-    Details
+    {{localize "SDP.TabDetails"}}
 
   </button>
 
@@ -31,7 +31,7 @@
     data-tab="effects"
     class="{{#if (eq activeTab 'effects')}}active{{/if}}">
 
-    Effects
+    {{localize "SDP.Effects"}}
 
   </button>
 
@@ -46,14 +46,14 @@
 <div class="weapon-card">
 
   <div class="weapon-card-title">
-    Talent
+    {{localize "TYPES.Item.talent"}}
   </div>
 
   <div class="weapon-grid">
 
     <div class="form-group">
 
-      <label>Advances</label>
+      <label>{{localize "SDP.Advances"}}</label>
 
       <input
         type="number"
@@ -64,7 +64,7 @@
 
     <div class="form-group">
 
-      <label>Max Advances</label>
+      <label>{{localize "SDP.MaxAdvances"}}</label>
 
       <input
         type="text"
@@ -80,7 +80,7 @@
         name="system.canAdvance"
         {{checked system.canAdvance}}>
 
-      <label>Can Advance</label>
+      <label>{{localize "SDP.CanAdvance"}}</label>
 
     </div>
 
@@ -93,7 +93,7 @@
 <div class="weapon-card">
 
   <div class="weapon-card-title">
-    GM Notes
+    {{localize "SDP.GMNotes"}}
   </div>
 
   <div
@@ -125,7 +125,7 @@
     data-action="toggleEditor"
     data-target="gmNotes">
 
-    ✏️ Edit
+    ✏️ {{localize "SDP.Edit"}}
 
   </button>
 
@@ -144,7 +144,7 @@
 <div class="weapon-card">
 
   <div class="weapon-card-title">
-    Description
+    {{localize "SDP.TabDescription"}}
   </div>
 
   <div
@@ -176,7 +176,7 @@
     data-action="toggleEditor"
     data-target="description">
 
-    ✏️ Edit
+    ✏️ {{localize "SDP.Edit"}}
 
   </button>
 
@@ -185,7 +185,7 @@
 <div class="weapon-card">
 
   <div class="weapon-card-title">
-    Player Notes
+    {{localize "SDP.PlayerNotes"}}
   </div>
 
   <div
@@ -217,7 +217,7 @@
     data-action="toggleEditor"
     data-target="playerNotes">
 
-    ✏️ Edit
+    ✏️ {{localize "SDP.Edit"}}
 
   </button>
 

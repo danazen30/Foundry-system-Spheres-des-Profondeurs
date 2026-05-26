@@ -37,14 +37,18 @@ export class SdpSpecieSheet extends SdpItemSheet {
       this._resolveDocuments(
         this.document.system
           .startingSkills?.choices || [],
-        "Unknown Skill"
+        game.i18n.localize(
+  "SDP.UnknownSkill"
+)
       );
 
     context.startingTalents =
       this._resolveDocuments(
         this.document.system
           .startingTalents?.fixed || [],
-        "Unknown Talent"
+        game.i18n.localize(
+  "SDP.UnknownTalent"
+)
       );
 
     context.choiceTalents =
@@ -57,7 +61,9 @@ export class SdpSpecieSheet extends SdpItemSheet {
         options:
           this._resolveDocuments(
             group.options || [],
-            "Unknown Talent"
+            game.i18n.localize(
+  "SDP.UnknownTalent"
+)
           )
 
       }));

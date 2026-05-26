@@ -157,7 +157,8 @@ const INT = actor.system.attributes.intelligence.value;
 const bestSkill = this._getBestSpellSkill(actor, spell);
 
 let skillValue = 0;
-let skillName = "No Skill";
+let skillName =
+  game.i18n.localize("SDP.NoSkill");
 
 if (bestSkill){
   skillValue = bestSkill.system.value;
@@ -362,7 +363,7 @@ const isAoE = system.aoe?.value === true;
   critText = `
   <p>
     <strong class="spell-crit-success clickable">
-      CRITICAL SUCCESS
+      ${game.i18n.localize("SDP.CriticalSuccess")}
     </strong>
   </p>`;
 }
@@ -372,7 +373,7 @@ if (crit.failure){
   <p>
     <strong class="spell-crit-failure clickable"
       data-severity="${magicConsequence || "minor"}">
-      CRITICAL FAILURE
+      ${game.i18n.localize("SDP.CriticalFailure")}
     </strong>
   </p>`;
 }
@@ -380,7 +381,9 @@ if (crit.failure){
   const currentMana = actor.system.resources.mana.value;
 
 if (currentMana < manaCost) {
-  ui.notifications.warn("Not enough mana");
+  ui.notifications.warn(
+  game.i18n.localize("SDP.NotEnoughMana")
+);
   return;
 }
 
@@ -400,7 +403,7 @@ await actor.update({
       data-actor="${actor.id}"
       data-weapon="${spell.id}"
       data-target="${Array.from(game.user.targets)[0]?.id || ""}">
-      Roll Damage
+      ${game.i18n.localize("SDP.RollDamage")}
     </button>
     `;
   }
@@ -424,48 +427,58 @@ await actor.update({
      data-overcast="${overcast}"
      data-overcast-used="0">
 
-  <h3>${actor.name} casts ${spell.name}</h3>
+  <h3>
+  ${actor.name}
+  ${game.i18n.localize("SDP.CastSpell")}
+  ${spell.name}
+</h3>
 
-  <button class="edit-attack">Edit</button>
+  <button class="edit-attack">${game.i18n.localize("SDP.Edit")}</button>
 
-  <p><strong>Magic Type:</strong> ${magicType}</p>
-  <p><strong>Used:</strong> ${bestSkill ? skillName : "Intelligence"} (${bestSkill ? skillValue : INT})</p>
+  <p><strong>${game.i18n.localize("SDP.MagicType")}:</strong> ${magicType}</p>
+  <p><strong>${game.i18n.localize("SDP.Used")}:</strong> ${bestSkill ? skillName : game.i18n.localize("SDP.Intelligence")} (${bestSkill ? skillValue : INT})</p>
 
-  <p class="spell-target"><strong>Target:</strong> ${targetValue}</p>
-<p class="spell-roll"><strong>Roll:</strong> ${result}</p>
+  <p class="spell-target"><strong>${game.i18n.localize("SDP.Target")}:</strong> ${targetValue}</p>
+<p class="spell-roll"><strong>${game.i18n.localize("SDP.Roll")}:</strong> ${result}</p>
 <p class="spell-sl">
-  <strong>SL:</strong> ${SL} (${SdpRoll.getSLLabel(SL)})
+  <strong>${game.i18n.localize("SDP.SuccessLevel")}:</strong> ${SL} (${SdpRoll.getSLLabel(SL)})
 </p>
 
  <div class="crit-block">
   ${critText}
 </div>
   ${magicConsequence ? `
-  <p><strong>Magical Consequence:</strong> ${magicConsequence.toUpperCase()}</p>
+  <p><strong>${game.i18n.localize("SDP.MagicalConsequence")}:</strong> ${game.i18n.localize(
+  `SDP.MagicSeverity.${foundry.utils.capitalize(magicConsequence)}`
+)}</p>
 ` : ""}
 ${talentsHTML}
-<p class="spell-result"><strong>${success ? "SUCCESS" : "FAILURE"}</strong></p>
+<p class="spell-result"><strong>${success
+  ? game.i18n.localize("SDP.Success")
+  : game.i18n.localize("SDP.Failure")}</strong></p>
 
-<p><strong>Mana Cost:</strong> ${manaCost}</p>
+<p><strong>${game.i18n.localize("SDP.ManaCost")}:</strong> ${manaCost}</p>
 
 <p>
-<strong>Location:</strong>
-${hitProfile.locations?.[hitLocation.location]?.label || hitLocation.location}
+<strong>${game.i18n.localize("SDP.HitLocation")}:</strong>
+${game.i18n.localize(
+  hitProfile.locations?.[hitLocation.location]?.label
+) || hitLocation.location}
 (${hitLocation.roll.total})
 </p>
 
-${concentration ? `<p><strong>Concentration</strong></p>` : ""}
+${concentration ? `<p><strong>${game.i18n.localize("SDP.Concentration")}</strong></p>` : ""}
 
 <hr>
 
 ${overcast > 0 ? `
 <p class="spell-overcast">
-  <strong>Overcast:</strong> ${overcast}
+  <strong>${game.i18n.localize("SDP.Overcast")}:</strong> ${overcast}
 </p>
 
 <div class="spell-overcast-controls">
 <button class="reset-overcast">
-  Reset Overcast
+  ${game.i18n.localize("SDP.ResetOvercast")}
 </button>
 
   ${specialEffects.map((e, i) => {
@@ -497,7 +510,7 @@ ${range > 0 ? `
    data-base="${range}"
    data-value="${range}"
    data-unit="m">
-   <strong>Range:</strong>
+   <strong>${game.i18n.localize("SDP.Range")}:</strong>
    <span class="value">${range}</span> m
 </p> ` : ""}
 
@@ -507,7 +520,7 @@ ${!concentration ? `
    data-base="${duration}"
    data-value="${duration}"
    data-unit="${durationType}">
-   <strong>Duration:</strong>
+   <strong>${game.i18n.localize("SDP.Duration")}:</strong>
 <span class="value">${duration}</span> ${durationType}
 </p>
 ` : ""}
@@ -520,7 +533,7 @@ ${!concentration ? `
    data-type="aoe"
    data-base="${radius}"
    data-value="${radius}">
-   <strong>Radius:</strong>
+   <strong>${game.i18n.localize("SDP.Radius")}:</strong>
 <span class="value">${radius}</span>
 <button class="place-aoe">📍</button>
 </p>` : "")
@@ -528,12 +541,17 @@ ${!concentration ? `
     <p class="spell-target-count overcast-click" data-type="target"
        data-base="${targets}"
        data-value="${targets}">
-       <strong>Targets:</strong>
+       <strong>${game.i18n.localize("SDP.Targets")}:</strong>
 <span class="value">${targets}</span>
     </p>` : "")
 }
 
-${hasSpecialOvercast ? `<p><strong>Special Overcast:</strong> Yes</p>` : ""}
+${hasSpecialOvercast ? `
+<p>
+  <strong>${game.i18n.localize("SDP.SpecialOvercast")}:</strong>
+  ${game.i18n.localize("SDP.Yes")}
+</p>
+` : ""}
 
   <hr>
 
