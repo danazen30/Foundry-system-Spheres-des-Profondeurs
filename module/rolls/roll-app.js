@@ -294,7 +294,7 @@ const finalRange =
 
 }
 
-  // =========================
+// =========================
 // WEAPON TRAITS → MODIFIERS
 // =========================
 
@@ -305,45 +305,164 @@ if (this.weapon) {
 
   const allTraits = [...weaponTraits, ...itemTraits];
 
-  for (const t of allTraits) {
+  // =========================
+  // NORMALIZE
+  // =========================
 
-    if (!t || !t.key) continue;
+  const normalizedTraits = allTraits
+    .filter(t => t)
+    .map(t => {
+      if (typeof t === "string") {
+        return { key: t };
+      }
+
+      return t;
+    });
+
+  // =========================
+  // SKILL CHECK
+  // =========================
+
+  const weaponSkills = (this.weapon.system.skill || "")
+    .split(",")
+    .map(s => s.trim().toLowerCase());
+
+  const actorSkills =
+    this.actor.items.filter(i => i.type === "skill");
+
+  let bestSkill = null;
+
+  for (const group of weaponSkills) {
+
+    const skill = actorSkills.find(s =>
+      (s.system.key || "").toLowerCase() === group ||
+      (s.name || "").toLowerCase() === group
+    );
+
+    if (!skill) continue;
+
+    if (
+      !bestSkill ||
+      skill.system.value > bestSkill.system.value
+    ) {
+      bestSkill = skill;
+    }
+  }
+
+  const hasValidSkill = !!bestSkill;
+
+  // =========================
+  // POSITIVE / NEGATIVE
+  // =========================
+
+  const positiveTraitKeys = [
+    "precise",
+    "practical",
+    "fast",
+    "accurate"
+  ];
+
+  const negativeTraitKeys = [
+    "imprecise",
+    "impractical",
+    "slow",
+    "unbalanced"
+  ];
+
+  // =========================
+  // FINAL ACTIVE TRAITS
+  // =========================
+
+  const activeTraits = normalizedTraits.filter(t => {
+
+    if (!t?.key) return false;
+
+    // négatifs toujours actifs
+    if (negativeTraitKeys.includes(t.key)) {
+      return true;
+    }
+
+    // positifs seulement si compétence valide
+    if (positiveTraitKeys.includes(t.key)) {
+      return hasValidSkill;
+    }
+
+    return true;
+  });
+
+  // =========================
+  // APPLY MODIFIERS
+  // =========================
+
+  for (const t of activeTraits) {
 
     const key = t.key;
 
     if (key === "precise") {
-      modifiers.push({ label: game.i18n.localize("SDP.Precise"), value: 10 });
+      modifiers.push({
+        label: game.i18n.localize("SDP.Precise"),
+        value: 10
+      });
     }
 
     if (key === "imprecise") {
-      modifiers.push({ label: game.i18n.localize("SDP.Imprecise"), value: -10 });
+      modifiers.push({
+        label: game.i18n.localize("SDP.Imprecise"),
+        value: -10
+      });
     }
 
     if (key === "practical") {
-      modifiers.push({ label: game.i18n.localize("SDP.Practical"), value: 10 });
+      modifiers.push({
+        label: game.i18n.localize("SDP.Practical"),
+        value: 10
+      });
     }
 
     if (key === "impractical") {
-      modifiers.push({ label: game.i18n.localize("SDP.Impractical"), value: -10 });
+      modifiers.push({
+        label: game.i18n.localize("SDP.Impractical"),
+        value: -10
+      });
     }
 
     if (key === "fast") {
-  modifiers.push({ label: game.i18n.localize("SDP.Fast"), value: 10 });
-}
+      modifiers.push({
+        label: game.i18n.localize("SDP.Fast"),
+        value: 10
+      });
+    }
 
-if (key === "slow") {
-  modifiers.push({ label: game.i18n.localize("SDP.Slow"), value: -10 });
-}
+    if (key === "slow") {
+      modifiers.push({
+        label: game.i18n.localize("SDP.Slow"),
+        value: -10
+      });
+    }
 
-if (key === "accurate") {
-  modifiers.push({ label: game.i18n.localize("SDP.Accurate"), value: 10 });
-}
+    if (key === "accurate") {
+      modifiers.push({
+        label: game.i18n.localize("SDP.Accurate"),
+        value: 10
+      });
+    }
 
-if (key === "unbalanced") {
-  modifiers.push({ label: game.i18n.localize("SDP.Unbalanced"), value: -10 });
-}
+    if (key === "unbalanced") {
+      modifiers.push({
+        label: game.i18n.localize("SDP.Unbalanced"),
+        value: -10
+      });
+    }
 
   }
+
+  console.log("SDP | ACTIVE DIALOG TRAITS", {
+    weapon: this.weapon.name,
+    hasValidSkill,
+    activeTraits
+  });
+
+
 }
   this._modifiers = modifiers;
 

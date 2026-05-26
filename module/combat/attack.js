@@ -734,7 +734,11 @@ ${displayTraits.length ? `
 
   <p>${game.i18n.localize("SDP.Test")}: ${source}</p>
   <p>${game.i18n.localize("SDP.Target")}: ${targetValue}</p>
-  <p>${game.i18n.localize("SDP.Range")}: ${rangeLabel} (${Math.round(measuredDistance)}m)</p>
+  <p>
+  ${game.i18n.localize("SDP.Range")}:
+  ${game.i18n.localize(rangeLabel)}
+  (${Math.round(measuredDistance)}m)
+</p>
   <p>${game.i18n.localize("SDP.Roll")}: ${result}</p>
   ${inspiration > 0 ? `<p>${game.i18n.localize("SDP.Inspiration")}: +${inspiration}</p>` : ""}
   <p>

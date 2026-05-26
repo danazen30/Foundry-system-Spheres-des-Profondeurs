@@ -57,9 +57,6 @@ static async add(actor, key, value = 1){
       thresholdBefore: actor.system.derived?.woundThreshold?.value
     });
 
-// 🔥 FORCE RECALCUL PROPRE
-await actor.prepareData();
-
 const threshold = actor.system.derived?.woundThreshold?.value || 0;
 
 console.log("EXHAUST CHECK FINAL", {
