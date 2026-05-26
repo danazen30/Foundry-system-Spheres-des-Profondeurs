@@ -766,14 +766,14 @@
 "SDP.AmbientManaDescription": "You draw mana from your surroundings (WPB meters). You may drain fauna, flora, or nearby humanoids. If insufficient, remaining cost is paid with health.",
 "SDP.MultipleConcentration": "Multiple Concentration",
 "SDP.MultipleConcentrationDescription": "You may sustain a second concentration spell.",
-"SDP.RollTableMajorMagicalConsequence": "Major magical consequence",
-"SDP.RollTableMinorMagicalConsequence": "Minor magical consequence",
 "SDP.TableNotFound": "Table not found: {table}",
 "SDP.MinorMagicalBacklash": "Minor magical backlash ({roll})",
   "SDP.MajorMagicalCatastrophe": "MAJOR magical catastrophe ({roll})",
 "SDP.NotEnoughOvercast":  "Not enough overcast",
 
   "SDP.RollTableCriticalAttackFailure": "Critical Attack Failure",
+  "SDP.RollTableMajorMagicalConsequence": "Major magical consequence",
+"SDP.RollTableMinorMagicalConsequence": "Minor magical consequence",
   "SDP.RollTablePackLabel": "SDP Tables"
 
 }

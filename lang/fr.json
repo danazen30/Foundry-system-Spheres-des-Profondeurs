@@ -766,14 +766,14 @@
 "SDP.AmbientManaDescription": "Vous puisez le mana dans votre environnement (mètres FMB). Vous pouvez drainer la faune, la flore ou les humanoïdes proches. Si cela est insuffisant, le coût restant est payé avec la santé.",
 "SDP.MultipleConcentration": "Concentration multiple",
 "SDP.MultipleConcentrationDescription": "Vous pouvez maintenir un second sort à concentration.",
-"SDP.RollTableMajorMagicalConsequence": "Conséquence magique majeure",
-"SDP.RollTableMinorMagicalConsequence": "Conséquence magique mineure",
 "SDP.TableNotFound": "Table introuvable : {table}",
 "SDP.MinorMagicalBacklash": "Contrecoup magique mineur ({roll})",
 "SDP.MajorMagicalCatastrophe": "Catastrophe magique MAJEURE ({roll})",
 "SDP.NotEnoughOvercast": "Pas assez d'Overcast",
 
    "SDP.RollTableCriticalAttackFailure": "Échec Critique d’Attaque",
+   "SDP.RollTableMajorMagicalConsequence": "Conséquence magique majeure",
+"SDP.RollTableMinorMagicalConsequence": "Conséquence magique mineure",
  "SDP.RollTablePackLabel": "Tables SDP"
 
 

@@ -53,26 +53,88 @@ ${game.i18n.localize("SDP.MultipleConcentrationDescription")}
       formula = "1d20";
     }
 
-    const tableName =
-  severity === "major"
-    ? game.i18n.localize("SDP.RollTableMajorMagicalConsequence")
-    : game.i18n.localize("SDP.RollTableMinorMagicalConsequence");
+   let tableConfig = null;
 
-const table = game.tables.getName(tableName);
+switch (severity) {
 
-if (!table){
-  ui.notifications.error(
-  game.i18n.format(
-    "SDP.TableNotFound",
-    { table: tableName }
-  )
-);
+  case "major":
+
+    tableConfig =
+      CONFIG.SDP.rollTables
+        .majorMagicalConsequence;
+
+    break;
+
+  default:
+
+    tableConfig =
+      CONFIG.SDP.rollTables
+        .minorMagicalConsequence;
+
+    break;
+}
+
+if (!tableConfig) {
+
+  ui.notifications.warn(
+    game.i18n.localize(
+      "SDP.Warning.CriticalTableNotConfigured"
+    )
+  );
+
+  return;
+}
+
+const pack =
+  game.packs.get(
+    "sdp.rolltables"
+  );
+
+const tables =
+  await pack.getDocuments();
+
+  const table = tables.find(t => {
+
+  const normalizedName =
+    (t.name || "")
+      .toLowerCase()
+      .trim();
+
+  return (
+    normalizedName ===
+    tableConfig.key
+      .toLowerCase()
+      .trim()
+      .replaceAll("-", " ")
+  );
+
+});
+
+if (!table) {
+
+  ui.notifications.warn(
+
+    game.i18n.format(
+      "SDP.Warning.TableNotFound",
+      {
+        table: localizedTableName
+      }
+    )
+
+  );
+
   return;
 }
 
 // POTENTIEL BUG ICI
 const roll = await new Roll(formula).roll();
+const originalName = table.name;
+
+table.name = game.i18n.localize(
+  tableConfig.label
+);
 await table.draw();
+table.name = originalName;
 
     let resultText = "";
 

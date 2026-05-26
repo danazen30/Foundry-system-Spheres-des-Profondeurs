@@ -251,38 +251,57 @@ for (const entry of pack.index) {
     foundry.utils.deepClone(entry)
   );
 
-  const key =
-    entry.flags?.sdp?.key;
+  let localizationKey = null;
 
-  console.log(
-    "SDP DEBUG | ENTRY KEY",
-    key
-  );
+  // =========================
+  // ATTACK FAILURE
+  // =========================
 
   if (
-    key === "critical-attack-failure"
+    entry.name === "Critical Attack Failure"
   ) {
 
-    const localized =
+    localizationKey =
+      "SDP.RollTableCriticalAttackFailure";
+
+  }
+
+  // =========================
+  // MAGIC MAJOR
+  // =========================
+
+  else if (
+    entry.name === "major magical consequence"
+  ) {
+
+    localizationKey =
+      "SDP.RollTableMajorMagicalConsequence";
+
+  }
+
+  // =========================
+  // MAGIC MINOR
+  // =========================
+
+  else if (
+    entry.name === "minor magical consequence"
+  ) {
+
+    localizationKey =
+      "SDP.RollTableMinorMagicalConsequence";
+
+  }
+
+  // =========================
+  // APPLY LOCALIZATION
+  // =========================
+
+  if (localizationKey) {
+
+    entry.name =
       game.i18n.localize(
-        "SDP.RollTableCriticalAttackFailure"
+        localizationKey
       );
-
-    console.log(
-      "SDP DEBUG | LOCALIZED VALUE",
-      localized
-    );
-
-    // =========================
-    // TEST 1
-    // =========================
-
-    entry.name = localized;
-
-    console.log(
-      "SDP DEBUG | ENTRY AFTER NAME",
-      foundry.utils.deepClone(entry)
-    );
 
   }
 
@@ -295,7 +314,7 @@ console.log(
 
 ui.compendium.render(true);
 
-  }
+}
 
 
   game.sdp = game.sdp || {};
