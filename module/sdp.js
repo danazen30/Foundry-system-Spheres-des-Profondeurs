@@ -45,6 +45,41 @@ const difficultyMap = {
   critical: -30
 };
 
+const SDP_ROLLTABLE_LOCALIZATION = {
+
+  // CAREERS
+  "uiomVIaoy9Drhemu":
+    "SDP.RollTableCareerElf",
+
+  "WzRAb3Ftyu0qFMCa":
+    "SDP.RollTableCareerHuman",
+
+  // SIGNS
+  "7ZHAMQWLtvXnaw1N":
+    "SDP.RollTableSignRandom",
+
+  // SPECIES
+  "FjSsEkbsWkBkrjWg":
+    "SDP.RollTableSpecies",
+
+  // CRITICAL FAILURE
+  "XZ4ZAHiJvXgmww25":
+    "SDP.RollTableCriticalAttackFailure",
+
+  // MAGIC MAJOR
+  "6Q4OF1ap29CkArDj":
+    "SDP.RollTableMajorMagicalConsequence",
+
+  // MAGIC MINOR
+  "VVHLBG4r2WP3Ssrs":
+    "SDP.RollTableMinorMagicalConsequence",
+
+    // TALENTS
+"6AY1b31Cy8uYYBTj":
+  "SDP.RollTableTalent"
+
+};
+
 async function getInjuryFromPack(location, severity, isConsequence = false) {
 
   const pack = game.packs.get("sdp.injuries");
@@ -244,77 +279,234 @@ console.log(
   pack.index
 );
 
-for (const entry of pack.index) {
+Hooks.on(
+  "renderCompendium",
+  (app, html) => {
 
-  console.log(
-    "SDP DEBUG | ENTRY BEFORE",
-    foundry.utils.deepClone(entry)
-  );
+    // =========================
+    // ONLY SDP ROLLTABLE PACK
+    // =========================
 
-  let localizationKey = null;
+    if (
+      app.collection?.metadata?.id !==
+      "sdp.rolltables"
+    ) return;
 
-  // =========================
-  // ATTACK FAILURE
-  // =========================
+    const element =
+      html instanceof HTMLElement
+        ? html
+        : html[0];
 
-  if (
-    entry.name === "Critical Attack Failure"
-  ) {
+    if (!element)
+      return;
 
-    localizationKey =
-      "SDP.RollTableCriticalAttackFailure";
+    // =========================
+    // FIND ALL ENTRIES
+    // =========================
 
-  }
-
-  // =========================
-  // MAGIC MAJOR
-  // =========================
-
-  else if (
-    entry.name === "major magical consequence"
-  ) {
-
-    localizationKey =
-      "SDP.RollTableMajorMagicalConsequence";
-
-  }
-
-  // =========================
-  // MAGIC MINOR
-  // =========================
-
-  else if (
-    entry.name === "minor magical consequence"
-  ) {
-
-    localizationKey =
-      "SDP.RollTableMinorMagicalConsequence";
-
-  }
-
-  // =========================
-  // APPLY LOCALIZATION
-  // =========================
-
-  if (localizationKey) {
-
-    entry.name =
-      game.i18n.localize(
-        localizationKey
+    const entries =
+      element.querySelectorAll(
+        ".directory-item"
       );
 
-  }
+    for (const entry of entries) {
 
-}
+      const documentId =
+        entry.dataset.entryId;
+
+      if (!documentId)
+        continue;
+
+      const localizationKey =
+        SDP_ROLLTABLE_LOCALIZATION[
+          documentId
+        ];
+
+      if (!localizationKey)
+        continue;
+
+      const title =
+        entry.querySelector(
+          ".entry-name"
+        );
+
+      if (!title)
+        continue;
+
+      title.textContent =
+        game.i18n.localize(
+          localizationKey
+        );
+
+    }
+
+  }
+);
 
 console.log(
   "SDP DEBUG | FINAL INDEX",
   pack.index
 );
 
-ui.compendium.render(true);
+// FORCE REFRESH COMPENDIUM UI
+for (const app of Object.values(ui.windows)) {
+
+  if (
+    app.constructor.name ===
+    "CompendiumDirectory"
+  ) {
+
+    app.render(true);
+
+  }
 
 }
+
+// FALLBACK
+ui.compendium?.render(true);
+
+}
+
+// =========================
+// LOCALIZE OPENED ROLLTABLE WINDOWS
+// =========================
+
+Hooks.on(
+  "renderApplicationV2",
+  (app, element) => {
+    console.log(
+  "SDP DEBUG | renderApplicationV2",
+  app,
+  element
+);
+
+    // =========================
+    // ONLY ROLLTABLE SHEETS
+    // =========================
+
+    if (
+      app.document?.documentName !==
+      "RollTable"
+    ) return;
+
+    const table =
+      app.document;
+
+    const localizationKey =
+      SDP_ROLLTABLE_LOCALIZATION[
+        table.id
+      ];
+
+    if (!localizationKey)
+      return;
+
+    const localizedName =
+      game.i18n.localize(
+        localizationKey
+      );
+
+    // =========================
+    // REAL HTML ELEMENT
+    // =========================
+
+    const html =
+      element instanceof HTMLElement
+        ? element
+        : element?.[0];
+
+        console.log(
+  "SDP DEBUG | HTML",
+  html
+);
+
+    if (!html)
+      return;
+
+    // =========================
+    // WINDOW TITLE
+    // =========================
+
+    const windowTitle =
+      html.querySelector(
+        ".window-title"
+      );
+
+    if (windowTitle) {
+
+      windowTitle.textContent =
+        localizedName;
+
+    }
+
+    // =========================
+    // DOCUMENT TITLE
+    // =========================
+
+    const docName =
+  html.querySelector(
+    ".sheet-header h1"
+  );
+
+  console.log(
+  "SDP DEBUG | DOC NAME FIX",
+  docName
+);
+
+  console.log(
+  "SDP DEBUG | DOC NAME",
+  docName
+);
+
+    if (docName) {
+
+      docName.textContent =
+        localizedName;
+
+    }
+
+  }
+);
+
+// =========================
+// LOCALIZE ROLLTABLE CHAT
+// =========================
+
+Hooks.on(
+  "renderChatMessageHTML",
+  (message, html) => {
+
+    const links =
+  html instanceof HTMLElement
+    ? html.querySelectorAll(
+        ".content-link"
+      )
+    : [];
+
+    for (const link of links) {
+
+      const tableId =
+        link.dataset.id;
+
+      if (!tableId)
+        continue;
+
+      const localizationKey =
+        SDP_ROLLTABLE_LOCALIZATION[
+          tableId
+        ];
+
+      if (!localizationKey)
+        continue;
+
+      link.textContent =
+        game.i18n.localize(
+          localizationKey
+        );
+
+    }
+
+  }
+);
 
 
   game.sdp = game.sdp || {};

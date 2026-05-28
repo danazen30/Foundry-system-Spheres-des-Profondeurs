@@ -771,9 +771,14 @@
 "SDP.MajorMagicalCatastrophe": "Catastrophe magique MAJEURE ({roll})",
 "SDP.NotEnoughOvercast": "Pas assez d'Overcast",
 
+"SDP.RollTableCareerHuman": "Carrière Humain",
+"SDP.RollTableCareerElf": "Carrière Elfe",
+"SDP.RollTableSignRandom": "Table des Signes",
+"SDP.RollTableSpecies": "Table des Espèces",
    "SDP.RollTableCriticalAttackFailure": "Échec Critique d’Attaque",
    "SDP.RollTableMajorMagicalConsequence": "Conséquence magique majeure",
 "SDP.RollTableMinorMagicalConsequence": "Conséquence magique mineure",
+"SDP.RollTableTalent": "Table des Talents",
  "SDP.RollTablePackLabel": "Tables SDP"
 
 

@@ -22,19 +22,71 @@ export class SdpSpecieSheet extends SdpItemSheet {
   // CONTEXT
   // =========================
 
-  async _prepareContext() {
+ async _prepareContext() {
 
     const context =
       await super._prepareContext();
 
-    context.tables =
-      game.tables.map(t => ({
-        id: t.id,
-        name: t.name
-      }));
+   // =========================
+// WORLD TABLES
+// =========================
+
+const worldTables =
+  game.tables.map(table => ({
+
+    id:
+      table.id,
+
+    name:
+      `[World] ${table.name}`
+
+  }));
+
+// =========================
+// COMPENDIUM TABLES
+// =========================
+
+const compendiumTables = [];
+
+for (const pack of game.packs) {
+
+  if (
+    pack.documentName !==
+    "RollTable"
+  ) continue;
+
+  const index =
+    await pack.getIndex();
+
+  for (const entry of index) {
+
+    compendiumTables.push({
+
+      id:
+`Compendium.${pack.metadata.id}.RollTable.${entry._id}`,
+
+      name:
+`[${pack.metadata.label}] ${entry.name}`
+
+    });
+
+  }
+
+}
+
+// =========================
+// MERGE
+// =========================
+
+context.tables = [
+
+  ...worldTables,
+  ...compendiumTables
+
+];
 
     context.startingSkills =
-      this._resolveDocuments(
+  await this._resolveDocuments(
         this.document.system
           .startingSkills?.choices || [],
         game.i18n.localize(
@@ -43,7 +95,7 @@ export class SdpSpecieSheet extends SdpItemSheet {
       );
 
     context.startingTalents =
-      this._resolveDocuments(
+  await this._resolveDocuments(
         this.document.system
           .startingTalents?.fixed || [],
         game.i18n.localize(
@@ -52,21 +104,31 @@ export class SdpSpecieSheet extends SdpItemSheet {
       );
 
     context.choiceTalents =
-      (
-        this._getTalentData().choices || []
-      ).map(group => ({
+  await Promise.all(
+
+    (
+      this._getTalentData().choices || []
+    ).map(async group => ({
 
         count: group.count,
 
         options:
-          this._resolveDocuments(
+  await this._resolveDocuments(
             group.options || [],
             game.i18n.localize(
   "SDP.UnknownTalent"
 )
           )
 
-      }));
+            }))
+
+  );
+
+  context.isCompendium =
+
+  this.document.pack
+  !==
+  null;
 
     return context;
 
@@ -217,22 +279,87 @@ export class SdpSpecieSheet extends SdpItemSheet {
   // HELPERS
   // =========================
 
-  _resolveDocuments(ids, fallback) {
+async _resolveDocuments(
+  ids,
+  fallback
+) {
 
-    return ids.map(id => {
+  const cleaned =
+    ids.filter(id =>
 
-      const doc =
-        game.items.get(id);
+      typeof id === "string"
+      &&
+      id.length > 0
+
+    );
+
+  return await Promise.all(
+
+    cleaned.map(async id => {
+
+      let doc = null;
+
+      // =========================
+      // UUID COMPENDIUM
+      // =========================
+
+      if (
+        id.startsWith(
+          "Compendium."
+        )
+      ) {
+
+        try {
+
+          doc =
+            await fromUuid(id);
+
+        }
+
+        catch(error) {
+
+          console.error(
+            "SDP | UUID ERROR",
+            id,
+            error
+          );
+
+        }
+
+      }
+
+      // =========================
+      // WORLD ITEM
+      // =========================
+
+      else {
+
+        doc =
+          game.items.get(id);
+
+      }
+
+      console.log(
+        "SDP DEBUG RESOLVE",
+        id,
+        doc
+      );
 
       return {
+
         id,
+        uuid: id,
+
         name:
           doc?.name || fallback
+
       };
 
-    });
+    })
 
-  }
+  );
+
+}
 
   _getTalentData() {
 
@@ -268,104 +395,326 @@ export class SdpSpecieSheet extends SdpItemSheet {
 
   }
 
-  async _updateTalents(talents) {
+async _updateTalents(talents) {
 
-    await this.document.update({
+  // =========================
+  // COMPENDIUM DOCUMENT
+  // =========================
+
+  if (this.document.pack) {
+
+    const pack =
+      game.packs.get(
+        this.document.pack
+      );
+
+    if (!pack) return;
+
+    const doc =
+      await pack.getDocument(
+        this.document.id
+      );
+
+    if (!doc) return;
+
+    await doc.update({
+
       "system.startingTalents":
         talents
+
     });
 
+    // =========================
+    // REFRESH LOCAL DOCUMENT
+    // =========================
+
+    this.document.system.startingTalents =
+      foundry.utils.deepClone(
+        talents
+      );
+
+    this.render();
+
+    return;
+
   }
 
-  async _openSelector(type, callback) {
+  // =========================
+  // WORLD DOCUMENT
+  // =========================
 
-    const items =
-      game.items
-        .filter(i => i.type === type)
-        .map(i => ({
-          id: i.id,
-          name: i.name
+  await this.document.update({
+
+    "system.startingTalents":
+      talents
+
+  });
+
+}
+
+async _openSelector(
+  type,
+  callback
+) {
+
+  // =========================
+  // WORLD ITEMS
+  // =========================
+
+  const worldItems =
+    game.items
+      .filter(i => i.type === type)
+      .map(i => ({
+
+        id: i.id,
+        name: i.name
+
+      }));
+
+  // =========================
+  // COMPENDIUM ITEMS
+  // =========================
+
+  const compendiumItems = [];
+
+  for (const pack of game.packs) {
+
+    if (
+      pack.documentName !== "Item"
+    ) continue;
+
+    const docs =
+      await pack.getDocuments();
+
+    const filtered =
+      docs
+        .filter(doc =>
+          doc.type === type
+        )
+        .map(doc => ({
+
+          id: doc.uuid,
+          name: doc.name
+
         }));
 
-    const app =
-      new SkillSelectorApp({
-
-        skills: items,
-        callback
-
-      });
-
-    app.render(true);
+    compendiumItems.push(
+      ...filtered
+    );
 
   }
+
+  // =========================
+  // MERGE
+  // =========================
+
+  const items = [
+
+    ...worldItems,
+    ...compendiumItems
+
+  ];
+
+  // =========================
+  // OPEN APP
+  // =========================
+
+  const app =
+    new SkillSelectorApp({
+
+      skills: items,
+      callback
+
+    });
+
+  app.render(true);
+
+}
 
   // =========================
   // SKILLS
   // =========================
 
-  async _addSkill() {
+ async _addSkill() {
 
-    await this._openSelector(
-      "skill",
-      async skillId => {
+  await this._openSelector(
+    "skill",
+    async skillId => {
 
-        if (
-          !this.document.system
-            .startingSkills
-        ) {
+      let startingSkills =
+        foundry.utils.deepClone(
 
-          await this.document.update({
-            "system.startingSkills": {
-              choices: [],
-              groups: [
-                {
-                  count: 3,
-                  value: 3
-                },
-                {
-                  count: 3,
-                  value: 5
-                }
-              ]
-            }
-          });
-
-        }
-
-        const current =
           this.document.system
-            .startingSkills?.choices || [];
+            .startingSkills
 
-        await this.document.update({
-          "system.startingSkills.choices": [
-            ...current,
-            skillId
+          || {}
+
+        );
+
+      // =========================
+      // INIT
+      // =========================
+
+      if (!startingSkills.choices) {
+
+        startingSkills = {
+
+          choices: [],
+
+          groups: [
+            {
+              count: 3,
+              value: 3
+            },
+            {
+              count: 3,
+              value: 5
+            }
           ]
-        });
+
+        };
 
       }
+
+      // =========================
+      // PUSH
+      // =========================
+
+      startingSkills.choices.push(
+        skillId
+      );
+
+      // =========================
+      // COMPENDIUM
+      // =========================
+
+      if (this.document.pack) {
+
+        const pack =
+          game.packs.get(
+            this.document.pack
+          );
+
+        const doc =
+          await pack.getDocument(
+            this.document.id
+          );
+
+        await doc.update({
+
+          "system.startingSkills":
+            startingSkills
+
+        });
+
+        this.document.system.startingSkills =
+          foundry.utils.deepClone(
+            startingSkills
+          );
+
+        this.render();
+
+        return;
+
+      }
+
+      // =========================
+      // WORLD
+      // =========================
+
+      await this.document.update({
+
+        "system.startingSkills":
+          startingSkills
+
+      });
+
+    }
+  );
+
+}
+
+async _removeSkill(event) {
+
+  const skillId =
+    event.currentTarget.dataset.skill;
+
+  let startingSkills =
+    foundry.utils.deepClone(
+
+      this.document.system
+        .startingSkills
+
+      || {}
+
     );
 
-  }
+  // =========================
+  // FILTER
+  // =========================
 
-  async _removeSkill(event) {
+  startingSkills.choices =
+    (startingSkills.choices || [])
+      .filter(id =>
 
-    const skillId =
-      event.currentTarget.dataset.skill;
+        id !== skillId
 
-    const current =
-      this.document.system
-        .startingSkills?.choices || [];
+      );
 
-    await this.document.update({
-      "system.startingSkills.choices":
-        current.filter(
-          id => id !== skillId
-        )
+  // =========================
+  // COMPENDIUM
+  // =========================
+
+  if (this.document.pack) {
+
+    const pack =
+      game.packs.get(
+        this.document.pack
+      );
+
+    if (!pack) return;
+
+    const doc =
+      await pack.getDocument(
+        this.document.id
+      );
+
+    if (!doc) return;
+
+    await doc.update({
+
+      "system.startingSkills":
+        startingSkills
+
     });
 
+    // =========================
+    // REFRESH LOCAL
+    // =========================
+
+    this.document.system.startingSkills =
+      foundry.utils.deepClone(
+        startingSkills
+      );
+
+    this.render();
+
+    return;
+
   }
 
+  // =========================
+  // WORLD
+  // =========================
+
+  await this.document.update({
+
+    "system.startingSkills":
+      startingSkills
+
+  });
+
+}
   // =========================
   // FIXED TALENTS
   // =========================

@@ -253,7 +253,6 @@ SDP.rollTables = {
   }
 };
 
-
 SDP.conditionConfig = {
 
   stunned: {
