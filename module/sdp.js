@@ -285,15 +285,6 @@ Hooks.once("ready", async () => {
 
   }, 1000);
 
-const test = await Item.create({
-  name: "READY TEST",
-  type: "weapon",
-  system: {
-    attackBonus: {
-      value: 999
-    }
-  }
-});
 
   game.system.description =
     game.i18n.localize(

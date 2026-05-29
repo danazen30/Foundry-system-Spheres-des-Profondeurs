@@ -791,6 +791,18 @@
   "SDP.Item.Talent.SurplusEnergy.Description": "You possess an unusual reserve of magical energy. Once per encounter, when you spend Mana, reduce the cost by 1 (minimum 1).",
 
   "SDP.Item.Specie.human.Name" : "Human",
-  "SDP.Item.Specie.human.Description" : "Specie Human"
+  "SDP.Item.Specie.human.Description" : "Specie Human",
+
+  "SDP.Item.Sign.bull.Name" : "bull",
+  "SDP.Item.Sign.bull.Description" : "it's best stronger",
+
+  "SDP.Item.Currency.coppercoin.Name" : "copper coin",
+  "SDP.Item.Currency.coppercoin.Description" : "it's the copper coin",
+  "SDP.Item.Currency.silvercoin.Name" : "silver coin",
+  "SDP.Item.Currency.silvercoin.Description" : "it's the silver coin",
+  "SDP.Item.Currency.goldcoin.Name" : "gold coin",
+  "SDP.Item.Currency.goldcoin.Description" : "it's the gold coin",
+  "SDP.Item.Currency.platinumcoin.Name" : "platinum coin",
+  "SDP.Item.Currency.platinumcoin.Description" : "it's the platinum coin"
 
 }

@@ -790,5 +790,17 @@
   "SDP.Item.Talent.SurplusEnergy.Description": "Vous disposez d'une réserve inhabituelle d'énergie magique. Une fois par rencontre, lorsque vous dépensez du Mana, réduisez son coût de 1 (minimum 1).",
 
   "SDP.Item.Specie.human.Name" : "Humain",
-  "SDP.Item.Specie.human.Description" : "la race des humains"
+  "SDP.Item.Specie.human.Description" : "la race des humains",
+
+  "SDP.Item.Sign.bull.Name" : "taureau",
+  "SDP.Item.Sign.bull.Description" : "c'est le plus fort",
+
+  "SDP.Item.Currency.coppercoin.Name" : "pièce de cuivre",
+  "SDP.Item.Currency.coppercoin.Description" : "c'est la pièce de cuivre",
+  "SDP.Item.Currency.silvercoin.Name" : "pièce de argent",
+  "SDP.Item.Currency.silvercoin.Description" : "c'est la pièce de argent",
+  "SDP.Item.Currency.goldcoin.Name" : "pièce d'or",
+  "SDP.Item.Currency.goldcoin.Description" : "c'est la pièce d'or",
+  "SDP.Item.Currency.platinumcoin.Name" : "pièce de platine",
+  "SDP.Item.Currency.platinumcoin.Description" : "c'est la pièce de platine"
 }

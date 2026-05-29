@@ -19,6 +19,15 @@
 
   <button
     type="button"
+    data-tab="details"
+    class="{{#if (eq activeTab 'details')}}active{{/if}}">
+
+    {{localize "SDP.TabDetails"}}
+
+  </button>
+
+  <button
+    type="button"
     data-tab="effects"
     class="{{#if (eq activeTab 'effects')}}active{{/if}}">
 
@@ -35,6 +44,37 @@
 {{#if (eq activeTab "description")}}
 
   {{> "systems/sdp/templates/partials/items/item-description-tab.hbs"}}
+
+{{/if}}
+
+<!-- ========================= -->
+<!-- DETAILS -->
+<!-- ========================= -->
+
+{{#if (eq activeTab "details")}}
+
+<div class="weapon-card">
+
+  <div class="weapon-card-title">
+    {{localize "TYPES.Item.trait"}}
+  </div>
+
+  <div class="weapon-grid">
+
+    <div class="form-group full-width">
+
+      <label>{{localize "SDP.Key"}}</label>
+
+      <input
+        type="text"
+        name="system.key"
+        value="{{system.key}}" />
+
+    </div>
+
+  </div>
+
+</div>
 
 {{/if}}
 
