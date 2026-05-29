@@ -1,5 +1,6 @@
 import { getHitLocationLabel } from "../combat/hit-location.js";
 import { SdpSizeEngine } from "../system/size-engine.js";
+import { findSdpRollTable } from "../system/roll-table-utils.js";
 
 export function registerAttackHandlers(html, message) {
 
@@ -561,14 +562,11 @@ const pack =
     "sdp.rolltables"
   );
 
-const tables =
-  await pack.getDocuments();
-
-const table = tables.find(t =>
-
-  t.flags?.sdp?.key === tableKey
-
-);
+const table =
+  await findSdpRollTable(
+    pack,
+    tableKey
+  );
 
   if (!table) {
 

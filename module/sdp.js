@@ -44,6 +44,9 @@ import {
   localizeSidebarItems,
   refreshSdpUiLocalization
 } from "./system/item-localization.js";
+import {
+  ensureSdpRollTableFlags
+} from "./system/roll-table-utils.js";
 
 export let sdpSocket;
 
@@ -472,6 +475,8 @@ Hooks.once("ready", async () => {
         "flags.sdp.key"
       ]
     });
+
+    await ensureSdpRollTableFlags(pack);
 
   }
 

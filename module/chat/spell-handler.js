@@ -1,4 +1,5 @@
 import { SimpleDialog } from "../apps/simple-dialog.js";
+import { findSdpRollTable } from "../system/roll-table-utils.js";
 
 export function registerSpellHandlers(html) {
 
@@ -85,30 +86,21 @@ if (!tableConfig) {
   return;
 }
 
+  const localizedTableName =
+    game.i18n.localize(
+      tableConfig.label
+    );
+
 const pack =
   game.packs.get(
     "sdp.rolltables"
   );
 
-const tables =
-  await pack.getDocuments();
-
-  const table = tables.find(t => {
-
-  const normalizedName =
-    (t.name || "")
-      .toLowerCase()
-      .trim();
-
-  return (
-    normalizedName ===
+const table =
+  await findSdpRollTable(
+    pack,
     tableConfig.key
-      .toLowerCase()
-      .trim()
-      .replaceAll("-", " ")
   );
-
-});
 
 if (!table) {
 
@@ -126,7 +118,6 @@ if (!table) {
   return;
 }
 
-// POTENTIEL BUG ICI
 const roll = await new Roll(formula).roll();
 const originalName = table.name;
 
