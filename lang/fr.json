@@ -802,5 +802,15 @@
   "SDP.Item.Currency.goldcoin.Name" : "pièce d'or",
   "SDP.Item.Currency.goldcoin.Description" : "c'est la pièce d'or",
   "SDP.Item.Currency.platinumcoin.Name" : "pièce de platine",
-  "SDP.Item.Currency.platinumcoin.Description" : "c'est la pièce de platine"
+  "SDP.Item.Currency.platinumcoin.Description" : "c'est la pièce de platine",
+
+ "SDP.Item.Weapon.shortsword.Name" : "Épée courte",
+ "SDP.Item.Weapon.shortsword.Description" : "c'est une épée courte",
+
+  "SDP.Folder.weapons.Name": "Armes",
+  "SDP.Folder.armors.Name": "Armures",
+  "SDP.Folder.ammunitions.Name": "Munitions",
+  "SDP.Folder.clothing.Name": "Vêtements et accessoires",
+  "SDP.Folder.containers.Name": "Conteneurs",
+  "SDP.Folder.divers.Name": "Divers"
 }

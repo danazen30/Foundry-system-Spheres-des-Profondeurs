@@ -38,8 +38,9 @@ import { SdpConditionEngine } from "./system/condition-engine.js";
 import { SdpTurnEngine } from "./system/turn-engine.js";
 import {
   indexSdpItemPacks,
-  localizeCompendiumItems,
   localizeRolltableCompendium,
+  localizeSdpCompendium,
+  localizeSidebarFolders,
   localizeSidebarItems,
   refreshSdpUiLocalization
 } from "./system/item-localization.js";
@@ -267,49 +268,39 @@ Handlebars.registerHelper("includes", function(value, key) {
 });
 
 registerChatHandlers();
+
 /* ========================================= */
-/* READY                                     */
+/* COMPENDIUM LOCALIZATION                   */
 /* ========================================= */
 
-Hooks.once("ready", async () => {
+function applySdpCompendiumLocalization(app, element) {
 
-  setTimeout(() => {
+  const pack = app.collection;
 
-    for (const app of Object.values(ui.windows)) {
+  if (pack?.metadata?.system !== "sdp")
+    return;
 
-      if (app.rendered) {
-        app.render(true);
-      }
+  const html =
+    element instanceof HTMLElement
+      ? element
+      : element?.[0];
 
-    }
+  if (!html) return;
 
-  }, 1000);
-
-
-  game.system.description =
-    game.i18n.localize(
-      "SDP.SystemDescription"
+  const localize = () => {
+    localizeSdpCompendium(
+      html,
+      pack,
+      SDP_ROLLTABLE_LOCALIZATION
     );
+  };
 
-  // =========================
-  // LOCALIZE ROLLTABLE PACK
-  // =========================
+  requestAnimationFrame(() => {
+    localize();
+    requestAnimationFrame(localize);
+  });
 
-  const pack =
-    game.packs.get("sdp.rolltables");
-
-  if (pack) {
-
-    pack.metadata.label =
-      game.i18n.localize(
-        "SDP.RollTablePackLabel"
-      );
-
-    await pack.getIndex({
-  fields: [
-    "flags.sdp.key"
-  ]
-});
+}
 
 Hooks.on(
   "renderCompendium",
@@ -328,67 +319,30 @@ Hooks.on(
     if (!element)
       return;
 
+    const localize = () => {
+      localizeSdpCompendium(
+        element,
+        pack,
+        SDP_ROLLTABLE_LOCALIZATION
+      );
+    };
+
     requestAnimationFrame(() => {
-
-      if (pack.documentName === "Item") {
-        localizeCompendiumItems(element, pack);
-        return;
-      }
-
-      if (
-        pack.metadata.id === "sdp.rolltables"
-      ) {
-        localizeRolltableCompendium(
-          element,
-          SDP_ROLLTABLE_LOCALIZATION
-        );
-      }
-
+      localize();
+      requestAnimationFrame(localize);
     });
 
   }
 );
 
-console.log(
-  "SDP DEBUG | FINAL INDEX",
-  pack.index
-);
-
-// FORCE REFRESH COMPENDIUM UI
-for (const app of Object.values(ui.windows)) {
-
-  if (
-    app.constructor.name ===
-    "CompendiumDirectory"
-  ) {
-
-    app.render(true);
-
-  }
-
-}
-
-// FALLBACK
-ui.compendium?.render(true);
-
-}
-
-// =========================
-// LOCALIZE OPENED ROLLTABLE WINDOWS
-// =========================
-
 Hooks.on(
   "renderApplicationV2",
   (app, element) => {
-    console.log(
-  "SDP DEBUG | renderApplicationV2",
-  app,
-  element
-);
 
-    // =========================
-    // ONLY ROLLTABLE SHEETS
-    // =========================
+    if (app.collection?.metadata?.system === "sdp") {
+      applySdpCompendiumLocalization(app, element);
+      return;
+    }
 
     if (
       app.document?.documentName !==
@@ -411,26 +365,13 @@ Hooks.on(
         localizationKey
       );
 
-    // =========================
-    // REAL HTML ELEMENT
-    // =========================
-
     const html =
       element instanceof HTMLElement
         ? element
         : element?.[0];
 
-        console.log(
-  "SDP DEBUG | HTML",
-  html
-);
-
     if (!html)
       return;
-
-    // =========================
-    // WINDOW TITLE
-    // =========================
 
     const windowTitle =
       html.querySelector(
@@ -438,55 +379,33 @@ Hooks.on(
       );
 
     if (windowTitle) {
-
       windowTitle.textContent =
         localizedName;
-
     }
 
-    // =========================
-    // DOCUMENT TITLE
-    // =========================
-
     const docName =
-  html.querySelector(
-    ".sheet-header h1"
-  );
-
-  console.log(
-  "SDP DEBUG | DOC NAME FIX",
-  docName
-);
-
-  console.log(
-  "SDP DEBUG | DOC NAME",
-  docName
-);
+      html.querySelector(
+        ".sheet-header h1"
+      );
 
     if (docName) {
-
       docName.textContent =
         localizedName;
-
     }
 
   }
 );
-
-// =========================
-// LOCALIZE ROLLTABLE CHAT
-// =========================
 
 Hooks.on(
   "renderChatMessageHTML",
   (message, html) => {
 
     const links =
-  html instanceof HTMLElement
-    ? html.querySelectorAll(
-        ".content-link"
-      )
-    : [];
+      html instanceof HTMLElement
+        ? html.querySelectorAll(
+            ".content-link"
+          )
+        : [];
 
     for (const link of links) {
 
@@ -514,6 +433,47 @@ Hooks.on(
   }
 );
 
+/* ========================================= */
+/* READY                                     */
+/* ========================================= */
+
+Hooks.once("ready", async () => {
+
+  setTimeout(() => {
+
+    for (const app of Object.values(ui.windows)) {
+
+      if (app.rendered) {
+        app.render(true);
+      }
+
+    }
+
+  }, 1000);
+
+
+  game.system.description =
+    game.i18n.localize(
+      "SDP.SystemDescription"
+    );
+
+  const pack =
+    game.packs.get("sdp.rolltables");
+
+  if (pack) {
+
+    pack.metadata.label =
+      game.i18n.localize(
+        "SDP.RollTablePackLabel"
+      );
+
+    await pack.getIndex({
+      fields: [
+        "flags.sdp.key"
+      ]
+    });
+
+  }
 
   game.sdp = game.sdp || {};
   game.sdp.conditions = SdpConditionEngine;
@@ -688,6 +648,7 @@ Hooks.on(
       return;
 
     requestAnimationFrame(() => {
+      localizeSidebarFolders(element);
       localizeSidebarItems(element);
     });
 

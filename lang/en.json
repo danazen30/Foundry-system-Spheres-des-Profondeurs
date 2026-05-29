@@ -803,6 +803,16 @@
   "SDP.Item.Currency.goldcoin.Name" : "gold coin",
   "SDP.Item.Currency.goldcoin.Description" : "it's the gold coin",
   "SDP.Item.Currency.platinumcoin.Name" : "platinum coin",
-  "SDP.Item.Currency.platinumcoin.Description" : "it's the platinum coin"
+  "SDP.Item.Currency.platinumcoin.Description" : "it's the platinum coin",
+
+  "SDP.Item.Weapon.shortsword.Name" : "Short sword",
+  "SDP.Item.Weapon.shortsword.Description" : "it's a short sword",
+
+  "SDP.Folder.weapons.Name": "Weapons",
+  "SDP.Folder.armors.Name": "Armors",
+  "SDP.Folder.ammunitions.Name": "Ammunitions",
+  "SDP.Folder.clothing.Name": "Clothing & Accessories",
+  "SDP.Folder.containers.Name": "Containers",
+  "SDP.Folder.divers.Name": "Divers"
 
 }
