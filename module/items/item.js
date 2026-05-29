@@ -48,11 +48,249 @@ const DEFAULT_ITEM_IMAGES = {
 
 export class SdpItem extends Item {
 
+_preparePhysicalFields(system) {
+
+  if (typeof system.quantity === "number") {
+    system.quantity = { value: system.quantity };
+  }
+
+  system.quantity ??= { value: 1 };
+
+  if (system.quantity.value !== undefined) {
+    system.quantity.value =
+      Number(system.quantity.value) || 0;
+  }
+
+  if (typeof system.encumbrance === "number") {
+    system.encumbrance = { value: system.encumbrance };
+  }
+
+  system.encumbrance ??= { value: 0 };
+
+  if (system.encumbrance.value !== undefined) {
+    system.encumbrance.value =
+      Number(system.encumbrance.value) || 0;
+  }
+
+  system.price ??= {};
+
+  for (const coin of [
+    "platinum",
+    "gold",
+    "silver",
+    "copper"
+  ]) {
+
+    const raw =
+      system.price[coin];
+
+    system.price[coin] =
+      raw === "" ||
+      raw === null ||
+      raw === undefined
+        ? 0
+        : Number(raw) || 0;
+
+  }
+
+}
+
+_prepareWeaponSystem(system) {
+
+  this._preparePhysicalFields(system);
+
+  system.category ??= "melee";
+  system.skill ??= "melee";
+  system.weaponGroup ??= "basic";
+  system.handedness ??= "one";
+  system.equipped ??= false;
+  system.offhand ??= false;
+  system.consumesAmmo ??= true;
+  system.forceReload ??= false;
+  system.isDefenseWeapon ??= false;
+  system.traits ??= [];
+  system.itemTraits ??= [];
+
+}
+
+_getPhysicalDefaultUpdates() {
+
+  const system = this.system;
+  const updates = {};
+
+  if (
+    typeof system.quantity === "number" ||
+    system.quantity?.value === undefined
+  ) {
+
+    updates["system.quantity"] = {
+      value:
+        Number(
+          typeof system.quantity === "number"
+            ? system.quantity
+            : system.quantity?.value
+        ) || 1
+    };
+
+  }
+
+  if (
+    typeof system.encumbrance === "number" ||
+    system.encumbrance?.value === undefined
+  ) {
+
+    updates["system.encumbrance"] = {
+      value:
+        Number(
+          typeof system.encumbrance === "number"
+            ? system.encumbrance
+            : system.encumbrance?.value
+        ) || 0
+    };
+
+  }
+
+  const price = system.price ?? {};
+
+  for (const coin of [
+    "platinum",
+    "gold",
+    "silver",
+    "copper"
+  ]) {
+
+    const raw = price[coin];
+
+    if (
+      raw === undefined ||
+      raw === null ||
+      raw === ""
+    ) {
+
+      updates[`system.price.${coin}`] = 0;
+
+    }
+
+  }
+
+  return updates;
+
+}
+
+_getWeaponDefaultUpdates() {
+
+  if (this.type !== "weapon") return {};
+
+  const system = this.system;
+  const updates = {
+    ...this._getPhysicalDefaultUpdates()
+  };
+
+  const ensure = (path, value) => {
+
+    const key =
+      path.replace(/^system\./, "");
+
+    const current =
+      foundry.utils.getProperty(
+        system,
+        key
+      );
+
+    if (
+      current === undefined ||
+      current === null ||
+      current === ""
+    ) {
+
+      updates[path] = value;
+
+    }
+
+  };
+
+  ensure("system.category", "melee");
+  ensure("system.skill", "melee");
+  ensure("system.weaponGroup", "basic");
+  ensure("system.handedness", "one");
+  ensure("system.equipped", false);
+  ensure("system.offhand", false);
+  ensure("system.consumesAmmo", true);
+  ensure("system.forceReload", false);
+  ensure("system.isDefenseWeapon", false);
+  ensure("system.traits", []);
+  ensure("system.itemTraits", []);
+
+  return updates;
+
+}
+
+_usesPhysicalFields() {
+
+  return [
+    "weapon",
+    "armor",
+    "clothing",
+    "container",
+    "ammunition",
+    "possession",
+    "currency"
+  ].includes(this.type);
+
+}
+
+_getArmorDefaultUpdates() {
+
+  if (this.type !== "armor") return {};
+
+  const system = this.system;
+
+  const updates = {
+    ...this._getPhysicalDefaultUpdates()
+  };
+
+  if (
+    typeof system.worn === "boolean" ||
+    system.worn?.value === undefined
+  ) {
+
+    updates["system.worn"] = {
+      value: !!(
+        typeof system.worn === "boolean"
+          ? system.worn
+          : system.worn?.value
+      )
+    };
+
+  }
+
+  return updates;
+
+}
+
+_getItemDefaultUpdates() {
+
+  if (this.type === "weapon") {
+    return this._getWeaponDefaultUpdates();
+  }
+
+  if (this.type === "armor") {
+    return this._getArmorDefaultUpdates();
+  }
+
+  if (this._usesPhysicalFields()) {
+    return this._getPhysicalDefaultUpdates();
+  }
+
+  return {};
+
+}
+
 prepareDerivedData(){
 
   const system = this.system;
 
-  if(this.type === "armor"){
+  if (this.type === "armor") {
 
     system.AP ??= {
       head: 0,
@@ -63,6 +301,20 @@ prepareDerivedData(){
       rightLeg: 0
     };
 
+    if (typeof system.worn === "boolean") {
+      system.worn = { value: system.worn };
+    }
+
+    system.worn ??= { value: false };
+    system.worn.value = !!system.worn.value;
+
+  }
+
+  if (this.type === "weapon") {
+    this._prepareWeaponSystem(system);
+  }
+  else if (this._usesPhysicalFields()) {
+    this._preparePhysicalFields(system);
   }
 
 }
@@ -78,6 +330,10 @@ async _onCreate(data, options, userId) {
     options,
     userId
   );
+
+  const updates = {
+    ...this._getItemDefaultUpdates()
+  };
 
   // =========================
   // DEFAULT IMAGE
@@ -95,10 +351,12 @@ async _onCreate(data, options, userId) {
     hasDefaultCoreIcon
   ) {
 
-    await this.update({
-      img: defaultImg
-    });
+    updates.img = defaultImg;
 
+  }
+
+  if (Object.keys(updates).length) {
+    await this.update(updates);
   }
 
   // =========================

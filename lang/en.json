@@ -805,8 +805,31 @@
   "SDP.Item.Currency.platinumcoin.Name" : "platinum coin",
   "SDP.Item.Currency.platinumcoin.Description" : "it's the platinum coin",
 
-  "SDP.Item.Weapon.shortsword.Name" : "Short sword",
-  "SDP.Item.Weapon.shortsword.Description" : "it's a short sword",
+  "SDP.Item.Weapon.shortswordiron.Name" : "Short sword",
+  "SDP.Item.Weapon.shortswordiron.Description" : "it's a short iron sword",
+
+  "SDP.Item.Armor.ironchainmail.Name" : "Chain mail",
+  "SDP.Item.Armor.ironchainmail.Description" : "it's a chainmail made of iron",
+
+  "SDP.Item.Ammunition.basicarrow.Name" : "Arrow",
+  "SDP.Item.Ammunition.basicarrow.Description" : "it's a basic arrow",
+
+  "SDP.Item.Clothing.tunic.Name" : "Basic tunic",
+  "SDP.Item.Clothing.tunic.Description" : "it's a basic tunic",
+
+  "SDP.Item.Container.backpack.Name" : "backpack",
+  "SDP.Item.Container.backpack.Description" : "it's a basic backpack",
+
+  "SDP.Item.Possession.grimoire.Name" : "Grimoire",
+  "SDP.Item.Possession.grimoire.Description" : "it's a grimoire",
+
+  "SDP.Item.Injury.lightbody.name" : "Light body injury",
+  "SDP.Item.Injury.lightbody.description" : "it's a light body injury",
+  "SDP.Item.Injury.lightbodyconsequence.name" : "Light body injury (consequence)",
+  "SDP.Item.Injury.lightbodyconsequence.description" : "it's a light body injury (consequence)",
+
+  "SDP.Item.Career.trader.Name" : "Trader",
+  "SDP.Item.Career.trader.Description" : "it's a trader",
 
   "SDP.Folder.weapons.Name": "Weapons",
   "SDP.Folder.armors.Name": "Armors",

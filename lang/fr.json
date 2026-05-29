@@ -804,8 +804,31 @@
   "SDP.Item.Currency.platinumcoin.Name" : "pièce de platine",
   "SDP.Item.Currency.platinumcoin.Description" : "c'est la pièce de platine",
 
- "SDP.Item.Weapon.shortsword.Name" : "Épée courte",
- "SDP.Item.Weapon.shortsword.Description" : "c'est une épée courte",
+ "SDP.Item.Weapon.shortswordiron.Name" : "Épée courte",
+ "SDP.Item.Weapon.shortswordiron.Description" : "c'est une épée courte en fer",
+
+ "SDP.Item.Armor.ironchainmail.Name" : "Cotte de maille",
+  "SDP.Item.Armor.ironchainmail.Description" : "c'est une cotte de maille en fer",
+
+  "SDP.Item.Ammunition.basicarrow.Name" : "Flèche",
+  "SDP.Item.Ammunition.basicarrow.Description" : "c'est une flèche basique",
+
+  "SDP.Item.Clothing.tunic.Name" : "Tunique",
+  "SDP.Item.Clothing.tunic.Description" : "c'est une tunique basique",
+
+  "SDP.Item.Container.backpack.Name" : "Sac à dos",
+  "SDP.Item.Container.backpack.Description" : "c'est un sac à dos",
+
+  "SDP.Item.Possession.grimoire.Name" : "Grimoire",
+  "SDP.Item.Possession.grimoire.Description" : "c'est un grimoire",
+
+  "SDP.Item.Injury.lightbody.Name" : "Blessure légère au corps",
+  "SDP.Item.Injury.lightbody.Description" : "c'est une blessure légère au corps",
+  "SDP.Item.Injury.lightbodyconsequence.Name" : "Blessure légère au corps (conséquence)",
+  "SDP.Item.Injury.lightbodyconsequence.Description" : "c'est une blessure légère au corps (conséquence)",
+
+  "SDP.Item.Career.trader.Name" : "Négociant",
+  "SDP.Item.Career.trader.Description" : "c'est un négociant",
 
   "SDP.Folder.weapons.Name": "Armes",
   "SDP.Folder.armors.Name": "Armures",

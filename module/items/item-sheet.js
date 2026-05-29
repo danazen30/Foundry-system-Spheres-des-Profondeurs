@@ -44,13 +44,7 @@ get title() {
     + this.document.type.slice(1);
 
  const key =
-  this.document.system.key;
-
-console.log(
-  this.document.name,
-  this.document.type,
-  key
-);
+  this.document.system.key?.trim?.() ?? "";
 
   if (!key) {
     return this.document.name;
@@ -159,15 +153,20 @@ const negativeArmorTraits =
 const itemType =
   this.document.type.charAt(0).toUpperCase()
   + this.document.type.slice(1);
-  const nameKey =
-  `SDP.Item.${itemType}.${this.document.system.key}.Name`;
+
+const itemKey =
+  this.document.system.key?.trim?.() ?? "";
+
+const nameKey =
+  `SDP.Item.${itemType}.${itemKey}.Name`;
 
 const localizedName =
-  game.i18n.has(nameKey)
+  itemKey && game.i18n.has(nameKey)
     ? game.i18n.localize(nameKey)
     : this.document.name;
+
 const descriptionKey =
-  `SDP.Item.${itemType}.${this.document.system.key}.Description`;
+  `SDP.Item.${itemType}.${itemKey}.Description`;
 
 const localizedDescription =
   game.i18n.has(descriptionKey)

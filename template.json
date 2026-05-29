@@ -360,9 +360,11 @@
   "Item": {
     "templates": {
       "quantity": {
-        "type": "number",
-        "label": "Quantity",
-        "value": 0
+        "value": {
+          "type": "number",
+          "label": "Quantity",
+          "value": 1
+        }
       },
       "description": {
         "type": "string",
@@ -370,20 +372,33 @@
         "value": ""
       },
       "encumbrance": {
-        "type": "number",
-        "label": "Encumbrance",
-        "value": 0,
-        "state": {
-          "level": 0,
-          "label": ""
+        "value": {
+          "type": "number",
+          "label": "Encumbrance",
+          "value": 0
         }
       },
       "price": {
-        "type": "string",
-        "label": "Price",
-        "po": 0,
-        "pa": 0,
-        "pc": 0
+        "platinum": {
+          "type": "number",
+          "label": "Platinum",
+          "value": 0
+        },
+        "gold": {
+          "type": "number",
+          "label": "Gold",
+          "value": 0
+        },
+        "silver": {
+          "type": "number",
+          "label": "Silver",
+          "value": 0
+        },
+        "copper": {
+          "type": "number",
+          "label": "Copper",
+          "value": 0
+        }
       },
       "gmNotes": {
         "type": "string",
@@ -651,12 +666,15 @@
         "price",
         "gmNotes",
         "playerNotes",
-        "itemTraits"
+        "itemTraits",
+        "key"
       ],
       "worn": {
-        "type": "boolean",
-        "label": "worn",
-        "value": false
+        "value": {
+          "type": "boolean",
+          "label": "Worn",
+          "value": false
+        }
       },
       "armorType": {
         "type": "string",
@@ -749,7 +767,8 @@
         "encumbrance",
         "price",
         "gmNotes",
-        "playerNotes"
+        "playerNotes",
+        "key"
       ],
 
       "weaponGroup": {
@@ -793,7 +812,8 @@
       "templates": [
         "description",
         "gmNotes",
-        "playerNotes"
+        "playerNotes",
+        "key"
       ],
       "severity": {
         "type": "string",

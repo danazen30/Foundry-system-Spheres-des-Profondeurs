@@ -816,11 +816,6 @@ export function restoreItemScroll(sheet) {
 
   if (!el) return;
 
-  console.log(
-    "RESTORE TO",
-    sheet._scrollPositions.main
-  );
-
   el.scrollTop =
     sheet._scrollPositions.main || 0;
 

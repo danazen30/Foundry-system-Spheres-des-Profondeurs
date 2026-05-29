@@ -159,6 +159,14 @@ export class SdpArmorSheet extends SdpItemSheet {
 
     }
 
+    // =========================
+    // CHECKBOX (absent si décoché)
+    // =========================
+
+    data.system.worn = {
+      value: !!(data.system.worn?.value)
+    };
+
     return data;
 
   }

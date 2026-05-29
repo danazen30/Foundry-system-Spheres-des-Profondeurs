@@ -102,14 +102,19 @@ function localizeFolderEntry(entry, key, fallback) {
 
 export function getLocalizedItemName(type, key, fallback = "") {
 
-  if (!type || !key) return fallback;
+  const normalizedKey =
+    typeof key === "string"
+      ? key.trim()
+      : key;
+
+  if (!type || !normalizedKey) return fallback;
 
   const itemType =
     type.charAt(0).toUpperCase()
     + type.slice(1);
 
   const translationKey =
-    `SDP.Item.${itemType}.${key}.Name`;
+    `SDP.Item.${itemType}.${normalizedKey}.Name`;
 
   return game.i18n.has(translationKey)
     ? game.i18n.localize(translationKey)
