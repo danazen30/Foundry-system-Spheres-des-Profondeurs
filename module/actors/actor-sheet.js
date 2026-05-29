@@ -392,6 +392,12 @@ editors.sharedNpcNotes =
     { async: true }
   );
 
+  console.log(
+  "WEAPONS",
+  meleeWeapons,
+  rangedWeapons
+);
+
 return {
   actor: this.document,
   system: this.document.system,
@@ -735,34 +741,39 @@ async _onDropItem(event, data) {
 
   const actor = this.document;
 
-  // 🔥 IMPORTANT : si drop sur container → on laisse le handler container gérer
   if (event.target.closest(".container-block")) {
     return super._onDropItem(event, data);
   }
 
   const item = await Item.fromDropData(data);
 
-  // =========================
-  // SI ITEM DEJA DANS ACTOR
-  // =========================
-
   const existing = actor.items.get(item.id);
 
   if (existing) {
-    // 👉 on enlève du container
+
     await existing.update({
       "system.containerId": null
     });
+
     return;
   }
 
-  // =========================
-  // SINON → CREATE
-  // =========================
+  const source = item.toObject();
 
-  const created = await actor.createEmbeddedDocuments("Item", [
-    item.toObject()
-  ]);
+  console.log(
+    "DROP SOURCE",
+    foundry.utils.deepClone(source)
+  );
+
+  console.log(
+    "DROP SOURCE SYSTEM",
+    foundry.utils.deepClone(source.system)
+  );
+
+  const created = await actor.createEmbeddedDocuments(
+    "Item",
+    [source]
+  );
 
   return created;
 }

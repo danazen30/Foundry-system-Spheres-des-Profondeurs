@@ -79,33 +79,33 @@
 
     <div class="form-group">
 
-      <label>{{localize "SDP.Type"}}</label>
+  <label>{{localize "SDP.Type"}}</label>
 
-      <select name="system.advanced">
+  <select name="system.advanced">
 
-        <option
-          value="false"
-          {{#unless system.advanced}}
-            selected
-          {{/unless}}>
+    <option
+      value="false"
+      {{#unless system.advanced}}
+        selected
+      {{/unless}}>
 
-          {{localize "SDP.Basic"}}
+      {{localize "SDP.Basic"}}
 
-        </option>
+    </option>
 
-        <option
-          value="true"
-          {{#if system.advanced}}
-            selected
-          {{/if}}>
+    <option
+      value="true"
+      {{#if system.advanced}}
+        selected
+      {{/if}}>
 
-          {{localize "SDP.Advanced"}}
+      {{localize "SDP.Advanced"}}
 
-        </option>
+    </option>
 
-      </select>
+  </select>
 
-    </div>
+</div>
 
   </div>
 

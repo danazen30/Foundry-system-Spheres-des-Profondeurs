@@ -106,4 +106,25 @@ export class SdpSkillSheet extends SdpItemSheet {
 
   }
 
+  async _onChangeForm(formConfig, event) {
+
+  const element = event.target;
+
+  if (element?.name === "system.advanced") {
+
+    await this.document.update({
+      "system.advanced":
+        element.value === "true"
+    });
+
+    return;
+  }
+
+  return super._onChangeForm(
+    formConfig,
+    event
+  );
+
+}
+
 }

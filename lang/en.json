@@ -370,7 +370,7 @@
 "SDP.SignHP": "Sign HP",
 "SDP.ChooseBaseHPFirst": "Choose base HP first",
 "SDP.ChooseSignHPFirst": "Choose sign HP first",
-"SDP.Dialog": "Dialog",
+"SDP.Dialogs": "Dialog",
 "SDP.SelectSkill": "Select Skill",
 
   "SDP.StunnedCannotAttack": "{actor} is stunned and cannot attack",
@@ -771,6 +771,9 @@
   "SDP.MajorMagicalCatastrophe": "MAJOR magical catastrophe ({roll})",
 "SDP.NotEnoughOvercast":  "Not enough overcast",
 
+"SDP.Injuries": "Injuries",
+"SDP.Diseases": "Diseases",
+
 "SDP.RollTableCareerHuman": "Career Human",
 "SDP.RollTableCareerElf": "Career Elf",
 "SDP.RollTableSignRandom": "Random Sign",
@@ -779,6 +782,9 @@
   "SDP.RollTableMajorMagicalConsequence": "Major magical consequence",
 "SDP.RollTableMinorMagicalConsequence": "Minor magical consequence",
 "SDP.RollTableTalent": "Talent Table",
-  "SDP.RollTablePackLabel": "SDP Tables"
+  "SDP.RollTablePackLabel": "SDP Tables",
+
+"SDP.Item.Skill.resistance.Name": "Resistance",
+"SDP.Item.Skill.resistance.Description": "Skill used to resist poisons, diseases and other harmful effects."
 
 }

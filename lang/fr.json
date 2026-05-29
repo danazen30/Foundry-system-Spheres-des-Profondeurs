@@ -1,5 +1,5 @@
 {
-  "SDP.SystemDescription": "Sphères en formation",
+"SDP.SystemDescription": "Sphères en formation",
   "TYPES.Item.skill": "Compétence",
 "TYPES.Item.talent": "Talent",
 "TYPES.Item.weapon": "Arme",
@@ -370,7 +370,7 @@
 "SDP.SignHP": "PV du Signe",
 "SDP.ChooseBaseHPFirst": "Choisissez d'abord les PV de base",
 "SDP.ChooseSignHPFirst": "Choisissez d'abord les PV du signe",
-"SDP.Dialog": "Dialogue",
+"SDP.Dialogs": "Dialogue",
 "SDP.SelectSkill": "Sélectionner une Compétence",
 
   "SDP.StunnedCannotAttack": "{actor} est étourdi et ne peut pas attaquer",
@@ -588,8 +588,6 @@
 "SDP.ForceReload": "Rechargement Obligatoire",
 "SDP.ItemFlaws": "Défauts d'Objet",
 "SDP.Advances": "Progressions",
-"AddEffect": "Ajouter un Effet",
-"Delete": "Supprimer",
 
 "SDP.InitialAbbr": "Base",
 "SDP.AdvancesAbbr": "Prog",
@@ -771,6 +769,9 @@
 "SDP.MajorMagicalCatastrophe": "Catastrophe magique MAJEURE ({roll})",
 "SDP.NotEnoughOvercast": "Pas assez d'Overcast",
 
+"SDP.Injuries": "Blessures",
+"SDP.Diseases": "Maladies",
+
 "SDP.RollTableCareerHuman": "Carrière Humain",
 "SDP.RollTableCareerElf": "Carrière Elfe",
 "SDP.RollTableSignRandom": "Table des Signes",
@@ -779,7 +780,8 @@
    "SDP.RollTableMajorMagicalConsequence": "Conséquence magique majeure",
 "SDP.RollTableMinorMagicalConsequence": "Conséquence magique mineure",
 "SDP.RollTableTalent": "Table des Talents",
- "SDP.RollTablePackLabel": "Tables SDP"
+ "SDP.RollTablePackLabel": "Tables SDP",
 
-
+"SDP.Item.Skill.resistance.Name": "Résistance",
+"SDP.Item.Skill.resistance.Description": "Compétence utilisée pour résister aux poisons, maladies et autres effets néfastes."
 }

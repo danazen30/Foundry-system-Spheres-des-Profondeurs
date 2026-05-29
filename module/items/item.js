@@ -67,33 +67,38 @@ prepareDerivedData(){
 
 async _onCreate(data, options, userId) {
 
+  console.log("ON CREATE");
+
+  console.log(this.system);
+
   await super._onCreate(
     data,
     options,
     userId
   );
 
-// =========================
-// DEFAULT IMAGE
-// =========================
+  // =========================
+  // DEFAULT IMAGE
+  // =========================
 
-const defaultImg =
-  DEFAULT_ITEM_IMAGES[this.type];
+  const defaultImg =
+    DEFAULT_ITEM_IMAGES[this.type];
 
-const hasDefaultCoreIcon =
-  !this.img ||
-  this.img === "icons/svg/item-bag.svg";
+  const hasDefaultCoreIcon =
+    !this.img ||
+    this.img === "icons/svg/item-bag.svg";
 
-if (
-  defaultImg &&
-  hasDefaultCoreIcon
-) {
+  if (
+    defaultImg &&
+    hasDefaultCoreIcon
+  ) {
 
-  await this.update({
-    img: defaultImg
-  });
+    await this.update({
+      img: defaultImg
+    });
 
-}
+  }
+
   // =========================
   // EFFECTS
   // =========================

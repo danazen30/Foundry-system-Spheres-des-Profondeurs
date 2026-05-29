@@ -357,7 +357,7 @@
       ]
     }
   },
-  "item": {
+  "Item": {
     "templates": {
       "quantity": {
         "type": "number",

@@ -13,8 +13,20 @@ export class SdpActorInventory {
 
     // 🔥 SI DANS CONTAINER → poids réduit
     if (item.system.containerId) {
-      weight *= 0.5;
-    }
+
+  const container =
+    actor.items.get(
+      item.system.containerId
+    );
+
+  const reduction =
+    Number(
+      container?.system?.reduction?.value ?? 0.5
+    );
+
+  weight *= reduction;
+
+}
 
     total += weight;
   }
@@ -36,9 +48,21 @@ for (let item of actor.items) {
   let weight = enc * qty;
 
   // 🔥 container logic
-  if (item.system.containerId) {
-    weight *= 0.5;
-  }
+ if (item.system.containerId) {
+
+  const container =
+    actor.items.get(
+      item.system.containerId
+    );
+
+  const reduction =
+    Number(
+      container?.system?.reduction?.value ?? 0.5
+    );
+
+  weight *= reduction;
+
+}
 
   total += weight;
   total = Math.round(total * 100) / 100;

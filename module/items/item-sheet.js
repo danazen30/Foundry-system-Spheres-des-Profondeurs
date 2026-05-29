@@ -129,7 +129,9 @@ const negativeArmorTraits =
 // =========================
 
 const description =
-  this.document.system.description ?? "";
+  game.i18n.localize(
+    `SDP.Item.Skill.${this.document.system.key}.Description`
+  );
 
 const playerNotes =
   this.document.system.playerNotes ?? "";

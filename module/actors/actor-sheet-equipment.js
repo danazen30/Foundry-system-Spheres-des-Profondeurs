@@ -8,6 +8,18 @@ export function prepareWeapons(actor) {
     !i.system.containerId
   );
 
+  console.log(
+  "WEAPON DEBUG",
+  weapons.map(w => ({
+    name: w.name,
+    category: w.system.category,
+    type: w.type,
+    system: foundry.utils.deepClone(w.system)
+  }))
+);
+
+  console.log("ALL WEAPONS", weapons);
+
   const meleeWeapons = weapons.filter(
     w => w.system.category === "melee"
   );
@@ -15,6 +27,8 @@ export function prepareWeapons(actor) {
   const rangedWeapons = weapons.filter(
     w => w.system.category === "ranged"
   );
+  console.log("MELEE", meleeWeapons);
+  console.log("RANGED", rangedWeapons);
 
   const allAmmo = actor.items.filter(
     i => i.type === "ammunition"

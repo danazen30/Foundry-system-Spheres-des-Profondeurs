@@ -32,6 +32,7 @@ import { SdpLevelService } from "./services/level-service.js";
 
 import { LevelUpApp } from "./apps/level-up-app.js";
 
+
 import { SDP } from "./system/config.js";
 import { SdpConditionEngine } from "./system/condition-engine.js";
 import { SdpTurnEngine } from "./system/turn-engine.js";
@@ -102,6 +103,41 @@ async function getInjuryFromPack(location, severity, isConsequence = false) {
 
   Hooks.once("init", async () => {
 
+    console.log(
+  "SYSTEM JSON",
+  game.system
+);
+
+    console.log("========== SDP TEMPLATE DEBUG ==========");
+
+const templateResponse = await fetch("systems/sdp/template.json");
+const templateJson = await templateResponse.json();
+
+console.log("TEMPLATE FILE LOADED");
+console.log(templateJson);
+
+console.log("ITEM WEAPON TEMPLATE");
+console.log(templateJson?.Item?.weapon);
+
+console.log("ACTOR CHARACTER TEMPLATE");
+console.log(templateJson?.Actor?.character);
+
+console.log("========================================");
+
+    console.log("SDP INIT");
+
+  console.log("MODEL ACTOR",
+    foundry.utils.deepClone(game.model?.Actor ?? {})
+  );
+
+  console.log("MODEL ITEM",
+    foundry.utils.deepClone(game.model?.Item ?? {})
+  );
+
+  console.log("TEMPLATE MODEL");
+console.log(CONFIG.Actor.dataModels);
+console.log(CONFIG.Item.dataModels);
+
   console.log("SDP | Initializing Spheres of the Depths system");
 
   await foundry.applications.handlebars.loadTemplates([
@@ -131,6 +167,22 @@ game.sdp.Roll = SdpRoll;
 
   CONFIG.Actor.documentClass = SdpActor;
   CONFIG.Item.documentClass = SdpItem;
+
+  Hooks.on("preCreateItem", (item, data) => {
+
+  console.log("PRECREATE SYSTEM");
+  console.log(data.system);
+
+});
+
+  console.log("DOCUMENT TYPES");
+console.log(game.system.documentTypes);
+
+console.log("ITEM TYPES");
+console.log(game.system.documentTypes?.Item);
+
+console.log("ACTOR TYPES");
+console.log(game.system.documentTypes?.Actor);
 
   registerActorHandlers();
 
@@ -248,6 +300,62 @@ registerChatHandlers();
 /* ========================================= */
 
 Hooks.once("ready", async () => {
+
+  console.log(
+  JSON.stringify(
+    game.model.Item,
+    null,
+    2
+  )
+);
+
+  console.log("READY MODEL ACTOR", game.model.Actor);
+console.log("READY MODEL ITEM", game.model.Item);
+
+console.log(
+  "READY WEAPON MODEL",
+  game.model.Item?.weapon
+);
+
+const test = await Item.create({
+  name: "READY TEST",
+  type: "weapon",
+  system: {
+    attackBonus: {
+      value: 999
+    }
+  }
+});
+
+console.log("RAW SOURCE");
+console.log(test._source);
+
+console.log("SYSTEM");
+console.log(test.system);
+
+console.log(
+  "READY ITEM SYSTEM",
+  test.system
+);
+
+console.log(
+  foundry.utils.deepClone(
+    test.system
+  )
+);
+console.log(
+  test.toObject().system
+);
+
+console.log(
+  "SYSTEM TEMPLATE",
+  game.system.template
+);
+
+console.log(
+  "SYSTEM SOURCE TEMPLATE",
+  game.system._source.template
+);
 
   game.system.description =
     game.i18n.localize(
