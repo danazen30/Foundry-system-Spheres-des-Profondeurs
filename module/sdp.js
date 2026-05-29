@@ -36,6 +36,13 @@ import { LevelUpApp } from "./apps/level-up-app.js";
 import { SDP } from "./system/config.js";
 import { SdpConditionEngine } from "./system/condition-engine.js";
 import { SdpTurnEngine } from "./system/turn-engine.js";
+import {
+  indexSdpItemPacks,
+  localizeCompendiumItems,
+  localizeRolltableCompendium,
+  localizeSidebarItems,
+  refreshSdpUiLocalization
+} from "./system/item-localization.js";
 
 export let sdpSocket;
 
@@ -113,33 +120,6 @@ async function getInjuryFromPack(location, severity, isConsequence = false) {
 const templateResponse = await fetch("systems/sdp/template.json");
 const templateJson = await templateResponse.json();
 
-console.log("TEMPLATE FILE LOADED");
-console.log(templateJson);
-
-console.log("ITEM WEAPON TEMPLATE");
-console.log(templateJson?.Item?.weapon);
-
-console.log("ACTOR CHARACTER TEMPLATE");
-console.log(templateJson?.Actor?.character);
-
-console.log("========================================");
-
-    console.log("SDP INIT");
-
-  console.log("MODEL ACTOR",
-    foundry.utils.deepClone(game.model?.Actor ?? {})
-  );
-
-  console.log("MODEL ITEM",
-    foundry.utils.deepClone(game.model?.Item ?? {})
-  );
-
-  console.log("TEMPLATE MODEL");
-console.log(CONFIG.Actor.dataModels);
-console.log(CONFIG.Item.dataModels);
-
-  console.log("SDP | Initializing Spheres of the Depths system");
-
   await foundry.applications.handlebars.loadTemplates([
     "systems/sdp/templates/partials/header.hbs",
     "systems/sdp/templates/partials/attributes.hbs",
@@ -175,14 +155,6 @@ game.sdp.Roll = SdpRoll;
 
 });
 
-  console.log("DOCUMENT TYPES");
-console.log(game.system.documentTypes);
-
-console.log("ITEM TYPES");
-console.log(game.system.documentTypes?.Item);
-
-console.log("ACTOR TYPES");
-console.log(game.system.documentTypes?.Actor);
 
   registerActorHandlers();
 
@@ -301,21 +273,17 @@ registerChatHandlers();
 
 Hooks.once("ready", async () => {
 
-  console.log(
-  JSON.stringify(
-    game.model.Item,
-    null,
-    2
-  )
-);
+  setTimeout(() => {
 
-  console.log("READY MODEL ACTOR", game.model.Actor);
-console.log("READY MODEL ITEM", game.model.Item);
+    for (const app of Object.values(ui.windows)) {
 
-console.log(
-  "READY WEAPON MODEL",
-  game.model.Item?.weapon
-);
+      if (app.rendered) {
+        app.render(true);
+      }
+
+    }
+
+  }, 1000);
 
 const test = await Item.create({
   name: "READY TEST",
@@ -326,36 +294,6 @@ const test = await Item.create({
     }
   }
 });
-
-console.log("RAW SOURCE");
-console.log(test._source);
-
-console.log("SYSTEM");
-console.log(test.system);
-
-console.log(
-  "READY ITEM SYSTEM",
-  test.system
-);
-
-console.log(
-  foundry.utils.deepClone(
-    test.system
-  )
-);
-console.log(
-  test.toObject().system
-);
-
-console.log(
-  "SYSTEM TEMPLATE",
-  game.system.template
-);
-
-console.log(
-  "SYSTEM SOURCE TEMPLATE",
-  game.system._source.template
-);
 
   game.system.description =
     game.i18n.localize(
@@ -382,23 +320,14 @@ console.log(
   ]
 });
 
-console.log(
-  "SDP DEBUG | PACK INDEX",
-  pack.index
-);
-
 Hooks.on(
   "renderCompendium",
   (app, html) => {
 
-    // =========================
-    // ONLY SDP ROLLTABLE PACK
-    // =========================
+    const pack = app.collection;
 
-    if (
-      app.collection?.metadata?.id !==
-      "sdp.rolltables"
-    ) return;
+    if (pack?.metadata?.system !== "sdp")
+      return;
 
     const element =
       html instanceof HTMLElement
@@ -408,45 +337,23 @@ Hooks.on(
     if (!element)
       return;
 
-    // =========================
-    // FIND ALL ENTRIES
-    // =========================
+    requestAnimationFrame(() => {
 
-    const entries =
-      element.querySelectorAll(
-        ".directory-item"
-      );
+      if (pack.documentName === "Item") {
+        localizeCompendiumItems(element, pack);
+        return;
+      }
 
-    for (const entry of entries) {
-
-      const documentId =
-        entry.dataset.entryId;
-
-      if (!documentId)
-        continue;
-
-      const localizationKey =
-        SDP_ROLLTABLE_LOCALIZATION[
-          documentId
-        ];
-
-      if (!localizationKey)
-        continue;
-
-      const title =
-        entry.querySelector(
-          ".entry-name"
+      if (
+        pack.metadata.id === "sdp.rolltables"
+      ) {
+        localizeRolltableCompendium(
+          element,
+          SDP_ROLLTABLE_LOCALIZATION
         );
+      }
 
-      if (!title)
-        continue;
-
-      title.textContent =
-        game.i18n.localize(
-          localizationKey
-        );
-
-    }
+    });
 
   }
 );
@@ -646,6 +553,14 @@ sdpSocket.register(
   }
 );
 
+await indexSdpItemPacks();
+
+Hooks.callAll(
+  "sdpRefreshLocalization"
+);
+
+refreshSdpUiLocalization();
+
 });
 
 
@@ -765,3 +680,69 @@ Hooks.on("updateActor", async (actor, changes) => {
   }
 
 });
+
+Hooks.on(
+  "renderSidebarTab",
+  (app, html) => {
+
+    if (app.tabName !== "items")
+      return;
+
+    const element =
+      html instanceof HTMLElement
+        ? html
+        : html[0];
+
+    if (!element)
+      return;
+
+    requestAnimationFrame(() => {
+      localizeSidebarItems(element);
+    });
+
+  }
+);
+
+function refreshSdpItemSheets() {
+
+  for (const app of Object.values(ui.windows)) {
+
+    if (
+      app instanceof SdpItemSheet
+    ) {
+
+      app.window.title =
+        app.title;
+
+      app.render(true);
+
+    }
+
+  }
+
+}
+
+Hooks.on(
+  "i18nInit",
+  () => {
+
+    refreshSdpItemSheets();
+    refreshSdpUiLocalization();
+
+  }
+);
+
+Hooks.on(
+  "changeSetting",
+  (setting) => {
+
+    if (
+      setting.namespace !== "core" ||
+      setting.key !== "language"
+    ) return;
+
+    refreshSdpItemSheets();
+    refreshSdpUiLocalization();
+
+  }
+);

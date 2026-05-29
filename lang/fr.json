@@ -783,5 +783,12 @@
  "SDP.RollTablePackLabel": "Tables SDP",
 
 "SDP.Item.Skill.resistance.Name": "Résistance",
-"SDP.Item.Skill.resistance.Description": "Compétence utilisée pour résister aux poisons, maladies et autres effets néfastes."
+"SDP.Item.Skill.resistance.Description": "Compétence utilisée pour résister aux poisons, maladies et autres effets néfastes.",
+
+
+  "SDP.Item.Talent.SurplusEnergy.Name": "Surplus d'Énergie",
+  "SDP.Item.Talent.SurplusEnergy.Description": "Vous disposez d'une réserve inhabituelle d'énergie magique. Une fois par rencontre, lorsque vous dépensez du Mana, réduisez son coût de 1 (minimum 1).",
+
+  "SDP.Item.Specie.human.Name" : "Humain",
+  "SDP.Item.Specie.human.Description" : "la race des humains"
 }

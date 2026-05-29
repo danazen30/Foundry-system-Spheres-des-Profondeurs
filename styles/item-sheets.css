@@ -338,7 +338,9 @@
 ========================= */
 
 .note-display {
-  min-height: 50px;
+  min-height: 80px;
+  height: auto;
+  max-height: 300px;
 }
 
 .note-editor prose-mirror {

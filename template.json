@@ -398,6 +398,11 @@
       "itemTraits": {
         "type": "array",
         "value": []
+      },
+      "key": {
+        "type": "string",
+        "label": "Key",
+        "value": ""
       }
     },
 
@@ -822,7 +827,8 @@
       "templates": [
         "description",
         "gmNotes",
-        "playerNotes"
+        "playerNotes",
+        "key"
       ],
       "baseAttributes": {
         "meleeAbility": 0,

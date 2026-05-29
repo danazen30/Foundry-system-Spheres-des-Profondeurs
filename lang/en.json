@@ -785,6 +785,12 @@
   "SDP.RollTablePackLabel": "SDP Tables",
 
 "SDP.Item.Skill.resistance.Name": "Resistance",
-"SDP.Item.Skill.resistance.Description": "Skill used to resist poisons, diseases and other harmful effects."
+"SDP.Item.Skill.resistance.Description": "Skill used to resist poisons, diseases and other harmful effects.",
+
+  "SDP.Item.Talent.SurplusEnergy.Name": "Surplus Energy",
+  "SDP.Item.Talent.SurplusEnergy.Description": "You possess an unusual reserve of magical energy. Once per encounter, when you spend Mana, reduce the cost by 1 (minimum 1).",
+
+  "SDP.Item.Specie.human.Name" : "Human",
+  "SDP.Item.Specie.human.Description" : "Specie Human"
 
 }

@@ -1,3 +1,5 @@
+import { getLocalizedItemName } from "../system/item-localization.js";
+
 const DEFAULT_ITEM_IMAGES = {
 
   weapon:
@@ -174,6 +176,16 @@ async _syncActiveEffects() {
     });
 
   }
+
+}
+
+get localizedName() {
+
+  return getLocalizedItemName(
+    this.type,
+    this.system?.key,
+    this.name
+  );
 
 }
 

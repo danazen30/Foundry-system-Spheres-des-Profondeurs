@@ -37,6 +37,34 @@ static LAYOUT = {
  parts: ["sheet"]
  };
 
+get title() {
+
+  const itemType =
+    this.document.type.charAt(0).toUpperCase()
+    + this.document.type.slice(1);
+
+ const key =
+  this.document.system.key;
+
+console.log(
+  this.document.name,
+  this.document.type,
+  key
+);
+
+  if (!key) {
+    return this.document.name;
+  }
+
+  const translationKey =
+    `SDP.Item.${itemType}.${key}.Name`;
+
+  return game.i18n.has(translationKey)
+    ? game.i18n.localize(translationKey)
+    : this.document.name;
+
+}
+
 async _prepareContext() {
 
   const traitsArray = this.document.system.itemTraits ?? [];
@@ -128,10 +156,47 @@ const negativeArmorTraits =
 // EDITORS
 // =========================
 
-const description =
-  game.i18n.localize(
-    `SDP.Item.Skill.${this.document.system.key}.Description`
-  );
+const itemType =
+  this.document.type.charAt(0).toUpperCase()
+  + this.document.type.slice(1);
+  const nameKey =
+  `SDP.Item.${itemType}.${this.document.system.key}.Name`;
+
+const localizedName =
+  game.i18n.has(nameKey)
+    ? game.i18n.localize(nameKey)
+    : this.document.name;
+const descriptionKey =
+  `SDP.Item.${itemType}.${this.document.system.key}.Description`;
+
+const localizedDescription =
+  game.i18n.has(descriptionKey)
+    ? game.i18n.localize(descriptionKey)
+    : "";
+
+const customDescription =
+  this.document.system.description ?? "";
+
+let description = "";
+
+if (localizedDescription && customDescription) {
+
+  description =
+    `${localizedDescription}<hr>${customDescription}`;
+
+}
+else if (localizedDescription) {
+
+  description =
+    localizedDescription;
+
+}
+else {
+
+  description =
+    customDescription;
+
+}
 
 const playerNotes =
   this.document.system.playerNotes ?? "";
@@ -143,10 +208,10 @@ const editors = {
 
 
   description:
-    await foundry.applications.ux.TextEditor
-      .enrichHTML(description, {
-        async: true
-      }),
+  await foundry.applications.ux.TextEditor
+    .enrichHTML(description, {
+      async: true
+    }),
 
   playerNotes:
     await foundry.applications.ux.TextEditor
@@ -162,7 +227,10 @@ const editors = {
 };
 
   return {
-  item: this.document,
+  item: {
+  ...this.document,
+  displayName: localizedName
+},
   system: this.document.system,
   positiveItemTraits,
   negativeItemTraits,
@@ -395,5 +463,7 @@ async _onChangeForm(formConfig, event) {
   }
 
 }
+
+
 
 }
