@@ -845,7 +845,7 @@ SL = adjusted.SL;
 SL += this.inspirationResult;
 
 // 🔥 APPLY SUCCESS BONUS
-SL = game.sdp.Roll.applySuccessBonus(
+SL = game.sdp.Roll.applyTalentSLModifiers(
   SL,
   this.actor,
   game.sdp?.dialogModifiers?.talents || []

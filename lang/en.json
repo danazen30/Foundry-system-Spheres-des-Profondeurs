@@ -802,12 +802,20 @@
 "SDP.Item.Talent.ambidextrous.Description": "Through training or natural aptitude, you have learned to use your off-hand with remarkable ease. While most people struggle to perform precise actions with their secondary hand, you are able to compensate for this disadvantage far more effectively.\n\nWhenever you perform an action relying solely on your off-hand, the usual penalty is reduced.\n\nEffect: you suffer a -10 penalty on Tests performed exclusively with your off-hand instead of -20. If you acquire this Talent a second time, this penalty is removed entirely.",
 "SDP.Item.Talent.animalaffinity.Name": "Animal Affinity",
 "SDP.Item.Talent.animalaffinity.Description": "Wild creatures instinctively perceive your presence as reassuring and non-threatening. Your natural affinity with the animal world inspires trust, even in wary beasts, which tend to remain calm around you and may occasionally follow you without fear.\n\nAnimals and other creatures that are not naturally aggressive remain peaceful in your presence unless a specific circumstance causes them to react differently. Pain, an immediate threat, an attack, strong territorial instincts, or the presence of offspring may still provoke hostility despite this gift.\n\nEffect: creatures that are not naturally aggressive are automatically calm in your presence unless there is an obvious reason for them to behave otherwise.",
+"SDP.Item.Talent.cannoneer.Name": "Cannoneer",
+"SDP.Item.Talent.cannoneer.Description": "You have learned to handle black powder weapons with speed and efficiency. The reloading process has become second nature to you, allowing you to prepare your weapon for firing far faster than most marksmen.\n\nEffect: add a SL equal to your Artillerist level to any Extended Test made to reload a black powder weapon.",
+"SDP.Item.Talent.artist.Name": "Artiste",
+"SDP.Item.Talent.artist.Description": "You possess a natural talent for visual arts and can accurately depict people, places, or objects when given sufficient time and the proper materials. Whether sketching a wanted criminal, illustrating a manuscript, or creating a detailed map, your artistic skill can prove valuable in many situations.\n\nThe exact benefits provided by this ability depend on the circumstances and are determined by the GM.",
+"SDP.Item.Talent.affable.Name": "Affable",
+"SDP.Item.Talent.affable.Description": "You possess a natural charisma that draws attention and makes social interactions easier. Whether through confidence, presence, or charm, you stand out from most people.\n\nEffect: you gain a permanent +5 bonus to Fellowship during character creation. This bonus does not count as a Characteristic Advance.",
+"SDP.Item.Talent.handyman.Name": "Handyman",
+"SDP.Item.Talent.handyman.Description": "You have a knack for understanding how things work and finding solutions where others see only broken parts. Through ingenuity and experience, you can repair a wide variety of equipment even without specialized training.\n\nEffect: when attempting to repair a damaged or broken item, all non-magical Trade Skills are treated as Basic Skills for you.",
 
   "SDP.Item.Specie.human.Name" : "Human",
   "SDP.Item.Specie.human.Description" : "Specie Human",
 
-  "SDP.Item.Sign.bull.Name" : "bull",
-  "SDP.Item.Sign.bull.Description" : "it's best stronger",
+  "SDP.Item.Sign.bull.Name" : "Bull",
+  "SDP.Item.Sign.bull.Description" : "Those born under this sign are destined for battle. From an early age, they display unwavering determination, remarkable courage, and a natural affinity for the arts of war. Many of history's greatest warriors, champions, and conquerors are said to have been born beneath its influence.\n\nThis sign is often regarded as an omen of strength, discipline, and victory.",
 
   "SDP.Item.Currency.coppercoin.Name" : "copper coin",
   "SDP.Item.Currency.coppercoin.Description" : "it's the copper coin",

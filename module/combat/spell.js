@@ -298,7 +298,7 @@ const talentsHTML =
     : "";
 
 // 🔥 APPLY SUCCESS BONUS
-SL = SdpRoll.applySuccessBonus(SL, actor, selectedTalents);
+SL = SdpRoll.applyTalentSLModifiers(SL, actor, selectedTalents);
 
   // ======================
   // LOCATION

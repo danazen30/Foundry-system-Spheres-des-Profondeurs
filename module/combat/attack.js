@@ -603,7 +603,7 @@ console.log("SDP | INSPIRATION APPLIED (RANGED)", {
 // 🔥 APPLY SUCCESS BONUS
 const selectedTalents = dialogMods.talents || [];
 
-SL = SdpRoll.applySuccessBonus(SL, actor, selectedTalents);
+SL = SdpRoll.applyTalentSLModifiers(SL, actor, selectedTalents);
 
 // =========================
 // TALENTS HTML

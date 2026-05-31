@@ -66,41 +66,60 @@ static getCritical(result, target, options = {}) {
 }
 
   // =====================
-// SUCCESS LEVEL BONUS
+// TALENT SL MODIFIERS
 // =====================
 
-static applySuccessBonus(SL, actor, selectedTalents = []){
+static _getTalentEffectBonus(actor, selectedTalents, effectKey) {
+
+  let bonus = 0;
+
+  for (const item of actor.items) {
+
+    if (item.type !== "talent") continue;
+    if (!selectedTalents.includes(item.id)) continue;
+
+    const level = Number(item.system.advances || 1);
+
+    for (const effect of item.effects) {
+
+      if (effect.disabled) continue;
+
+      for (const change of effect.changes) {
+
+        if (change.key !== effectKey) continue;
+
+        bonus += Number(change.value || 0) * level;
+      }
+    }
+  }
+
+  return bonus;
+}
+
+static applySLBonus(SL, actor, selectedTalents = []) {
+
+  return SL + this._getTalentEffectBonus(
+    actor,
+    selectedTalents,
+    "system.modifiers.slBonus"
+  );
+}
+
+static applySuccessBonus(SL, actor, selectedTalents = []) {
 
   if (SL <= 0) return SL;
 
-let bonus = 0;
-
-for (const item of actor.items){
-
-  if (item.type !== "talent") continue;
-
-  // ✔ DOIT être sélectionné
-  if (!selectedTalents.includes(item.id)) continue;
-
-  const level = Number(item.system.advances || 1);
-
-  for (const effect of item.effects){
-
-    if (effect.disabled) continue;
-
-    for (const change of effect.changes){
-
-      if (change.key !== "system.modifiers.successBonus") continue;
-
-      const value = Number(change.value || 0);
-
-      bonus += value * level;
-    }
-  }
+  return SL + this._getTalentEffectBonus(
+    actor,
+    selectedTalents,
+    "system.modifiers.successBonus"
+  );
 }
 
-return SL + bonus;
+static applyTalentSLModifiers(SL, actor, selectedTalents = []) {
 
+  SL = this.applySLBonus(SL, actor, selectedTalents);
+  return this.applySuccessBonus(SL, actor, selectedTalents);
 }
 
 // =====================

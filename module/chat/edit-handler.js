@@ -203,7 +203,7 @@ SL = adjusted.SL;
 // 🔥 APPLY SUCCESS BONUS
 const selectedTalents = JSON.parse(card.dataset.talents || "[]");
 
-SL = game.sdp.Roll.applySuccessBonus(SL, actor, selectedTalents);
+SL = game.sdp.Roll.applyTalentSLModifiers(SL, actor, selectedTalents);
 
 const overcast = game.sdp.Roll.getOvercast(SL);
 
@@ -442,7 +442,7 @@ SL = adjusted.SL;
 // 🔥 APPLY SUCCESS BONUS
 const selectedTalents = JSON.parse(card.dataset.talents || "[]");
 
-SL = game.sdp.Roll.applySuccessBonus(SL, actor, selectedTalents);
+SL = game.sdp.Roll.applyTalentSLModifiers(SL, actor, selectedTalents);
 
               const weapon = actor.items.get(card.dataset.weapon);
 

@@ -239,6 +239,11 @@
           "type": "number",
           "label": "Success Bonus",
           "value": 0
+        },
+        "slBonus": {
+          "type": "number",
+          "label": "SL Bonus",
+          "value": 0
         }
       },
       "conditions": {

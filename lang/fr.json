@@ -800,12 +800,20 @@
 "SDP.Item.Talent.ambidextrous.Description": "Votre entraînement ou vos prédispositions naturelles vous permettent d'utiliser votre main non directrice avec une aisance inhabituelle. Là où la plupart des individus peinent à accomplir des gestes précis de leur main secondaire, vous compensez plus facilement ce désavantage.\n\nLorsque vous effectuez une action reposant exclusivement sur votre main secondaire, la pénalité subie est réduite.\n\nEffet : vous subissez une pénalité de -10 aux Tests utilisant uniquement votre main secondaire au lieu de -20. Si vous possédez ce Talent une seconde fois, cette pénalité est totalement supprimée.",
 "SDP.Item.Talent.animalaffinity.Name": "Affinité animale",
 "SDP.Item.Talent.animalaffinity.Description": "Les créatures sauvages perçoivent instinctivement votre présence comme rassurante et non menaçante. Votre affinité naturelle avec le monde animal inspire confiance, même aux bêtes les plus méfiantes, qui ont tendance à rester calmes en votre compagnie et peuvent parfois vous suivre sans crainte.\n\nLes animaux et autres créatures qui ne sont pas naturellement agressifs demeurent paisibles en votre présence, sauf si une circonstance particulière les pousse à réagir autrement. La douleur, une menace immédiate, une agression, un instinct territorial prononcé ou la protection de leurs petits peuvent néanmoins les rendre hostiles malgré ce don.\n\nEffet : les créatures qui ne sont pas naturellement agressives sont automatiquement calmes en votre présence, sauf si une raison évidente les pousse à agir autrement.",
+"SDP.Item.Talent.cannoneer.Name": "Artilleur",
+"SDP.Item.Talent.cannoneer.Description": "Vous avez appris à manipuler les armes à poudre noire avec rapidité et efficacité. Les gestes nécessaires au rechargement vous sont familiers, ce qui vous permet de remettre votre arme en état de tir bien plus vite que la plupart des tireurs.\n\nEffet : ajoutez un DR égal à votre niveau d'Artilleur à tout Test étendu visant à recharger une arme à poudre noire.",
+"SDP.Item.Talent.artist.Name": "Artiste",
+"SDP.Item.Talent.artist.Description": "Vous possédez un véritable don pour les arts visuels et êtes capable de reproduire avec précision des personnes, des lieux ou des objets lorsque vous disposez du temps et du matériel nécessaires. Qu'il s'agisse d'esquisser le portrait d'un criminel recherché, d'illustrer un ouvrage ou de réaliser une carte détaillée, votre talent peut s'avérer précieux dans de nombreuses situations.\n\nLes avantages exacts offerts par cette aptitude dépendent des circonstances et sont laissés à l'appréciation du MJ.",
+"SDP.Item.Talent.affable.Name": "Affable",
+"SDP.Item.Talent.affable.Description": "Vous possédez un charisme naturel qui attire l'attention et facilite vos interactions avec les autres. Votre présence, votre assurance ou votre aisance sociale vous distinguent de la plupart des individus.\n\nEffet : vous gagnez un bonus permanent de +5 en Sociabilité lors de la création du personnage. Ce bonus ne compte pas comme une Augmentation de Caractéristique.",
+"SDP.Item.Talent.handyman.Name": "Bricoleur",
+"SDP.Item.Talent.handyman.Description": "Vous avez le talent de comprendre le fonctionnement des objets et de trouver des solutions là où d'autres ne voient qu'un amas de pièces inutilisables. Grâce à votre débrouillardise et à votre expérience, vous êtes capable de remettre en état une grande variété d'équipements, même sans formation spécialisée.\n\nEffet : lorsque vous tentez de réparer un objet endommagé ou cassé, toutes les Compétences Métier non magiques sont considérées comme des Compétences de Base pour vous.",
 
     "SDP.Item.Specie.human.Name" : "Humain",
   "SDP.Item.Specie.human.Description" : "la race des humains",
 
-  "SDP.Item.Sign.bull.Name" : "taureau",
-  "SDP.Item.Sign.bull.Description" : "c'est le plus fort",
+  "SDP.Item.Sign.bull.Name" : "Taureau",
+  "SDP.Item.Sign.bull.Description" : "Sous ce signe naissent ceux dont le destin est forgé par le combat. Depuis leur plus jeune âge, ils font preuve d'une détermination inébranlable, d'un courage remarquable et d'une affinité naturelle avec les arts de la guerre. Nombre des plus grands guerriers, champions et conquérants de l'histoire seraient nés sous son influence.\n\nCe signe est souvent considéré comme un présage de force, de discipline et de victoire.",
 
   "SDP.Item.Currency.coppercoin.Name" : "pièce de cuivre",
   "SDP.Item.Currency.coppercoin.Description" : "c'est la pièce de cuivre",
