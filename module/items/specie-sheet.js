@@ -181,6 +181,10 @@ context.tables = [
               this._addTalentChoice();
               break;
 
+            case "remove-talent-choice":
+              this._removeTalentChoice(event);
+              break;
+
             case "add-choice-option":
               this._addChoiceOption(event);
               break;
@@ -773,6 +777,34 @@ async _removeSkill(event) {
       count: 1,
       options: []
     });
+
+    await this._updateTalents(
+      talents
+    );
+
+  }
+
+  async _removeTalentChoice(event) {
+
+    const index =
+      Number(
+        event.currentTarget.dataset.index
+      );
+
+    const talents =
+      this._getTalentData();
+
+    if (
+      Number.isNaN(index) ||
+      !talents.choices[index]
+    ) {
+      return;
+    }
+
+    talents.choices.splice(
+      index,
+      1
+    );
 
     await this._updateTalents(
       talents

@@ -45,37 +45,68 @@ Hooks.on("createActor", async (actor) => {
   const skillDocs =
     await skillsPack.getDocuments();
 
-  // =========================
-  // BASIC SKILLS
-  // =========================
+  const DEFAULT_ADVANCED_SKILL_KEYS = [
+    "stealth"
+  ];
 
-  const basicSkills = skillDocs.filter(skill => {
+  const basicSkills =
+    skillDocs.filter(skill => {
 
-    return (
+      if (skill.type !== "skill") return false;
+
+      if (
+        DEFAULT_ADVANCED_SKILL_KEYS.includes(
+          skill.system?.key
+        )
+      ) {
+        return false;
+      }
+
+      const advanced = skill.system?.advanced;
+
+      if (
+        advanced === true ||
+        advanced === "true"
+      ) {
+        return false;
+      }
+
+      if (skill.system?.type === "advanced") {
+        return false;
+      }
+
+      return true;
+
+    });
+
+  const advancedSkills =
+    skillDocs.filter(skill =>
       skill.type === "skill" &&
-      (
-        skill.system.advanced === false ||
-        skill.system.advanced === "false" ||
-        skill.system.advanced == null
+      DEFAULT_ADVANCED_SKILL_KEYS.includes(
+        skill.system?.key
       )
     );
 
+  const seenSkillKeys = new Set();
+
+  const defaultSkills = [
+    ...basicSkills,
+    ...advancedSkills
+  ].filter(skill => {
+
+    const key =
+      skill.system?.key ||
+      skill.id;
+
+    if (seenSkillKeys.has(key)) {
+      return false;
+    }
+
+    seenSkillKeys.add(key);
+
+    return true;
+
   });
-
- // =========================
-// DEFAULT ADVANCED
-// =========================
-
-const defaultAdvancedSkills = [
-  "stealth"
-];
-
-const advancedSkills =
-  skillDocs.filter(skill =>
-    defaultAdvancedSkills.includes(
-      skill.system.key
-    )
-  );
 
   // =========================
   // DEFAULT CURRENCIES
@@ -207,9 +238,7 @@ const advancedSkills =
 
   const toCreate = [
 
-    ...basicSkills,
-
-    ...advancedSkills,
+    ...defaultSkills,
 
     ...currencies
 

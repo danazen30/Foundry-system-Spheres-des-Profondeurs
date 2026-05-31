@@ -600,6 +600,12 @@
         "value": "basic"
       },
 
+      "advanced": {
+        "type": "boolean",
+        "label": "Advanced",
+        "value": false
+      },
+
       "canAdvance": {
         "type": "boolean",
         "label": "Can Advance",

@@ -14,6 +14,7 @@ import { registerUIListeners, registerItemListeners, restoreScroll} from "./acto
 import { registerInteractionListeners } from "./actor-sheet-interactions.js";
 import {
   findActorItemByRef,
+  getLocalizedItemName,
   matchesItemRef,
   parseKeyList,
   resolveItemRef,
@@ -140,17 +141,18 @@ if (!Array.isArray(careerTalents)) {
   careerTalents = [];
 }
 
-const normalizeTalent = (name) =>
-  String(name || "")
-    .trim()
-    .toLowerCase();
-
 for (const item of this.document.items) {
 
   if (item.type !== "talent") continue;
 
-  const isCareerTalent = careerTalents.some(t =>
-    normalizeTalent(t) === normalizeTalent(item.name)
+  item.displayName = getLocalizedItemName(
+    item.type,
+    item.system?.key,
+    item.name
+  );
+
+  const isCareerTalent = careerTalents.some(ref =>
+    matchesItemRef(item, ref)
   );
 
   const advances = Number(item.system.advances || 0);
@@ -165,6 +167,32 @@ for (const item of this.document.items) {
   item.isCareerTalent = isCareerTalent;
   item.isPurchased = isPurchased;
   item.isAvailable = isAvailable;
+}
+
+let careerSkills = currentCareer?.system?.skills || [];
+
+if (typeof careerSkills === "string") {
+  careerSkills = parseKeyList(careerSkills);
+}
+
+if (!Array.isArray(careerSkills)) {
+  careerSkills = [];
+}
+
+for (const item of this.document.items) {
+
+  if (item.type !== "skill") continue;
+
+  item.displayName = getLocalizedItemName(
+    item.type,
+    item.system?.key,
+    item.name
+  );
+
+  item.isCareerSkill = careerSkills.some(ref =>
+    matchesItemRef(item, ref)
+  );
+
 }
 
 const xpBar = getXPBar(this.document, xpData);

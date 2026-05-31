@@ -1,5 +1,5 @@
-2026/05/31-14:50:06.251 4c8c Recovering log #587
-2026/05/31-14:50:06.253 4c8c Level-0 table #590: started
-2026/05/31-14:50:06.255 4c8c Level-0 table #590: 5297 bytes OK
-2026/05/31-14:50:06.258 4c8c Delete type=0 #587
-2026/05/31-14:50:06.259 4c8c Delete type=3 #585
+2026/05/31-15:30:15.733 1fa4 Recovering log #591
+2026/05/31-15:30:15.733 1fa4 Level-0 table #593: started
+2026/05/31-15:30:15.735 1fa4 Level-0 table #593: 12070 bytes OK
+2026/05/31-15:30:15.740 1fa4 Delete type=0 #591
+2026/05/31-15:30:15.741 1fa4 Delete type=3 #589

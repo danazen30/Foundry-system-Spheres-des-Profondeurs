@@ -113,6 +113,69 @@ _prepareWeaponSystem(system) {
 
 }
 
+_prepareSkillSystem(system) {
+
+  const advancedRaw = system.advanced;
+  const typeRaw = system.type;
+
+  if (
+    advancedRaw === true ||
+    advancedRaw === "true"
+  ) {
+    system.advanced = true;
+    system.type = "advanced";
+    return;
+  }
+
+  if (
+    advancedRaw === false ||
+    advancedRaw === "false"
+  ) {
+    system.advanced = false;
+    system.type = "basic";
+    return;
+  }
+
+  if (typeRaw === "advanced") {
+    system.advanced = true;
+    system.type = "advanced";
+    return;
+  }
+
+  system.advanced = false;
+  system.type = "basic";
+
+}
+
+_getSkillDefaultUpdates() {
+
+  if (this.type !== "skill") return {};
+
+  const system = this.system;
+
+  if (
+    system.advanced === true ||
+    system.advanced === "true" ||
+    system.type === "advanced"
+  ) {
+    return {};
+  }
+
+  if (
+    system.advanced === false ||
+    system.advanced === "false" ||
+    system.type === "basic"
+  ) {
+    return {};
+  }
+
+  return {
+    "system.advanced": false,
+    "system.type": "basic"
+  };
+
+}
+
 _getPhysicalDefaultUpdates() {
 
   const system = this.system;
@@ -278,6 +341,10 @@ _getItemDefaultUpdates() {
     return this._getArmorDefaultUpdates();
   }
 
+  if (this.type === "skill") {
+    return this._getSkillDefaultUpdates();
+  }
+
   if (this._usesPhysicalFields()) {
     return this._getPhysicalDefaultUpdates();
   }
@@ -312,6 +379,9 @@ prepareDerivedData(){
 
   if (this.type === "weapon") {
     this._prepareWeaponSystem(system);
+  }
+  else if (this.type === "skill") {
+    this._prepareSkillSystem(system);
   }
   else if (this._usesPhysicalFields()) {
     this._preparePhysicalFields(system);
