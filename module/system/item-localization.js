@@ -689,6 +689,17 @@ export function refreshSdpUiLocalization() {
 
     if (app.collection?.metadata?.system === "sdp") {
       app.render(true);
+      continue;
+    }
+
+    const docName =
+      app.document?.documentName;
+
+    if (
+      docName === "RollTable" ||
+      docName === "TableResult"
+    ) {
+      app.render(true);
     }
 
   }

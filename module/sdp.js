@@ -45,7 +45,10 @@ import {
   refreshSdpUiLocalization
 } from "./system/item-localization.js";
 import {
-  ensureSdpRollTableFlags
+  ensureSdpRollTableFlags,
+  localizeRollTableChatLinks,
+  localizeRollTableSheet,
+  localizeTableResultConfig
 } from "./system/roll-table-utils.js";
 
 export let sdpSocket;
@@ -485,6 +488,33 @@ Hooks.on(
       return;
     }
 
+    const html =
+      element instanceof HTMLElement
+        ? element
+        : element?.[0];
+
+    if (!html)
+      return;
+
+    if (
+      app.document?.documentName ===
+      "TableResult"
+    ) {
+
+      const result =
+        app.document;
+
+      requestAnimationFrame(() => {
+        localizeTableResultConfig(
+          result,
+          html
+        );
+      });
+
+      return;
+
+    }
+
     if (
       app.document?.documentName !==
       "RollTable"
@@ -498,41 +528,41 @@ Hooks.on(
         table.id
       ];
 
-    if (!localizationKey)
-      return;
+    if (localizationKey) {
 
-    const localizedName =
-      game.i18n.localize(
-        localizationKey
-      );
+      const localizedName =
+        game.i18n.localize(
+          localizationKey
+        );
 
-    const html =
-      element instanceof HTMLElement
-        ? element
-        : element?.[0];
+      const windowTitle =
+        html.querySelector(
+          ".window-title"
+        );
 
-    if (!html)
-      return;
+      if (windowTitle) {
+        windowTitle.textContent =
+          localizedName;
+      }
 
-    const windowTitle =
-      html.querySelector(
-        ".window-title"
-      );
+      const docName =
+        html.querySelector(
+          ".sheet-header h1"
+        );
 
-    if (windowTitle) {
-      windowTitle.textContent =
-        localizedName;
+      if (docName) {
+        docName.textContent =
+          localizedName;
+      }
+
     }
 
-    const docName =
-      html.querySelector(
-        ".sheet-header h1"
+    requestAnimationFrame(() => {
+      localizeRollTableSheet(
+        table,
+        html
       );
-
-    if (docName) {
-      docName.textContent =
-        localizedName;
-    }
+    });
 
   }
 );
@@ -570,6 +600,10 @@ Hooks.on(
         );
 
     }
+
+    requestAnimationFrame(() => {
+      localizeRollTableChatLinks(html);
+    });
 
   }
 );
