@@ -50,6 +50,10 @@ import {
   localizeRollTableSheet,
   localizeTableResultConfig
 } from "./system/roll-table-utils.js";
+import {
+  rebuildAllCareerJournalCaches,
+  registerCareerJournalHooks
+} from "./journal/career-journal.js";
 
 export let sdpSocket;
 
@@ -157,8 +161,11 @@ const templateJson = await templateResponse.json();
     "systems/sdp/templates/partials/items/item-header-physical.hbs",
     "systems/sdp/templates/partials/items/item-description-tab.hbs",
     "systems/sdp/templates/partials/items/item-effects-tab.hbs",
-    "systems/sdp/templates/partials/items/item-header-simple.hbs"
+    "systems/sdp/templates/partials/items/item-header-simple.hbs",
+    "systems/sdp/templates/journal/career-page.hbs"
   ]);
+
+  registerCareerJournalHooks();
 
   CONFIG.SDP = SDP;
 
@@ -680,6 +687,8 @@ sdpSocket.register(
 
 await indexSdpItemPacks();
 
+await rebuildAllCareerJournalCaches();
+
 Hooks.callAll(
   "sdpRefreshLocalization"
 );
@@ -868,6 +877,24 @@ Hooks.on(
     localizeAllSdpPackLabels();
     refreshSdpItemSheets();
     refreshSdpUiLocalization();
+
+    rebuildAllCareerJournalCaches().then(() => {
+
+      for (const app of Object.values(ui.windows)) {
+
+        const docName =
+          app.document?.documentName;
+
+        if (
+          docName === "JournalEntry" ||
+          docName === "JournalEntryPage"
+        ) {
+          app.render(true);
+        }
+
+      }
+
+    });
 
   }
 );

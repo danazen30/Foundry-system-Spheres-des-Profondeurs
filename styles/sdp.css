@@ -302,3 +302,41 @@ margin-top:10px;
   width: 30px;
   text-align: center;
 }
+
+.sdp-career-journal {
+  line-height: 1.5;
+}
+
+.sdp-career-journal .sdp-career-epigraph {
+  margin: 1em 0;
+  font-style: italic;
+  opacity: 0.9;
+}
+
+.sdp-career-journal .sdp-career-meta {
+  margin: 0.5em 0;
+}
+
+.sdp-career-journal .sdp-career-divider {
+  margin: 1.5em 0;
+  opacity: 0.35;
+}
+
+.sdp-career-journal .sdp-career-tier h3 {
+  margin: 1em 0 0.35em;
+  font-size: 1em;
+}
+
+.sdp-career-journal .sdp-career-links {
+  margin: 0.25em 0 1em;
+  padding-left: 1.25em;
+}
+
+.sdp-career-journal .sdp-career-error {
+  color: var(--color-text-error, #c0392b);
+  font-style: italic;
+}
+
+.sdp-career-journal .sdp-career-sheet-link {
+  margin: 0.75em 0 1em;
+}

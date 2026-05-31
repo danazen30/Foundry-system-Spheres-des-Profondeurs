@@ -1,5 +1,9 @@
 import { SdpRoll } from "../rolls/roll.js";
 import { SdpAttack } from "../combat/attack.js";
+import {
+  getCareerJournalHtmlForPage,
+  isCareerJournalPage
+} from "../journal/career-journal.js";
 import { SDP } from "../system/config.js";
 import { SimpleDialog } from "../apps/simple-dialog.js";
 import { SdpSpell } from "../combat/spell.js";
@@ -391,8 +395,14 @@ if (sharedPageId) {
   sharedJournal =
     sharedJournalPage?.parent || null;
 
-  sharedNpcNotes =
-    sharedJournalPage?.text?.content || "";
+  if (sharedJournalPage) {
+
+    sharedNpcNotes =
+      isCareerJournalPage(sharedJournalPage)
+        ? await getCareerJournalHtmlForPage(sharedJournalPage)
+        : (sharedJournalPage.text?.content || "");
+
+  }
 
 }
 

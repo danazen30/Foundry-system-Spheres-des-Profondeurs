@@ -931,6 +931,16 @@
   "SDP.Item.Career.trader.Name" : "Trader",
   "SDP.Item.Career.trader.Description" : "it's a trader",
 
+  "SDP.Journal.Career.SpeciesLabel": "Species",
+  "SDP.Journal.Career.ViewSheet": "View career sheet: {name}",
+  "SDP.Journal.Career.MissingTiers": "No career tier found for \"{key}\" (check flags.sdp.tiers).",
+  "SDP.Journal.Career.trader.Title": "Trader",
+  "SDP.Journal.Career.trader.Epigraph1": "\"Trade is the art of turning trust into profit.\"",
+  "SDP.Journal.Career.trader.Epigraph2": "\"A good deal is worth more than a good sword.\"",
+  "SDP.Journal.Career.trader.Intro": "Traders travel roads and markets to exchange goods and information.\n\nTheir reputation and network are worth as much as their purse.",
+  "SDP.Journal.Career.trader.Species": "human",
+  "SDP.Journal.Career.trader.CareerGroup": "trader",
+
   "SDP.Folder.weapons.Name": "Weapons",
   "SDP.Folder.armors.Name": "Armors",
   "SDP.Folder.ammunitions.Name": "Ammunitions",

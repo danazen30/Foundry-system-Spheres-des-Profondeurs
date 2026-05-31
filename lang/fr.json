@@ -929,6 +929,16 @@
   "SDP.Item.Career.trader.Name" : "Négociant",
   "SDP.Item.Career.trader.Description" : "c'est un négociant",
 
+  "SDP.Journal.Career.SpeciesLabel": "Espèces",
+  "SDP.Journal.Career.ViewSheet": "Voir la fiche carrière : {name}",
+  "SDP.Journal.Career.MissingTiers": "Aucun palier de carrière trouvé pour « {key} » (vérifiez flags.sdp.tiers).",
+  "SDP.Journal.Career.trader.Title": "Négociant",
+  "SDP.Journal.Career.trader.Epigraph1": "« Le commerce est l'art de transformer la confiance en profit. »",
+  "SDP.Journal.Career.trader.Epigraph2": "« Un bon marché vaut mieux qu'une bonne épée. »",
+  "SDP.Journal.Career.trader.Intro": "Les négociants parcourent routes et marchés pour échanger biens et informations.\n\nLeur réputation et leur réseau valent autant que leur bourse.",
+  "SDP.Journal.Career.trader.Species": "human",
+  "SDP.Journal.Career.trader.CareerGroup": "trader",
+
   "SDP.Folder.weapons.Name": "Armes",
   "SDP.Folder.armors.Name": "Armures",
   "SDP.Folder.ammunitions.Name": "Munitions",

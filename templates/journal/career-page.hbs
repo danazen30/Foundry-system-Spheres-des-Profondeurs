@@ -1,0 +1,104 @@
+<article class="sdp-career-journal">
+
+  <h1>{{title}}</h1>
+
+  {{#if epigraph1}}
+  <blockquote class="sdp-career-epigraph">
+    <p>{{epigraph1}}</p>
+  </blockquote>
+  {{/if}}
+
+  {{#if epigraph2}}
+  <blockquote class="sdp-career-epigraph">
+    <p>{{epigraph2}}</p>
+  </blockquote>
+  {{/if}}
+
+  {{#if intro}}
+  <div class="sdp-career-intro">
+    {{{intro}}}
+  </div>
+  {{/if}}
+
+  {{#if species}}
+  <p class="sdp-career-meta">
+    <strong>{{localize "SDP.Journal.Career.SpeciesLabel"}}:</strong>
+    {{species}}
+  </p>
+  {{/if}}
+
+  {{#if group}}
+  <p class="sdp-career-meta">
+    <strong>{{localize "SDP.CareerGroup"}}:</strong>
+    {{group}}
+  </p>
+  {{/if}}
+
+  {{#if missingTiers}}
+  <p class="sdp-career-error">
+    {{localize "SDP.Journal.Career.MissingTiers" key=journalKey}}
+  </p>
+  {{/if}}
+
+  {{#each tiers}}
+  <hr class="sdp-career-divider">
+
+  <section class="sdp-career-tier">
+
+    <h2>{{heading}}</h2>
+
+    {{#if status}}
+    <p>
+      <strong>{{localize "SDP.Status"}}:</strong>
+      {{status}}
+    </p>
+    {{/if}}
+
+    {{#if standing}}
+    <p>
+      <strong>{{localize "SDP.Standing"}}:</strong>
+      {{standing}}
+    </p>
+    {{/if}}
+
+    {{#if sheetLink}}
+    <p class="sdp-career-sheet-link">
+      {{{sheetLink}}}
+    </p>
+    {{/if}}
+
+    {{#if characteristics}}
+    <p>
+      <strong>{{localize "SDP.Characteristics"}}:</strong>
+      {{characteristics}}
+    </p>
+    {{/if}}
+
+    {{#if skillsHtml}}
+    <h3>{{localize "SDP.Skills"}}</h3>
+    {{{skillsHtml}}}
+    {{/if}}
+
+    {{#if talentsHtml}}
+    <h3>{{localize "SDP.Talents"}}</h3>
+    {{{talentsHtml}}}
+    {{/if}}
+
+    {{#if workSkill}}
+    <p>
+      <strong>{{localize "SDP.WorkSkill"}}:</strong>
+      {{{workSkill}}}
+    </p>
+    {{/if}}
+
+    {{#if trappings}}
+    <p>
+      <strong>{{localize "SDP.Trappings"}}:</strong>
+      {{trappings}}
+    </p>
+    {{/if}}
+
+  </section>
+  {{/each}}
+
+</article>
