@@ -798,9 +798,10 @@
 
   "SDP.Item.Talent.SurplusEnergy.Name": "Surplus Energy",
   "SDP.Item.Talent.SurplusEnergy.Description": "Through rigorous training and a deeper understanding of arcane forces, you have learned to channel magical energy more efficiently. Your mind now serves as a greater reservoir, capable of holding and controlling a larger amount of mystical power.\n\nThis mastery expands your magical reserves, allowing you to cast more spells before reaching your limits. Your Mental Strength directly fuels this increased capacity, permanently enhancing your magical potential.\n\nEffect: add a multiplier of your Mental Strength to your maximum Mana pool.",
-"SDP.Item.Talent.ambidextrous.Name": "Ambidextrous",
+  "SDP.ActiveEffect.manaMultiplier.Name": "Mana Multiplier Bonus",
+  "SDP.Item.Talent.ambidextrous.Name": "Ambidextrous",
 "SDP.Item.Talent.ambidextrous.Description": "Through training or natural aptitude, you have learned to use your off-hand with remarkable ease. While most people struggle to perform precise actions with their secondary hand, you are able to compensate for this disadvantage far more effectively.\n\nWhenever you perform an action relying solely on your off-hand, the usual penalty is reduced.\n\nEffect: you suffer a -10 penalty on Tests performed exclusively with your off-hand instead of -20. If you acquire this Talent a second time, this penalty is removed entirely.",
-
+"SDP.ActiveEffect.offHandPenalty.Name": "Off-Hand Penalty",
 
   "SDP.Item.Specie.human.Name" : "Human",
   "SDP.Item.Specie.human.Description" : "Specie Human",

@@ -114,6 +114,19 @@ async function getInjuryFromPack(location, severity, isConsequence = false) {
 
   Hooks.once("init", async () => {
 
+    Handlebars.registerHelper(
+      "localize",
+      foundry.applications.handlebars.localize
+    );
+
+    Handlebars.registerHelper(
+      "concat",
+      (...args) => {
+        args.pop();
+        return args.join("");
+      }
+    );
+
     console.log(
   "SYSTEM JSON",
   game.system
@@ -276,6 +289,210 @@ registerChatHandlers();
 /* COMPENDIUM LOCALIZATION                   */
 /* ========================================= */
 
+function getPackLabelKey(pack) {
+
+  if (pack.metadata._sdpLabelKey) {
+    return pack.metadata._sdpLabelKey;
+  }
+
+  const label =
+    pack.metadata.label;
+
+  if (label?.startsWith?.("SDP.")) {
+    pack.metadata._sdpLabelKey = label;
+    return label;
+  }
+
+  const systemDef =
+    game.system.packs?.find(
+      def =>
+        def.name === pack.metadata.name
+    );
+
+  if (
+    systemDef?.label?.startsWith?.(
+      "SDP."
+    )
+  ) {
+    pack.metadata._sdpLabelKey =
+      systemDef.label;
+    return systemDef.label;
+  }
+
+  if (
+    pack.metadata.id === "sdp.rolltables"
+  ) {
+    pack.metadata._sdpLabelKey =
+      "SDP.RollTablePackLabel";
+    return pack.metadata._sdpLabelKey;
+  }
+
+  return null;
+
+}
+
+function localizeAllSdpPackLabels() {
+
+  for (const pack of game.packs) {
+
+    if (pack.metadata.system !== "sdp")
+      continue;
+
+    const key =
+      getPackLabelKey(pack);
+
+    if (key) {
+      pack.metadata.label =
+        game.i18n.localize(key);
+    }
+
+  }
+
+}
+
+function localizeCompendiumSidebarPacks(
+  element
+) {
+
+  if (!element) return;
+
+  for (const pack of game.packs) {
+
+    if (pack.metadata.system !== "sdp")
+      continue;
+
+    const key =
+      getPackLabelKey(pack);
+
+    if (!key) continue;
+
+    const text =
+      game.i18n.localize(key);
+
+    const packId =
+      pack.metadata.id;
+
+    element.querySelectorAll(
+      `[data-pack="${packId}"], [data-collection="${pack.collection}"]`
+    ).forEach(row => {
+
+      const nameEl =
+        row.querySelector(
+          ".entry-name, .name, h4, a"
+        );
+
+      if (nameEl) {
+        nameEl.textContent = text;
+      }
+
+    });
+
+  }
+
+}
+
+function applyItemEffectLocalization(
+  sheet,
+  root
+) {
+
+  if (!sheet?.document || !root) return;
+
+  root.querySelectorAll(
+    ".effect-row[data-effect-id]"
+  ).forEach(li => {
+
+    const effect =
+      sheet.document.effects.get(
+        li.dataset.effectId
+      );
+
+    if (!effect) return;
+
+    const key =
+      effect.flags?.sdp?.key?.trim?.()
+      ?? "";
+
+    const nameEl =
+      li.querySelector(".effect-name");
+
+    if (nameEl && key) {
+
+      const i18nKey =
+        `SDP.ActiveEffect.${key}.Name`;
+
+      const text =
+        game.i18n.localize(i18nKey);
+
+      if (text !== i18nKey) {
+        nameEl.textContent = text;
+      }
+
+    }
+
+    if (!game.user.isGM) return;
+
+    if (li.querySelector(".effect-key-field"))
+      return;
+
+    const field =
+      document.createElement("div");
+
+    field.className = "effect-key-field";
+
+    const label =
+      document.createElement("label");
+
+    label.textContent =
+      game.i18n.localize("SDP.Key");
+
+    const input =
+      document.createElement("input");
+
+    input.type = "text";
+    input.className = "effect-key-input";
+    input.dataset.effectId = effect.id;
+    input.value = key;
+    input.placeholder = "offHandPenalty";
+
+    input.addEventListener(
+      "change",
+      async (event) => {
+
+        const target =
+          event.currentTarget;
+
+        const eff =
+          sheet.document.effects.get(
+            target.dataset.effectId
+          );
+
+        if (!eff) return;
+
+        await eff.update({
+          "flags.sdp.key":
+            target.value.trim() || null
+        });
+
+        applyItemEffectLocalization(
+          sheet,
+          root
+        );
+
+      }
+    );
+
+    field.append(label, input);
+
+    li.insertBefore(
+      field,
+      li.querySelector(".effect-controls")
+    );
+
+  });
+
+}
+
 function applySdpCompendiumLocalization(app, element) {
 
   const pack = app.collection;
@@ -291,11 +508,34 @@ function applySdpCompendiumLocalization(app, element) {
   if (!html) return;
 
   const localize = () => {
+
+    const labelKey =
+      getPackLabelKey(pack);
+
+    if (labelKey) {
+
+      const title =
+        game.i18n.localize(labelKey);
+
+      const windowTitle =
+        html.closest?.(".application")
+          ?.querySelector?.(".window-title")
+        ?? html.querySelector?.(
+          ".window-title"
+        );
+
+      if (windowTitle) {
+        windowTitle.textContent = title;
+      }
+
+    }
+
     localizeSdpCompendium(
       html,
       pack,
       SDP_ROLLTABLE_LOCALIZATION
     );
+
   };
 
   requestAnimationFrame(() => {
@@ -341,6 +581,26 @@ Hooks.on(
 Hooks.on(
   "renderApplicationV2",
   (app, element) => {
+
+    if (app instanceof SdpItemSheet) {
+
+      const root =
+        element instanceof HTMLElement
+          ? element
+          : element?.[0];
+
+      if (root) {
+        requestAnimationFrame(() => {
+          applyItemEffectLocalization(
+            app,
+            root
+          );
+        });
+      }
+
+      return;
+
+    }
 
     if (app.collection?.metadata?.system === "sdp") {
       applySdpCompendiumLocalization(app, element);
@@ -460,15 +720,12 @@ Hooks.once("ready", async () => {
       "SDP.SystemDescription"
     );
 
+  localizeAllSdpPackLabels();
+
   const pack =
     game.packs.get("sdp.rolltables");
 
   if (pack) {
-
-    pack.metadata.label =
-      game.i18n.localize(
-        "SDP.RollTablePackLabel"
-      );
 
     await pack.getIndex({
       fields: [
@@ -641,21 +898,34 @@ Hooks.on(
   "renderSidebarTab",
   (app, html) => {
 
-    if (app.tabName !== "items")
-      return;
-
     const element =
       html instanceof HTMLElement
         ? html
         : html[0];
 
-    if (!element)
+    if (!element) return;
+
+    if (app.tabName === "items") {
+
+      requestAnimationFrame(() => {
+        localizeSidebarFolders(element);
+        localizeSidebarItems(element);
+      });
+
       return;
 
-    requestAnimationFrame(() => {
-      localizeSidebarFolders(element);
-      localizeSidebarItems(element);
-    });
+    }
+
+    if (app.tabName === "compendium") {
+
+      requestAnimationFrame(() => {
+        localizeAllSdpPackLabels();
+        localizeCompendiumSidebarPacks(
+          element
+        );
+      });
+
+    }
 
   }
 );
@@ -683,6 +953,7 @@ Hooks.on(
   "i18nInit",
   () => {
 
+    localizeAllSdpPackLabels();
     refreshSdpItemSheets();
     refreshSdpUiLocalization();
 
@@ -698,6 +969,7 @@ Hooks.on(
       setting.key !== "language"
     ) return;
 
+    localizeAllSdpPackLabels();
     refreshSdpItemSheets();
     refreshSdpUiLocalization();
 
