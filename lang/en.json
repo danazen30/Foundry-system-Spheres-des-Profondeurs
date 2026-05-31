@@ -785,10 +785,22 @@
   "SDP.RollTablePackLabel": "SDP Tables",
 
 "SDP.Item.Skill.resistance.Name": "Resistance",
-"SDP.Item.Skill.resistance.Description": "Skill used to resist poisons, diseases and other harmful effects.",
+"SDP.Item.Skill.resistance.Description": "Resilience represents your ability to endure the hardships of the world. It is used whenever you must withstand difficult conditions, resist fatigue, hunger, or thirst, remain still for long periods, or survive in hostile environments. It also helps you resist certain conditions and harmful effects while directly influencing your Wound Threshold and your ability to endure injury.",
+"SDP.Item.Skill.calm.Name": "Calm",
+"SDP.Item.Skill.calm.Description": "Composure reflects your ability to remain in control when faced with adversity. This Skill comes into play whenever fear, pressure, or the influence of others threatens to shake your resolve. It allows you to keep a clear head in the face of horror, stay true to your convictions, and resist attempts at manipulation such as Charm, Intimidation, and similar effects. Composure is also your primary defense against the effects of Psychology.",
+"SDP.Item.Skill.stealth.Name": "Stealth",
+"SDP.Item.Skill.stealth.Description": "Stealth allows you to move unnoticed, blend into your surroundings, and avoid unwanted attention. Whether slipping past guards, advancing through darkness, or hiding near a threat, this Skill reflects your ability to remain unseen.\n\nStealth Tests are usually opposed by the Perception of those attempting to spot you. Ambient light, available cover, terrain, as well as your appearance and equipment can all affect your chances of success.\n\nA particularly severe failure may immediately reveal your presence and ruin your plans. In combat, Stealth is commonly used to set up ambushes, bypass enemy positions, or catch an opponent off guard at the perfect moment.",
+
+"SDP.Item.Skill.melee.Name": "Melee ()",
+"SDP.Item.Skill.melee.Description": "Melee encompasses the techniques and combat instincts required to fight effectively in close quarters. Each Specialization is tied to a specific weapon group and reflects the training needed to wield those weapons to their full potential.\n\nWithout the appropriate Specialization, handling a weapon becomes more difficult and less effective. Refer to the Rigour rules for the penalties applied when using a weapon without the proper training.\n\nExamples of Specializations: Polearm, Two-Handed Weapon, Brawling, Basic, Cavalry, Fencing, Flail, and Parrying.",
+"SDP.Item.Skill.meleebrawl.Name": "Melee Brawl",
+"SDP.Item.Skill.meleebrawl.Description": "Brawling represents your mastery of unarmed combat and improvised fighting techniques. It covers the use of fists, feet, elbows, knees, and any method of subduing an opponent without relying on a weapon.\n\nThis Skill is used during tavern brawls, street fights, wrestling matches, or any situation where only your strength, speed, and determination can prevail. It also allows you to perform certain maneuvers such as grappling, pushing, restraining, or disarming an opponent.\n\nWhile it may appear less deadly than a blade or a weapon of war, Brawling remains a formidable discipline in the hands of an experienced fighter capable of turning their own body into a weapon.",
 
   "SDP.Item.Talent.SurplusEnergy.Name": "Surplus Energy",
-  "SDP.Item.Talent.SurplusEnergy.Description": "You possess an unusual reserve of magical energy. Once per encounter, when you spend Mana, reduce the cost by 1 (minimum 1).",
+  "SDP.Item.Talent.SurplusEnergy.Description": "Through rigorous training and a deeper understanding of arcane forces, you have learned to channel magical energy more efficiently. Your mind now serves as a greater reservoir, capable of holding and controlling a larger amount of mystical power.\n\nThis mastery expands your magical reserves, allowing you to cast more spells before reaching your limits. Your Mental Strength directly fuels this increased capacity, permanently enhancing your magical potential.\n\nEffect: add a multiplier of your Mental Strength to your maximum Mana pool.",
+"SDP.Item.Talent.ambidextrous.Name": "Ambidextrous",
+"SDP.Item.Talent.ambidextrous.Description": "Through training or natural aptitude, you have learned to use your off-hand with remarkable ease. While most people struggle to perform precise actions with their secondary hand, you are able to compensate for this disadvantage far more effectively.\n\nWhenever you perform an action relying solely on your off-hand, the usual penalty is reduced.\n\nEffect: you suffer a -10 penalty on Tests performed exclusively with your off-hand instead of -20. If you acquire this Talent a second time, this penalty is removed entirely.",
+
 
   "SDP.Item.Specie.human.Name" : "Human",
   "SDP.Item.Specie.human.Description" : "Specie Human",
