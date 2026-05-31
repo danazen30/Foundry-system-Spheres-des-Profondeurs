@@ -1,4 +1,5 @@
 import { ITEM_TRAITS, ARMOR_TRAITS} from "../system/config.js";
+import { formatPlainTextAsHtml } from "../system/text-format.js";
 import { restoreItemScroll, registerEditorToggles, setupRichTextEditors, setupTextareaResize} from "../actors/actor-sheet-ui.js";
 
 const { ItemSheetV2 } = foundry.applications.sheets;
@@ -170,7 +171,9 @@ const descriptionKey =
 
 const localizedDescription =
   game.i18n.has(descriptionKey)
-    ? game.i18n.localize(descriptionKey)
+    ? formatPlainTextAsHtml(
+        game.i18n.localize(descriptionKey)
+      )
     : "";
 
 const customDescription =
