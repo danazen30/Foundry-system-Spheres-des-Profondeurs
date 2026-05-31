@@ -816,6 +816,12 @@
 
   "SDP.Item.Sign.bull.Name" : "Bull",
   "SDP.Item.Sign.bull.Description" : "Those born under this sign are destined for battle. From an early age, they display unwavering determination, remarkable courage, and a natural affinity for the arts of war. Many of history's greatest warriors, champions, and conquerors are said to have been born beneath its influence.\n\nThis sign is often regarded as an omen of strength, discipline, and victory.",
+  "SDP.Item.Sign.bull.Level.1.Description": "You deal an additional 1d4 damage on all Melee attacks and all Ranged attacks that use Strength.",
+"SDP.Item.Sign.bull.Level.2.Description": "+1d4 Wounds and +1 MP.",
+  "SDP.Item.Sign.bull.Level.3.Description": "+10 Strength.",
+  "SDP.Item.Sign.bull.Level.4.Description": "Your additional damage increases from 1d4 to 1d6. When engaged in a Strength contest, you can leverage your entire body, granting you a +20 bonus to the test.", 
+  "SDP.Item.Sign.bull.Level.5.Description": "Gain an additional +1d6 damage and +1d6 Wounds. Once per day, you may double the damage granted by your Strength Bonus.",
+
 
   "SDP.Item.Currency.coppercoin.Name" : "copper coin",
   "SDP.Item.Currency.coppercoin.Description" : "it's the copper coin",

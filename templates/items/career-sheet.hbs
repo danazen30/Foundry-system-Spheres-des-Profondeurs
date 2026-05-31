@@ -94,6 +94,10 @@
         name="system.careerGroup"
         value="{{system.careerGroup}}">
 
+      {{#if display.careerGroup}}
+      <p class="career-field-hint">{{display.careerGroup}}</p>
+      {{/if}}
+
     </div>
 
     <div class="form-group full-width">
@@ -104,6 +108,10 @@
         type="text"
         name="system.standing"
         value="{{system.standing}}">
+
+      {{#if display.standing}}
+      <p class="career-field-hint">{{display.standing}}</p>
+      {{/if}}
 
     </div>
 
@@ -128,6 +136,10 @@
         name="system.characteristics"
         value="{{system.characteristics}}">
 
+      {{#if display.characteristics}}
+      <p class="career-field-hint">{{display.characteristics}}</p>
+      {{/if}}
+
     </div>
 
     <div class="form-group full-width">
@@ -139,6 +151,10 @@
         name="system.skills"
         value="{{system.skills}}">
 
+      {{#if display.skills}}
+      <p class="career-field-hint">{{display.skills}}</p>
+      {{/if}}
+
     </div>
 
     <div class="form-group full-width">
@@ -149,6 +165,10 @@
         type="text"
         name="system.talents"
         value="{{system.talents}}">
+
+      {{#if display.talents}}
+      <p class="career-field-hint">{{display.talents}}</p>
+      {{/if}}
 
     </div>
 
@@ -165,6 +185,10 @@
     name="system.workSkill"
     value="{{system.workSkill}}">
 
+  {{#if display.workSkill}}
+  <p class="career-field-hint">{{display.workSkill}}</p>
+  {{/if}}
+
 </div>
 
 <div class="weapon-card">
@@ -179,6 +203,10 @@
       name="system.trappings"
       rows="6"
     >{{system.trappings}}</textarea>
+
+    {{#if display.trappings}}
+    <p class="career-field-hint career-field-hint-multiline">{{display.trappings}}</p>
+    {{/if}}
 
   </div>
 

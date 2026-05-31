@@ -814,6 +814,11 @@
 
   "SDP.Item.Sign.bull.Name" : "Taureau",
   "SDP.Item.Sign.bull.Description" : "Sous ce signe naissent ceux dont le destin est forgé par le combat. Depuis leur plus jeune âge, ils font preuve d'une détermination inébranlable, d'un courage remarquable et d'une affinité naturelle avec les arts de la guerre. Nombre des plus grands guerriers, champions et conquérants de l'histoire seraient nés sous son influence.\n\nCe signe est souvent considéré comme un présage de force, de discipline et de victoire.",
+  "SDP.Item.Sign.bull.Level.1.Description": "+1d4 de dégâts de plus sur tout les jet de CC et de CT se basant sur la force",
+  "SDP.Item.Sign.bull.Level.2.Description": "+1d4 vie + 1PM",
+  "SDP.Item.Sign.bull.Level.3.Description": "+10 de Force.",
+  "SDP.Item.Sign.bull.Level.4.Description": "le 1d4 de dégâts passent en 1d6, dans un duel de force vous arrivé a utiliser tout votre corps ce qui vous fait gagner un +20",
+  "SDP.Item.Sign.bull.Level.5.Description": "1d6 de dégâts supplémentaire +1d6 de vie. Une fois par jour vous pouvais doubler les degat due a votre bonus de force.",
 
   "SDP.Item.Currency.coppercoin.Name" : "pièce de cuivre",
   "SDP.Item.Currency.coppercoin.Description" : "c'est la pièce de cuivre",

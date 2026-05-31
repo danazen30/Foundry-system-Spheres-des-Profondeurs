@@ -67,10 +67,13 @@
 
       <label>{{localize "SDP.Attributes"}}</label>
 
-      <input
-        type="text"
-        name="system.attribute"
-        value="{{system.attribute}}">
+      <select name="system.attribute">
+
+        {{selectOptions
+          characteristicOptions
+          selected=system.attribute}}
+
+      </select>
 
     </div>
 
@@ -125,8 +128,7 @@
           <input
             type="text"
             name="system.levels.{{key}}.hp"
-            value="{{lvl.hp}}"
-            placeholder="1d4">
+            value="{{lvl.hp}}">
 
         </div>
 
@@ -156,10 +158,9 @@
 
           <label>{{localize "SDP.TabDescription"}}</label>
 
-          <textarea
-            class="sign-description"
-            name="system.levels.{{key}}.description"
-          >{{lvl.description}}</textarea>
+          {{#if lvl.localizedDescription}}
+          <p class="career-field-hint sign-level-description-hint">{{lvl.localizedDescription}}</p>
+          {{/if}}
 
         </div>
 

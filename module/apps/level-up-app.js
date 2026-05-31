@@ -203,9 +203,8 @@ progression.push({
 
   // 🔥 AJOUT ICI
   damageBonus: levelData?.damageBonus || 0,
-  inspirationDice: levelData?.inspirationDice || null,
+  inspirationDice: levelData?.inspirationDice || null
 
-  description: levelData?.description || ""
 });
 
   updates["system.details.levelProgression"] = progression;

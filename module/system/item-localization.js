@@ -3,6 +3,8 @@
  * (barre latérale, compendiums, etc.)
  */
 
+import { SDP } from "./config.js";
+
 /**
  * Dérive une clé i18n à partir d'un nom de dossier ("Weapons" → "weapons").
  */
@@ -115,6 +117,370 @@ export function getLocalizedItemName(type, key, fallback = "") {
 
   const translationKey =
     `SDP.Item.${itemType}.${normalizedKey}.Name`;
+
+  return game.i18n.has(translationKey)
+    ? game.i18n.localize(translationKey)
+    : fallback;
+
+}
+
+export function normalizeItemRef(value = "") {
+
+  return String(value || "").trim().toLowerCase();
+
+}
+
+export function parseKeyList(value) {
+
+  if (Array.isArray(value)) {
+    return value
+      .map(entry => String(entry).trim())
+      .filter(Boolean);
+  }
+
+  if (typeof value === "string") {
+    return value
+      .split(",")
+      .map(entry => entry.trim())
+      .filter(Boolean);
+  }
+
+  return [];
+
+}
+
+export function matchesItemRef(item, ref) {
+
+  if (!item || ref == null || ref === "") return false;
+
+  const normalizedRef = normalizeItemRef(ref);
+
+  return (
+    normalizeItemRef(item.system?.key) === normalizedRef
+    || normalizeItemRef(item.name) === normalizedRef
+  );
+
+}
+
+export function findActorItemByRef(actor, type, ref) {
+
+  if (!actor || !type || ref == null || ref === "") return null;
+
+  return actor.items.find(item =>
+    item.type === type &&
+    matchesItemRef(item, ref)
+  ) ?? null;
+
+}
+
+export function findWorldItemByRef(type, ref) {
+
+  if (!type || ref == null || ref === "") return null;
+
+  return game.items.find(item =>
+    item.type === type &&
+    matchesItemRef(item, ref)
+  ) ?? null;
+
+}
+
+export async function findCompendiumItemByRef(packId, type, ref) {
+
+  const pack = game.packs.get(packId);
+
+  if (!pack || !type || ref == null || ref === "") return null;
+
+  const index = await pack.getIndex({
+    fields: [
+      "name",
+      "type",
+      "system.key"
+    ]
+  });
+
+  const normalizedRef = normalizeItemRef(ref);
+
+  const entry = index.find(item =>
+    item.type === type && (
+      normalizeItemRef(item.system?.key) === normalizedRef
+      || normalizeItemRef(item.name) === normalizedRef
+    )
+  );
+
+  if (!entry) return null;
+
+  return pack.getDocument(entry._id);
+
+}
+
+export async function resolveItemRef(type, ref, packId) {
+
+  return findWorldItemByRef(type, ref)
+    ?? await findCompendiumItemByRef(packId, type, ref);
+
+}
+
+export function localizeCharacteristicKey(key, fallback = "") {
+
+  const normalizedKey =
+    typeof key === "string"
+      ? key.trim()
+      : "";
+
+  if (!normalizedKey) return fallback;
+
+  const translationKey =
+    `SDP.Characteristic${normalizedKey.charAt(0).toUpperCase()}${normalizedKey.slice(1)}`;
+
+  return game.i18n.has(translationKey)
+    ? game.i18n.localize(translationKey)
+    : (fallback || normalizedKey);
+
+}
+
+export function localizeItemRef(type, ref, fallback = "") {
+
+  const normalizedRef =
+    typeof ref === "string"
+      ? ref.trim()
+      : "";
+
+  if (!type || !normalizedRef) return fallback;
+
+  return getLocalizedItemName(
+    type,
+    normalizedRef,
+    fallback || normalizedRef
+  );
+
+}
+
+export function formatLocalizedKeyList(value, {
+  type = null,
+  characteristic = false
+} = {}) {
+
+  const keys = parseKeyList(value);
+
+  if (!keys.length) return "";
+
+  return keys.map(key => {
+
+    if (characteristic) {
+      return localizeCharacteristicKey(key);
+    }
+
+    return localizeItemRef(type, key);
+
+  }).join(", ");
+
+}
+
+const STANDING_TIER_KEYS = {
+  copper: "SDP.StandingCopper",
+  silver: "SDP.StandingSilver",
+  gold: "SDP.StandingGold",
+  platinum: "SDP.StandingPlatinum"
+};
+
+const TRAPPING_ITEM_TYPES = [
+  "weapon",
+  "armor",
+  "clothing",
+  "possession",
+  "container",
+  "ammunition",
+  "currency",
+  "trait"
+];
+
+function capitalizeItemType(type = "") {
+
+  return type.charAt(0).toUpperCase() + type.slice(1);
+
+}
+
+export function hasItemTranslation(type, key) {
+
+  const normalizedKey =
+    typeof key === "string"
+      ? key.trim()
+      : "";
+
+  if (!type || !normalizedKey) return false;
+
+  return game.i18n.has(
+    `SDP.Item.${capitalizeItemType(type)}.${normalizedKey}.Name`
+  );
+
+}
+
+export function localizeCareerGroupRef(key, fallback = "") {
+
+  const normalizedKey =
+    typeof key === "string"
+      ? key.trim()
+      : "";
+
+  if (!normalizedKey) return fallback;
+
+  return localizeItemRef(
+    "career",
+    normalizedKey,
+    fallback || normalizedKey
+  );
+
+}
+
+export function localizeStanding(value, fallback = "") {
+
+  const text =
+    typeof value === "string"
+      ? value.trim()
+      : "";
+
+  if (!text) return fallback;
+
+  const parts = text.split(/\s+/);
+  const tierKey = parts[0].toLowerCase();
+  const tierI18nKey = STANDING_TIER_KEYS[tierKey];
+
+  const localizedTier =
+    tierI18nKey && game.i18n.has(tierI18nKey)
+      ? game.i18n.localize(tierI18nKey)
+      : parts[0];
+
+  if (parts.length === 1) return localizedTier;
+
+  return [
+    localizedTier,
+    ...parts.slice(1)
+  ].join(" ");
+
+}
+
+export function parseTrappingRefs(value) {
+
+  if (Array.isArray(value)) {
+    return value
+      .map(entry => String(entry).trim())
+      .filter(Boolean);
+  }
+
+  if (typeof value !== "string") return [];
+
+  return value
+    .split(/[\r\n,]+/)
+    .map(entry => entry.trim())
+    .filter(Boolean);
+
+}
+
+export function localizeTrappingRef(ref, fallback = "") {
+
+  const trimmed =
+    typeof ref === "string"
+      ? ref.trim()
+      : "";
+
+  if (!trimmed) return fallback;
+
+  const typedMatch =
+    trimmed.match(/^([a-zA-Z]+)\s*:\s*(.+)$/);
+
+  if (typedMatch) {
+
+    const type = typedMatch[1].toLowerCase();
+    const key = typedMatch[2].trim();
+
+    return localizeItemRef(
+      type,
+      key,
+      fallback || trimmed
+    );
+
+  }
+
+  for (const type of TRAPPING_ITEM_TYPES) {
+
+    if (hasItemTranslation(type, trimmed)) {
+      return getLocalizedItemName(
+        type,
+        trimmed,
+        trimmed
+      );
+    }
+
+  }
+
+  return fallback || trimmed;
+
+}
+
+export function formatLocalizedTrappings(value) {
+
+  const text =
+    typeof value === "string"
+      ? value
+      : "";
+
+  if (!text.trim()) return "";
+
+  if (text.includes("\n")) {
+
+    return text
+      .split(/\r?\n/)
+      .map(line => {
+
+        const refs = parseTrappingRefs(line);
+
+        if (!refs.length) return "";
+
+        return refs
+          .map(ref => localizeTrappingRef(ref))
+          .join(", ");
+
+      })
+      .filter(Boolean)
+      .join("\n");
+
+  }
+
+  return parseTrappingRefs(value)
+    .map(ref => localizeTrappingRef(ref))
+    .join(", ");
+
+}
+
+export function getCharacteristicOptions() {
+
+  return SDP.ATTRIBUTE_ORDER.map(key => ({
+    value: key,
+    label: localizeCharacteristicKey(key)
+  }));
+
+}
+
+export function getLocalizedSignLevelDescription(
+  signKey,
+  level,
+  fallback = ""
+) {
+
+  const normalizedKey =
+    typeof signKey === "string"
+      ? signKey.trim()
+      : "";
+
+  const levelKey =
+    level == null
+      ? ""
+      : String(level).trim();
+
+  if (!normalizedKey || !levelKey) return fallback;
+
+  const translationKey =
+    `SDP.Item.Sign.${normalizedKey}.Level.${levelKey}.Description`;
 
   return game.i18n.has(translationKey)
     ? game.i18n.localize(translationKey)

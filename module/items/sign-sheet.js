@@ -1,4 +1,8 @@
 import { SdpItemSheet } from "./item-sheet.js";
+import {
+  getCharacteristicOptions,
+  getLocalizedSignLevelDescription
+} from "../system/item-localization.js";
 
 export class SdpSignSheet extends SdpItemSheet {
 
@@ -13,6 +17,27 @@ export class SdpSignSheet extends SdpItemSheet {
 
     const context =
       await super._prepareContext();
+
+    const system = context.system ?? {};
+    const signKey = system.key?.trim?.() ?? "";
+
+    context.characteristicOptions =
+      getCharacteristicOptions();
+
+    const levels =
+      foundry.utils.deepClone(system.levels ?? {});
+
+    for (const [level, data] of Object.entries(levels)) {
+
+      data.localizedDescription =
+        getLocalizedSignLevelDescription(
+          signKey,
+          level
+        );
+
+    }
+
+    context.system.levels = levels;
 
     return context;
 
@@ -48,13 +73,11 @@ export class SdpSignSheet extends SdpItemSheet {
 
         levels[newLevel] = {
 
-          hp: "1d4",
+          hp: "",
 
           damageBonus: "",
 
-          inspirationDice: "",
-
-          description: ""
+          inspirationDice: ""
 
         };
 
@@ -79,8 +102,10 @@ export class SdpSignSheet extends SdpItemSheet {
 
           const level =
             event.currentTarget
-              .closest(".level-block")
-              .dataset.level;
+              .closest(".sign-level-card")
+              ?.dataset.level;
+
+          if (!level) return;
 
           const levels =
             foundry.utils.deepClone(

@@ -93,10 +93,7 @@ export class SdpLevelEngine {
         levelData?.damageBonus || 0,
 
       inspirationDice:
-        levelData?.inspirationDice || null,
-
-      description:
-        levelData?.description || ""
+        levelData?.inspirationDice || null
 
     };
 

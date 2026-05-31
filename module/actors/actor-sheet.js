@@ -12,6 +12,13 @@ import { registerCombatListeners } from "./actor-sheet-combat.js";
 import { registerXPListeners } from "./actor-sheet-xp.js";
 import { registerUIListeners, registerItemListeners, restoreScroll} from "./actor-sheet-ui.js";
 import { registerInteractionListeners } from "./actor-sheet-interactions.js";
+import {
+  findActorItemByRef,
+  matchesItemRef,
+  parseKeyList,
+  resolveItemRef,
+  getLocalizedSignLevelDescription
+} from "../system/item-localization.js";
 
 const { ActorSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -284,6 +291,7 @@ if (sign?.system?.levels) {
 
   const levels = sign.system.levels;
 const storedProgression = this.document.system.details?.levelProgression ?? [];
+const signKey = sign.system?.key?.trim?.() ?? "";
 
 levelProgression = storedProgression.map(data => {
   return {
@@ -297,7 +305,11 @@ levelProgression = storedProgression.map(data => {
     damageBonus: data.damageBonus,
     inspirationDice: data.inspirationDice,
 
-    description: data.description
+    description: getLocalizedSignLevelDescription(
+      signKey,
+      data.level,
+      data.description
+    )
   };
 });
 
@@ -481,45 +493,20 @@ return {
   // AUTO ADD SKILLS
   // =========================
 
-  let skills = career.system.skills || [];
+  const skills = parseKeyList(career.system.skills);
 
-if (typeof skills === "string") {
-  skills = skills.split(",").map(s => s.trim());
-}
+  for (const skillRef of skills) {
 
-if (!Array.isArray(skills)) {
-  skills = [];
-}
-
-  for (const skillName of skills) {
-
-    const exists = actor.items.find(i =>
-      i.type === "skill" && i.name === skillName
-    );
+    const exists = findActorItemByRef(actor, "skill", skillRef);
 
     if (!exists) {
 
-      let baseSkill = game.items.find(i =>
-        i.type === "skill" && i.name === skillName
-      );
-
-      if (!baseSkill) {
-
-        const pack = game.packs.get("sdp.skills");
-
-        if (pack) {
-
-          const index = await pack.getIndex();
-          const entry = index.find(i => i.name === skillName);
-
-          if (entry) {
-            baseSkill = await pack.getDocument(entry._id);
-          }
-
-        }
-
-      }
-
+      const baseSkill =
+        await resolveItemRef(
+          "skill",
+          skillRef,
+          "sdp.skills"
+        );
 
       if (baseSkill) {
         await actor.createEmbeddedDocuments("Item", [
@@ -535,40 +522,11 @@ if (!Array.isArray(skills)) {
 // REMOVE OLD CAREER TALENTS
 // =========================
 
-let oldTalents =
-  previousCareer?.system?.talents || [];
+const oldTalents =
+  parseKeyList(previousCareer?.system?.talents);
 
-if (typeof oldTalents === "string") {
-
-  oldTalents = oldTalents
-    .split(",")
-    .map(t => t.trim());
-
-}
-
-if (!Array.isArray(oldTalents)) {
-  oldTalents = [];
-}
-
-let newTalents =
-  career.system.talents || [];
-
-if (typeof newTalents === "string") {
-
-  newTalents = newTalents
-    .split(",")
-    .map(t => t.trim());
-
-}
-
-if (!Array.isArray(newTalents)) {
-  newTalents = [];
-}
-
-const normalize = (s) =>
-  String(s || "")
-    .trim()
-    .toLowerCase();
+const newTalents =
+  parseKeyList(career.system.talents);
 
 // talents à supprimer
 const removableTalents = actor.items.filter(item => {
@@ -582,13 +540,13 @@ const removableTalents = actor.items.filter(item => {
   if (advances > 0) return false;
 
   const isOldCareerTalent =
-    oldTalents.some(t =>
-      normalize(t) === normalize(item.name)
+    oldTalents.some(ref =>
+      matchesItemRef(item, ref)
     );
 
   const isStillInNewCareer =
-    newTalents.some(t =>
-      normalize(t) === normalize(item.name)
+    newTalents.some(ref =>
+      matchesItemRef(item, ref)
     );
 
   return (
@@ -611,44 +569,18 @@ if (removableTalents.length > 0) {
 // AUTO ADD TALENTS
 // =========================
 
-let talents = career.system.talents || [];
+for (const talentRef of newTalents) {
 
-if (typeof talents === "string") {
-  talents = talents.split(",").map(t => t.trim());
-}
-
-if (!Array.isArray(talents)) {
-  talents = [];
-}
-
-for (const talentName of talents) {
-
-  const exists = actor.items.find(i =>
-    i.type === "talent" && i.name === talentName
-  );
+  const exists = findActorItemByRef(actor, "talent", talentRef);
 
   if (!exists) {
 
-    let baseTalent = game.items.find(i =>
-      i.type === "talent" && i.name === talentName
-    );
-
-    if (!baseTalent) {
-
-      const pack = game.packs.get("sdp.talents");
-
-      if (pack) {
-
-        const index = await pack.getIndex();
-        const entry = index.find(i => i.name === talentName);
-
-        if (entry) {
-          baseTalent = await pack.getDocument(entry._id);
-        }
-
-      }
-
-    }
+    const baseTalent =
+      await resolveItemRef(
+        "talent",
+        talentRef,
+        "sdp.talents"
+      );
 
     if (baseTalent) {
       await actor.createEmbeddedDocuments("Item", [

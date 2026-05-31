@@ -1,4 +1,8 @@
 import { SdpRoll } from "../rolls/roll.js";
+import {
+  findActorItemByRef,
+  getLocalizedItemName
+} from "../system/item-localization.js";
 
 export class SdpWorkEngine {
 
@@ -26,10 +30,10 @@ export class SdpWorkEngine {
     // WORK SKILL
     // =========================
 
-    const workSkillName =
+    const workSkillRef =
       career.system.workSkill;
 
-    if (!workSkillName) {
+    if (!workSkillRef) {
 
       ui.notifications.warn(
   game.i18n.localize("SDP.WarningNoWorkSkill")
@@ -42,16 +46,17 @@ export class SdpWorkEngine {
     // FIND SKILL
     // =========================
 
-    const skill = actor.items.find(i =>
-      i.type === "skill" &&
-      i.name === workSkillName
+    const skill = findActorItemByRef(
+      actor,
+      "skill",
+      workSkillRef
     );
 
     if (!skill) {
 
       ui.notifications.warn(
   game.i18n.format("SDP.WarningSkillNotFound", {
-    skill: workSkillName
+    skill: workSkillRef
   })
 );
 
@@ -179,6 +184,18 @@ const localizedTier =
 
     }
 
+    const careerLabel = getLocalizedItemName(
+      "career",
+      career.system?.key,
+      career.name
+    );
+
+    const skillLabel = getLocalizedItemName(
+      "skill",
+      skill.system?.key,
+      skill.name
+    );
+
     // =========================
 // RENDER DICE HTML
 // =========================
@@ -207,12 +224,12 @@ await ChatMessage.create({
 
   <p>
     <strong>${game.i18n.localize("SDP.WorkCareerLabel")}</strong>
-    ${career.name}
+    ${careerLabel}
   </p>
 
   <p>
     <strong>${game.i18n.localize("SDP.WorkSkillLabel")}</strong>
-    ${skill.name}
+    ${skillLabel}
   </p>
 
   <p>
