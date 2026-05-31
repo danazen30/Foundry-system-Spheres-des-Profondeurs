@@ -391,108 +391,6 @@ function localizeCompendiumSidebarPacks(
 
 }
 
-function applyItemEffectLocalization(
-  sheet,
-  root
-) {
-
-  if (!sheet?.document || !root) return;
-
-  root.querySelectorAll(
-    ".effect-row[data-effect-id]"
-  ).forEach(li => {
-
-    const effect =
-      sheet.document.effects.get(
-        li.dataset.effectId
-      );
-
-    if (!effect) return;
-
-    const key =
-      effect.flags?.sdp?.key?.trim?.()
-      ?? "";
-
-    const nameEl =
-      li.querySelector(".effect-name");
-
-    if (nameEl && key) {
-
-      const i18nKey =
-        `SDP.ActiveEffect.${key}.Name`;
-
-      const text =
-        game.i18n.localize(i18nKey);
-
-      if (text !== i18nKey) {
-        nameEl.textContent = text;
-      }
-
-    }
-
-    if (!game.user.isGM) return;
-
-    if (li.querySelector(".effect-key-field"))
-      return;
-
-    const field =
-      document.createElement("div");
-
-    field.className = "effect-key-field";
-
-    const label =
-      document.createElement("label");
-
-    label.textContent =
-      game.i18n.localize("SDP.Key");
-
-    const input =
-      document.createElement("input");
-
-    input.type = "text";
-    input.className = "effect-key-input";
-    input.dataset.effectId = effect.id;
-    input.value = key;
-    input.placeholder = "offHandPenalty";
-
-    input.addEventListener(
-      "change",
-      async (event) => {
-
-        const target =
-          event.currentTarget;
-
-        const eff =
-          sheet.document.effects.get(
-            target.dataset.effectId
-          );
-
-        if (!eff) return;
-
-        await eff.update({
-          "flags.sdp.key":
-            target.value.trim() || null
-        });
-
-        applyItemEffectLocalization(
-          sheet,
-          root
-        );
-
-      }
-    );
-
-    field.append(label, input);
-
-    li.insertBefore(
-      field,
-      li.querySelector(".effect-controls")
-    );
-
-  });
-
-}
-
 function applySdpCompendiumLocalization(app, element) {
 
   const pack = app.collection;
@@ -581,26 +479,6 @@ Hooks.on(
 Hooks.on(
   "renderApplicationV2",
   (app, element) => {
-
-    if (app instanceof SdpItemSheet) {
-
-      const root =
-        element instanceof HTMLElement
-          ? element
-          : element?.[0];
-
-      if (root) {
-        requestAnimationFrame(() => {
-          applyItemEffectLocalization(
-            app,
-            root
-          );
-        });
-      }
-
-      return;
-
-    }
 
     if (app.collection?.metadata?.system === "sdp") {
       applySdpCompendiumLocalization(app, element);
