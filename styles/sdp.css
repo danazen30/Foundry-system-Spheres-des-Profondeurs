@@ -304,32 +304,132 @@ margin-top:10px;
 }
 
 .sdp-career-journal {
-  line-height: 1.5;
+  line-height: 1.55;
+  font-family: var(--font-serif, "Signika", serif);
+  color: var(--color-text-primary, #ececec);
+}
+
+.sdp-career-journal-host {
+  padding: 0.5rem 0.75rem;
+}
+
+.sdp-career-journal .sdp-career-header h1 {
+  margin: 0 0 0.75em;
+  padding: 0.35em 0.65em;
+  text-align: center;
+  font-size: 1.35em;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: rgba(80, 45, 25, 0.55);
+  border: 1px solid rgba(120, 75, 40, 0.65);
+  border-radius: 2px;
 }
 
 .sdp-career-journal .sdp-career-epigraph {
-  margin: 1em 0;
+  margin: 0.75em 1.5em;
   font-style: italic;
-  opacity: 0.9;
+  opacity: 0.92;
+  border-left: 3px solid rgba(160, 110, 60, 0.55);
+  padding-left: 0.85em;
+}
+
+.sdp-career-journal .sdp-career-intro p {
+  margin: 0.65em 0;
+  text-align: justify;
 }
 
 .sdp-career-journal .sdp-career-meta {
-  margin: 0.5em 0;
+  margin: 0.45em 0;
 }
 
-.sdp-career-journal .sdp-career-divider {
+.sdp-career-journal .sdp-career-progression {
+  margin: 1.25em 0 1.75em;
+  text-align: center;
+}
+
+.sdp-career-journal .sdp-career-progression-title {
+  margin: 0 0 0.65em;
+  font-size: 0.95em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.9;
+}
+
+.sdp-career-journal .sdp-career-progression-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85em;
+}
+
+.sdp-career-journal .sdp-career-progression-table th,
+.sdp-career-journal .sdp-career-progression-table td {
+  border: 1px solid rgba(120, 75, 40, 0.45);
+  padding: 0.25em 0.35em;
+  text-align: center;
+}
+
+.sdp-career-journal .sdp-career-progression-table thead th {
+  background: rgba(80, 45, 25, 0.35);
+  font-weight: 600;
+}
+
+.sdp-career-journal .sdp-career-progression-table tbody th {
+  background: rgba(80, 45, 25, 0.25);
+  width: 2.25em;
+}
+
+.sdp-career-journal .sdp-career-tier {
   margin: 1.5em 0;
-  opacity: 0.35;
+  padding-top: 0.35em;
+  border-top: 2px solid rgba(120, 75, 40, 0.45);
 }
 
-.sdp-career-journal .sdp-career-tier h3 {
-  margin: 1em 0 0.35em;
-  font-size: 1em;
+.sdp-career-journal .sdp-career-tier-title {
+  margin: 0.35em 0 0.65em;
+  font-size: 1.05em;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-text-light-highlight, #f0c090);
 }
 
-.sdp-career-journal .sdp-career-links {
-  margin: 0.25em 0 1em;
-  padding-left: 1.25em;
+.sdp-career-journal .sdp-career-header-compact h1 {
+  font-size: 1.1em;
+  margin-bottom: 0.5em;
+}
+
+.sdp-career-journal .sdp-career-field {
+  margin: 0.65em 0;
+}
+
+.sdp-career-journal .sdp-career-field strong {
+  display: block;
+  margin-bottom: 0.25em;
+}
+
+.sdp-career-journal .sdp-career-field-body {
+  margin-top: 0.15em;
+}
+
+.sdp-career-journal .sdp-career-link-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45em 0.55em;
+  align-items: center;
+}
+
+.sdp-career-journal .sdp-career-link-list .content-link {
+  display: inline-flex;
+  align-items: center;
+  margin: 0;
+  line-height: 1.35;
+  height: auto;
+  min-height: unset;
+  vertical-align: initial;
+  font-weight: 600;
+}
+
+.sdp-career-journal .sdp-career-field .content-link {
+  font-weight: 600;
 }
 
 .sdp-career-journal .sdp-career-error {
@@ -338,5 +438,7 @@ margin-top:10px;
 }
 
 .sdp-career-journal .sdp-career-sheet-link {
-  margin: 0.75em 0 1em;
+  margin: 0.75em 0 0.25em;
+  font-size: 0.9em;
+  opacity: 0.85;
 }

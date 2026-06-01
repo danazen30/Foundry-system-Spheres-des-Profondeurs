@@ -1,6 +1,9 @@
-<article class="sdp-career-journal">
+<article class="sdp-career-journal sdp-career-view-{{view}}">
 
-  <h1>{{title}}</h1>
+  {{#if showIntro}}
+  <header class="sdp-career-header">
+    <h1>{{title}}</h1>
+  </header>
 
   {{#if epigraph1}}
   <blockquote class="sdp-career-epigraph">
@@ -34,23 +37,91 @@
   </p>
   {{/if}}
 
+  {{#if progressionTable}}
+  <section class="sdp-career-progression">
+    <h2 class="sdp-career-progression-title">
+      {{localize "SDP.Journal.Career.ProgressionTitle"}}
+    </h2>
+    <table class="sdp-career-progression-table">
+      <thead>
+        <tr>
+          <th></th>
+          {{#each progressionTable.columns}}
+          <th>{{abbr}}</th>
+          {{/each}}
+        </tr>
+      </thead>
+      <tbody>
+        {{#each progressionTable.rows}}
+        <tr>
+          <th>{{roman}}</th>
+          {{#each cells}}
+          <td>{{this}}</td>
+          {{/each}}
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </section>
+  {{/if}}
+  {{/if}}
+
   {{#if missingTiers}}
   <p class="sdp-career-error">
     {{localize "SDP.Journal.Career.MissingTiers" key=journalKey}}
   </p>
   {{/if}}
 
-  {{#each tiers}}
-  <hr class="sdp-career-divider">
+  {{#if showTiers}}
+  {{#unless showIntro}}
+  <header class="sdp-career-header sdp-career-header-compact">
+    <h1>{{title}}</h1>
+  </header>
+  {{/unless}}
 
+  {{#each tiers}}
   <section class="sdp-career-tier">
 
-    <h2>{{heading}}</h2>
+    <h2 class="sdp-career-tier-title">{{heading}}</h2>
 
     {{#if standing}}
-    <p>
+    <p class="sdp-career-field">
       <strong>{{localize "SDP.Standing"}}:</strong>
       {{standing}}
+    </p>
+    {{/if}}
+
+    {{#if skillsHtml}}
+    <div class="sdp-career-field">
+      <strong>{{localize "SDP.Skills"}}:</strong>
+      <div class="sdp-career-field-body">
+        {{{skillsHtml}}}
+      </div>
+    </div>
+    {{/if}}
+
+    {{#if talentsHtml}}
+    <div class="sdp-career-field">
+      <strong>{{localize "SDP.Talents"}}:</strong>
+      <div class="sdp-career-field-body">
+        {{{talentsHtml}}}
+      </div>
+    </div>
+    {{/if}}
+
+    {{#if workSkillHtml}}
+    <div class="sdp-career-field">
+      <strong>{{localize "SDP.WorkSkill"}}:</strong>
+      <div class="sdp-career-field-body">
+        {{{workSkillHtml}}}
+      </div>
+    </div>
+    {{/if}}
+
+    {{#if trappings}}
+    <p class="sdp-career-field">
+      <strong>{{localize "SDP.Trappings"}}:</strong>
+      {{trappings}}
     </p>
     {{/if}}
 
@@ -60,38 +131,8 @@
     </p>
     {{/if}}
 
-    {{#if characteristics}}
-    <p>
-      <strong>{{localize "SDP.Characteristics"}}:</strong>
-      {{characteristics}}
-    </p>
-    {{/if}}
-
-    {{#if skillsHtml}}
-    <h3>{{localize "SDP.Skills"}}</h3>
-    {{{skillsHtml}}}
-    {{/if}}
-
-    {{#if talentsHtml}}
-    <h3>{{localize "SDP.Talents"}}</h3>
-    {{{talentsHtml}}}
-    {{/if}}
-
-    {{#if workSkill}}
-    <p>
-      <strong>{{localize "SDP.WorkSkill"}}:</strong>
-      {{{workSkill}}}
-    </p>
-    {{/if}}
-
-    {{#if trappings}}
-    <p>
-      <strong>{{localize "SDP.Trappings"}}:</strong>
-      {{trappings}}
-    </p>
-    {{/if}}
-
   </section>
   {{/each}}
+  {{/if}}
 
 </article>

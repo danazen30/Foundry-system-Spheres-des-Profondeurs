@@ -104,6 +104,21 @@
 
     </div>
 
+    <div class="form-group full-width">
+
+      <label>{{localize "SDP.Species"}}</label>
+
+      <input
+        type="text"
+        name="system.species"
+        value="{{system.species}}">
+
+      {{#if display.species}}
+      <p class="career-field-hint">{{display.species}}</p>
+      {{/if}}
+
+    </div>
+
   </div>
 
 </div>

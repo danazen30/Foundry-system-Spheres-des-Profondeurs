@@ -3,8 +3,12 @@
  *
  * Configuration d'une page (onglet Détails → flags) :
  *   flags.sdp.type  = "career"
- *   flags.sdp.key   = "trader"           → clés SDP.Journal.Career.trader.*
- *   flags.sdp.tiers = ["trader"]         → clés d'items carrière (compendium), dans l'ordre
+ *   flags.sdp.key   = "merchant"         → clés SDP.Journal.Career.merchant.*
+ *   flags.sdp.tiers = ["trader", ...]    → clés d'items carrière (compendium), dans l'ordre
+ *   flags.sdp.view  = "intro" | "tiers" | "full" (défaut : full)
+ *
+ *   intro → titre, épigraphes, description, espèces, classe, tableau de progression
+ *   tiers → paliers I, II, III… uniquement
  *
  * Le corps HTML de la page peut rester vide : tout est rendu par le système.
  */
@@ -15,6 +19,7 @@ import {
   formatLocalizedTrappings,
   getLocalizedItemName,
   localizeCareerGroupRef,
+  localizeItemDirectory,
   localizeStanding,
   parseKeyList,
   resolveItemRef
@@ -26,6 +31,19 @@ const TALENTS_PACK = "sdp.talents";
 
 const TIER_ROMAN = [
   "I", "II", "III", "IV", "V", "VI", "VII", "VIII"
+];
+
+const CAREER_CHARACTERISTICS = [
+  "meleeAbility",
+  "rangedAbility",
+  "strength",
+  "toughness",
+  "initiative",
+  "agility",
+  "dexterity",
+  "intelligence",
+  "willpower",
+  "charisma"
 ];
 
 const careerJournalCache = new Map();
@@ -45,6 +63,253 @@ export function isCareerJournalPage(page) {
 
   return page.getFlag?.("sdp", "type") === "career"
     || page.flags?.sdp?.type === "career";
+
+}
+
+export function isCareerJournal(entry) {
+
+  if (!entry) return false;
+
+  if (
+    entry.getFlag?.("sdp", "type") === "career"
+    || entry.flags?.sdp?.type === "career"
+  ) {
+    return true;
+  }
+
+  return entry.pages?.some?.(page =>
+    isCareerJournalPage(page)
+  ) ?? false;
+
+}
+
+export function getCareerJournalEntryTitle() {
+
+  return game.i18n.localize("SDP.Journal.Career.EntryName");
+
+}
+
+export function getLocalizedCareerPageDisplayName(page) {
+
+  if (!isCareerJournalPage(page)) return "";
+
+  const journalKey = getCareerJournalKey(page);
+  const groupRef =
+    localizeJournalField(journalKey, "CareerGroup");
+
+  return groupRef
+    ? localizeCareerGroupRef(groupRef)
+    : "";
+
+}
+
+export async function syncCareerJournalDisplayNames(entry) {
+
+  if (!isCareerJournal(entry)) return entry;
+
+  const entryTitle = getCareerJournalEntryTitle();
+
+  if (entryTitle && entry.name !== entryTitle) {
+    await entry.update({ name: entryTitle });
+  }
+
+  for (const page of entry.pages) {
+
+    if (!isCareerJournalPage(page)) continue;
+
+    const pageName =
+      getLocalizedCareerPageDisplayName(page);
+
+    if (pageName && page.name !== pageName) {
+      await page.update({ name: pageName });
+    }
+
+  }
+
+  return entry;
+
+}
+
+export async function refreshAllCareerJournalDisplayNames() {
+
+  if (!game.journal?.size) return;
+
+  for (const entry of game.journal) {
+
+    if (isCareerJournal(entry)) {
+      await syncCareerJournalDisplayNames(entry);
+    }
+
+  }
+
+  ui.sidebar?.tabs?.journal?.render?.(true);
+
+  for (const app of Object.values(ui.windows)) {
+
+    if (app.document?.documentName === "JournalEntry") {
+      app.render(true);
+    }
+
+  }
+
+}
+
+function localizeCareerJournalDirectory(element) {
+
+  localizeItemDirectory(element, (row) => {
+
+    const id =
+      row.dataset.documentId
+      ?? row.dataset.entryId;
+
+    if (!id) return null;
+
+    const journalEntry = game.journal.get(id);
+
+    if (!journalEntry || !isCareerJournal(journalEntry)) {
+      return null;
+    }
+
+    return getCareerJournalEntryTitle();
+
+  });
+
+  for (const entry of game.journal) {
+
+    if (!isCareerJournal(entry)) continue;
+
+    for (const page of entry.pages) {
+
+      if (!isCareerJournalPage(page)) continue;
+
+      const pageName =
+        getLocalizedCareerPageDisplayName(page);
+
+      if (!pageName) continue;
+
+      element.querySelectorAll(
+        `[data-page-id="${page.id}"] .page-name,`
+        + `[data-page-id="${page.id}"] .document-name,`
+        + `li[data-page-id="${page.id}"] .name`
+      ).forEach(label => {
+        label.textContent = pageName;
+      });
+
+    }
+
+  }
+
+}
+
+function localizeCareerJournalSheet(app, element) {
+
+  const entry = app.document;
+
+  if (!isCareerJournal(entry)) return;
+
+  const root =
+    element instanceof HTMLElement
+      ? element
+      : element?.[0];
+
+  if (!root) return;
+
+  const entryTitle = getCareerJournalEntryTitle();
+
+  if (entryTitle) {
+
+    if (app.window?.title !== undefined) {
+      app.window.title = entryTitle;
+    }
+
+    const windowTitle =
+      root.closest?.(".application")
+        ?.querySelector?.(".window-title")
+      ?? root.querySelector?.(".window-title");
+
+    if (windowTitle) {
+      windowTitle.textContent = entryTitle;
+    }
+
+    root.querySelectorAll(
+      ".journal-header h1, "
+      + ".journal-header .journal-entry-name, "
+      + ".journal-entry-header h1, "
+      + ".journal-sheet-header h1, "
+      + ".journal-sheet-header .name, "
+      + "header.sheet-header h1, "
+      + ".sheet-header .document-name, "
+      + ".journal-entry-title"
+    ).forEach(label => {
+      label.textContent = entryTitle;
+    });
+
+  }
+
+  for (const page of entry.pages) {
+
+    if (!isCareerJournalPage(page)) continue;
+
+    const pageName =
+      getLocalizedCareerPageDisplayName(page);
+
+    if (!pageName) continue;
+
+    root.querySelectorAll(
+      `[data-page-id="${page.id}"] .page-name,`
+      + `[data-page-id="${page.id}"] .page-title,`
+      + `[data-page-id="${page.id}"] .name,`
+      + `[data-page-id="${page.id}"] .document-name,`
+      + `li[data-page-id="${page.id}"]`
+    ).forEach(label => {
+
+      if (label.matches("li[data-page-id]")) {
+
+        const nameEl =
+          label.querySelector(
+            ".page-name, .page-title, .name, .document-name"
+          )
+          ?? label;
+
+        nameEl.textContent = pageName;
+
+        return;
+
+      }
+
+      label.textContent = pageName;
+
+    });
+
+  }
+
+  const activePage =
+    entry.pages.get(
+      root.querySelector("[data-page-id].active")?.dataset?.pageId
+      ?? app._currentPageId
+    );
+
+  if (activePage && isCareerJournalPage(activePage)) {
+
+    const pageName =
+      getLocalizedCareerPageDisplayName(activePage);
+
+    if (pageName) {
+
+      root.querySelectorAll(
+        ".journal-page-header h1, "
+        + ".journal-page-header .page-title, "
+        + ".journal-header .page-title, "
+        + ".journal-header h1.page-title, "
+        + ".journal-page-title, "
+        + "h1.page-heading"
+      ).forEach(label => {
+        label.textContent = pageName;
+      });
+
+    }
+
+  }
 
 }
 
@@ -84,6 +349,39 @@ function getTierKeys(page, journalKey) {
   }
 
   return journalKey ? [journalKey] : [];
+
+}
+
+function getCareerPageView(page) {
+
+  const view =
+    page.getFlag?.("sdp", "view")
+    ?? page.flags?.sdp?.view;
+
+  if (view === "intro" || view === "tiers") {
+    return view;
+  }
+
+  return "full";
+
+}
+
+async function getPrimaryCareerItem(tierKeys) {
+
+  for (const tierKey of tierKeys) {
+
+    const careerItem =
+      await findCompendiumItemByRef(
+        CAREER_PACK,
+        "career",
+        tierKey
+      );
+
+    if (careerItem) return careerItem;
+
+  }
+
+  return null;
 
 }
 
@@ -127,7 +425,7 @@ async function buildItemUuidLink(type, ref, packId) {
 
 }
 
-async function buildItemLinkListHtml(type, value, packId) {
+async function buildItemLinkInlineHtml(type, value, packId) {
 
   const keys = parseKeyList(value);
 
@@ -139,9 +437,45 @@ async function buildItemLinkListHtml(type, value, packId) {
     )
   );
 
-  return `<ul class="sdp-career-links">${items.map(link =>
-    `<li>${link}</li>`
-  ).join("")}</ul>`;
+  return `<span class="sdp-career-link-list">${items.join("")}</span>`;
+
+}
+
+function getCharacteristicAbbr(key) {
+
+  const translationKey =
+    `SDP.AttributeAbbr.${key.charAt(0).toUpperCase()}${key.slice(1)}`;
+
+  return game.i18n.has(translationKey)
+    ? game.i18n.localize(translationKey)
+    : key;
+
+}
+
+function buildProgressionTable(tierCharacteristicKeys) {
+
+  if (!tierCharacteristicKeys.length) return null;
+
+  const hasAny = tierCharacteristicKeys.some(
+    keys => keys.length
+  );
+
+  if (!hasAny) return null;
+
+  return {
+    columns: CAREER_CHARACTERISTICS.map(key => ({
+      key,
+      abbr: getCharacteristicAbbr(key)
+    })),
+    rows: tierCharacteristicKeys.map((characteristicKeys, tierIndex) => ({
+      roman: TIER_ROMAN[tierIndex] ?? String(tierIndex + 1),
+      cells: CAREER_CHARACTERISTICS.map(charKey =>
+        characteristicKeys.includes(charKey)
+          ? (TIER_ROMAN[tierIndex] ?? String(tierIndex + 1))
+          : ""
+      )
+    }))
+  };
 
 }
 
@@ -164,38 +498,32 @@ async function prepareTierContext(careerItem, index) {
   const system = careerItem.system ?? {};
 
   const skillsHtml =
-    await buildItemLinkListHtml(
+    await buildItemLinkInlineHtml(
       "skill",
       system.skills,
       SKILLS_PACK
     );
 
   const talentsHtml =
-    await buildItemLinkListHtml(
+    await buildItemLinkInlineHtml(
       "talent",
       system.talents,
       TALENTS_PACK
     );
 
-  const workSkillLink =
-    system.workSkill
-      ? await buildItemUuidLink(
-          "skill",
-          system.workSkill,
-          SKILLS_PACK
-        )
-      : "";
+  const workSkillHtml =
+    await buildItemLinkInlineHtml(
+      "skill",
+      system.workSkill,
+      SKILLS_PACK
+    );
 
   return {
     heading: `${roman}. ${name}`,
     standing: localizeStanding(system.standing),
-    characteristics: formatLocalizedKeyList(
-      system.characteristics,
-      { characteristic: true }
-    ),
     skillsHtml,
     talentsHtml,
-    workSkill: workSkillLink,
+    workSkillHtml,
     trappings: formatLocalizedTrappings(system.trappings),
     sheetLink:
       `@UUID[${careerItem.uuid}]`
@@ -211,8 +539,12 @@ export async function prepareCareerJournalContext(page) {
 
   const journalKey = getCareerJournalKey(page);
   const tierKeys = getTierKeys(page, journalKey);
+  const view = getCareerPageView(page);
+  const showIntro = view === "full" || view === "intro";
+  const showTiers = view === "full" || view === "tiers";
 
   const tiers = [];
+  const tierCharacteristicKeys = [];
 
   for (const tierKey of tierKeys) {
 
@@ -225,14 +557,27 @@ export async function prepareCareerJournalContext(page) {
 
     if (!careerItem) continue;
 
-    tiers.push(
-      await prepareTierContext(
-        careerItem,
-        tiers.length
-      )
-    );
+    if (showIntro) {
+      tierCharacteristicKeys.push(
+        parseKeyList(careerItem.system?.characteristics)
+      );
+    }
+
+    if (showTiers) {
+      tiers.push(
+        await prepareTierContext(
+          careerItem,
+          tiers.length
+        )
+      );
+    }
 
   }
+
+  const progressionTable =
+    showIntro
+      ? buildProgressionTable(tierCharacteristicKeys)
+      : null;
 
   const title =
     localizeJournalField(journalKey, "Title")
@@ -242,19 +587,34 @@ export async function prepareCareerJournalContext(page) {
       journalKey
     );
 
-  const speciesKeys =
+  const primaryCareer =
+    await getPrimaryCareerItem(tierKeys);
+
+  const speciesFromItem =
+    primaryCareer?.system?.species;
+
+  const speciesFromLang =
     localizeJournalField(journalKey, "Species");
 
-  const groupKey =
-    localizeJournalField(journalKey, "CareerGroup");
+  const speciesSource =
+    speciesFromItem || speciesFromLang;
 
   const species =
-    speciesKeys
+    speciesSource
       ? formatLocalizedKeyList(
-          speciesKeys,
+          speciesSource,
           { type: "specie" }
         )
       : "";
+
+  const groupFromItem =
+    primaryCareer?.system?.careerGroup;
+
+  const groupFromLang =
+    localizeJournalField(journalKey, "CareerGroup");
+
+  const groupKey =
+    groupFromItem || groupFromLang;
 
   const group =
     groupKey
@@ -263,16 +623,26 @@ export async function prepareCareerJournalContext(page) {
 
   return {
     journalKey,
+    view,
+    showIntro,
+    showTiers,
     title,
-    epigraph1: localizeJournalField(journalKey, "Epigraph1"),
-    epigraph2: localizeJournalField(journalKey, "Epigraph2"),
-    intro: formatIntro(
-      localizeJournalField(journalKey, "Intro")
-    ),
-    species,
-    group,
+    epigraph1: showIntro
+      ? localizeJournalField(journalKey, "Epigraph1")
+      : "",
+    epigraph2: showIntro
+      ? localizeJournalField(journalKey, "Epigraph2")
+      : "",
+    intro: showIntro
+      ? formatIntro(
+          localizeJournalField(journalKey, "Intro")
+        )
+      : "",
+    species: showIntro ? species : "",
+    group: showIntro ? group : "",
+    progressionTable,
     tiers,
-    missingTiers: !tiers.length
+    missingTiers: showTiers && !tiers.length
   };
 
 }
@@ -359,65 +729,276 @@ export async function rebuildAllCareerJournalCaches() {
 
 }
 
-export function injectCareerJournalPage(app, element) {
+function resolveJournalPageFromApp(app) {
 
-  const page =
+  const directPage =
     app.page
-    ?? app.document;
+    ?? (app.document?.documentName === "JournalEntryPage"
+      ? app.document
+      : null);
 
-  if (!isCareerJournalPage(page)) return;
+  if (directPage) return directPage;
 
-  const html =
-    getCachedCareerJournalHtml(page);
+  const journal =
+    app.document?.documentName === "JournalEntry"
+      ? app.document
+      : app.document?.parent?.documentName === "JournalEntry"
+        ? app.document.parent
+        : null;
 
-  if (!html) {
-
-    refreshCareerJournalCache(page).then(() => {
-
-      if (app.rendered) {
-        app.render(true);
-      }
-
-    });
-
-    return;
-
-  }
+  if (!journal?.pages?.size) return null;
 
   const root =
-    element instanceof HTMLElement
-      ? element
-      : element?.[0];
+    app.element instanceof HTMLElement
+      ? app.element
+      : app.element?.[0];
 
-  if (!root) return;
+  const pageId =
+    root?.querySelector?.("[data-page-id]")?.dataset?.pageId
+    ?? root?.querySelector?.(".journal-entry-page.active")?.dataset?.pageId
+    ?? app._currentPageId
+    ?? app.viewedPage?.id;
 
-  const content =
-    root.querySelector(".journal-entry-page .journal-entry-content")
+  if (pageId) {
+    return journal.pages.get(pageId) ?? null;
+  }
+
+  return journal.pages.contents.find(page =>
+    isCareerJournalPage(page)
+  ) ?? null;
+
+}
+
+function findJournalPageContent(root, page) {
+
+  if (!root) return null;
+
+  const byPageId =
+    page?.id
+      ? root.querySelector(`[data-page-id="${page.id}"] .editor-content`)
+        ?? root.querySelector(`[data-page-id="${page.id}"] .journal-entry-content`)
+        ?? root.querySelector(`[data-page-id="${page.id}"] .journal-page-content`)
+      : null;
+
+  if (byPageId) return byPageId;
+
+  return root.querySelector(".journal-entry-page .journal-entry-content")
     ?? root.querySelector(".journal-entry-page-content")
     ?? root.querySelector(".journal-page-content")
-    ?? root.querySelector("article.journal-entry-page .content");
+    ?? root.querySelector("article.journal-entry-page .content")
+    ?? root.querySelector(".journal-sheet .journal-body .editor-content")
+    ?? root.querySelector(".journal-entry-pages .editor-content");
+
+}
+
+function applyCareerJournalHtml(content, html) {
 
   if (
     !content
+    || !html
     || content.classList.contains("ProseMirror")
     || content.closest(".ProseMirror")
   ) {
-    return;
+    return false;
   }
 
   content.innerHTML = html;
+  content.classList.add("sdp-career-journal-host");
+
+  return true;
+
+}
+
+function scheduleCareerJournalInjection(app, element, page) {
+
+  if (!isCareerJournalPage(page)) return;
+
+  const inject = () => {
+
+    const root =
+      element instanceof HTMLElement
+        ? element
+        : element?.[0];
+
+    const html =
+      getCachedCareerJournalHtml(page);
+
+    if (!html) {
+
+      refreshCareerJournalCache(page).then(() => {
+
+        if (app.rendered !== false) {
+          scheduleCareerJournalInjection(app, element, page);
+        }
+
+      });
+
+      return;
+
+    }
+
+    const content =
+      findJournalPageContent(root, page);
+
+    applyCareerJournalHtml(content, html);
+
+  };
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(inject);
+  });
+
+}
+
+export function injectCareerJournalPage(app, element) {
+
+  const page =
+    resolveJournalPageFromApp(app);
+
+  if (!page) return;
+
+  scheduleCareerJournalInjection(app, element, page);
+
+}
+
+/**
+ * Crée un journal carrière SDP (contenu auto-généré).
+ */
+export async function createSdpCareerJournal({
+  name = null,
+  journalKey = "merchant",
+  tiers = ["trader"],
+  splitPages = false
+} = {}) {
+
+  const title =
+    name
+    ?? (game.i18n.has(`SDP.Journal.Career.${journalKey}.Title`)
+      ? game.i18n.localize(`SDP.Journal.Career.${journalKey}.Title`)
+      : journalKey);
+
+  const tiersLabel =
+    game.i18n.has("SDP.Journal.Career.TiersPageName")
+      ? game.i18n.localize("SDP.Journal.Career.TiersPageName")
+      : "Paliers";
+
+  const baseFlags = {
+    type: "career",
+    key: journalKey,
+    tiers
+  };
+
+  const pages = splitPages
+    ? [
+      {
+        name: title,
+        type: "text",
+        text: { content: "", format: 1 },
+        flags: {
+          sdp: {
+            ...baseFlags,
+            view: "intro"
+          }
+        }
+      },
+      {
+        name: `${title} — ${tiersLabel}`,
+        type: "text",
+        text: { content: "", format: 1 },
+        flags: {
+          sdp: {
+            ...baseFlags,
+            view: "tiers"
+          }
+        }
+      }
+    ]
+    : [{
+      name: title,
+      type: "text",
+      text: { content: "", format: 1 },
+      flags: {
+        sdp: {
+          ...baseFlags,
+          view: "full"
+        }
+      }
+    }];
+
+  const entry = await JournalEntry.create({
+    name: getCareerJournalEntryTitle(),
+    flags: {
+      sdp: {
+        type: "career",
+        key: journalKey
+      }
+    },
+    pages
+  });
+
+  await syncCareerJournalDisplayNames(entry);
+
+  for (const page of entry.pages) {
+    if (isCareerJournalPage(page)) {
+      await refreshCareerJournalCache(page);
+    }
+  }
+
+  entry.sheet.render(true);
+
+  return entry;
+
+}
+
+/**
+ * Configure une page journal carrière SDP existante.
+ */
+export async function configureCareerJournalPage(
+  page,
+  {
+    journalKey = "merchant",
+    tiers = ["trader"],
+    view = "full"
+  } = {}
+) {
+
+  if (!page) {
+    throw new Error("configureCareerJournalPage: page introuvable");
+  }
+
+  await page.setFlag("sdp", "type", "career");
+  await page.setFlag("sdp", "key", journalKey);
+  await page.setFlag("sdp", "tiers", tiers);
+  await page.setFlag("sdp", "view", view);
+
+  await refreshCareerJournalCache(page);
+
+  const entry = page.parent;
+
+  if (entry) {
+    await syncCareerJournalDisplayNames(entry);
+  }
+
+  const journalSheet =
+    entry?.sheet ?? page.sheet;
+
+  if (journalSheet?.rendered !== false) {
+    journalSheet.render(true);
+  }
+
+  return page;
 
 }
 
 export function registerCareerJournalHooks() {
 
-  const hooks = [
+  const pageHooks = [
     "renderJournalEntryPageTextSheet",
     "renderJournalEntryPageProseMirrorSheet",
     "renderJournalEntryPageSheet"
   ];
 
-  for (const hookName of hooks) {
+  for (const hookName of pageHooks) {
 
     Hooks.on(hookName, (app, element) => {
 
@@ -428,6 +1009,58 @@ export function registerCareerJournalHooks() {
   }
 
   Hooks.on(
+    "renderJournalEntrySheet",
+    (app, element) => {
+
+      injectCareerJournalPage(app, element);
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          localizeCareerJournalSheet(app, element);
+        });
+      });
+
+    }
+  );
+
+  Hooks.on(
+    "renderSidebarTab",
+    (app, element) => {
+
+      if (app.tabName !== "journal") return;
+
+      const root =
+        element instanceof HTMLElement
+          ? element
+          : element?.[0];
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          localizeCareerJournalDirectory(root);
+        });
+      });
+
+    }
+  );
+
+  Hooks.on(
+    "renderApplicationV2",
+    (app, element) => {
+
+      const docName =
+        app.document?.documentName;
+
+      if (
+        docName === "JournalEntryPage"
+        || docName === "JournalEntry"
+      ) {
+        injectCareerJournalPage(app, element);
+      }
+
+    }
+  );
+
+  Hooks.on(
     "updateJournalEntryPage",
     (page) => {
 
@@ -435,6 +1068,7 @@ export function registerCareerJournalHooks() {
 
       refreshCareerJournalCache(page).then(() => {
         page.sheet?.render?.(true);
+        page.parent?.sheet?.render?.(true);
       });
 
     }

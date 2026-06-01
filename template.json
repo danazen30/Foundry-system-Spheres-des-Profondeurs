@@ -912,7 +912,13 @@
       "current": false,
       "completed": false,
       "careerGroup": "",
-      "standing": ""
+      "standing": "",
+      "species": "",
+      "key": {
+        "type": "string",
+        "label": "Key",
+        "value": ""
+      }
     },
     "sign": {
       "templates": [

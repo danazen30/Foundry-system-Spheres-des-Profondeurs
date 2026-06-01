@@ -25,6 +25,10 @@ export class SdpCareerSheet extends SdpItemSheet {
     context.display = {
       careerGroup: localizeCareerGroupRef(system.careerGroup),
       standing: localizeStanding(system.standing),
+      species: formatLocalizedKeyList(
+        system.species,
+        { type: "specie" }
+      ),
       characteristics: formatLocalizedKeyList(
         system.characteristics,
         { characteristic: true }
@@ -37,9 +41,9 @@ export class SdpCareerSheet extends SdpItemSheet {
         system.talents,
         { type: "talent" }
       ),
-      workSkill: localizeItemRef(
-        "skill",
-        system.workSkill
+      workSkill: formatLocalizedKeyList(
+        system.workSkill,
+        { type: "skill" }
       ),
       trappings: formatLocalizedTrappings(system.trappings)
     };

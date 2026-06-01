@@ -55,8 +55,12 @@ import {
   localizeTableResultConfig
 } from "./system/roll-table-utils.js";
 import {
+  configureCareerJournalPage,
+  createSdpCareerJournal,
   rebuildAllCareerJournalCaches,
-  registerCareerJournalHooks
+  refreshAllCareerJournalDisplayNames,
+  registerCareerJournalHooks,
+  syncCareerJournalDisplayNames
 } from "./journal/career-journal.js";
 
 export let sdpSocket;
@@ -698,6 +702,9 @@ Hooks.once("ready", async () => {
   level: SdpLevelService
 };
 game.sdp.levelUpApp = LevelUpApp;
+game.sdp.createCareerJournal = createSdpCareerJournal;
+game.sdp.configureCareerJournalPage = configureCareerJournalPage;
+game.sdp.syncCareerJournal = syncCareerJournalDisplayNames;
 
 sdpSocket = socketlib.registerSystem("sdp");
 
@@ -730,6 +737,8 @@ localizeAllSdpCompendiumIndices(
 );
 
 await rebuildAllCareerJournalCaches();
+
+await refreshAllCareerJournalDisplayNames();
 
 Hooks.callAll(
   "sdpRefreshLocalization"
@@ -955,7 +964,9 @@ Hooks.on(
     refreshSdpUiLocalization();
     refreshOpenSdpCompendiumApps();
 
-    rebuildAllCareerJournalCaches().then(() => {
+    rebuildAllCareerJournalCaches().then(async () => {
+
+      await refreshAllCareerJournalDisplayNames();
 
       for (const app of Object.values(ui.windows)) {
 
@@ -992,6 +1003,10 @@ Hooks.on(
     refreshSdpItemSheets();
     refreshSdpUiLocalization();
     refreshOpenSdpCompendiumApps();
+
+    rebuildAllCareerJournalCaches().then(async () => {
+      await refreshAllCareerJournalDisplayNames();
+    });
 
   }
 );

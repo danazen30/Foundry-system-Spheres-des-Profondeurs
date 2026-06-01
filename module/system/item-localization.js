@@ -481,6 +481,64 @@ export function localizeTrappingRef(ref, fallback = "") {
 
 }
 
+const TRAPPING_CHOICE_SPLIT = /\s+(?:or|ou)\s+/i;
+
+const TRAPPING_QUANTITY_PATTERN =
+  /^(\d+)\s*(?:x\s*)?(.+)$/i;
+
+function localizeTrappingQuantityPart(part) {
+
+  const trimmed =
+    typeof part === "string"
+      ? part.trim()
+      : "";
+
+  if (!trimmed) return "";
+
+  const quantityMatch =
+    trimmed.match(TRAPPING_QUANTITY_PATTERN);
+
+  if (quantityMatch) {
+
+    const quantity = quantityMatch[1];
+    const ref = quantityMatch[2].trim();
+    const name = localizeTrappingRef(ref, ref);
+
+    return `${quantity} ${name}`;
+
+  }
+
+  return localizeTrappingRef(trimmed);
+
+}
+
+function localizeTrappingEntry(entry) {
+
+  const trimmed =
+    typeof entry === "string"
+      ? entry.trim()
+      : "";
+
+  if (!trimmed) return "";
+
+  const choices = trimmed.split(TRAPPING_CHOICE_SPLIT);
+
+  if (choices.length === 1) {
+    return localizeTrappingQuantityPart(trimmed);
+  }
+
+  const orWord =
+    game.i18n.has("SDP.TrappingsOr")
+      ? game.i18n.localize("SDP.TrappingsOr")
+      : "or";
+
+  return choices
+    .map(part => localizeTrappingQuantityPart(part))
+    .filter(Boolean)
+    .join(` ${orWord} `);
+
+}
+
 export function formatLocalizedTrappings(value) {
 
   const text =
@@ -501,7 +559,7 @@ export function formatLocalizedTrappings(value) {
         if (!refs.length) return "";
 
         return refs
-          .map(ref => localizeTrappingRef(ref))
+          .map(ref => localizeTrappingEntry(ref))
           .join(", ");
 
       })
@@ -511,7 +569,7 @@ export function formatLocalizedTrappings(value) {
   }
 
   return parseTrappingRefs(value)
-    .map(ref => localizeTrappingRef(ref))
+    .map(ref => localizeTrappingEntry(ref))
     .join(", ");
 
 }
