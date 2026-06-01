@@ -124,6 +124,70 @@ export function getLocalizedItemName(type, key, fallback = "") {
 
 }
 
+function getSharedDescriptionKey(type, key) {
+
+  const normalizedKey =
+    typeof key === "string"
+      ? key.trim()
+      : "";
+
+  if (
+    type === "talent"
+    && normalizedKey.startsWith("network")
+    && normalizedKey !== "network"
+  ) {
+    return "network";
+  }
+
+  return null;
+
+}
+
+export function getLocalizedItemDescription(
+  type,
+  key,
+  fallback = ""
+) {
+
+  const normalizedKey =
+    typeof key === "string"
+      ? key.trim()
+      : key;
+
+  if (!type || !normalizedKey) return fallback;
+
+  const itemType =
+    type.charAt(0).toUpperCase()
+    + type.slice(1);
+
+  const specificKey =
+    `SDP.Item.${itemType}.${normalizedKey}.Description`;
+
+  if (game.i18n.has(specificKey)) {
+    return game.i18n.localize(specificKey);
+  }
+
+  const sharedKey =
+    getSharedDescriptionKey(
+      type,
+      normalizedKey
+    );
+
+  if (sharedKey) {
+
+    const sharedTranslationKey =
+      `SDP.Item.${itemType}.${sharedKey}.Description`;
+
+    if (game.i18n.has(sharedTranslationKey)) {
+      return game.i18n.localize(sharedTranslationKey);
+    }
+
+  }
+
+  return fallback;
+
+}
+
 export function normalizeItemRef(value = "") {
 
   return String(value || "").trim().toLowerCase();

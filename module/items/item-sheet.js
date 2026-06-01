@@ -1,5 +1,6 @@
 import { ITEM_TRAITS, ARMOR_TRAITS} from "../system/config.js";
 import { formatPlainTextAsHtml } from "../system/text-format.js";
+import { getLocalizedItemDescription } from "../system/item-localization.js";
 import { restoreItemScroll, registerEditorToggles, setupRichTextEditors, setupTextareaResize} from "../actors/actor-sheet-ui.js";
 
 const { ItemSheetV2 } = foundry.applications.sheets;
@@ -166,13 +167,13 @@ const localizedName =
     ? game.i18n.localize(nameKey)
     : this.document.name;
 
-const descriptionKey =
-  `SDP.Item.${itemType}.${itemKey}.Description`;
-
 const localizedDescription =
-  game.i18n.has(descriptionKey)
+  itemKey
     ? formatPlainTextAsHtml(
-        game.i18n.localize(descriptionKey)
+        getLocalizedItemDescription(
+          this.document.type,
+          itemKey
+        )
       )
     : "";
 
