@@ -98,17 +98,6 @@ function localizeJournalField(journalKey, field) {
 
 }
 
-function localizeCareerStatus(careerKey, fallback = "") {
-
-  const translationKey =
-    `SDP.Item.Career.${careerKey}.Status`;
-
-  return game.i18n.has(translationKey)
-    ? game.i18n.localize(translationKey)
-    : fallback;
-
-}
-
 function formatIntro(text) {
 
   if (!text?.trim()) return "";
@@ -199,10 +188,6 @@ async function prepareTierContext(careerItem, index) {
 
   return {
     heading: `${roman}. ${name}`,
-    status: localizeCareerStatus(
-      key,
-      system.status ?? ""
-    ),
     standing: localizeStanding(system.standing),
     characteristics: formatLocalizedKeyList(
       system.characteristics,

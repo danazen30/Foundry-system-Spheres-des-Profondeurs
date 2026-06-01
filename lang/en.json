@@ -882,6 +882,10 @@
 "SDP.Item.Talent.intriguer.Description": "You understand power games, hidden alliances, and rivalries that shape organizations and societies. Where others see only isolated events, you are able to discern the interests, influences, and maneuvers operating behind the scenes.\n\nOnce per session, you may ask the GM a question regarding a political situation, an organization, or a network of influence. The GM then makes a secret Intelligence Test and reveals information, clues, or observations based on the SL achieved.\n\nThe intelligence obtained is not always complete, but it often allows you to better understand the true stakes of a situation.",
 "SDP.Item.Talent.liar.Name": "Liar",
 "SDP.Item.Talent.liar.Description": "You possess a remarkable talent for manipulating the truth. Lies, half-truths, and genuine facts blend in your speech with such ease that it becomes extremely difficult to distinguish what is true from what is false.\n\nWhen you use the Charm Skill to lie or deceive someone, your listeners cannot use Intuition to detect whether your words are suspicious or inconsistent. They must rely on other evidence, testimony, or circumstances to question what you say.\n\nThis does not make your lies automatically believable, but it becomes much harder to perceive the deception hidden within them.",
+"SDP.Item.Talent.negotiator.Name": "Negotiator",
+"SDP.Item.Talent.negotiator.Description": "You know the inner workings of commerce and how to conduct negotiations to your advantage. Thanks to your experience, you regularly obtain better terms when buying or selling goods.\n\nWhen you use the Haggle Skill, prices obtained are improved by an additional 10% in your favor, whether you are trying to buy cheaper or sell for more.\n\nThe GM remains free to limit this advantage when a seller cannot reasonably sell at a loss or when circumstances make any negotiation difficult.",
+"SDP.Item.Talent.swindle.Name": "Swindle",
+"SDP.Item.Talent.swindle.Description": "You know how to discreetly skim a small share of the wealth that passes through your hands. Cooked books, forgotten commissions, or hidden profits—you have learned to benefit from transactions without drawing attention.\n\nEach time you earn money, whether in play or through an Income activity, you may make an opposed Intelligence Test against your employer, if you have one. On a success, you divert an additional sum whose value depends on the importance of the transaction, at the GM's discretion.\n\nIf your employer achieves +6 SL or more than you, your scheme is discovered. You keep the money obtained, but the consequences of your swindle are left to the GM's judgment. In all other cases, you fail to divert any money.",
 "SDP.Item.Talent.handyman.Name": "Handyman",
 "SDP.Item.Talent.handyman.Description": "You have a knack for understanding how things work and finding solutions where others see only broken parts. Through ingenuity and experience, you can repair a wide variety of equipment even without specialized training.\n\nEffect: when attempting to repair a damaged or broken item, all non-magical Trade Skills are treated as Basic Skills for you.",
 
@@ -994,12 +998,15 @@
 
   "SDP.Item.Container.handcart.Name" : "Handcart",
   "SDP.Item.Container.handcart.Description" : "This small handcart is designed to transport goods, equipment, or supplies over short and medium distances. It may be pulled by hand or hitched to a mule, donkey, or any other suitable draft animal.\n\nSimple but sturdy, it is commonly used by merchants, artisans, travelers, and farmers to move loads too cumbersome to carry on one's back.",
+  "SDP.Item.Container.riverboat.Name" : "River transport boat",
+  "SDP.Item.Container.wagon.Name" : "Wagons",
 
   "SDP.Item.Possession.grimoire.Name" : "Grimoire",
   "SDP.Item.Possession.grimoire.Description" : "it's a grimoire",
 
   "SDP.Item.Possession.abacus.Name" : "Abacus",
   "SDP.Item.Possession.abacus.Description" : "A simple tool used by merchants to keep their accounts, check their merchandise, and manage their daily transactions.",
+  "SDP.Item.Possession.guildlicense.Name" : "Guild license",
 
   "SDP.Item.Injury.lightbody.name" : "Light body injury",
   "SDP.Item.Injury.lightbody.description" : "it's a light body injury",
@@ -1007,7 +1014,6 @@
   "SDP.Item.Injury.lightbodyconsequence.description" : "it's a light body injury (consequence)",
 
   "SDP.Item.Career.trader.Name" : "Trader",
-  "SDP.Item.Career.trader.Description" : "it's a trader",
 
   "SDP.Journal.Career.SpeciesLabel": "Species",
   "SDP.Journal.Career.ViewSheet": "View career sheet: {name}",

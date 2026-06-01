@@ -38,11 +38,15 @@ import { SdpConditionEngine } from "./system/condition-engine.js";
 import { SdpTurnEngine } from "./system/turn-engine.js";
 import {
   indexSdpItemPacks,
+  installSdpCompendiumIndexLocalization,
+  localizeAllSdpCompendiumIndices,
   localizeRolltableCompendium,
   localizeSdpCompendium,
   localizeSidebarFolders,
   localizeSidebarItems,
-  refreshSdpUiLocalization
+  refreshSdpUiLocalization,
+  requestSdpCompendiumResort,
+  resetSdpCompendiumResortFlag
 } from "./system/item-localization.js";
 import {
   ensureSdpRollTableFlags,
@@ -415,6 +419,15 @@ function applySdpCompendiumLocalization(app, element) {
 
   if (!html) return;
 
+  if (
+    requestSdpCompendiumResort(
+      app,
+      SDP_ROLLTABLE_LOCALIZATION
+    )
+  ) {
+    return;
+  }
+
   const localize = () => {
 
     const labelKey =
@@ -470,6 +483,15 @@ Hooks.on(
     if (!element)
       return;
 
+    if (
+      requestSdpCompendiumResort(
+        app,
+        SDP_ROLLTABLE_LOCALIZATION
+      )
+    ) {
+      return;
+    }
+
     const localize = () => {
       localizeSdpCompendium(
         element,
@@ -482,6 +504,17 @@ Hooks.on(
       localize();
       requestAnimationFrame(localize);
     });
+
+  }
+);
+
+Hooks.on(
+  "closeApplicationV2",
+  (app) => {
+
+    if (app.collection?.metadata?.system === "sdp") {
+      resetSdpCompendiumResortFlag(app);
+    }
 
   }
 );
@@ -648,6 +681,7 @@ Hooks.once("ready", async () => {
 
     await pack.getIndex({
       fields: [
+        "name",
         "flags.sdp.key"
       ]
     });
@@ -685,7 +719,15 @@ sdpSocket.register(
   }
 );
 
+installSdpCompendiumIndexLocalization(
+  SDP_ROLLTABLE_LOCALIZATION
+);
+
 await indexSdpItemPacks();
+
+localizeAllSdpCompendiumIndices(
+  SDP_ROLLTABLE_LOCALIZATION
+);
 
 await rebuildAllCareerJournalCaches();
 
@@ -870,13 +912,48 @@ function refreshSdpItemSheets() {
 
 }
 
+function refreshOpenSdpCompendiumApps() {
+
+  for (const app of Object.values(ui.windows)) {
+
+    if (
+      app.collection?.metadata?.system ===
+      "sdp"
+    ) {
+      resetSdpCompendiumResortFlag(app);
+      app.render(true);
+    }
+
+  }
+
+}
+
+Hooks.on(
+  "updateCompendium",
+  (pack) => {
+
+    if (pack.metadata?.system !== "sdp") return;
+
+    localizeAllSdpCompendiumIndices(
+      SDP_ROLLTABLE_LOCALIZATION
+    );
+
+    refreshOpenSdpCompendiumApps();
+
+  }
+);
+
 Hooks.on(
   "i18nInit",
   () => {
 
     localizeAllSdpPackLabels();
+    localizeAllSdpCompendiumIndices(
+      SDP_ROLLTABLE_LOCALIZATION
+    );
     refreshSdpItemSheets();
     refreshSdpUiLocalization();
+    refreshOpenSdpCompendiumApps();
 
     rebuildAllCareerJournalCaches().then(() => {
 
@@ -909,8 +986,12 @@ Hooks.on(
     ) return;
 
     localizeAllSdpPackLabels();
+    localizeAllSdpCompendiumIndices(
+      SDP_ROLLTABLE_LOCALIZATION
+    );
     refreshSdpItemSheets();
     refreshSdpUiLocalization();
+    refreshOpenSdpCompendiumApps();
 
   }
 );

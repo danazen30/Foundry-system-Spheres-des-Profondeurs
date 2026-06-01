@@ -771,6 +771,158 @@ export function refreshSdpUiLocalization() {
 }
 
 /**
+ * Met à jour les noms dans l'index compendium (tri + recherche Foundry).
+ */
+export function localizeSdpPackIndex(
+  pack,
+  rolltableMap = null
+) {
+
+  if (!pack?.index?.size) return;
+
+  if (pack.documentName === "Item") {
+
+    for (const entry of pack.index.values()) {
+
+      if (!entry._sdpSourceName) {
+        entry._sdpSourceName = entry.name;
+      }
+
+      entry.name = getLocalizedItemName(
+        entry.type,
+        entry.system?.key,
+        entry._sdpSourceName
+      );
+
+    }
+
+    return;
+
+  }
+
+  if (
+    pack.documentName === "RollTable"
+    && rolltableMap
+  ) {
+
+    for (const entry of pack.index.values()) {
+
+      const localizationKey =
+        rolltableMap[entry._id];
+
+      if (!localizationKey) continue;
+
+      if (!entry._sdpSourceName) {
+        entry._sdpSourceName = entry.name;
+      }
+
+      entry.name =
+        game.i18n.localize(localizationKey);
+
+    }
+
+  }
+
+}
+
+export function localizeAllSdpCompendiumIndices(
+  rolltableMap = null
+) {
+
+  for (const pack of game.packs) {
+
+    if (pack.metadata.system !== "sdp") continue;
+
+    if (
+      pack.documentName === "Item"
+      || pack.documentName === "RollTable"
+    ) {
+      localizeSdpPackIndex(
+        pack,
+        rolltableMap
+      );
+    }
+
+  }
+
+}
+
+/**
+ * Localise l'index après chaque getIndex() (tri/recherche avant le rendu).
+ */
+export function installSdpCompendiumIndexLocalization(
+  rolltableMap = null
+) {
+
+  for (const pack of game.packs) {
+
+    if (pack.metadata.system !== "sdp") continue;
+
+    if (
+      pack.documentName !== "Item"
+      && pack.documentName !== "RollTable"
+    ) continue;
+
+    if (pack._sdpGetIndexWrapped) continue;
+
+    pack._sdpGetIndexWrapped = true;
+
+    const originalGetIndex =
+      pack.getIndex.bind(pack);
+
+    pack.getIndex = async function(options) {
+
+      const index =
+        await originalGetIndex(options);
+
+      localizeSdpPackIndex(
+        pack,
+        rolltableMap
+      );
+
+      return index;
+
+    };
+
+  }
+
+}
+
+/**
+ * Re-rend le compendium une fois après localisation de l'index (tri alphabétique).
+ */
+export function requestSdpCompendiumResort(
+  app,
+  rolltableMap = null
+) {
+
+  if (!app || app._sdpSortRefreshDone) return false;
+
+  app._sdpSortRefreshDone = true;
+
+  localizeAllSdpCompendiumIndices(rolltableMap);
+
+  queueMicrotask(() => {
+
+    if (app.rendered !== false) {
+      app.render(true);
+    }
+
+  });
+
+  return true;
+
+}
+
+export function resetSdpCompendiumResortFlag(app) {
+
+  if (app) {
+    delete app._sdpSortRefreshDone;
+  }
+
+}
+
+/**
  * Index compendium : inclure system.key pour la traduction sans ouvrir l'objet.
  */
 export async function indexSdpItemPacks() {
@@ -782,10 +934,14 @@ export async function indexSdpItemPacks() {
 
     await pack.getIndex({
       fields: [
+        "name",
+        "type",
         "system.key",
         "flags.sdp.key"
       ]
     });
+
+    localizeSdpPackIndex(pack);
 
   }
 

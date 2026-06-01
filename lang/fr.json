@@ -880,6 +880,10 @@
 "SDP.Item.Talent.intriguer.Description": "Vous comprenez les jeux de pouvoir, les alliances cachées et les rivalités qui façonnent les organisations et les sociétés. Là où d'autres ne voient que des événements isolés, vous êtes capable de discerner les intérêts, les influences et les manœuvres qui se cachent en arrière-plan.\n\nUne fois par session, vous pouvez poser une question au MJ concernant une situation politique, une organisation ou un réseau d'influence. Le MJ effectue alors un Test secret d'Intelligence et vous révèle des informations, des indices ou des observations en fonction du DR obtenu.\n\nLes renseignements obtenus ne sont pas toujours complets, mais ils permettent souvent de mieux comprendre les véritables enjeux d'une situation.",
 "SDP.Item.Talent.liar.Name": "Menteur",
 "SDP.Item.Talent.liar.Description": "Vous possédez un talent remarquable pour manipuler la vérité. Mensonges, demi-vérités et faits authentiques se mêlent dans vos discours avec une telle aisance qu'il devient extrêmement difficile de distinguer le vrai du faux.\n\nLorsque vous utilisez la Compétence Charme pour mentir ou tromper quelqu'un, vos interlocuteurs ne peuvent pas utiliser Intuition pour détecter si vos propos sont suspects ou incohérents. Ils devront s'appuyer sur d'autres preuves, témoignages ou circonstances pour remettre vos paroles en question.\n\nCela ne rend pas vos mensonges automatiquement crédibles, mais il devient bien plus difficile de percevoir la tromperie qui s'y cache.",
+"SDP.Item.Talent.negotiator.Name": "Négociateur",
+"SDP.Item.Talent.negotiator.Description": "Vous connaissez les rouages du commerce et savez comment mener une négociation à votre avantage. Grâce à votre expérience, vous obtenez régulièrement de meilleures conditions lors de l'achat ou de la vente de marchandises.\n\nLorsque vous utilisez la Compétence Marchandage, les prix obtenus sont améliorés de 10 % supplémentaires en votre faveur, que vous cherchiez à acheter moins cher ou à vendre plus cher.\n\nLe MJ reste libre de limiter cet avantage lorsqu'un vendeur ne peut raisonnablement pas vendre à perte ou lorsque les circonstances rendent toute négociation difficile.",
+"SDP.Item.Talent.swindle.Name": "Escroquer",
+"SDP.Item.Talent.swindle.Description": "Vous savez comment prélever discrètement une petite part des richesses qui transitent entre vos mains. Comptes truqués, commissions oubliées ou bénéfices dissimulés, vous avez appris à profiter des transactions sans attirer l'attention.\n\nChaque fois que vous gagnez de l'argent, que ce soit en jeu ou grâce à une activité de Revenus, vous pouvez effectuer un Test opposé d'Intelligence contre votre employeur, si vous en avez un. En cas de réussite, vous détournez une somme supplémentaire dont la valeur dépend de l'importance de la transaction, à la discrétion du MJ.\n\nSi votre employeur obtient +6 DR ou plus que vous, votre manœuvre est découverte. Vous conservez l'argent obtenu, mais les conséquences de votre escroquerie sont laissées à l'appréciation du MJ. Dans tous les autres cas, vous ne parvenez pas à détourner d'argent.",
 "SDP.Item.Talent.handyman.Name": "Bricoleur",
 "SDP.Item.Talent.handyman.Description": "Vous avez le talent de comprendre le fonctionnement des objets et de trouver des solutions là où d'autres ne voient qu'un amas de pièces inutilisables. Grâce à votre débrouillardise et à votre expérience, vous êtes capable de remettre en état une grande variété d'équipements, même sans formation spécialisée.\n\nEffet : lorsque vous tentez de réparer un objet endommagé ou cassé, toutes les Compétences Métier non magiques sont considérées comme des Compétences de Base pour vous.",
 
@@ -991,11 +995,14 @@
   "SDP.Item.Container.backpack.Description" : "c'est un sac à dos",
   "SDP.Item.Container.handcart.Name" : "Charrette",
   "SDP.Item.Container.handcart.Description" : "Cette petite charrette est conçue pour transporter des marchandises, du matériel ou des provisions sur de courtes et moyennes distances. Elle peut être tirée à la main ou attelée à une mule, un âne ou toute autre bête de trait adaptée.\n\nSimple mais robuste, elle est couramment utilisée par les marchands, artisans, voyageurs et fermiers pour déplacer des charges trop encombrantes pour être portées à dos d'homme.",
+  "SDP.Item.Container.riverboat.Name" : "Bateau de transport fluvial",
+  "SDP.Item.Container.wagon.Name" : "Chariots",
 
   "SDP.Item.Possession.grimoire.Name" : "Grimoire",
   "SDP.Item.Possession.grimoire.Description" : "c'est un grimoire",
   "SDP.Item.Possession.abacus.Name" : "Boulier",
   "SDP.Item.Possession.abacus.Description" : "Un outil simple utilisé par les marchands pour tenir leurs comptes, vérifier leurs marchandises et gérer leurs transactions au quotidien.",
+  "SDP.Item.Possession.guildlicense.Name" : "Licence de guilde",
 
   "SDP.Item.Injury.lightbody.Name" : "Blessure légère au corps",
   "SDP.Item.Injury.lightbody.Description" : "c'est une blessure légère au corps",
@@ -1003,7 +1010,6 @@
   "SDP.Item.Injury.lightbodyconsequence.Description" : "c'est une blessure légère au corps (conséquence)",
 
   "SDP.Item.Career.trader.Name" : "Négociant",
-  "SDP.Item.Career.trader.Description" : "c'est un négociant",
 
   "SDP.Journal.Career.SpeciesLabel": "Espèces",
   "SDP.Journal.Career.ViewSheet": "Voir la fiche carrière : {name}",
