@@ -313,6 +313,38 @@ margin-top:10px;
   padding: 0.5rem 0.75rem;
 }
 
+.sdp-journal-page-host {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+}
+
+.sdp-lore-journal {
+  line-height: 1.55;
+  font-family: var(--font-serif, "Signika", serif);
+  color: var(--color-text-primary, #ececec);
+}
+
+.sdp-lore-journal .sdp-lore-header h1 {
+  margin: 0 0 0.75em;
+  padding: 0.35em 0.65em;
+  text-align: center;
+  font-size: 1.35em;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.sdp-lore-journal .sdp-lore-epigraph {
+  margin: 1rem 0;
+  padding: 0.5rem 1rem;
+  border-left: 3px solid var(--color-border-highlight, #8b7355);
+  font-style: italic;
+  opacity: 0.9;
+}
+
+.sdp-lore-journal .sdp-lore-intro p {
+  margin: 0 0 1rem;
+}
+
 .sdp-career-journal .sdp-career-header h1 {
   margin: 0 0 0.75em;
   padding: 0.35em 0.65em;

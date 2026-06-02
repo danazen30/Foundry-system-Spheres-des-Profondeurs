@@ -609,7 +609,7 @@
       "canAdvance": {
         "type": "boolean",
         "label": "Can Advance",
-        "value": true
+        "value": false
       },
 
       "advances": {

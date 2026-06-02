@@ -56,11 +56,15 @@ import {
 } from "./system/roll-table-utils.js";
 import {
   configureCareerJournalPage,
+  configureLoreJournalPage,
+  configureSdpJournal,
   createSdpCareerJournal,
   rebuildAllCareerJournalCaches,
-  refreshAllCareerJournalDisplayNames,
+  refreshAllSdpJournalDisplayNames,
   registerCareerJournalHooks,
-  syncCareerJournalDisplayNames
+  resolveJournalEntry,
+  resolveJournalPage,
+  syncSdpJournalDisplayNames
 } from "./journal/career-journal.js";
 
 export let sdpSocket;
@@ -704,7 +708,12 @@ Hooks.once("ready", async () => {
 game.sdp.levelUpApp = LevelUpApp;
 game.sdp.createCareerJournal = createSdpCareerJournal;
 game.sdp.configureCareerJournalPage = configureCareerJournalPage;
-game.sdp.syncCareerJournal = syncCareerJournalDisplayNames;
+game.sdp.configureJournal = configureSdpJournal;
+game.sdp.configureLoreJournalPage = configureLoreJournalPage;
+game.sdp.resolveJournalEntry = resolveJournalEntry;
+game.sdp.resolveJournalPage = resolveJournalPage;
+game.sdp.syncCareerJournal = syncSdpJournalDisplayNames;
+game.sdp.syncJournal = syncSdpJournalDisplayNames;
 
 sdpSocket = socketlib.registerSystem("sdp");
 
@@ -738,7 +747,7 @@ localizeAllSdpCompendiumIndices(
 
 await rebuildAllCareerJournalCaches();
 
-await refreshAllCareerJournalDisplayNames();
+await refreshAllSdpJournalDisplayNames();
 
 Hooks.callAll(
   "sdpRefreshLocalization"
@@ -966,7 +975,7 @@ Hooks.on(
 
     rebuildAllCareerJournalCaches().then(async () => {
 
-      await refreshAllCareerJournalDisplayNames();
+      await refreshAllSdpJournalDisplayNames();
 
       for (const app of Object.values(ui.windows)) {
 
@@ -1005,7 +1014,7 @@ Hooks.on(
     refreshOpenSdpCompendiumApps();
 
     rebuildAllCareerJournalCaches().then(async () => {
-      await refreshAllCareerJournalDisplayNames();
+      await refreshAllSdpJournalDisplayNames();
     });
 
   }

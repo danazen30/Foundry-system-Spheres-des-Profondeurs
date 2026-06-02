@@ -139,6 +139,23 @@ function getSharedDescriptionKey(type, key) {
     return "network";
   }
 
+  if (
+    type === "skill"
+    && normalizedKey.startsWith("lore")
+    && normalizedKey !== "lore"
+    && normalizedKey !== "loreregion"
+  ) {
+    return "lore";
+  }
+
+  if (
+    type === "skill"
+    && normalizedKey.startsWith("language")
+    && normalizedKey !== "language"
+  ) {
+    return "language";
+  }
+
   return null;
 
 }

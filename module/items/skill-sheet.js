@@ -18,6 +18,10 @@ export class SdpSkillSheet extends SdpItemSheet {
       context.system.advanced === true ||
       context.system.advanced === "true";
 
+    context.system.canAdvance =
+      context.system.canAdvance === true
+      || context.system.canAdvance === "true";
+
     context.characteristicOptions = [
 
   {
