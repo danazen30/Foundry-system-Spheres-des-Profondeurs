@@ -18,12 +18,14 @@ import { registerUIListeners, registerItemListeners, restoreScroll} from "./acto
 import { registerInteractionListeners } from "./actor-sheet-interactions.js";
 import {
   findActorItemByRef,
-  getLocalizedItemName,
+  getActorItemDisplayName,
+  getLocalizedItemDescription,
   matchesItemRef,
   parseKeyList,
   resolveItemRef,
   getLocalizedSignLevelDescription
 } from "../system/item-localization.js";
+import { formatPlainTextAsHtml } from "../system/text-format.js";
 
 const { ActorSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -146,14 +148,13 @@ if (!Array.isArray(careerTalents)) {
 }
 
 for (const item of this.document.items) {
+  item.displayName =
+    getActorItemDisplayName(item);
+}
+
+for (const item of this.document.items) {
 
   if (item.type !== "talent") continue;
-
-  item.displayName = getLocalizedItemName(
-    item.type,
-    item.system?.key,
-    item.name
-  );
 
   const isCareerTalent = careerTalents.some(ref =>
     matchesItemRef(item, ref)
@@ -171,6 +172,41 @@ for (const item of this.document.items) {
   item.isCareerTalent = isCareerTalent;
   item.isPurchased = isPurchased;
   item.isAvailable = isAvailable;
+
+  const itemKey =
+    item.system?.key?.trim?.() ?? "";
+
+  const localizedDescription =
+    itemKey
+      ? getLocalizedItemDescription(
+          item.type,
+          itemKey,
+          ""
+        )
+      : "";
+
+  const customDescription =
+    item.system?.description ?? "";
+
+  let descriptionText = "";
+
+  if (
+    localizedDescription &&
+    customDescription
+  ) {
+    descriptionText =
+      `${localizedDescription}\n\n${customDescription}`;
+  }
+  else if (localizedDescription) {
+    descriptionText = localizedDescription;
+  }
+  else {
+    descriptionText = customDescription;
+  }
+
+  item.localizedDescription =
+    formatPlainTextAsHtml(descriptionText);
+
 }
 
 let careerSkills = currentCareer?.system?.skills || [];
@@ -186,12 +222,6 @@ if (!Array.isArray(careerSkills)) {
 for (const item of this.document.items) {
 
   if (item.type !== "skill") continue;
-
-  item.displayName = getLocalizedItemName(
-    item.type,
-    item.system?.key,
-    item.name
-  );
 
   item.isCareerSkill = careerSkills.some(ref =>
     matchesItemRef(item, ref)

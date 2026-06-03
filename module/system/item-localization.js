@@ -4,6 +4,7 @@
  */
 
 import { SDP } from "./config.js";
+import { getLocalizedRollTableName } from "./roll-table-utils.js";
 
 /**
  * Dérive une clé i18n à partir d'un nom de dossier ("Weapons" → "weapons").
@@ -121,6 +122,59 @@ export function getLocalizedItemName(type, key, fallback = "") {
   return game.i18n.has(translationKey)
     ? game.i18n.localize(translationKey)
     : fallback;
+
+}
+
+/**
+ * Nom affiché d'un item sur la fiche acteur (inventaire, combat, etc.).
+ */
+export function getActorItemDisplayName(item) {
+
+  if (!item) return "";
+
+  const type =
+    item.type ?? "";
+
+  const key =
+    normalizeItemRef(
+      item.system?.key
+      || item.name
+      || ""
+    );
+
+  if (!key) {
+    return item.name ?? "";
+  }
+
+  if (type) {
+
+    const localized =
+      getLocalizedItemName(
+        type,
+        key,
+        ""
+      );
+
+    if (localized) {
+      return localized;
+    }
+
+  }
+
+  const trappingName =
+    localizeTrappingRef(
+      key,
+      ""
+    );
+
+  if (
+    trappingName &&
+    trappingName !== key
+  ) {
+    return trappingName;
+  }
+
+  return item.name ?? key;
 
 }
 
@@ -805,6 +859,7 @@ export function localizeSdpCompendium(element, pack, rolltableMap = null) {
   ) {
     localizeRolltableCompendium(
       element,
+      pack,
       rolltableMap
     );
   }
@@ -840,7 +895,7 @@ export function localizeSidebarFolders(element) {
 
 }
 
-export function localizeRolltableCompendium(element, rolltableMap) {
+export function localizeRolltableCompendium(element, pack, rolltableMap) {
 
   localizeItemDirectory(element, (entry) => {
 
@@ -848,8 +903,25 @@ export function localizeRolltableCompendium(element, rolltableMap) {
 
     if (!documentId) return null;
 
+    const indexEntry =
+      pack?.index?.get(documentId);
+
+    const flagKey =
+      indexEntry?.flags?.sdp?.key;
+
+    if (flagKey) {
+
+      const localized =
+        getLocalizedRollTableName({
+          flags: { sdp: { key: flagKey } }
+        });
+
+      if (localized) return localized;
+
+    }
+
     const localizationKey =
-      rolltableMap[documentId];
+      rolltableMap?.[documentId];
 
     if (!localizationKey) return null;
 
@@ -925,22 +997,43 @@ export function localizeSdpPackIndex(
 
   if (
     pack.documentName === "RollTable"
-    && rolltableMap
   ) {
 
     for (const entry of pack.index.values()) {
 
-      const localizationKey =
-        rolltableMap[entry._id];
+      const flagKey =
+        entry.flags?.sdp?.key;
 
-      if (!localizationKey) continue;
+      let localized = null;
+
+      if (flagKey) {
+
+        localized =
+          getLocalizedRollTableName({
+            flags: { sdp: { key: flagKey } }
+          });
+
+      }
+
+      if (!localized && rolltableMap) {
+
+        const localizationKey =
+          rolltableMap[entry._id];
+
+        if (localizationKey) {
+          localized =
+            game.i18n.localize(localizationKey);
+        }
+
+      }
+
+      if (!localized) continue;
 
       if (!entry._sdpSourceName) {
         entry._sdpSourceName = entry.name;
       }
 
-      entry.name =
-        game.i18n.localize(localizationKey);
+      entry.name = localized;
 
     }
 

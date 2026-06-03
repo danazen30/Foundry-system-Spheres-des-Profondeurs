@@ -47,7 +47,7 @@
       </td>
 
       <td class="weapon-toggle" data-item-id="{{item.id}}">
-        <span class="weapon-name">{{item.name}}</span>
+        <span class="weapon-name">{{item.displayName}}</span>
       </td>
 
       <td>
@@ -181,7 +181,7 @@
       </td>
 
       <td class="weapon-toggle" data-item-id="{{item.id}}">
-        <span class="weapon-name">{{item.name}}</span>
+        <span class="weapon-name">{{item.displayName}}</span>
       </td>
 
       <td>
@@ -202,7 +202,7 @@
               value="{{this.id}}"
               {{#if (eq this.id ../system.currentAmmo)}}selected{{/if}}
             >
-              {{this.name}} ({{this.system.quantity.value}})
+              {{this.displayName}} ({{this.system.quantity.value}})
             </option>
             {{/each}}
 
@@ -336,7 +336,7 @@
         <img src="{{item.img}}" class="item-img">
       </td>
 
-      <td>{{item.name}}</td>
+      <td>{{item.displayName}}</td>
 
       <td>{{item.system.weaponGroup}}</td>
 
@@ -402,7 +402,7 @@
       </td>
 
       <td class="armor-toggle" data-item-id="{{item.id}}">
-        <span class="armor-name">{{item.name}}</span>
+        <span class="armor-name">{{item.displayName}}</span>
       </td>
 
       <td>{{item.system.AP.head}}</td>
@@ -506,7 +506,7 @@
       </td>
 
       <td class="item-name">
-        {{item.name}}
+        {{item.displayName}}
       </td>
 
       <td class="qty-clickable" data-item-id="{{item.id}}">
@@ -542,7 +542,7 @@
 <thead>
 <tr>
   {{#each currency as |item|}}
-    <th>{{item.name}}</th>
+    <th>{{item.displayName}}</th>
   {{/each}}
 </tr>
 </thead>
@@ -612,7 +612,7 @@
   </td>
 
   <td>
-    {{this.name}}
+    {{this.displayName}}
   </td>
 
   <td>
@@ -689,7 +689,7 @@
         ▶
       </button>
 
-      <strong>{{container.name}}</strong>
+      <strong>{{container.displayName}}</strong>
 
     </div>
 
@@ -765,7 +765,7 @@
   </td>
 
   <td>
-    {{item.name}}
+    {{item.displayName}}
   </td>
 
   <td

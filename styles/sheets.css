@@ -3420,6 +3420,16 @@ text-align:center;
   min-height: 250px;
 }
 
+.creature-combat-tab
+  .skills-container
+  .skills-block:first-child
+  .skills-table-wrapper {
+
+  max-height: 200px;
+  overflow-y: auto;
+
+}
+
 /* =========================================
    CREATURE COMBAT TAB ULTRA COMPACT
 ========================================= */

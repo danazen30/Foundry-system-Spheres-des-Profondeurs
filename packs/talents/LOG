@@ -1,11 +1,11 @@
-2026/06/03-03:23:18.467 80a8 Recovering log #1130
-2026/06/03-03:23:18.467 80a8 Level-0 table #1132: started
-2026/06/03-03:23:18.469 80a8 Level-0 table #1132: 9817 bytes OK
-2026/06/03-03:23:18.474 80a8 Delete type=0 #1130
-2026/06/03-03:23:18.474 80a8 Delete type=3 #1129
-2026/06/03-04:05:10.411 adc Compacting 1@0 + 1@1 files
-2026/06/03-04:05:10.415 adc Generated table #1134@0: 76 keys, 13650 bytes
-2026/06/03-04:05:10.415 adc Compacted 1@0 + 1@1 files => 13650 bytes
-2026/06/03-04:05:10.416 adc compacted to: files[ 0 1 0 0 0 0 0 ]
-2026/06/03-04:05:10.417 adc Delete type=2 #1124
-2026/06/03-04:05:10.417 adc Delete type=2 #1132
+2026/06/03-04:29:01.326 8b40 Recovering log #1133
+2026/06/03-04:29:01.326 8b40 Level-0 table #1136: started
+2026/06/03-04:29:01.330 8b40 Level-0 table #1136: 9751 bytes OK
+2026/06/03-04:29:01.333 8b40 Delete type=0 #1133
+2026/06/03-04:29:01.333 8b40 Delete type=3 #1131
+2026/06/03-05:04:53.021 7a04 Compacting 1@0 + 1@1 files
+2026/06/03-05:04:53.024 7a04 Generated table #1138@0: 84 keys, 15182 bytes
+2026/06/03-05:04:53.024 7a04 Compacted 1@0 + 1@1 files => 15182 bytes
+2026/06/03-05:04:53.025 7a04 compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/06/03-05:04:53.025 7a04 Delete type=2 #1134
+2026/06/03-05:04:53.025 7a04 Delete type=2 #1136

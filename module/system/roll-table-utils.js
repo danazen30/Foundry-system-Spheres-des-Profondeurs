@@ -4,16 +4,67 @@
 
 import { getLocalizedItemName } from "./item-localization.js";
 
-export const SDP_ROLLTABLE_GAME_KEYS = {
+/** @deprecated IDs legacy — utilisés seulement pour migration auto des flags */
+export const SDP_ROLLTABLE_FLAG_DEFAULTS = {
+
+  "WzRAb3Ftyu0qFMCa":
+    { key: "careerHuman", group: "career" },
+
+  "uiomVIaoy9Drhemu":
+    { key: "careerElf", group: "career" },
+
+  "FjSsEkbsWkBkrjWg":
+    { key: "species", group: "species" },
+
+  "7ZHAMQWLtvXnaw1N":
+    { key: "signRandom", group: "sign" },
+
+  "6AY1b31Cy8uYYBTj":
+    { key: "talent", group: "talent" },
 
   "XZ4ZAHiJvXgmww25":
-    "critical-attack-failure",
+    { key: "critical-attack-failure", group: "combat" },
 
   "6Q4OF1ap29CkArDj":
-    "major-magical-consequence",
+    { key: "major-magical-consequence", group: "combat" },
 
   "VVHLBG4r2WP3Ssrs":
-    "minor-magical-consequence"
+    { key: "minor-magical-consequence", group: "combat" }
+
+};
+
+/** Alias rétrocompatibilité */
+export const SDP_ROLLTABLE_GAME_KEYS = Object.fromEntries(
+  Object.entries(SDP_ROLLTABLE_FLAG_DEFAULTS).map(
+    ([id, { key }]) => [id, key]
+  )
+);
+
+const LEGACY_ROLLTABLE_I18N = {
+
+  careerHuman: "SDP.RollTableCareerHuman",
+  careerElf: "SDP.RollTableCareerElf",
+  signRandom: "SDP.RollTableSignRandom",
+  species: "SDP.RollTableSpecies",
+  talent: "SDP.RollTableTalent",
+  "critical-attack-failure": "SDP.RollTableCriticalAttackFailure",
+  "major-magical-consequence": "SDP.RollTableMajorMagicalConsequence",
+  "minor-magical-consequence": "SDP.RollTableMinorMagicalConsequence"
+
+};
+
+const SDP_ROLLTABLE_NAME_HINTS = {
+
+  "career human": { key: "careerHuman", group: "career" },
+  "carrière humain": { key: "careerHuman", group: "career" },
+  "career elf": { key: "careerElf", group: "career" },
+  "carrière elfe": { key: "careerElf", group: "career" },
+  "species table": { key: "species", group: "species" },
+  "table des espèces": { key: "species", group: "species" },
+  "sign random": { key: "signRandom", group: "sign" },
+  "table des signes": { key: "signRandom", group: "sign" },
+  "talents": { key: "talent", group: "talent" },
+  "table des talents": { key: "talent", group: "talent" }
 
 };
 
@@ -23,6 +74,127 @@ function normalizeRollTableKey(key = "") {
     .toLowerCase()
     .trim()
     .replaceAll("-", " ");
+
+}
+
+/**
+ * Nom affiché d'une RollTable SDP (flags.sdp.key → i18n).
+ */
+export function getLocalizedRollTableName(table) {
+
+  if (!table) return "";
+
+  const flagKey =
+    table.flags?.sdp?.key;
+
+  if (flagKey) {
+
+    const primaryKey =
+      `SDP.RollTable.${flagKey}.Name`;
+
+    if (game.i18n.has(primaryKey)) {
+      return game.i18n.localize(primaryKey);
+    }
+
+    const legacyKey =
+      LEGACY_ROLLTABLE_I18N[flagKey];
+
+    if (
+      legacyKey &&
+      game.i18n.has(legacyKey)
+    ) {
+      return game.i18n.localize(legacyKey);
+    }
+
+  }
+
+  return table.name ?? "";
+
+}
+
+/**
+ * Liste les tables d'un compendium par flags.sdp.group.
+ */
+export async function listSdpRollTables(
+  pack,
+  group
+) {
+
+  if (!pack) return [];
+
+  const tables =
+    await pack.getDocuments();
+
+  return tables
+
+    .filter(t =>
+      t.flags?.sdp?.group === group
+    )
+
+    .map(t => ({
+      id: t.uuid,
+      key: t.flags?.sdp?.key ?? "",
+      localizedName:
+        getLocalizedRollTableName(t)
+    }))
+
+    .sort((a, b) =>
+      a.localizedName.localeCompare(
+        b.localizedName,
+        game.i18n.lang
+      )
+    );
+
+}
+
+/**
+ * Résout une table par UUID, clé sdp ou id document.
+ */
+export async function resolveSdpRollTable(
+  pack,
+  ref
+) {
+
+  if (!pack || !ref) return null;
+
+  if (
+    typeof ref === "string" &&
+    ref.includes("Compendium.")
+  ) {
+    return await fromUuid(ref);
+  }
+
+  const tables =
+    await pack.getDocuments();
+
+  const match =
+    tables.find(t =>
+      t.uuid === ref ||
+      t.id === ref ||
+      t.flags?.sdp?.key === ref
+    );
+
+  if (match) return match;
+
+  return findSdpRollTable(pack, ref);
+
+}
+
+function resolveFlagDefaults(table) {
+
+  if (!table) return null;
+
+  const byId =
+    SDP_ROLLTABLE_FLAG_DEFAULTS[table.id];
+
+  if (byId) return byId;
+
+  const normalized =
+    (table.name || "")
+      .toLowerCase()
+      .trim();
+
+  return SDP_ROLLTABLE_NAME_HINTS[normalized] ?? null;
 
 }
 
@@ -57,41 +229,65 @@ export async function findSdpRollTable(pack, tableKey) {
 }
 
 /**
- * Pose flags.sdp.key sur les tables de jeu connues (GM, compendium sdp.rolltables).
+ * Pose flags.sdp.key / flags.sdp.group sur les tables du compendium.
  */
-export async function ensureSdpRollTableFlags(pack) {
+export async function applySdpRollTableFlags(pack) {
 
-  if (!pack || !game.user.isGM)
-    return;
+  if (!pack || !game.user.isGM) {
+    return { updated: [], skipped: [] };
+  }
 
-  for (const [id, key] of Object.entries(SDP_ROLLTABLE_GAME_KEYS)) {
+  const tables =
+    await pack.getDocuments();
 
-    try {
+  const updated = [];
+  const skipped = [];
 
-      const doc =
-        await pack.getDocument(id);
+  for (const table of tables) {
 
-      if (!doc)
-        continue;
+    const defaults =
+      resolveFlagDefaults(table);
 
-      if (doc.flags?.sdp?.key === key)
-        continue;
-
-      await doc.update({
-        "flags.sdp.key": key
-      });
-
+    if (!defaults) {
+      skipped.push(table.name);
+      continue;
     }
-    catch (err) {
 
-      console.warn(
-        `SDP: impossible de poser flags.sdp.key sur la table ${id}`,
-        err
-      );
+    const currentKey =
+      table.flags?.sdp?.key;
 
+    const currentGroup =
+      table.flags?.sdp?.group;
+
+    if (
+      currentKey === defaults.key &&
+      currentGroup === defaults.group
+    ) {
+      continue;
     }
+
+    await table.update({
+      "flags.sdp.key": defaults.key,
+      "flags.sdp.group": defaults.group
+    });
+
+    updated.push({
+      name: table.name,
+      key: defaults.key,
+      group: defaults.group,
+      uuid: table.uuid
+    });
 
   }
+
+  return { updated, skipped };
+
+}
+
+/** @deprecated Utiliser applySdpRollTableFlags */
+export async function ensureSdpRollTableFlags(pack) {
+
+  return applySdpRollTableFlags(pack);
 
 }
 

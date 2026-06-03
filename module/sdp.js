@@ -49,7 +49,9 @@ import {
   resetSdpCompendiumResortFlag
 } from "./system/item-localization.js";
 import {
+  applySdpRollTableFlags,
   ensureSdpRollTableFlags,
+  getLocalizedRollTableName,
   localizeRollTableChatLinks,
   localizeRollTableSheet,
   localizeTableResultConfig
@@ -571,17 +573,10 @@ Hooks.on(
     const table =
       app.document;
 
-    const localizationKey =
-      SDP_ROLLTABLE_LOCALIZATION[
-        table.id
-      ];
+    const localizedName =
+      getLocalizedRollTableName(table);
 
-    if (localizationKey) {
-
-      const localizedName =
-        game.i18n.localize(
-          localizationKey
-        );
+    if (localizedName) {
 
       const windowTitle =
         html.querySelector(
@@ -690,7 +685,8 @@ Hooks.once("ready", async () => {
     await pack.getIndex({
       fields: [
         "name",
-        "flags.sdp.key"
+        "flags.sdp.key",
+        "flags.sdp.group"
       ]
     });
 
@@ -714,6 +710,18 @@ game.sdp.resolveJournalEntry = resolveJournalEntry;
 game.sdp.resolveJournalPage = resolveJournalPage;
 game.sdp.syncCareerJournal = syncSdpJournalDisplayNames;
 game.sdp.syncJournal = syncSdpJournalDisplayNames;
+game.sdp.applyRollTableFlags = async () => {
+
+  const rolltablePack =
+    game.packs.get("sdp.rolltables");
+
+  if (!rolltablePack) {
+    return { updated: [], skipped: [] };
+  }
+
+  return applySdpRollTableFlags(rolltablePack);
+
+};
 
 sdpSocket = socketlib.registerSystem("sdp");
 
