@@ -24,6 +24,7 @@
 "SDP.Pack.Careers": "SDP Carrières",
 "SDP.Pack.Signs": "SDP Signes",
 "SDP.Pack.Possessions": "SDP Possessions",
+"SDP.Pack.Corruptions": "SDP Corruptions",
 
   "SDP.RangePointBlank": "À bout portant",
   "SDP.RangeShort": "Courte",
@@ -774,6 +775,67 @@
 
 "SDP.Injuries": "Blessures",
 "SDP.Diseases": "Maladies",
+"SDP.Corruptions": "Corruptions",
+
+"SDP.Item.Trait.absence.Name": "Absence",
+"SDP.Item.Trait.absence.Description": "Par moments, votre regard se vide et votre esprit semble se déconnecter du monde. À la discrétion du MJ, vous pouvez rester immobile et inexpressif pendant quelques secondes, comme si quelque chose s'emparait de votre esprit ou tentait de communiquer avec vous. Ou est-ce seulement votre cerveau qui se déconnecte ? Ces épisodes ont tendance à se déclencher lors de certaines émotions ou dans des situations particulières.",
+
+"SDP.Item.Trait.memoryErosion.Name": "Érosion de la Mémoire",
+"SDP.Item.Trait.memoryErosion.Description": "Vos souvenirs s'effacent progressivement. À la discrétion du MJ, vous pouvez oublier des personnes, des événements ou même des concepts importants. Peut-être oublierez-vous le visage d'un proche, la signification de l'amitié ou la notion même de bonté. Si la corruption poursuit son œuvre, vous pourriez finir par oublier les gestes les plus élémentaires nécessaires à votre survie.",
+
+"SDP.Item.Trait.detachment.Name": "Détachement",
+"SDP.Item.Trait.detachment.Description": "Les émotions qui vous animaient autrefois perdent peu à peu leur importance. À la discrétion du MJ, vous pouvez devenir indifférent à des situations qui devraient pourtant vous toucher profondément. Les joies, les peines et les drames du monde semblent de plus en plus lointains.",
+
+"SDP.Item.Trait.recurringStress.Name": "Stress Récurrent",
+"SDP.Item.Trait.recurringStress.Description": "Le moindre imprévu peut provoquer chez vous une réaction disproportionnée. Qu'il s'agisse d'un lapin surgissant d'un buisson, d'une créature monstrueuse ou d'une personne que vous redoutez, vous devez effectuer un Test de Calme. En cas d'échec, vous gagnez l'état Secoué. Plus le temps passe, plus le moindre événement peut vous surprendre et plus les effets deviennent contraignants, voire dangereux.",
+
+"SDP.Item.Trait.nihilism.Name": "Nihilisme",
+"SDP.Item.Trait.nihilism.Description": "Pourquoi agir lorsque tout est voué à disparaître ? Cette pensée s'insinue progressivement dans votre esprit. Vous perdez peu à peu vos ambitions, vos objectifs et vos motivations. À terme, même les besoins les plus fondamentaux, comme se nourrir ou se protéger, peuvent vous sembler dénués de sens.",
+
+"SDP.Item.Trait.devitalization.Name": "Dévitalisation",
+"SDP.Item.Trait.devitalization.Description": "La vie quitte lentement votre corps. Vous perdez immédiatement 1d6 Points de Vie maximum. À la décision du MJ, cet effet peut se reproduire au fil du temps, à mesure que la corruption progresse.",
+
+"SDP.Item.Trait.bodilyFragility.Name": "Fragilisation du Corps",
+"SDP.Item.Trait.bodilyFragility.Description": "Votre corps devient anormalement vulnérable. La moindre blessure ou maladie semble plus grave qu'elle ne devrait l'être. Pour vous, les seuils de blessure sont réduits de 1. Avec le temps, les effets s'aggravent jusqu'à ce qu'un simple incident puisse vous tuer.",
+
+"SDP.Item.Trait.slowRecovery.Name": "Récupération Lente",
+"SDP.Item.Trait.slowRecovery.Description": "Votre organisme peine à se réparer. Tous les soins, qu'ils soient naturels, médicaux ou magiques, sont moins efficaces. Plus le temps passe, moins vous récupérez, jusqu'à ne plus récupérer du tout.",
+
+"SDP.Item.Trait.weakening.Name": "Affaiblissement",
+"SDP.Item.Trait.weakening.Description": "Votre corps vous paraît de plus en plus lourd, comme si une force invisible pesait sur chacun de vos mouvements. À mesure que la corruption progresse, votre Encombrement maximal diminue.",
+
+"SDP.Item.Trait.realityRift.Name": "Faille de Réalité",
+"SDP.Item.Trait.realityRift.Description": "La réalité semble parfois vaciller autour de vous. Votre vision peut se déformer, des objets paraissent avoir changé de place ou certains détails semblent différents de ce qu'ils étaient quelques instants auparavant. Ces phénomènes deviennent de plus en plus fréquents à mesure que la corruption s'intensifie. Certains de ces événements peuvent être réels, mais il devient difficile de distinguer la vérité de l'illusion.",
+
+"SDP.Item.Trait.negativePresence.Name": "Présence Négative",
+"SDP.Item.Trait.negativePresence.Description": "Une aura malsaine émane de vous. Les animaux deviennent nerveux en votre présence et les individus les plus sensibles ressentent instinctivement un profond malaise. Avec le temps, certains chercheront à vous éviter, tandis que d'autres réagiront avec une hostilité inexpliquée.",
+
+"SDP.Item.Trait.foreignThoughts.Name": "Pensées Étrangères",
+"SDP.Item.Trait.foreignThoughts.Description": "Des idées qui ne semblent pas être les vôtres surgissent dans votre esprit. Certaines sont malsaines, d'autres profondément destructrices. Elles peuvent vous pousser à agir contre votre intérêt, mettre en péril vos proches ou même vous inciter à mettre fin à vos jours.",
+
+"SDP.Item.Trait.chronicFatigue.Name": "Fatigue Chronique",
+"SDP.Item.Trait.chronicFatigue.Description": "Votre sommeil n'est plus aussi réparateur qu'autrefois. Chaque matin, vous devez réussir un Test de Résistance ou gagner 1 état Exténué pour la journée. À mesure que la corruption progresse, la difficulté du test augmente et le nombre d'états gagnés peut devenir plus important, jusqu'à vous plonger dans une torpeur permanente.",
+
+"SDP.Item.Trait.somnambulism.Name": "Somnambulisme",
+"SDP.Item.Trait.somnambulism.Description": "Durant votre sommeil, votre corps agit de son propre chef. Vous vous réveillez parfois dans des lieux inconnus, entouré d'objets déplacés ou confronté aux conséquences d'actions dont vous n'avez aucun souvenir. C'est comme si quelque chose utilisait votre corps lorsque vous vous endormiez.",
+
+"SDP.Item.Trait.forgottenDanger.Name": "Oubli du Danger",
+"SDP.Item.Trait.forgottenDanger.Description": "Votre instinct de survie s'érode progressivement. Face à un danger évident, vous devez réussir un Test de Force Mentale. En cas d'échec, vous minimisez la menace et avez tendance à vous exposer volontairement au danger plutôt qu'à l'éviter. Plus le temps passe, plus il devient difficile pour vous de reconnaître ou d'éviter un danger.",
+
+"SDP.Item.Trait.voidResonance.Name": "Résonance du Néant",
+"SDP.Item.Trait.voidResonance.Description": "Vous développez une fascination grandissante pour tout ce qui est mort, mourant ou en ruine. Les cimetières, les champs de bataille et les lieux abandonnés exercent sur vous une étrange attraction. Avec le temps, l'idée de rejoindre les morts peut finir par vous sembler réconfortante.",
+
+"SDP.Item.Trait.silenceObsession.Name": "Obsession du Silence",
+"SDP.Item.Trait.silenceObsession.Description": "Les bruits du monde deviennent progressivement insupportables. Les foules, les marchés, les fêtes et les conversations vous agressent de plus en plus. À mesure que la corruption progresse, votre tolérance au bruit diminue et vous ressentez un besoin croissant de faire taire tout ce qui vous entoure.",
+
+"SDP.Item.Trait.morbidFixation.Name": "Fixation Mortuaire",
+"SDP.Item.Trait.morbidFixation.Description": "Vous commencez à vous interroger de plus en plus souvent sur votre propre disparition. D'abord par simple curiosité, puis avec une fascination inquiétante.\n« Comment les gens se souviendront-ils de moi ? »\n« Que se passerait-il si je mourais aujourd'hui ? »\n« Pourquoi attendre ? »\nCes pensées deviennent progressivement omniprésentes.",
+
+"SDP.Item.Trait.finalTruth.Name": "Dernière Vérité",
+"SDP.Item.Trait.finalTruth.Description": "Vous êtes parfois convaincu d'avoir entrevu une vérité fondamentale sur l'univers. Une vérité terrible, si vaste et si profonde qu'aucun mot ne semble capable de la décrire.\nQuelque chose qui rend toute lutte inutile.\nQuelque chose qui rend tout espoir dérisoire.\nVous êtes incapable d'expliquer clairement ce que vous avez compris, mais cette certitude ne vous quitte jamais.\nAu fond de votre esprit résonne une conviction de plus en plus forte :\nTout ce qui existe doit disparaître.\nÀ mesure que la corruption progresse, cette idée cesse d'être une simple pensée pour devenir une évidence. Vous finissez alors par agir en accord avec cette vérité et devenez, consciemment ou non, un serviteur de cette volonté de destruction.",
+
+"SDP.Item.Trait.voidHunger.Name": "Faim du Vide",
+"SDP.Item.Trait.voidHunger.Description": "Vous ressentez parfois un besoin irrépressible de détruire quelque chose. Non par colère, ni par haine, mais simplement parce que son existence vous paraît déplacée. Au début, cette pulsion ne vise que des objets insignifiants. Avec le temps, elle s'étend à des lieux, puis à des êtres vivants. Un simple animal, un individu innocent, voire une espèce entière peuvent finir par vous sembler n'être rien de plus qu'une anomalie qu'il conviendrait d'effacer.",
 
 "SDP.RollTableCareerHuman": "Carrière Humain",
 "SDP.RollTableCareerElf": "Carrière Elfe",

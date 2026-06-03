@@ -108,6 +108,15 @@
   },
 
   {
+    "name": "corruption",
+    "label": "SDP.Pack.Corruptions",
+    "system": "sdp",
+    "path": "packs/corruption",
+    "type": "Item",
+    "banner": "systems/sdp/assets/icons/default-banner.png"
+  },
+
+  {
     "name": "rolltables",
     "label": "SDP Roll Tables",
     "path": "packs/rolltables",

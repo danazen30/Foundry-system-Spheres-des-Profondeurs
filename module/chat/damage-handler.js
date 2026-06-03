@@ -1,6 +1,14 @@
 import { SdpDamage } from "../combat/damage.js";
 import { getHitLocationLabel } from "../combat/hit-location.js";
 
+function formatWoundSeverityKey(severity) {
+
+  if (!severity) return "";
+
+  return `SDP.Wound.${severity.charAt(0).toUpperCase() + severity.slice(1)}`;
+
+}
+
 export function registerDamageHandlers(html, message) {
 
   // ===================
@@ -638,7 +646,7 @@ ${getHitLocationLabel(
   "SDP.InjurySeverity"
 )}:
 ${game.i18n.localize(
-  `SDP.Wound.${severity.charAt(0).toUpperCase() + severity.slice(1)}`
+  formatWoundSeverityKey(severity)
 )}
 
   </strong>
@@ -748,17 +756,16 @@ const {
   severity
 } = result;
 
-const severityKey =
-  `SDP.Wound.${severity.charAt(0).toUpperCase() + severity.slice(1)}`;
+if (severity) {
 
-console.log("SDP | SEVERITY DEBUG", {
-  severity,
-  severityKey,
-  translated: game.i18n.localize(severityKey)
-});
+  const severityKey =
+    formatWoundSeverityKey(severity);
 
-
-if(severity){
+  console.log("SDP | SEVERITY DEBUG", {
+    severity,
+    severityKey,
+    translated: game.i18n.localize(severityKey)
+  });
 
   const pack = game.packs.get("sdp.injuries");
   const docs = await pack.getDocuments();
@@ -856,7 +863,7 @@ ${getHitLocationLabel(
   "SDP.InjurySeverity"
 )}:
 ${game.i18n.localize(
-  `SDP.Wound.${severity.charAt(0).toUpperCase() + severity.slice(1)}`
+  formatWoundSeverityKey(severity)
 )}
 
   </strong>

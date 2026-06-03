@@ -135,9 +135,29 @@ export function getActorItemDisplayName(item) {
   const type =
     item.type ?? "";
 
+  const systemKey =
+    typeof item.system?.key === "string"
+      ? item.system.key.trim()
+      : "";
+
+  if (systemKey && type) {
+
+    const localized =
+      getLocalizedItemName(
+        type,
+        systemKey,
+        ""
+      );
+
+    if (localized) {
+      return localized;
+    }
+
+  }
+
   const key =
     normalizeItemRef(
-      item.system?.key
+      systemKey
       || item.name
       || ""
     );
