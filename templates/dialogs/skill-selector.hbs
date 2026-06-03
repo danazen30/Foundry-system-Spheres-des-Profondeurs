@@ -1,14 +1,19 @@
-<div class="sdp-dialog">
+<div class="sdp-dialog sdp-skill-selector">
 
-  <label>{{localize "SDP.Skill"}}</label>
+  <label>
+    {{#if (eq itemType "talent")}}
+      {{localize "TYPES.Item.talent"}}
+    {{else}}
+      {{localize "SDP.Skill"}}
+    {{/if}}
+  </label>
 
-  <select id="skill-select">
-    {{#each skills}}
-      <option value="{{this.id}}">
-        {{this.name}}
-      </option>
-    {{/each}}
-  </select>
+  <input
+    type="search"
+    id="skill-filter"
+    placeholder="{{localize "SDP.Search"}}">
+
+  <select id="skill-select" size="12"></select>
 
   <button id="confirm">
     {{localize "SDP.Add"}}

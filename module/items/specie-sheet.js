@@ -1,5 +1,18 @@
 import { SdpItemSheet } from "./item-sheet.js";
 import { SkillSelectorApp } from "../apps/skill-selector.js";
+import { getLocalizedItemName } from "../system/item-localization.js";
+
+function getItemDisplayName(doc) {
+
+  if (!doc) return "";
+
+  return getLocalizedItemName(
+    doc.type,
+    doc.system?.key,
+    doc.name
+  );
+
+}
 
 export class SdpSpecieSheet extends SdpItemSheet {
 
@@ -355,7 +368,9 @@ async _resolveDocuments(
         uuid: id,
 
         name:
-          doc?.name || fallback
+          doc
+            ? getItemDisplayName(doc)
+            : fallback
 
       };
 
@@ -471,7 +486,7 @@ async _openSelector(
       .map(i => ({
 
         id: i.id,
-        name: i.name
+        name: getItemDisplayName(i)
 
       }));
 
@@ -498,7 +513,7 @@ async _openSelector(
         .map(doc => ({
 
           id: doc.uuid,
-          name: doc.name
+          name: getItemDisplayName(doc)
 
         }));
 
@@ -517,7 +532,13 @@ async _openSelector(
     ...worldItems,
     ...compendiumItems
 
-  ];
+  ].sort((a, b) =>
+    a.name.localeCompare(
+      b.name,
+      game.i18n.lang,
+      { sensitivity: "base" }
+    )
+  );
 
   // =========================
   // OPEN APP
@@ -527,6 +548,7 @@ async _openSelector(
     new SkillSelectorApp({
 
       skills: items,
+      itemType: type,
       callback
 
     });

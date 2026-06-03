@@ -1,3 +1,13 @@
-2026/06/02-17:46:57.998 7318 Recovering log #630
-2026/06/02-17:46:58.002 7318 Delete type=0 #630
-2026/06/02-17:46:58.002 7318 Delete type=3 #629
+2026/06/02-23:55:13.776 6cec Recovering log #635
+2026/06/02-23:55:13.777 6cec Level-0 table #637: started
+2026/06/02-23:55:13.779 6cec Level-0 table #637: 11915 bytes OK
+2026/06/02-23:55:13.783 6cec Delete type=0 #635
+2026/06/02-23:55:13.785 6cec Delete type=3 #633
+2026/06/02-23:55:13.785 ba8 Compacting 4@0 + 0@1 files
+2026/06/02-23:55:13.792 ba8 Generated table #639@0: 2 keys, 1583 bytes
+2026/06/02-23:55:13.792 ba8 Compacted 4@0 + 0@1 files => 1583 bytes
+2026/06/02-23:55:13.802 ba8 compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/06/02-23:55:13.802 ba8 Delete type=2 #587
+2026/06/02-23:55:13.803 ba8 Delete type=2 #621
+2026/06/02-23:55:13.803 ba8 Delete type=2 #634
+2026/06/02-23:55:13.804 ba8 Delete type=2 #637

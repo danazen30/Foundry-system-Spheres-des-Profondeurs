@@ -46,7 +46,8 @@ Hooks.on("createActor", async (actor) => {
     await skillsPack.getDocuments();
 
   const DEFAULT_ADVANCED_SKILL_KEYS = [
-    "stealth"
+    "discretion",
+    "entertainment"
   ];
 
   const basicSkills =

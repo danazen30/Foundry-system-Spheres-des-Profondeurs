@@ -474,3 +474,19 @@ margin-top:10px;
   font-size: 0.9em;
   opacity: 0.85;
 }
+
+.sdp-skill-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 320px;
+}
+
+.sdp-skill-selector #skill-filter {
+  width: 100%;
+}
+
+.sdp-skill-selector #skill-select {
+  width: 100%;
+  min-height: 240px;
+}

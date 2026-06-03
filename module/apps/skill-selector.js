@@ -17,16 +17,25 @@ export class SkillSelectorApp extends HandlebarsApplicationMixin(ApplicationV2) 
 
   constructor(options = {}) {
     super(options);
-     this.options.window.title =
-    game.i18n.localize("SDP.SelectSkill");
 
     this.skills = options.skills || [];
     this.callback = options.callback;
+    this.itemType = options.itemType || "skill";
+
+    const titleKey =
+      this.itemType === "talent"
+        ? "SDP.SelectTalent"
+        : "SDP.SelectSkill";
+
+    this.options.window.title =
+      game.i18n.localize(titleKey);
+
   }
 
   async _prepareContext() {
     return {
-      skills: this.skills
+      skills: this.skills,
+      itemType: this.itemType
     };
   }
 
@@ -35,9 +44,49 @@ export class SkillSelectorApp extends HandlebarsApplicationMixin(ApplicationV2) 
 
     const root = this.element;
 
+    const select =
+      root.querySelector("#skill-select");
+
+    const filter =
+      root.querySelector("#skill-filter");
+
+    const rebuildOptions = (query = "") => {
+
+      const normalized =
+        query.trim().toLowerCase();
+
+      select.innerHTML = "";
+
+      this.skills
+        .filter(entry =>
+          !normalized
+          || entry.name.toLowerCase().includes(normalized)
+        )
+        .forEach(entry => {
+
+          const option =
+            document.createElement("option");
+
+          option.value = entry.id;
+          option.textContent = entry.name;
+
+          select.appendChild(option);
+
+        });
+
+    };
+
+    rebuildOptions();
+
+    filter?.addEventListener(
+      "input",
+      event => {
+        rebuildOptions(event.target.value);
+      }
+    );
+
     root.querySelector("#confirm").addEventListener("click", () => {
 
-      const select = root.querySelector("#skill-select");
       const skillId = select.value;
 
       if (this.callback) this.callback(skillId);
@@ -45,6 +94,7 @@ export class SkillSelectorApp extends HandlebarsApplicationMixin(ApplicationV2) 
       this.close();
 
     });
+
   }
 
 }

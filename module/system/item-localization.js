@@ -140,6 +140,14 @@ function getSharedDescriptionKey(type, key) {
   }
 
   if (
+    type === "talent"
+    && normalizedKey.startsWith("sharpsenses")
+    && normalizedKey !== "sharpsenses"
+  ) {
+    return "sharpsenses";
+  }
+
+  if (
     type === "skill"
     && normalizedKey.startsWith("lore")
     && normalizedKey !== "lore"
@@ -154,6 +162,46 @@ function getSharedDescriptionKey(type, key) {
     && normalizedKey !== "language"
   ) {
     return "language";
+  }
+
+  if (
+    type === "skill"
+    && normalizedKey.startsWith("entertain")
+    && normalizedKey !== "entertain"
+  ) {
+    return "entertain";
+  }
+
+  if (
+    type === "skill"
+    && normalizedKey.startsWith("melee")
+    && normalizedKey !== "melee"
+  ) {
+    return "melee";
+  }
+
+  if (
+    type === "skill"
+    && normalizedKey.startsWith("projectile")
+    && normalizedKey !== "projectile"
+  ) {
+    return "projectile";
+  }
+
+  if (
+    type === "skill"
+    && normalizedKey.startsWith("trade")
+    && normalizedKey !== "trade"
+  ) {
+    return "trade";
+  }
+
+  if (
+    type === "skill"
+    && normalizedKey.startsWith("discretion")
+    && normalizedKey !== "stealth"
+  ) {
+    return "stealth";
   }
 
   return null;
