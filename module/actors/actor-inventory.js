@@ -72,8 +72,9 @@ for (let item of actor.items) {
     const STR = actor.system.attributes.strength.value || 0;
 const TGH = actor.system.attributes.toughness.value || 0;
 
-// 👉 moyenne arrondie à l'inférieur
-const max = Math.floor((STR + TGH) / 2);
+const max =
+  actor.system.derived?.carryingCapacity?.value ??
+  Math.floor((STR + TGH) / 2);
 const ratio = total / max;
 
 let encumbranceState = {

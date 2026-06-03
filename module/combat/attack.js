@@ -887,6 +887,8 @@ if (useFinesse && weapon.system.traits?.some(t => t.key === "finesse")) {
   baseAttack += weaponAttack;
 }
 
+baseAttack += Number(actor.system.custom.meleeActionBonus || 0);
+
 const roll = await (new Roll("1d100")).roll();
 const result = roll.total;
 

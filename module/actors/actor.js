@@ -88,6 +88,9 @@ export class SdpActor extends Actor {
 
     system.custom.healthBonus ??= 0;
 system.custom.manaBonus ??= 0;
+    system.custom.meleeActionBonus ??= 0;
+    system.custom.toughnessHealthMultiplier ??= 0;
+    system.custom.encumbranceStatMultiplier ??= 0;
 
     system.details ??= {};
 
@@ -221,6 +224,9 @@ system.bonuses.successSL = system.bonuses.successSL || 0;
 // =====================
 
 system.custom.offhandReduction = 0;
+system.custom.meleeActionBonus = 0;
+system.custom.toughnessHealthMultiplier = 0;
+system.custom.encumbranceStatMultiplier = 0;
 
 for (const item of this.items.contents) {
 
@@ -267,6 +273,30 @@ if (change.key === "system.custom.manaBonus") {
   const base = Number(change.value || 0);
 
   system.custom.manaBonus += base;
+
+}
+
+if (change.key === "system.custom.meleeActionBonus") {
+
+  const base = Number(change.value || 0);
+
+  system.custom.meleeActionBonus += base * level;
+
+}
+
+if (change.key === "system.custom.toughnessHealthMultiplier") {
+
+  const base = Number(change.value || 1);
+
+  system.custom.toughnessHealthMultiplier += base * level;
+
+}
+
+if (change.key === "system.custom.encumbranceStatMultiplier") {
+
+  const base = Number(change.value || 1);
+
+  system.custom.encumbranceStatMultiplier += base * level;
 
 }
 
@@ -438,10 +468,14 @@ const levelBonus =
 const healthBonus =
   system.custom.healthBonus || 0;
 
+const toughnessHealthBonus =
+  (system.custom.toughnessHealthMultiplier || 0) * TB;
+
 system.health.max =
   baseHealth +
   levelBonus +
-  healthBonus;
+  healthBonus +
+  toughnessHealthBonus;
 
 const finalMax = system.health.max;
 
@@ -814,7 +848,9 @@ system.derived.evasion.value = Math.max(
 
     const finalAttack = Math.max(attackBase, 0);
 
-   system.derived.attack.value = Math.round((finalAttack / 10) * 10) / 10;
+   system.derived.attack.value =
+     Math.round((finalAttack / 10) * 10) / 10 +
+     (system.custom.meleeActionBonus || 0);
 
     // =====================
     // MOVEMENT
@@ -908,10 +944,12 @@ if (mana) {
 const STR = system.attributes.strength.value;
 const TGH = system.attributes.toughness.value;
 
-const avg = Math.floor((STR + TGH) / 2);
+const baseCapacity = Math.floor((STR + TGH) / 2);
+const encumbranceTalentBonus =
+  (system.custom.encumbranceStatMultiplier || 0) * (SB + TB);
 
 system.derived.carryingCapacity = {
-  value: avg
+  value: baseCapacity + encumbranceTalentBonus
 };
 
 SdpActorInventory.applyEncumbrance(this);

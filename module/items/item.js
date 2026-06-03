@@ -463,6 +463,16 @@ async update(data, options) {
 
   }
 
+  const advancesChanged =
+    foundry.utils.hasProperty(
+      data,
+      "system.advances"
+    );
+
+  if (advancesChanged) {
+    await this._syncActiveEffects();
+  }
+
   return result;
 
 }
@@ -486,6 +496,11 @@ async _syncActiveEffects() {
     case "armor":
       active =
         this.system.worn?.value === true;
+      break;
+
+    case "talent":
+      active =
+        Number(this.system.advances || 0) > 0;
       break;
 
     default:

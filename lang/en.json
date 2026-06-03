@@ -950,6 +950,14 @@
 "SDP.Item.Talent.lightningreflexes.Description": "You gain a permanent +5 bonus to your starting Agility Characteristic (this does not count as an Advance).",
 "SDP.Item.Talent.foxtread.Name": "Fox Tread",
 "SDP.Item.Talent.foxtread.Description": "You have learned to move discreetly through natural environments, avoiding attention and limiting the traces you leave behind.\n\nWhen moving through the wild, you gain an advantage when hiding, moving unnoticed, or concealing the signs of your passage.",
+"SDP.Item.Talent.determined.Name": "Determined",
+"SDP.Item.Talent.determined.Description": "You strike with unwavering determination, constantly seeking the slightest opening in your opponent's guard.\n\nYou gain +1 Attack on your melee actions.",
+"SDP.Item.Talent.hardy.Name": "Hardy",
+"SDP.Item.Talent.hardy.Description": "Your exceptional constitution allows you to withstand more wounds than most people.\n\nYou gain additional Health Points equal to your Toughness Bonus, multiplied by this Talent's level. If your Toughness Bonus increases later, the Health Points granted by this Talent increase as well.",
+"SDP.Item.Talent.sturdy.Name": "Sturdy",
+"SDP.Item.Talent.sturdy.Description": "You are accustomed to carrying heavy loads, whether through physical strength, endurance, or years of effort.\n\nAdd your Strength Bonus and Toughness Bonus to your maximum encumbrance, multiplied by this Talent's level.",
+"SDP.Item.Talent.veryresistant.Name": "Very Resistant",
+"SDP.Item.Talent.veryresistant.Description": "You gain a permanent +5 bonus to your starting Toughness Characteristic (this does not count as an Advance).",
 "SDP.Item.Talent.worldear.Name": "Ear of the World",
 "SDP.Item.Talent.worldear.Description": "You maintain a vast network of contacts, informants, and acquaintances across different regions. These connections often allow you to obtain information before others.\n\nWhen you arrive in an important settlement, you may make an appropriate Test to learn a local rumor, a recent event, an influential figure, or any other useful information determined by the GM.",
 "SDP.Item.Talent.experteye.Name": "Expert's Eye",
@@ -973,6 +981,7 @@
 
   "SDP.Item.Specie.human.Name" : "Human",
   "SDP.Item.Specie.elf.Name": "Elf",
+  "SDP.Item.Specie.dwarf.Name": "Dwarf",
 
   "SDP.Item.Sign.bull.Name" : "Bull",
   "SDP.Item.Sign.bull.Description" : "Those born under this sign are destined for battle. From an early age, they display unwavering determination, remarkable courage, and a natural affinity for the arts of war. Many of history's greatest warriors, champions, and conquerors are said to have been born beneath its influence.\n\nThis sign is often regarded as an omen of strength, discipline, and victory.",

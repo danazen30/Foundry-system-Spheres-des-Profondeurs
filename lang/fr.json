@@ -948,6 +948,14 @@
 "SDP.Item.Talent.lightningreflexes.Description": "Vous gagnez un bonus permanent de +5 à votre Caractéristique Agilité de départ (ne compte pas comme une Augmentation).",
 "SDP.Item.Talent.foxtread.Name": "Pas de Renard",
 "SDP.Item.Talent.foxtread.Description": "Vous avez appris à vous déplacer discrètement dans les environnements naturels, en évitant d'attirer l'attention et en limitant les traces de votre passage.\n\nLorsque vous évoluez dans la nature, vous bénéficiez d'un avantage pour vous cacher, vous déplacer sans être remarqué ou dissimuler les indices que vous laissez derrière vous.",
+"SDP.Item.Talent.determined.Name": "Determiné",
+"SDP.Item.Talent.determined.Description": "Vous frappez avec une détermination sans faille, cherchant constamment la moindre ouverture dans la garde de votre adversaire.\n\nVous gagnez +1 Attaque lors de vos actions de corps à corps.",
+"SDP.Item.Talent.hardy.Name": "Dur à cuire",
+"SDP.Item.Talent.hardy.Description": "Votre constitution hors du commun vous permet d'encaisser davantage de blessures que la plupart des individus.\n\nVous gagnez un nombre de Points de Vie supplémentaires égal à votre Bonus d'Endurance, multiplié par le niveau de ce Talent. Si votre Bonus d'Endurance augmente par la suite, les Points de Vie accordés par ce Talent augmentent également.",
+"SDP.Item.Talent.sturdy.Name": "Costaud",
+"SDP.Item.Talent.sturdy.Description": "Vous êtes habitué à porter de lourdes charges, que ce soit grâce à votre force physique, votre endurance ou des années d'efforts.\n\nAjoutez votre Bonus de Force et votre Bonus d'Endurance à votre encombrement maximal, multiplié par le niveau de ce Talent.",
+"SDP.Item.Talent.veryresistant.Name": "Très résistant",
+"SDP.Item.Talent.veryresistant.Description": "Vous gagnez un bonus permanent de +5 à votre Caractéristique Endurance de départ (ne compte pas comme des Augmentations).",
 "SDP.Item.Talent.worldear.Name": "Oreille du Monde",
 "SDP.Item.Talent.worldear.Description": "Vous entretenez un vaste réseau de contacts, d'informateurs et de connaissances à travers différentes régions. Ces relations vous permettent souvent d'obtenir des informations avant les autres.\n\nLorsque vous arrivez dans une localité importante, vous pouvez effectuer un Test approprié afin de connaître une rumeur locale, un événement récent, une personnalité influente ou toute autre information utile déterminée par le MJ.",
 "SDP.Item.Talent.experteye.Name": "Œil de l'Expert",
@@ -971,6 +979,7 @@
 
     "SDP.Item.Specie.human.Name" : "Humain",
   "SDP.Item.Specie.elf.Name": "Elfe",
+  "SDP.Item.Specie.dwarf.Name": "Nain",
 
   "SDP.Item.Sign.bull.Name" : "Taureau",
   "SDP.Item.Sign.bull.Description" : "Sous ce signe naissent ceux dont le destin est forgé par le combat. Depuis leur plus jeune âge, ils font preuve d'une détermination inébranlable, d'un courage remarquable et d'une affinité naturelle avec les arts de la guerre. Nombre des plus grands guerriers, champions et conquérants de l'histoire seraient nés sous son influence.\n\nCe signe est souvent considéré comme un présage de force, de discipline et de victoire.",
