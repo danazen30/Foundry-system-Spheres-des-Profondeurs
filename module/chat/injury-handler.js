@@ -1,3 +1,5 @@
+import { getInjuryFromPack } from "../system/injury-utils.js";
+
 export function registerInjuryHandlers(html, message) {
 
 const difficultyMap = {
@@ -6,20 +8,6 @@ const difficultyMap = {
   severe: -20,
   critical: -30
 };
-
-async function getInjuryFromPack(location, severity, isConsequence = false) {
-
-  const pack = game.packs.get("sdp.injuries");
-  if (!pack) return null;
-
-  const docs = await pack.getDocuments();
-
-  return docs.find(i =>
-    i.system.location === location &&
-    i.system.severity === severity &&
-    i.system.consequence === isConsequence
-  );
-}
 
 html.find(".apply-injury").click(async ev => {
 

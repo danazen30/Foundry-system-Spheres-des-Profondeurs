@@ -8,6 +8,12 @@ import { SDP } from "../system/config.js";
 import { SimpleDialog } from "../apps/simple-dialog.js";
 import { SdpSpell } from "../combat/spell.js";
 import { SdpConditionEngine } from "../system/condition-engine.js";
+import {
+  getLocalizedInjurySeverity
+} from "../system/injury-utils.js";
+import {
+  getHitLocationLabel
+} from "../combat/hit-location.js";
 
 import { getCost, getTalentCost, getTalentMax, getAttributes, getXPData, getSkillMap, getCurrentCareer, getXPBar, getSpellsByType} from "./actor-sheet-utils.js";
 import { registerAttributeListeners, registerSkillListeners} from "./actor-sheet-listeners.js";
@@ -342,7 +348,32 @@ const currency = this.document.items.filter(i =>
   i.type === "currency"
 );
 
-const injuries = this.actor.items.filter(i => i.type === "injury");
+const injuries =
+  this.actor.items
+    .filter(i => i.type === "injury")
+    .map(item => ({
+
+      id: item.id,
+      img: item.img,
+      displayName:
+        getActorItemDisplayName(item),
+
+      severityLabel:
+        getLocalizedInjurySeverity(
+          item.system.severity,
+          item.system.severity
+        ),
+
+      locationLabel:
+        getHitLocationLabel(
+          "humanoid",
+          item.system.location
+        ) || item.system.location,
+
+      duration:
+        item.system.duration ?? ""
+
+    }));
 const species = this.document.items
   .filter(i => i.type === "specie")
   .at(-1);

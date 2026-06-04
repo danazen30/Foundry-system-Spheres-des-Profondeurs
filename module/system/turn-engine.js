@@ -1,4 +1,5 @@
 import { SDP } from "./config.js";
+import { getInjuryDurationRounds } from "./injury-utils.js";
 
 export class SdpTurnEngine {
 
@@ -187,15 +188,21 @@ export class SdpTurnEngine {
 
     for (let item of actor.items.filter(i => i.type === "injury")) {
 
-  let duration = item.system.duration;
+  const durationRounds =
+    getInjuryDurationRounds(item.system.duration);
 
-  if (duration > 0) {
+  if (durationRounds !== null) {
+
+    const remaining =
+      durationRounds - 1;
 
     await item.update({
-      "system.duration": duration - 1
+      "system.duration": remaining > 0
+        ? String(remaining)
+        : ""
     });
 
-    if (duration - 1 === 0) {
+    if (remaining === 0) {
 
       ChatMessage.create({
        content: game.i18n.format("SDP.ChatInjuryEnds", {

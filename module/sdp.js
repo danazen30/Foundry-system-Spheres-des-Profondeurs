@@ -55,8 +55,12 @@ import {
   localizeRollTableChatLinks,
   localizeRollTableChatDraw,
   localizeRollTableSheet,
-  localizeTableResultConfig
+  localizeTableResultConfig,
+  registerSdpRollTableDrawHook
 } from "./system/roll-table-utils.js";
+import {
+  registerInjuryHooks
+} from "./system/injury-utils.js";
 import {
   configureCareerJournalPage,
   configureLoreJournalPage,
@@ -113,22 +117,6 @@ const SDP_ROLLTABLE_LOCALIZATION = {
   "SDP.RollTableTalent"
 
 };
-
-async function getInjuryFromPack(location, severity, isConsequence = false) {
-
-  const pack = game.packs.get("sdp.injuries");
-  if (!pack) return null;
-
-  // 🔥 charge les vrais documents (pas juste index)
-  const docs = await pack.getDocuments();
-
-  return docs.find(i =>
-    i.system.location === location &&
-    i.system.severity === severity &&
-    i.system.consequence === isConsequence
-  );
-
-}
 
 /* ========================================= */
 /* INIT                                      */
@@ -309,6 +297,8 @@ Handlebars.registerHelper("includes", function(value, key) {
 });
 
 registerChatHandlers();
+registerSdpRollTableDrawHook();
+registerInjuryHooks();
 
 /* ========================================= */
 /* COMPENDIUM LOCALIZATION                   */

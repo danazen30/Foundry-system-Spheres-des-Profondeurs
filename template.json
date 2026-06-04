@@ -844,10 +844,17 @@
         "value": false
       },
 
+      "removeOnDelete": {
+        "type": "boolean",
+        "label": "Remove on Delete",
+        "value": true
+      },
+
       "duration": {
-        "type": "number",
-        "value": 0
-        },
+        "type": "String",
+        "label": "Duration",
+        "value": ""
+      },
 
       "effects": {
         "type": "array",

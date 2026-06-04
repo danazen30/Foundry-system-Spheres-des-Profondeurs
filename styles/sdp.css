@@ -1,5 +1,22 @@
-.derived{
-margin-top:10px;
+.chat-message .sdp-rolltable-results {
+  margin-top: 0.5em;
+}
+
+.chat-message .sdp-rolltable-result-name {
+  margin: 0.35em 0 0.25em;
+}
+
+.chat-message .sdp-rolltable-result-description {
+  margin: 0;
+}
+
+.chat-message .sdp-rolltable-result-description p {
+  margin: 0.35em 0;
+}
+
+.chat-message:has(.sdp-rolltable-results) .table-results,
+.chat-message:has(.sdp-rolltable-results) .table-result {
+  display: none !important;
 }
 
 .roll-attribute,

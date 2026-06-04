@@ -112,27 +112,25 @@
   </thead>
 
   <tbody>
-    {{#each actor.items as |item|}}
-    {{#if (eq item.type "injury")}}
+    {{#each injuries as |injury|}}
 
     <tr>
       <!-- IMAGE -->
       <td class="effect-img-cell">
-        <img src="{{item.img}}" class="effect-img">
+        <img src="{{injury.img}}" class="effect-img">
       </td>
 
-      <td>{{item.displayName}}</td>
-      <td>{{item.system.severity}}</td>
-      <td>{{item.system.location}}</td>
-      <td>{{item.system.duration}}</td>
+      <td>{{injury.displayName}}</td>
+      <td>{{injury.severityLabel}}</td>
+      <td>{{injury.locationLabel}}</td>
+      <td>{{injury.duration}}</td>
 
       <td class="item-actions">
-        <button data-action="editItem" data-item-id="{{item.id}}">✏️</button>
-        <button data-action="deleteItem" data-item-id="{{item.id}}">🗑️</button>
+        <button data-action="editItem" data-item-id="{{injury.id}}">✏️</button>
+        <button data-action="deleteItem" data-item-id="{{injury.id}}">🗑️</button>
       </td>
     </tr>
 
-    {{/if}}
     {{/each}}
   </tbody>
 </table>

@@ -3,6 +3,7 @@
  */
 
 import { getLocalizedItemName } from "./item-localization.js";
+import { formatPlainTextAsHtml } from "./text-format.js";
 
 /** @deprecated IDs legacy — utilisés seulement pour migration auto des flags */
 export const SDP_ROLLTABLE_FLAG_DEFAULTS = {
@@ -812,6 +813,386 @@ export async function localizeRollTableChatLinks(root) {
 }
 
 /**
+ * HTML enrichi (nom + description traduits) pour des résultats texte SDP.
+ */
+export function buildSdpRollTableResultsHtml(
+  table,
+  results
+) {
+
+  if (
+    !table?.flags?.sdp?.key
+    || !Array.isArray(results)
+    || !results.length
+  ) {
+    return "";
+  }
+
+  const parts = [];
+
+  for (const result of results) {
+
+    if (
+      result?.documentUuid
+      || result?.documentId
+    ) {
+      continue;
+    }
+
+    const resultKey =
+      result?.name?.trim?.() ?? "";
+
+    if (!resultKey)
+      continue;
+
+    const resultName =
+      getLocalizedRollTableResultName(
+        table,
+        resultKey,
+        ""
+      );
+
+    if (!resultName)
+      continue;
+
+    const resultDescription =
+      formatPlainTextAsHtml(
+        getLocalizedRollTableResultDescription(
+          table,
+          resultKey,
+          ""
+        )
+      );
+
+    parts.push(`
+      <div class="sdp-rolltable-result">
+        <h4 class="sdp-rolltable-result-name">${foundry.utils.escapeHTML(resultName)}</h4>
+        ${resultDescription
+          ? `<div class="sdp-rolltable-result-description">${resultDescription}</div>`
+          : ""}
+      </div>
+    `);
+
+  }
+
+  return parts.join("");
+
+}
+
+/**
+ * Résout la table d'un message de tirage (uuid lien, flag ou roll).
+ */
+export async function resolveRollTableFromChatMessage(
+  message,
+  root = null
+) {
+
+  if (!message)
+    return null;
+
+  let uuid =
+    message.flags?.core?.RollTable?.uuid
+    ?? message.flags?.core?.RollTable?.tableUuid
+    ?? null;
+
+  if (!uuid && root) {
+
+    const link =
+      root.querySelector(
+        'a.content-link[data-type="RollTable"], a.content-link[data-document-type="RollTable"]'
+      );
+
+    uuid = link?.dataset?.uuid ?? null;
+
+  }
+
+  if (!uuid && message.content) {
+
+    const match =
+      message.content.match(
+        /data-uuid="([^"]*RollTable[^"]*)"/
+      );
+
+    uuid = match?.[1] ?? null;
+
+  }
+
+  if (uuid) {
+
+    try {
+      return await fromUuid(uuid);
+    }
+    catch (err) {
+      /* ignore */
+    }
+
+  }
+
+  const rolls =
+    message.rolls ?? [];
+
+  for (const roll of rolls) {
+
+    const tableId =
+      roll?.options?.rollTableId
+      ?? roll?.data?.options?.rollTableId
+      ?? null;
+
+    if (!tableId)
+      continue;
+
+    const doc =
+      game.tables?.get?.(tableId)
+      ?? null;
+
+    if (doc)
+      return doc;
+
+  }
+
+  return null;
+
+}
+
+/**
+ * Clés de résultats texte depuis flags ou DOM.
+ */
+function extractResultKeysFromChatMessage(
+  message,
+  table,
+  root
+) {
+
+  const flagResults =
+    message.flags?.core?.RollTable?.results;
+
+  if (
+    Array.isArray(flagResults)
+    && flagResults.length
+  ) {
+
+    return flagResults
+      .map(result => result?.name?.trim?.() ?? "")
+      .filter(Boolean);
+
+  }
+
+  if (!root || !table?.flags?.sdp?.key)
+    return [];
+
+  const tableKey =
+    table.flags.sdp.key;
+
+  const keys = [];
+
+  const candidates =
+    root.querySelectorAll(
+      ".table-result, .table-results li, .result-text, .table-draw-result"
+    );
+
+  for (const element of candidates) {
+
+    const text =
+      element.textContent?.trim?.() ?? "";
+
+    if (
+      text
+      && game.i18n.has(
+        `SDP.RollTableResult.${tableKey}.${text}.Name`
+      )
+    ) {
+      keys.push(text);
+    }
+
+  }
+
+  return [...new Set(keys)];
+
+}
+
+/**
+ * Masque l'affichage brut (clé interne) quand le bloc enrichi est présent.
+ */
+function hideRawRollTableResults(
+  root,
+  resultKeys = []
+) {
+
+  if (!root)
+    return;
+
+  const selectors = [
+    ".table-results",
+    ".table-result",
+    ".result-text",
+    ".table-draw-result"
+  ];
+
+  for (const selector of selectors) {
+
+    for (const element of root.querySelectorAll(selector)) {
+
+      if (element.closest(".sdp-rolltable-results"))
+        continue;
+
+      element.hidden = true;
+      element.style.display = "none";
+
+    }
+
+  }
+
+  if (!resultKeys.length)
+    return;
+
+  const content =
+    root.querySelector(".message-content");
+
+  if (!content)
+    return;
+
+  for (const element of content.querySelectorAll("*")) {
+
+    if (element.closest(".sdp-rolltable-results"))
+      continue;
+
+    const text =
+      element.textContent?.trim?.() ?? "";
+
+    if (
+      resultKeys.includes(text)
+      && element.children.length <= 1
+    ) {
+
+      element.hidden = true;
+      element.style.display = "none";
+
+    }
+
+  }
+
+}
+
+/**
+ * Ajoute nom + description traduits au message de tirage.
+ */
+export async function enrichRollTableChatMessage(
+  message,
+  table,
+  results
+) {
+
+  if (
+    !message
+    || !table?.flags?.sdp?.key
+    || message.content?.includes("sdp-rolltable-results")
+  ) {
+    return;
+  }
+
+  const sourceResults =
+    Array.isArray(results) && results.length
+      ? results
+      : message.flags?.core?.RollTable?.results ?? [];
+
+  const resultsHtml =
+    buildSdpRollTableResultsHtml(
+      table,
+      sourceResults
+    );
+
+  if (!resultsHtml)
+    return;
+
+  const content =
+    `${message.content}<div class="sdp-rolltable-results">${resultsHtml}</div>`;
+
+  await message.update({ content });
+
+}
+
+/**
+ * Hook : enrichit les messages créés par RollTable#toMessage.
+ */
+export function registerSdpRollTableDrawHook() {
+
+  Hooks.once("init", () => {
+
+    const original =
+      foundry.documents.RollTable.prototype.toMessage;
+
+    foundry.documents.RollTable.prototype.toMessage =
+      async function toMessageWithSdpLocalization(
+        results,
+        options = {}
+      ) {
+
+        const messages =
+          await original.call(
+            this,
+            results,
+            options
+          );
+
+        if (
+          !this.flags?.sdp?.key
+          || !messages
+        ) {
+          return messages;
+        }
+
+        const list =
+          Array.isArray(messages)
+            ? messages
+            : [messages];
+
+        for (const message of list) {
+
+          await enrichRollTableChatMessage(
+            message,
+            this,
+            results
+          );
+
+        }
+
+        return messages;
+
+      };
+
+  });
+
+  Hooks.on(
+    "createChatMessage",
+    async (message) => {
+
+      if (
+        !message.flags?.core?.RollTable
+        || message.content?.includes("sdp-rolltable-results")
+      ) {
+        return;
+      }
+
+      const table =
+        await resolveRollTableFromChatMessage(
+          message
+        );
+
+      if (!table?.flags?.sdp?.key)
+        return;
+
+      await enrichRollTableChatMessage(
+        message,
+        table,
+        message.flags.core.RollTable.results
+      );
+
+    }
+  );
+
+}
+
+/**
  * Localise les noms de résultats dans un message de tirage de table.
  */
 export async function localizeRollTableChatDraw(
@@ -822,76 +1203,65 @@ export async function localizeRollTableChatDraw(
   if (!message || !root)
     return;
 
-  const flag =
-    message.flags?.core?.RollTable;
-
-  if (!flag)
-    return;
-
-  const tableUuid =
-    flag.uuid
-    ?? flag.tableUuid
-    ?? null;
-
-  if (!tableUuid)
-    return;
-
-  let table;
-
-  try {
-    table = await fromUuid(tableUuid);
-  }
-  catch (err) {
-    return;
-  }
+  const table =
+    await resolveRollTableFromChatMessage(
+      message,
+      root
+    );
 
   if (!table?.flags?.sdp?.key)
     return;
 
-  const rows =
-    root.querySelectorAll(
-      ".table-results li, .table-result"
+  if (root.querySelector(".sdp-rolltable-results")) {
+
+    const resultKeys =
+      extractResultKeysFromChatMessage(
+        message,
+        table,
+        root
+      );
+
+    hideRawRollTableResults(
+      root,
+      resultKeys
     );
-
-  for (const row of rows) {
-
-    const rawKey =
-      row.dataset?.resultName
-      ?? row.querySelector("[data-result-name]")
-        ?.dataset?.resultName
-      ?? row.textContent?.trim?.()
-      ?? "";
-
-    if (!rawKey)
-      continue;
-
-    const localized =
-      getLocalizedRollTableResultName(
-        table,
-        rawKey,
-        ""
-      );
-
-    if (!localized)
-      continue;
-
-    const description =
-      getLocalizedRollTableResultDescription(
-        table,
-        rawKey,
-        ""
-      );
-
-    if (description) {
-
-      row.innerHTML =
-        `<strong>${localized}</strong><p>${description}</p>`;
-
-    }
-    else {
-      row.textContent = localized;
-    }
+    return;
 
   }
+
+  const resultKeys =
+    extractResultKeysFromChatMessage(
+      message,
+      table,
+      root
+    );
+
+  if (!resultKeys.length)
+    return;
+
+  const resultsHtml =
+    buildSdpRollTableResultsHtml(
+      table,
+      resultKeys.map(name => ({ name }))
+    );
+
+  if (!resultsHtml)
+    return;
+
+  const container =
+    document.createElement("div");
+
+  container.className = "sdp-rolltable-results";
+  container.innerHTML = resultsHtml;
+
+  const content =
+    root.querySelector(".message-content")
+    ?? root;
+
+  content.appendChild(container);
+  hideRawRollTableResults(
+    root,
+    resultKeys
+  );
 
 }

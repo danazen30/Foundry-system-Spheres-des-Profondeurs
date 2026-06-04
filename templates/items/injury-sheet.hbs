@@ -61,25 +61,21 @@
 
   <div class="weapon-grid">
 
-    <div class="form-group full-width">
-
-      <label>{{localize "SDP.Key"}}</label>
-
-      <input
-        type="text"
-        name="system.key"
-        value="{{system.key}}" />
-
-    </div>
-
     <div class="form-group">
 
       <label>{{localize "SDP.Severity"}}</label>
 
-      <input
-        type="text"
-        name="system.severity"
-        value="{{system.severity}}">
+      <select name="system.severity">
+
+        {{#each severityOptions}}
+        <option
+          value="{{this.value}}"
+          {{#if this.selected}}selected{{/if}}>
+          {{this.label}}
+        </option>
+        {{/each}}
+
+      </select>
 
     </div>
 
@@ -87,10 +83,17 @@
 
       <label>{{localize "SDP.Location"}}</label>
 
-      <input
-        type="text"
-        name="system.location"
-        value="{{system.location}}">
+      <select name="system.location">
+
+        {{#each locationOptions}}
+        <option
+          value="{{this.value}}"
+          {{#if this.selected}}selected{{/if}}>
+          {{this.label}}
+        </option>
+        {{/each}}
+
+      </select>
 
     </div>
 
@@ -102,6 +105,20 @@
         {{checked system.consequence}}>
 
       <label>{{localize "SDP.Consequence"}}</label>
+
+    </div>
+
+    <div class="form-group full-width">
+
+      <label>{{localize "SDP.Key"}}</label>
+
+      <input
+        type="text"
+        value="{{#if computedKey}}{{computedKey}}{{else}}{{system.key}}{{/if}}"
+        readonly
+        disabled />
+
+      <p class="notes">{{localize "SDP.InjuryKeyHint"}}</p>
 
     </div>
 
@@ -118,12 +135,15 @@
 
     <div class="form-group full-width">
 
-      <label>{{localize "SDP.DurationRounds"}}</label>
+      <label>{{localize "SDP.Duration"}}</label>
 
       <input
-        type="number"
+        type="text"
         name="system.duration"
-        value="{{system.duration}}">
+        value="{{durationDisplay}}"
+        placeholder="1d4">
+
+      <p class="notes">{{localize "SDP.InjuryDurationHint"}}</p>
 
     </div>
 
