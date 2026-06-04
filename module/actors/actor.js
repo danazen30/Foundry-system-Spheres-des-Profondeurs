@@ -91,6 +91,8 @@ system.custom.manaBonus ??= 0;
     system.custom.meleeActionBonus ??= 0;
     system.custom.toughnessHealthMultiplier ??= 0;
     system.custom.encumbranceStatMultiplier ??= 0;
+    system.custom.woundThresholdModifier ??= 0;
+    system.custom.carryingCapacityModifier ??= 0;
 
     system.details ??= {};
 
@@ -204,6 +206,50 @@ _getItemModifiers(targetKey) {
   return total;
 }
 
+_getActiveEffectModifier(changeKey) {
+
+  let total = 0;
+
+  for (const item of this.items.contents) {
+
+    for (const effect of item.effects ?? []) {
+
+      if (effect.disabled) continue;
+
+      for (const change of effect.changes ?? []) {
+
+        if (change.key !== changeKey) {
+          continue;
+        }
+
+        total += Number(change.value || 0);
+
+      }
+
+    }
+
+  }
+
+  return total;
+
+}
+
+_getWoundThresholdModifier() {
+
+  return this._getActiveEffectModifier(
+    "system.custom.woundThresholdModifier"
+  );
+
+}
+
+_getCarryingCapacityModifier() {
+
+  return this._getActiveEffectModifier(
+    "system.custom.carryingCapacityModifier"
+  );
+
+}
+
 
   // =====================
   // DERIVED DATA
@@ -227,6 +273,8 @@ system.custom.offhandReduction = 0;
 system.custom.meleeActionBonus = 0;
 system.custom.toughnessHealthMultiplier = 0;
 system.custom.encumbranceStatMultiplier = 0;
+system.custom.woundThresholdModifier = 0;
+system.custom.carryingCapacityModifier = 0;
 
 for (const item of this.items.contents) {
 
@@ -798,9 +846,17 @@ const actorSkillNames = actorSkills.map(s =>
     // DERIVED FINAL
     // =====================
 
-    //system.derived.woundThreshold.value = resistance?.system.bonus ?? 0;
-    system.derived.woundThreshold.value =
-  Math.floor((resistance?.system.value || 0) / 10);
+    system.custom.woundThresholdModifier =
+      this._getWoundThresholdModifier();
+
+    const baseWoundThreshold =
+      Math.floor((resistance?.system.value || 0) / 10);
+
+    system.derived.woundThreshold.value = Math.max(
+      0,
+      baseWoundThreshold +
+        (system.custom.woundThresholdModifier || 0)
+    );
 
 // =====================
 // CONDITION MALUS (PARry / EVASION)
@@ -948,8 +1004,16 @@ const baseCapacity = Math.floor((STR + TGH) / 2);
 const encumbranceTalentBonus =
   (system.custom.encumbranceStatMultiplier || 0) * (SB + TB);
 
+system.custom.carryingCapacityModifier =
+  this._getCarryingCapacityModifier();
+
 system.derived.carryingCapacity = {
-  value: baseCapacity + encumbranceTalentBonus
+  value: Math.max(
+    0,
+    baseCapacity +
+      encumbranceTalentBonus +
+      (system.custom.carryingCapacityModifier || 0)
+  )
 };
 
 SdpActorInventory.applyEncumbrance(this);

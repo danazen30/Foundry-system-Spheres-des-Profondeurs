@@ -829,6 +829,7 @@
 "SDP.RollTable.signRandom.Name": "Random Sign",
 "SDP.RollTable.species.Name": "Species Table",
 "SDP.RollTable.talent.Name": "Talent Table",
+"SDP.RollTable.corruption.Name": "Corruption Table",
 "SDP.RollTable.critical-attack-failure.Name": "Critical Attack Failure",
 "SDP.RollTable.major-magical-consequence.Name": "Major magical consequence",
 "SDP.RollTable.minor-magical-consequence.Name": "Minor magical consequence",
@@ -836,6 +837,7 @@
   "SDP.RollTableMajorMagicalConsequence": "Major magical consequence",
 "SDP.RollTableMinorMagicalConsequence": "Minor magical consequence",
 "SDP.RollTableTalent": "Talent Table",
+"SDP.RollTableCorruption": "Corruption Table",
   "SDP.RollTablePackLabel": "SDP Tables",
 
 "SDP.Item.Skill.resistance.Name": "Resistance",

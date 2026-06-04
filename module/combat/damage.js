@@ -55,6 +55,15 @@ static async applyDamage(target, damage, location){
 
 }
 
+static getEffectiveWoundThreshold(actor) {
+
+  return Math.max(
+    0,
+    actor.system?.derived?.woundThreshold?.value ?? 0
+  );
+
+}
+
 static getWoundSeverity(damage, WT) {
 
   if (damage < WT * 2) {
@@ -484,7 +493,8 @@ damage = weaponMax + signTotal + baseWeapon + (useSB ? statBonus : 0);
 
 static async applyFullDamage({ actor, damage, location }) {
 
-  const WT = actor.system.derived.woundThreshold.value;
+  const WT =
+    this.getEffectiveWoundThreshold(actor);
 
   // ⚠️ damage est DÉJÀ FINAL (armor déjà retirée)
   const finalDamage = damage;

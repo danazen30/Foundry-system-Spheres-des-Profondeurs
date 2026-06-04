@@ -47,6 +47,7 @@ const LEGACY_ROLLTABLE_I18N = {
   signRandom: "SDP.RollTableSignRandom",
   species: "SDP.RollTableSpecies",
   talent: "SDP.RollTableTalent",
+  corruption: "SDP.RollTableCorruption",
   "critical-attack-failure": "SDP.RollTableCriticalAttackFailure",
   "major-magical-consequence": "SDP.RollTableMajorMagicalConsequence",
   "minor-magical-consequence": "SDP.RollTableMinorMagicalConsequence"
@@ -64,7 +65,9 @@ const SDP_ROLLTABLE_NAME_HINTS = {
   "sign random": { key: "signRandom", group: "sign" },
   "table des signes": { key: "signRandom", group: "sign" },
   "talents": { key: "talent", group: "talent" },
-  "table des talents": { key: "talent", group: "talent" }
+  "table des talents": { key: "talent", group: "talent" },
+  "corruption": { key: "corruption", group: "corruption" },
+  "table de corruption": { key: "corruption", group: "corruption" }
 
 };
 
