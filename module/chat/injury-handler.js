@@ -1,4 +1,7 @@
-import { getInjuryFromPack } from "../system/injury-utils.js";
+import {
+  getInjuryFromPack,
+  prepareAppliedInjuryData
+} from "../system/injury-utils.js";
 
 export function registerInjuryHandlers(html, message) {
 
@@ -28,7 +31,10 @@ html.find(".apply-injury").click(async ev => {
     return;
   }
 
-  await actor.createEmbeddedDocuments("Item", [injury.toObject()]);
+  await actor.createEmbeddedDocuments("Item", [
+    prepareAppliedInjuryData(injury, location)
+  ]);
+
 });
 
 html.find(".roll-resistance").click(async ev => {
@@ -79,8 +85,6 @@ html.find(".roll-resistance").click(async ev => {
   });
 
 if (!success) {
-
-  const location = card.dataset.location;
 
   const consequence = await getInjuryFromPack(location, severity, true);
 
@@ -138,7 +142,9 @@ html.find(".apply-consequence").click(async ev => {
     return;
   }
 
-  await actor.createEmbeddedDocuments("Item", [consequence.toObject()]);
+  await actor.createEmbeddedDocuments("Item", [
+    prepareAppliedInjuryData(consequence, location)
+  ]);
 
 });
 

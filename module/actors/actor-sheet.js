@@ -9,11 +9,10 @@ import { SimpleDialog } from "../apps/simple-dialog.js";
 import { SdpSpell } from "../combat/spell.js";
 import { SdpConditionEngine } from "../system/condition-engine.js";
 import {
-  getLocalizedInjurySeverity
+  getLocalizedInjurySeverity,
+  getInjuryDisplayLocation,
+  getInjuryLocationLabel
 } from "../system/injury-utils.js";
-import {
-  getHitLocationLabel
-} from "../combat/hit-location.js";
 
 import { getCost, getTalentCost, getTalentMax, getAttributes, getXPData, getSkillMap, getCurrentCareer, getXPBar, getSpellsByType} from "./actor-sheet-utils.js";
 import { registerAttributeListeners, registerSkillListeners} from "./actor-sheet-listeners.js";
@@ -365,10 +364,9 @@ const injuries =
         ),
 
       locationLabel:
-        getHitLocationLabel(
-          "humanoid",
-          item.system.location
-        ) || item.system.location,
+        getInjuryLocationLabel(
+          getInjuryDisplayLocation(item.system)
+        ) || getInjuryDisplayLocation(item.system),
 
       duration:
         item.system.duration ?? ""

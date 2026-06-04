@@ -79,6 +79,8 @@
 
     </div>
 
+    {{#unless isOnActor}}
+
     <div class="form-group">
 
       <label>{{localize "SDP.Location"}}</label>
@@ -97,14 +99,62 @@
 
     </div>
 
+    {{else}}
+
+    <div class="form-group">
+
+      <label>{{localize "SDP.Location"}}</label>
+
+      <input
+        type="text"
+        value="{{system.location}}"
+        readonly
+        disabled />
+
+    </div>
+
+    <div class="form-group full-width">
+
+      <label>{{localize "SDP.InjuryHitLocation"}}</label>
+
+      <select name="system.hitLocation">
+
+        {{#each hitLocationOptions}}
+        <option
+          value="{{this.value}}"
+          {{#if this.selected}}selected{{/if}}>
+          {{this.label}}
+        </option>
+        {{/each}}
+
+      </select>
+
+      <p class="notes">{{localize "SDP.InjuryHitLocationHint"}}</p>
+
+    </div>
+
+    {{/unless}}
+
     <div class="compact-checkbox">
 
       <input
         type="checkbox"
         name="system.consequence"
-        {{checked system.consequence}}>
+        {{checked system.consequence}}
+        {{#if system.permanent}}disabled{{/if}}>
 
       <label>{{localize "SDP.Consequence"}}</label>
+
+    </div>
+
+    <div class="compact-checkbox">
+
+      <input
+        type="checkbox"
+        name="system.permanent"
+        {{checked system.permanent}}>
+
+      <label>{{localize "SDP.InjuryPermanent"}}</label>
 
     </div>
 

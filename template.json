@@ -844,6 +844,18 @@
         "value": false
       },
 
+      "permanent": {
+        "type": "boolean",
+        "label": "Permanent Sequel",
+        "value": false
+      },
+
+      "hitLocation": {
+        "type": "String",
+        "label": "Precise Location",
+        "value": ""
+      },
+
       "removeOnDelete": {
         "type": "boolean",
         "label": "Remove on Delete",

@@ -1,5 +1,6 @@
 import { SdpDamage } from "../combat/damage.js";
 import { getHitLocationLabel } from "../combat/hit-location.js";
+import { getInjuryFromPack } from "../system/injury-utils.js";
 
 function formatWoundSeverityKey(severity) {
 
@@ -767,14 +768,11 @@ if (severity) {
     translated: game.i18n.localize(severityKey)
   });
 
-  const pack = game.packs.get("sdp.injuries");
-  const docs = await pack.getDocuments();
-
-  const injury = docs.find(i =>
-    i.system.location === location &&
-    i.system.severity === severity &&
-    !i.system.consequence
-  );
+  const injury =
+    await getInjuryFromPack(
+      location,
+      severity
+    );
 
   ChatMessage.create({
 

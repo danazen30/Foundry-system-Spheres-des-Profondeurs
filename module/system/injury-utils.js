@@ -10,6 +10,33 @@ export const SDP_INJURY_SEVERITIES = [
   "instant"
 ];
 
+/** Localisations logiques du compendium (bras/jambe regroupés). */
+export const SDP_INJURY_LOCATIONS = [
+  "head",
+  "body",
+  "arm",
+  "leg"
+];
+
+/** Coup de combat → clé compendium. */
+export const INJURY_HIT_LOCATION_MAP = {
+  head: "head",
+  body: "body",
+  arm: "arm",
+  leg: "leg",
+  rightArm: "arm",
+  leftArm: "arm",
+  rightLeg: "leg",
+  leftLeg: "leg"
+};
+
+const INJURY_LOCATION_I18N = {
+  head: "SDP.HitLocationHead",
+  body: "SDP.HitLocationBody",
+  arm: "SDP.InjuryLocationArm",
+  leg: "SDP.InjuryLocationLeg"
+};
+
 const SEVERITY_I18N = {
   light: "SDP.Wound.Light",
   moderate: "SDP.Wound.Moderate",
@@ -19,12 +46,12 @@ const SEVERITY_I18N = {
 };
 
 /**
- * Clé i18n / compendium : lightBody, severeRightArm, lightBodyConsequence…
+ * Clé i18n / compendium : lightBody, severeArmPermanent, lightArmConsequence…
  */
 export function buildInjuryKey(
   severity,
   location,
-  consequence = false
+  flags = false
 ) {
 
   if (
@@ -34,6 +61,17 @@ export function buildInjuryKey(
     return "";
   }
 
+  let consequence = false;
+  let permanent = false;
+
+  if (typeof flags === "boolean") {
+    consequence = flags;
+  }
+  else if (flags && typeof flags === "object") {
+    consequence = !!flags.consequence;
+    permanent = !!flags.permanent;
+  }
+
   const locationPart =
     location.charAt(0).toUpperCase()
     + location.slice(1);
@@ -41,11 +79,101 @@ export function buildInjuryKey(
   let key =
     `${severity}${locationPart}`;
 
-  if (consequence) {
+  if (permanent) {
+    key += "Permanent";
+  }
+  else if (consequence) {
     key += "Consequence";
   }
 
   return key;
+
+}
+
+/**
+ * Regroupe bras/jambes gauche/droite vers arm/leg pour le compendium.
+ */
+export function normalizeInjuryLocation(location) {
+
+  if (!location) {
+    return "";
+  }
+
+  return INJURY_HIT_LOCATION_MAP[location]
+    ?? location;
+
+}
+
+/**
+ * Label traduit d'une localisation (compendium ou coup précis).
+ */
+export function getInjuryLocationLabel(
+  location,
+  profileKey = "humanoid"
+) {
+
+  if (!location) {
+    return "";
+  }
+
+  const profile =
+    CONFIG.SDP?.hitLocationProfiles?.[profileKey]
+    ?? CONFIG.SDP?.hitLocationProfiles?.humanoid;
+
+  const hitLabel =
+    profile?.locations?.[location]?.label;
+
+  if (hitLabel && game.i18n.has(hitLabel)) {
+    return game.i18n.localize(hitLabel);
+  }
+
+  const group =
+    normalizeInjuryLocation(location);
+
+  const groupKey =
+    INJURY_LOCATION_I18N[group];
+
+  if (groupKey && game.i18n.has(groupKey)) {
+    return game.i18n.localize(groupKey);
+  }
+
+  return location;
+
+}
+
+/**
+ * Données d'une blessure compendium prêtes à être appliquées sur un acteur.
+ * Conserve la localisation précise du coup dans system.hitLocation.
+ */
+export function prepareAppliedInjuryData(
+  packItem,
+  actualHitLocation = ""
+) {
+
+  const data =
+    packItem.toObject();
+
+  const hitLocation =
+    actualHitLocation?.trim?.() ?? "";
+
+  if (hitLocation) {
+    data.system.hitLocation = hitLocation;
+  }
+
+  return data;
+
+}
+
+/**
+ * Localisation affichée (coup précis ou zone logique).
+ */
+export function getInjuryDisplayLocation(
+  injuryData = {}
+) {
+
+  return injuryData.hitLocation
+    || injuryData.location
+    || "";
 
 }
 
@@ -96,9 +224,46 @@ export function getInjurySeverityOptions(
 }
 
 /**
- * Options pour le select localisation (profil humanoïde par défaut).
+ * Options pour le select localisation (4 zones logiques).
  */
 export function getInjuryLocationOptions(
+  selected = ""
+) {
+
+  const normalized =
+    normalizeInjuryLocation(selected);
+
+  const blank = {
+    value: "",
+    label: "—"
+  };
+
+  const options =
+    SDP_INJURY_LOCATIONS.map(value => {
+
+      const labelKey =
+        INJURY_LOCATION_I18N[value];
+
+      return {
+        value,
+        label: labelKey
+          ? game.i18n.localize(labelKey)
+          : value
+      };
+
+    });
+
+  return [blank, ...options].map(option => ({
+    ...option,
+    selected: option.value === normalized
+  }));
+
+}
+
+/**
+ * Options pour la localisation précise (sur fiche acteur / application manuelle).
+ */
+export function getManualHitLocationOptions(
   selected = "",
   profileKey = "humanoid"
 ) {
@@ -125,6 +290,28 @@ export function getInjuryLocationOptions(
     ...option,
     selected: option.value === selected
   }));
+
+}
+
+/**
+ * Lit les flags conséquence / permanente pour clé ou lookup.
+ */
+export function resolveInjuryVariantFlags(
+  source = {}
+) {
+
+  const permanent =
+    source.permanent ?? false;
+
+  const consequence =
+    permanent
+      ? false
+      : (source.consequence ?? false);
+
+  return {
+    consequence,
+    permanent
+  };
 
 }
 
@@ -235,8 +422,19 @@ export async function rollInjuryDurationFormula(
 export async function getInjuryFromPack(
   location,
   severity,
-  isConsequence = false
+  filter = false
 ) {
+
+  let consequence = false;
+  let permanent = false;
+
+  if (typeof filter === "boolean") {
+    consequence = filter;
+  }
+  else if (filter && typeof filter === "object") {
+    consequence = filter.consequence ?? false;
+    permanent = filter.permanent ?? false;
+  }
 
   const pack =
     game.packs.get("sdp.injuries");
@@ -248,10 +446,17 @@ export async function getInjuryFromPack(
   const docs =
     await pack.getDocuments();
 
+  const groupLocation =
+    normalizeInjuryLocation(location);
+
   return docs.find(item =>
-    item.system.location === location
-    && item.system.severity === severity
-    && item.system.consequence === isConsequence
+    item.system.severity === severity
+    && (item.system.consequence ?? false) === consequence
+    && (item.system.permanent ?? false) === permanent
+    && (
+      item.system.location === groupLocation
+      || item.system.location === location
+    )
   ) ?? null;
 
 }
@@ -273,25 +478,43 @@ export function registerInjuryHooks() {
         update.system?.severity
         ?? document.system.severity;
 
-      const location =
+      const rawLocation =
         update.system?.location
         ?? document.system.location;
 
-      const consequence =
-        update.system?.consequence
-        ?? document.system.consequence
+      const location =
+        normalizeInjuryLocation(rawLocation);
+
+      const permanent =
+        update.system?.permanent
+        ?? document.system.permanent
         ?? false;
+
+      const consequence =
+        permanent
+          ? false
+          : (
+            update.system?.consequence
+            ?? document.system.consequence
+            ?? false
+          );
 
       if (!severity || !location) {
         return;
       }
 
       update.system ??= {};
+      update.system.location = location;
+
+      if (permanent) {
+        update.system.consequence = false;
+      }
+
       update.system.key =
         buildInjuryKey(
           severity,
           location,
-          consequence
+          { consequence, permanent }
         );
 
     }
@@ -308,22 +531,36 @@ export function registerInjuryHooks() {
       const severity =
         data.system?.severity ?? "";
 
-      const location =
+      const rawLocation =
         data.system?.location ?? "";
 
+      const location =
+        normalizeInjuryLocation(rawLocation);
+
+      const permanent =
+        data.system?.permanent ?? false;
+
       const consequence =
-        data.system?.consequence ?? false;
+        permanent
+          ? false
+          : (data.system?.consequence ?? false);
 
       if (!severity || !location) {
         return;
       }
 
       data.system ??= {};
+      data.system.location = location;
+
+      if (permanent) {
+        data.system.consequence = false;
+      }
+
       data.system.key =
         buildInjuryKey(
           severity,
           location,
-          consequence
+          { consequence, permanent }
         );
 
     }

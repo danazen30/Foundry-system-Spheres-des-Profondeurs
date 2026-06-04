@@ -2,7 +2,9 @@ import { SdpItemSheet } from "./item-sheet.js";
 import {
   buildInjuryKey,
   getInjuryLocationOptions,
-  getInjurySeverityOptions
+  getInjurySeverityOptions,
+  getManualHitLocationOptions,
+  resolveInjuryVariantFlags
 } from "../system/injury-utils.js";
 
 export class SdpInjurySheet extends SdpItemSheet {
@@ -25,8 +27,14 @@ export class SdpInjurySheet extends SdpItemSheet {
     const location =
       this.document.system.location ?? "";
 
-    const consequence =
-      this.document.system.consequence ?? false;
+    const hitLocation =
+      this.document.system.hitLocation ?? "";
+
+    const variantFlags =
+      resolveInjuryVariantFlags(this.document.system);
+
+    context.isOnActor =
+      !!this.actor;
 
     context.severityOptions =
       getInjurySeverityOptions(severity);
@@ -34,11 +42,14 @@ export class SdpInjurySheet extends SdpItemSheet {
     context.locationOptions =
       getInjuryLocationOptions(location);
 
+    context.hitLocationOptions =
+      getManualHitLocationOptions(hitLocation);
+
     context.computedKey =
       buildInjuryKey(
         severity,
         location,
-        consequence
+        variantFlags
       );
 
     context.durationDisplay =
