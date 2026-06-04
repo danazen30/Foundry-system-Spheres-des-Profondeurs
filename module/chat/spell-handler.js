@@ -1,5 +1,10 @@
 import { SimpleDialog } from "../apps/simple-dialog.js";
-import { findSdpRollTable } from "../system/roll-table-utils.js";
+import {
+  findSdpRollTable,
+  getLocalizedRollTableResultDescription,
+  getLocalizedRollTableResultName
+} from "../system/roll-table-utils.js";
+import { formatPlainTextAsHtml } from "../system/text-format.js";
 
 export function registerSpellHandlers(html) {
 
@@ -46,117 +51,126 @@ ${game.i18n.localize("SDP.MultipleConcentrationDescription")}
 
   html.find(".spell-crit-failure").click(async ev => {
 
-    const severity = ev.currentTarget.dataset.severity || "minor";
+    const severity =
+      ev.currentTarget.dataset.severity || "minor";
 
-    let formula = "1d10";
+    let tableConfig = null;
 
-    if (severity === "major"){
-      formula = "1d20";
+    switch (severity) {
+
+      case "major":
+        tableConfig =
+          CONFIG.SDP.rollTables
+            .majorMagicalConsequence;
+        break;
+
+      default:
+        tableConfig =
+          CONFIG.SDP.rollTables
+            .minorMagicalConsequence;
+        break;
+
     }
 
-   let tableConfig = null;
+    if (!tableConfig) {
 
-switch (severity) {
+      ui.notifications.warn(
+        game.i18n.localize(
+          "SDP.Warning.CriticalTableNotConfigured"
+        )
+      );
 
-  case "major":
+      return;
 
-    tableConfig =
-      CONFIG.SDP.rollTables
-        .majorMagicalConsequence;
-
-    break;
-
-  default:
-
-    tableConfig =
-      CONFIG.SDP.rollTables
-        .minorMagicalConsequence;
-
-    break;
-}
-
-if (!tableConfig) {
-
-  ui.notifications.warn(
-    game.i18n.localize(
-      "SDP.Warning.CriticalTableNotConfigured"
-    )
-  );
-
-  return;
-}
-
-  const localizedTableName =
-    game.i18n.localize(
-      tableConfig.label
-    );
-
-const pack =
-  game.packs.get(
-    "sdp.rolltables"
-  );
-
-const table =
-  await findSdpRollTable(
-    pack,
-    tableConfig.key
-  );
-
-if (!table) {
-
-  ui.notifications.warn(
-
-    game.i18n.format(
-      "SDP.Warning.TableNotFound",
-      {
-        table: localizedTableName
-      }
-    )
-
-  );
-
-  return;
-}
-
-const roll = await new Roll(formula).roll();
-const originalName = table.name;
-
-table.name = game.i18n.localize(
-  tableConfig.label
-);
-await table.draw();
-table.name = originalName;
-
-    let resultText = "";
-
-    if (severity === "minor"){
-      resultText = game.i18n.format(
-  "SDP.MinorMagicalBacklash",
-  { roll: roll.total }
-);
-    } else {
-      resultText = game.i18n.format(
-  "SDP.MajorMagicalCatastrophe",
-  { roll: roll.total }
-);
     }
+
+    const localizedTableName =
+      game.i18n.localize(
+        tableConfig.label
+      );
+
+    const pack =
+      game.packs.get(
+        "sdp.rolltables"
+      );
+
+    const table =
+      await findSdpRollTable(
+        pack,
+        tableConfig.key
+      );
+
+    if (!table) {
+
+      ui.notifications.warn(
+        game.i18n.format(
+          "SDP.Warning.TableNotFound",
+          {
+            table: localizedTableName
+          }
+        )
+      );
+
+      return;
+
+    }
+
+    const drawn =
+      await table.draw({
+        displayChat: false
+      });
+
+    const rollTotal =
+      drawn.rolls?.[0]?.total
+      ?? drawn.roll?.total
+      ?? "—";
+
+    const result =
+      drawn.results?.[0] ?? null;
+
+    const resultKey =
+      result?.name?.trim?.() ?? "";
+
+    const resultName =
+      getLocalizedRollTableResultName(
+        table,
+        resultKey,
+        resultKey
+      );
+
+    const resultDescription =
+      formatPlainTextAsHtml(
+        getLocalizedRollTableResultDescription(
+          table,
+          resultKey,
+          result?.description?.trim?.() ?? ""
+        )
+      );
+
+    const severityLabel =
+      game.i18n.localize(
+        severity === "major"
+          ? "SDP.MagicConsequenceMajor"
+          : "SDP.MagicConsequenceMinor"
+      );
 
     ChatMessage.create({
       content: `
-        <h3>${game.i18n.localize("SDP.MagicalConsequence")}</h3>
-        <p>
-  <strong>${game.i18n.localize("SDP.Severity")}:</strong>
-  ${game.i18n.localize(
-    severity === "major"
-      ? "SDP.MagicConsequenceMajor"
-      : "SDP.MagicConsequenceMinor"
-  )}
-</p>
-        <p>
-  <strong>${game.i18n.localize("SDP.Roll")}:</strong>
-  ${roll.total}
-</p>
-        <p>${resultText}</p>
+        <div class="sdp-magical-consequence">
+          <h3>${game.i18n.localize("SDP.MagicalConsequence")}</h3>
+          <p>
+            <strong>${game.i18n.localize("SDP.Severity")}:</strong>
+            ${severityLabel}
+          </p>
+          <p>
+            <strong>${game.i18n.localize("SDP.Roll")}:</strong>
+            ${rollTotal}
+          </p>
+          <h4 class="sdp-magical-consequence-name">${resultName}</h4>
+          ${resultDescription
+            ? `<div class="sdp-magical-consequence-description">${resultDescription}</div>`
+            : ""}
+        </div>
       `
     });
 

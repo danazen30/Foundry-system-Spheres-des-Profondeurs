@@ -53,6 +53,7 @@ import {
   ensureSdpRollTableFlags,
   getLocalizedRollTableName,
   localizeRollTableChatLinks,
+  localizeRollTableChatDraw,
   localizeRollTableSheet,
   localizeTableResultConfig
 } from "./system/roll-table-utils.js";
@@ -644,8 +645,12 @@ Hooks.on(
 
     }
 
-    requestAnimationFrame(() => {
+    requestAnimationFrame(async () => {
       localizeRollTableChatLinks(html);
+      await localizeRollTableChatDraw(
+        message,
+        html
+      );
     });
 
   }

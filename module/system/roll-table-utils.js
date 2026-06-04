@@ -365,38 +365,119 @@ export async function resolveTableResultDocument(result) {
 }
 
 /**
- * Nom affiché d'un résultat document (ex. signe dolphin → Dauphin).
+ * Nom affiché d'un résultat texte (flags.sdp.key + clé dans result.name).
+ */
+export function getLocalizedRollTableResultName(
+  table,
+  resultKey,
+  fallback = ""
+) {
+
+  const tableKey =
+    table?.flags?.sdp?.key;
+
+  const key =
+    typeof resultKey === "string"
+      ? resultKey.trim()
+      : "";
+
+  if (!tableKey || !key) {
+    return fallback;
+  }
+
+  const translationKey =
+    `SDP.RollTableResult.${tableKey}.${key}.Name`;
+
+  return game.i18n.has(translationKey)
+    ? game.i18n.localize(translationKey)
+    : fallback;
+
+}
+
+/**
+ * Description d'un résultat texte localisé.
+ */
+export function getLocalizedRollTableResultDescription(
+  table,
+  resultKey,
+  fallback = ""
+) {
+
+  const tableKey =
+    table?.flags?.sdp?.key;
+
+  const key =
+    typeof resultKey === "string"
+      ? resultKey.trim()
+      : "";
+
+  if (!tableKey || !key) {
+    return fallback;
+  }
+
+  const translationKey =
+    `SDP.RollTableResult.${tableKey}.${key}.Description`;
+
+  return game.i18n.has(translationKey)
+    ? game.i18n.localize(translationKey)
+    : fallback;
+
+}
+
+/**
+ * Nom affiché d'un résultat de table (document Item ou clé i18n texte).
  */
 export async function getLocalizedTableResultName(result) {
 
   const fallback =
     result?.name?.trim?.() ?? "";
 
-  if (
-    !result?.documentUuid &&
-    !result?.documentId
-  ) {
-    return fallback;
-  }
-
-  const doc =
-    await resolveTableResultDocument(result);
-
-  if (!doc)
-    return fallback;
+  const table =
+    result?.parent ?? null;
 
   if (
-    doc.documentName === "Item" ||
-    doc.type
+    result?.documentUuid ||
+    result?.documentId
   ) {
-    return getLocalizedItemName(
-      doc.type,
-      doc.system?.key,
-      fallback || doc.name
-    );
+
+    const doc =
+      await resolveTableResultDocument(result);
+
+    if (doc) {
+
+      if (
+        doc.documentName === "Item" ||
+        doc.type
+      ) {
+        return getLocalizedItemName(
+          doc.type,
+          doc.system?.key,
+          fallback || doc.name
+        );
+      }
+
+      return fallback || doc.name;
+
+    }
+
   }
 
-  return fallback || doc.name;
+  if (table && fallback) {
+
+    const localized =
+      getLocalizedRollTableResultName(
+        table,
+        fallback,
+        ""
+      );
+
+    if (localized) {
+      return localized;
+    }
+
+  }
+
+  return fallback;
 
 }
 
@@ -617,13 +698,6 @@ export async function localizeRollTableSheet(table, root) {
 
   for (const [index, result] of results.entries()) {
 
-    if (
-      !result.documentUuid &&
-      !result.documentId
-    ) {
-      continue;
-    }
-
     const localized =
       await getLocalizedTableResultName(result);
 
@@ -631,7 +705,9 @@ export async function localizeRollTableSheet(table, root) {
       continue;
 
     const doc =
-      await resolveTableResultDocument(result);
+      result.documentUuid || result.documentId
+        ? await resolveTableResultDocument(result)
+        : null;
 
     const imageSrc =
       result.icon
@@ -704,6 +780,19 @@ export async function localizeRollTableChatLinks(root) {
       continue;
     }
 
+    if (doc?.documentName === "RollTable") {
+
+      const localized =
+        getLocalizedRollTableName(doc);
+
+      if (localized) {
+        link.textContent = localized;
+      }
+
+      continue;
+
+    }
+
     if (doc?.documentName !== "Item")
       continue;
 
@@ -716,6 +805,91 @@ export async function localizeRollTableChatLinks(root) {
 
     if (localized) {
       link.textContent = localized;
+    }
+
+  }
+
+}
+
+/**
+ * Localise les noms de résultats dans un message de tirage de table.
+ */
+export async function localizeRollTableChatDraw(
+  message,
+  root
+) {
+
+  if (!message || !root)
+    return;
+
+  const flag =
+    message.flags?.core?.RollTable;
+
+  if (!flag)
+    return;
+
+  const tableUuid =
+    flag.uuid
+    ?? flag.tableUuid
+    ?? null;
+
+  if (!tableUuid)
+    return;
+
+  let table;
+
+  try {
+    table = await fromUuid(tableUuid);
+  }
+  catch (err) {
+    return;
+  }
+
+  if (!table?.flags?.sdp?.key)
+    return;
+
+  const rows =
+    root.querySelectorAll(
+      ".table-results li, .table-result"
+    );
+
+  for (const row of rows) {
+
+    const rawKey =
+      row.dataset?.resultName
+      ?? row.querySelector("[data-result-name]")
+        ?.dataset?.resultName
+      ?? row.textContent?.trim?.()
+      ?? "";
+
+    if (!rawKey)
+      continue;
+
+    const localized =
+      getLocalizedRollTableResultName(
+        table,
+        rawKey,
+        ""
+      );
+
+    if (!localized)
+      continue;
+
+    const description =
+      getLocalizedRollTableResultDescription(
+        table,
+        rawKey,
+        ""
+      );
+
+    if (description) {
+
+      row.innerHTML =
+        `<strong>${localized}</strong><p>${description}</p>`;
+
+    }
+    else {
+      row.textContent = localized;
     }
 
   }
