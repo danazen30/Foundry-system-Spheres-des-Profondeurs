@@ -169,9 +169,11 @@ el.addEventListener("mousedown", async (event) => {
 
   const key = input.dataset.key;
 
-  await sheet.document.update({
-    [`system.conditions.${key}`]: value
-  });
+  await SdpConditionEngine.add(
+    sheet.document,
+    key,
+    1
+  );
 
 });
 
@@ -192,34 +194,20 @@ el.addEventListener("mousedown", async (event) => {
   const value =
     Math.max(0, current - 1);
 
-    const wasRemoved =
-  current > 0 && value === 0;
+  if (current <= 0) {
+    return;
+  }
 
   // update visuel immédiat
   input.value = value;
 
   const key = input.dataset.key;
 
-  await sheet.document.update({
-  [`system.conditions.${key}`]: value
-});
-
-// =========================
-// CONDITION REMOVED
-// =========================
-
-if (
-  wasRemoved &&
-  key !== "exhausted"
-) {
-
-  await SdpConditionEngine.add(
+  await SdpConditionEngine.remove(
     sheet.document,
-    "exhausted",
+    key,
     1
   );
-
-}
 
 });
 

@@ -140,21 +140,9 @@
       <input
         type="checkbox"
         name="system.consequence"
-        {{checked system.consequence}}
-        {{#if system.permanent}}disabled{{/if}}>
+        {{checked system.consequence}}>
 
       <label>{{localize "SDP.Consequence"}}</label>
-
-    </div>
-
-    <div class="compact-checkbox">
-
-      <input
-        type="checkbox"
-        name="system.permanent"
-        {{checked system.permanent}}>
-
-      <label>{{localize "SDP.InjuryPermanent"}}</label>
 
     </div>
 
@@ -169,17 +157,6 @@
         disabled />
 
       <p class="notes">{{localize "SDP.InjuryKeyHint"}}</p>
-
-    </div>
-
-    <div class="compact-checkbox">
-
-      <input
-        type="checkbox"
-        name="system.removeOnDelete"
-        {{checked system.removeOnDelete}}>
-
-      <label>{{localize "SDP.RemoveOnDelete"}}</label>
 
     </div>
 

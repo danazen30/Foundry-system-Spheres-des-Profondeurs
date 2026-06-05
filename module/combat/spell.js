@@ -330,8 +330,7 @@ const hasDamage =
   const concentration = system.concentration?.value === true;
   const hasSpecialOvercast = system.overcast?.value === true;
   const power = system.power?.value ?? 0;
-const memorized = system.memorized?.value === true;
-const manaCost = memorized ? power : power * 2;
+  const manaCost = power;
 
 const durationRaw = system.duration?.value ?? 0;
 const duration = SdpSpell.resolveFormula(durationRaw, actor);

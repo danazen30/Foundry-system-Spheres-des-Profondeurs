@@ -804,8 +804,6 @@ Hooks.on("createItem", async (item) => {
 
   if (item.type !== "injury") return;
 
-  const removeOnDelete = item.system.removeOnDelete ?? true;
-
   for (const effect of item.effects) {
 
     for (const change of effect.changes) {
@@ -840,17 +838,18 @@ Hooks.on("deleteItem", async (item) => {
 
       if (!change.key?.startsWith("system.custom.conditionEffects")) continue;
 
-      // 🔥 NOUVEAU : check ici
-      if (item.system.removeOnDelete === false) continue;
-
       const key = change.key.split(".").pop();
       const value = Number(change.value || 0);
 
       const current = actor.system.conditions?.[key] ?? 0;
 
-      await actor.update({
-        [`system.conditions.${key}`]: Math.max(current - value, 0)
-      });
+      if (value > 0 && current > 0) {
+        await SdpConditionEngine.remove(
+          actor,
+          key,
+          Math.min(value, current)
+        );
+      }
 
     }
 

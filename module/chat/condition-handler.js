@@ -13,7 +13,8 @@ html.find(".stunned-roll").click(async ev => {
 
   const actor = game.actors.get(actorId);
 
-  const stack = actor.system.conditionTotals?.[conditionKey] ?? 0;
+  const stack =
+    actor.system.conditions?.[conditionKey] ?? 0;
 
   const resistance = actor.items.find(i =>
     i.type === "skill" && i.system.key === "resistance"
@@ -33,7 +34,7 @@ html.find(".stunned-roll").click(async ev => {
     removed = Math.max(SL,1);
   }
 
-  const newStack = Math.max(stack - removed,0);
+  const newStack = Math.max(stack - removed, 0);
 
   roll.toMessage({
     speaker: ChatMessage.getSpeaker({actor}),
@@ -88,18 +89,14 @@ html.find(".stunned-roll").click(async ev => {
 }
     `
   });
-await actor.update({
-  [`system.conditions.${conditionKey}`]: newStack
-});
 
-
-// =========================
-// APPLY EXHAUSTED IF RECOVERED
-// =========================
-
-if(newStack === 0){
-  await game.sdp.conditions.add(actor, "exhausted", 1);
-}
+  if (removed > 0) {
+    await game.sdp.conditions.remove(
+      actor,
+      conditionKey,
+      removed
+    );
+  }
 
 });
 
@@ -144,10 +141,6 @@ html.find(".poison-roll").click(async ev => {
     removed = Math.max(SL,1);
   }
 const newTotal = Math.max(total - removed, 0);
-
-await actor.update({
-  [`system.conditions.${conditionKey}`]: newTotal
-});
 
   roll.toMessage({
     speaker: ChatMessage.getSpeaker({actor}),
@@ -204,9 +197,13 @@ await actor.update({
     `
   });
 
-  if(newTotal === 0){
-  await game.sdp.conditions.add(actor, "exhausted", 1);
-}
+  if (removed > 0) {
+    await game.sdp.conditions.remove(
+      actor,
+      conditionKey,
+      removed
+    );
+  }
 
 });
 

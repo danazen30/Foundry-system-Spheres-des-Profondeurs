@@ -1,9 +1,38 @@
 import { SDP } from "./config.js";
 
+/** États cumulables : +1 Épuisé uniquement quand la pile tombe à 0. */
+const RECOVERY_EXHAUST_KEYS = [
+  "stunned",
+  "poisoned",
+  "bleeding"
+];
+
 export class SdpConditionEngine {
 
   static get(actor, key){
     return actor.system.conditions?.[key] ?? 0;
+  }
+
+  /**
+   * +1 Épuisé si une pile stunned/poisoned/bleeding vient de tomber à 0.
+   */
+  static async _applyRecoveryExhaustion(
+    actor,
+    key,
+    previous,
+    newValue
+  ) {
+
+    if (
+      !RECOVERY_EXHAUST_KEYS.includes(key)
+      || newValue !== 0
+      || previous <= 0
+    ) {
+      return;
+    }
+
+    await this.add(actor, "exhausted", 1);
+
   }
 
 static async add(actor, key, value = 1){
@@ -107,20 +136,12 @@ if (newValue >= threshold && threshold > 0) {
       [`system.conditions.${key}`]: newValue
     });
 
-    // =====================
-    // FATIGUE FROM RECOVERY
-    // =====================
-
-    if(
-  (key === "stunned" || key === "poisoned" || key === "bleeding") &&
-  newValue === 0 &&
-  current > 0
-){
-
-      const exhausted = actor.system.conditions.exhausted ?? 0;
-await this.add(actor, "exhausted", 1);
-
-    }
+    await this._applyRecoveryExhaustion(
+      actor,
+      key,
+      current,
+      newValue
+    );
 
   }
 
@@ -145,26 +166,18 @@ await this.add(actor, "exhausted", 1);
     // STACK CONDITIONS
     // =====================
 
+    const current = this.get(actor, key);
+
     await actor.update({
       [`system.conditions.${key}`]: 0
     });
 
-    // =====================
-    // FATIGUE FROM CLEAR
-    // =====================
-
-    const current = this.get(actor, key);
-
-if(
-  (key === "stunned" || key === "poisoned" || key === "bleeding") &&
-  current > 0
-){
-  const exhausted = actor.system.conditions.exhausted ?? 0;
-
-  await actor.update({
-    "system.conditions.exhausted": exhausted + 1
-  });
-}
+    await this._applyRecoveryExhaustion(
+      actor,
+      key,
+      current,
+      0
+    );
 
   }
 

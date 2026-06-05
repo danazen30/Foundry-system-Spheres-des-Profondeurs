@@ -46,12 +46,12 @@ const SEVERITY_I18N = {
 };
 
 /**
- * Clé i18n / compendium : lightBody, severeArmPermanent, lightArmConsequence…
+ * Clé i18n / compendium : lightBody, severeArmConsequence…
  */
 export function buildInjuryKey(
   severity,
   location,
-  flags = false
+  consequence = false
 ) {
 
   if (
@@ -61,16 +61,10 @@ export function buildInjuryKey(
     return "";
   }
 
-  let consequence = false;
-  let permanent = false;
-
-  if (typeof flags === "boolean") {
-    consequence = flags;
-  }
-  else if (flags && typeof flags === "object") {
-    consequence = !!flags.consequence;
-    permanent = !!flags.permanent;
-  }
+  const isConsequence =
+    typeof consequence === "boolean"
+      ? consequence
+      : !!consequence?.consequence;
 
   const locationPart =
     location.charAt(0).toUpperCase()
@@ -79,10 +73,7 @@ export function buildInjuryKey(
   let key =
     `${severity}${locationPart}`;
 
-  if (permanent) {
-    key += "Permanent";
-  }
-  else if (consequence) {
+  if (isConsequence) {
     key += "Consequence";
   }
 
@@ -294,28 +285,6 @@ export function getManualHitLocationOptions(
 }
 
 /**
- * Lit les flags conséquence / permanente pour clé ou lookup.
- */
-export function resolveInjuryVariantFlags(
-  source = {}
-) {
-
-  const permanent =
-    source.permanent ?? false;
-
-  const consequence =
-    permanent
-      ? false
-      : (source.consequence ?? false);
-
-  return {
-    consequence,
-    permanent
-  };
-
-}
-
-/**
  * Durée numérique en rounds pour le décompte automatique, ou null si formule / vide.
  */
 export function getInjuryDurationRounds(duration) {
@@ -422,19 +391,8 @@ export async function rollInjuryDurationFormula(
 export async function getInjuryFromPack(
   location,
   severity,
-  filter = false
+  isConsequence = false
 ) {
-
-  let consequence = false;
-  let permanent = false;
-
-  if (typeof filter === "boolean") {
-    consequence = filter;
-  }
-  else if (filter && typeof filter === "object") {
-    consequence = filter.consequence ?? false;
-    permanent = filter.permanent ?? false;
-  }
 
   const pack =
     game.packs.get("sdp.injuries");
@@ -451,8 +409,7 @@ export async function getInjuryFromPack(
 
   return docs.find(item =>
     item.system.severity === severity
-    && (item.system.consequence ?? false) === consequence
-    && (item.system.permanent ?? false) === permanent
+    && (item.system.consequence ?? false) === isConsequence
     && (
       item.system.location === groupLocation
       || item.system.location === location
@@ -485,19 +442,10 @@ export function registerInjuryHooks() {
       const location =
         normalizeInjuryLocation(rawLocation);
 
-      const permanent =
-        update.system?.permanent
-        ?? document.system.permanent
-        ?? false;
-
       const consequence =
-        permanent
-          ? false
-          : (
-            update.system?.consequence
-            ?? document.system.consequence
-            ?? false
-          );
+        update.system?.consequence
+        ?? document.system.consequence
+        ?? false;
 
       if (!severity || !location) {
         return;
@@ -505,16 +453,11 @@ export function registerInjuryHooks() {
 
       update.system ??= {};
       update.system.location = location;
-
-      if (permanent) {
-        update.system.consequence = false;
-      }
-
       update.system.key =
         buildInjuryKey(
           severity,
           location,
-          { consequence, permanent }
+          consequence
         );
 
     }
@@ -537,13 +480,8 @@ export function registerInjuryHooks() {
       const location =
         normalizeInjuryLocation(rawLocation);
 
-      const permanent =
-        data.system?.permanent ?? false;
-
       const consequence =
-        permanent
-          ? false
-          : (data.system?.consequence ?? false);
+        data.system?.consequence ?? false;
 
       if (!severity || !location) {
         return;
@@ -551,16 +489,11 @@ export function registerInjuryHooks() {
 
       data.system ??= {};
       data.system.location = location;
-
-      if (permanent) {
-        data.system.consequence = false;
-      }
-
       data.system.key =
         buildInjuryKey(
           severity,
           location,
-          { consequence, permanent }
+          consequence
         );
 
     }
