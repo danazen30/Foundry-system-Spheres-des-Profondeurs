@@ -278,6 +278,31 @@ function getSharedDescriptionKey(type, key) {
     return "stealth";
   }
 
+  if (
+    type === "skill"
+    && normalizedKey.startsWith("channel")
+    && normalizedKey !== "channel"
+  ) {
+    return "channel";
+  }
+
+  if (
+    type === "skill"
+    && normalizedKey.startsWith("art")
+    && normalizedKey !== "art"
+    && normalizedKey !== "artchoose"
+  ) {
+    return "artchoose";
+  }
+
+  if (
+    type === "talent"
+    && normalizedKey.startsWith("arcanediscipline")
+    && normalizedKey !== "arcanediscipline"
+  ) {
+    return "arcanediscipline";
+  }
+
   return null;
 
 }

@@ -1,0 +1,24 @@
+{
+  "name": "art",
+  "type": "skill",
+  "img": "systems/sdp/assets/icons/items/skills.png",
+  "system": {
+    "key": "art",
+    "characteristic": "dexterity",
+    "type": "advanced",
+    "advanced": true,
+    "canAdvance": true,
+    "advances": 0,
+    "modifier": 0,
+    "description": {
+      "value": ""
+    },
+    "gmNotes": {
+      "value": ""
+    },
+    "playerNotes": {
+      "value": ""
+    }
+  },
+  "flags": {}
+}

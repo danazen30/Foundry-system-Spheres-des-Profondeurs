@@ -1,0 +1,22 @@
+{
+  "name": "felineagility",
+  "type": "talent",
+  "img": "systems/sdp/assets/icons/items/talent.png",
+  "system": {
+    "key": "felineagility",
+    "max": "1",
+    "advances": 1,
+    "canAdvance": true,
+    "careerTemporary": false,
+    "description": {
+      "value": ""
+    },
+    "gmNotes": {
+      "value": ""
+    },
+    "playerNotes": {
+      "value": ""
+    }
+  },
+  "flags": {}
+}

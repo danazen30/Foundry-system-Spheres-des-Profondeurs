@@ -1,6 +1,7 @@
 import { SdpAttack } from "../combat/attack.js";
 import { SdpSpell } from "../combat/spell.js";
 import { SdpRoll } from "../rolls/roll.js";
+import { getActorItemDisplayName } from "../system/item-localization.js";
 import { SdpSizeEngine } from "../system/size-engine.js";
 
 const { ApplicationV2 } = foundry.applications.api;
@@ -59,7 +60,13 @@ left: null
 
 async _prepareContext() {
 
-  const talents = this.actor.items.filter(i => i.type === "talent");
+  const talents = this.actor.items
+    .filter(i => i.type === "talent")
+    .map(item => ({
+      id: item.id,
+      name: getActorItemDisplayName(item),
+      advances: item.system.advances ?? 0
+    }));
 
   let conditionMod = 0;
   let conditionDetails = [];
@@ -697,7 +704,7 @@ const talentsHTML =
         <ul>
           ${selectedTalentObjects.map(t => `
             <li>
-              ${t.name}
+              ${getActorItemDisplayName(t)}
               ${t.system.advances
                 ? `(${t.system.advances})`
                 : ""}
