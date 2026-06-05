@@ -105,7 +105,7 @@ const result = await SdpDamage.rollDamage({
   defenseType
 });
 
-  const { roll, damage, finalDamage, armor, formula, devastating, weaponDetail, baseWeapon, SB } = result;
+  const { roll, damage, damageAfterArmor, finalDamage, armor, formula, devastating, weaponDetail, baseWeapon, SB } = result;
 
    if (!brutal) {
 
@@ -430,7 +430,7 @@ ${getHitLocationLabel(
 </p>
       <button class="apply-damage"
         data-target="${card.classList.contains("sdp-spell") ? "" : targetId}"
-        data-damage="${finalDamage}"
+        data-damage="${damageAfterArmor ?? finalDamage}"
         data-location="${location}"
         data-critical="${critical}">
         ${game.i18n.localize(
@@ -1018,7 +1018,14 @@ html.on("click", ".validate-damage", async ev => {
     armor = SdpDamage.getArmorValue(targets[0].actor, location);
   }
 
-  const finalDamage = Math.max(damage - armor, 0);
+  const damageAfterArmor = Math.max(damage - armor, 0);
+
+  const finalDamage = targets.length
+    ? SdpDamage.resolveIncomingDamage(
+      damageAfterArmor,
+      targets[0].actor
+    )
+    : damageAfterArmor;
 
   // =========================
   // NORMAL DAMAGE RESOLUTION CARD
@@ -1062,7 +1069,7 @@ ${getHitLocationLabel(
 
 <button class="apply-damage"
   data-target="${targetId || ""}"
-  data-damage="${finalDamage}"
+  data-damage="${damageAfterArmor}"
   data-location="${location}">
 
   ${game.i18n.localize(

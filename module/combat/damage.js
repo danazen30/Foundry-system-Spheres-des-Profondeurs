@@ -34,11 +34,58 @@ export class SdpDamage {
 
   }
 
+static getTalentDamageReduction(actor) {
+
+  if (!actor) return 0;
+
+  let reduction = 0;
+
+  for (const item of actor.items) {
+
+    if (item.type !== "talent") continue;
+
+    const level = Number(item.system.advances || 1);
+
+    for (const effect of item.effects) {
+
+      if (effect.disabled) continue;
+
+      for (const change of effect.changes) {
+
+        if (change.key !== "damageReduction") continue;
+
+        reduction += Number(change.value || 0) * level;
+
+      }
+
+    }
+
+  }
+
+  return reduction;
+
+}
+
+static resolveIncomingDamage(damageAfterArmor, actor) {
+
+  if (damageAfterArmor <= 0) return 0;
+
+  const reduction = this.getTalentDamageReduction(actor);
+
+  return Math.max(1, damageAfterArmor - reduction);
+
+}
+
 static async applyDamage(target, damage, location){
 
   const armor = this.getArmorValue(target, location);
 
-  const finalDamage = Math.max(damage - armor, 0);
+  const damageAfterArmor = Math.max(damage - armor, 0);
+
+  const finalDamage = this.resolveIncomingDamage(
+    damageAfterArmor,
+    target
+  );
 
   const current = target.system.health.value;
 
@@ -459,10 +506,17 @@ weaponDetail.push(
 
 damage = weaponMax + signTotal + baseWeapon + (useSB ? statBonus : 0);
 
+  const damageAfterArmor = Math.max(damage - armor, 0);
+
+  const finalDamage = target
+    ? this.resolveIncomingDamage(damageAfterArmor, target)
+    : damageAfterArmor;
+
   return {
   roll: signRoll,
   damage,
-  finalDamage: Math.max(damage - armor, 0),
+  damageAfterArmor,
+  finalDamage,
   armor,
   formula,
   devastating,
@@ -479,11 +533,16 @@ damage = weaponMax + signTotal + baseWeapon + (useSB ? statBonus : 0);
     damage = Math.floor(damage * 1.5);
   }
 
-  const finalDamage = Math.max(damage - armor, 0);
+  const damageAfterArmor = Math.max(damage - armor, 0);
+
+  const finalDamage = target
+    ? this.resolveIncomingDamage(damageAfterArmor, target)
+    : damageAfterArmor;
 
   return {
   roll,
   damage,
+  damageAfterArmor,
   finalDamage,
   armor,
   formula,
@@ -496,8 +555,8 @@ static async applyFullDamage({ actor, damage, location }) {
   const WT =
     this.getEffectiveWoundThreshold(actor);
 
-  // ⚠️ damage est DÉJÀ FINAL (armor déjà retirée)
-  const finalDamage = damage;
+  // damage = après armure, avant réduction de talent
+  const finalDamage = this.resolveIncomingDamage(damage, actor);
 
   const current = actor.system.health.value;
   const newHealth = current - finalDamage;

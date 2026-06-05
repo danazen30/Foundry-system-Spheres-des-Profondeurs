@@ -1,0 +1,36 @@
+{
+  "name": "robust",
+  "type": "talent",
+  "img": "systems/sdp/assets/icons/items/talent.png",
+  "system": {
+    "key": "robust",
+    "max": "1",
+    "advances": 1,
+    "canAdvance": true,
+    "careerTemporary": false,
+    "description": {
+      "value": ""
+    },
+    "gmNotes": {
+      "value": ""
+    },
+    "playerNotes": {
+      "value": ""
+    }
+  },
+  "effects": [
+    {
+      "name": "Robust",
+      "changes": [
+        {
+          "key": "damageReduction",
+          "mode": 2,
+          "value": 1
+        }
+      ],
+      "disabled": false,
+      "transfer": true
+    }
+  ],
+  "flags": {}
+}

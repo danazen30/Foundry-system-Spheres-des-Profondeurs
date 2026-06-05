@@ -1,0 +1,24 @@
+{
+  "name": "languagevezkar",
+  "type": "skill",
+  "img": "systems/sdp/assets/icons/items/skills.png",
+  "system": {
+    "key": "languagevezkar",
+    "characteristic": "intelligence",
+    "type": "basic",
+    "advanced": false,
+    "canAdvance": true,
+    "advances": 0,
+    "modifier": 0,
+    "description": {
+      "value": ""
+    },
+    "gmNotes": {
+      "value": ""
+    },
+    "playerNotes": {
+      "value": ""
+    }
+  },
+  "flags": {}
+}

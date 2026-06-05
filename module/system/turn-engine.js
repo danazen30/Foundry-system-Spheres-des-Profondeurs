@@ -1,4 +1,5 @@
 import { SDP } from "./config.js";
+import { SdpDamage } from "../combat/damage.js";
 import { getInjuryDurationRounds } from "./injury-utils.js";
 
 export class SdpTurnEngine {
@@ -435,7 +436,12 @@ if(config.damagePerStack){
           lowestArmor = 0;
         }
 
-        const finalDamage = Math.max(rawDamage - lowestArmor,0);
+        const damageAfterArmor = Math.max(rawDamage - lowestArmor, 0);
+
+        const finalDamage = SdpDamage.resolveIncomingDamage(
+          damageAfterArmor,
+          actor
+        );
 
         const current = actor.system.health.value;
 
