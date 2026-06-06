@@ -1,85 +1,12 @@
 import { SdpRoll } from "../rolls/roll.js";
 import { rollHitLocation, getHitLocationProfile} from "./hit-location.js";
+import { resolveSdpFormula } from "../system/formula-utils.js";
 
 export class SdpSpell {
 
     static resolveFormula(value, actor){
-
-  if (!value) return 0;
-
-  let str = String(value).toUpperCase().trim();
-
-  const attrs = actor.system.attributes;
-
-  // =========================
-  // MAPPING COMPLET (UI → DATA)
-  // =========================
-
-  const map = {
-
-    // ===== STRENGTH =====
-    S: attrs.strength?.value ?? 0,
-    SB: attrs.strength?.bonus ?? 0,
-
-    // ===== TOUGHNESS =====
-    T: attrs.toughness?.value ?? 0,
-    TB: attrs.toughness?.bonus ?? 0,
-
-    // ===== AGILITY =====
-    AG: attrs.agility?.value ?? 0,
-    AGB: attrs.agility?.bonus ?? 0,
-
-    // ===== DEXTERITY =====
-    DEX: attrs.dexterity?.value ?? 0,
-    DEXB: attrs.dexterity?.bonus ?? 0,
-
-    // ===== INITIATIVE =====
-I: attrs.initiative?.value ?? 0,
-IB: attrs.initiative?.bonus ?? 0,
-
-    // ===== INTELLIGENCE =====
-    INT: attrs.intelligence?.value ?? 0,
-    INTB: attrs.intelligence?.bonus ?? 0,
-
-    // ===== WILLPOWER =====
-    WP: attrs.willpower?.value ?? 0,
-    WPB: attrs.willpower?.bonus ?? 0,
-
-    // ===== CHARISMA =====
-    CHA: attrs.charisma?.value ?? 0,
-    CHAB: attrs.charisma?.bonus ?? 0,
-
-    // ===== COMBAT =====
-    MA: attrs.meleeAbility?.value ?? 0,
-    MAB: attrs.meleeAbility?.bonus ?? 0,
-
-    RA: attrs.rangedAbility?.value ?? 0,
-    RAB: attrs.rangedAbility?.bonus ?? 0
-  };
-
-  // =========================
-  // TRI IMPORTANT (évite bugs SB / S)
-  // =========================
-
-  const keys = Object.keys(map).sort((a, b) => b.length - a.length);
-
-  for (const key of keys){
-    const regex = new RegExp(`\\b${key}\\b`, "g");
-    str = str.replace(regex, map[key]);
-  }
-
-  // =========================
-  // EVAL SAFE
-  // =========================
-
-  try {
-    return Math.floor(eval(str));
-  } catch (e) {
-    console.warn("Formula error:", value, "→", str);
-    return 0;
-  }
-
-}
+      return resolveSdpFormula(value, actor);
+    }
 
 static _getBestSpellSkill(actor, spell){
 

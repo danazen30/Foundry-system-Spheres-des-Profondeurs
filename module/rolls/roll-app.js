@@ -3,6 +3,9 @@ import { SdpSpell } from "../combat/spell.js";
 import { SdpRoll } from "../rolls/roll.js";
 import { getActorItemDisplayName } from "../system/item-localization.js";
 import { SdpSizeEngine } from "../system/size-engine.js";
+import {
+  resolveWeaponRangeWithAmmo
+} from "../system/formula-utils.js";
 
 const { ApplicationV2 } = foundry.applications.api;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -225,36 +228,18 @@ if (
     const distance =
       canvas.grid.measurePath(path).distance;
 
-    const baseRange =
-  Number(this.weapon.system.range || 0);
-
-// =========================
-// AMMO RANGE MODIFIER
-// =========================
-
-let ammoRangeModifier = 0;
-
-if (this.weapon.system.currentAmmo) {
-
-  const ammo =
-    this.actor.items.get(
+    const ammo =
       this.weapon.system.currentAmmo
+        ? this.actor.items.get(
+            this.weapon.system.currentAmmo
+          )
+        : null;
+
+    const finalRange = resolveWeaponRangeWithAmmo(
+      this.weapon,
+      this.actor,
+      ammo
     );
-
-  if (ammo) {
-
-    ammoRangeModifier =
-      Number(ammo.system.rangeModifier || 0);
-
-  }
-
-}
-
-const finalRange =
-  Math.max(
-    0,
-    baseRange + ammoRangeModifier
-  );
 
     const bands = CONFIG.SDP.rangeBands;
 

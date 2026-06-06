@@ -4,6 +4,9 @@ import { SdpTraitEngine } from "../system/trait-engine.js";
 import { WEAPON_TRAITS } from "../system/config.js";
 import { ITEM_TRAITS } from "../system/config.js";
 import { SdpSizeEngine } from "../system/size-engine.js";
+import {
+  resolveWeaponRangeWithAmmo
+} from "../system/formula-utils.js";
 
 export class SdpAttack {
 
@@ -194,20 +197,13 @@ measuredDistance = canvas.grid.measurePath(path).distance;
 // FINAL RANGE (WEAPON + AMMO)
 // =========================
 
-const baseRange =
-  Number(weapon.system.range || 0);
-
-let ammoRangeModifier = 0;
-
-if (ammo) {
-  ammoRangeModifier =
-    Number(ammo.system.rangeModifier || 0);
-}
-
-const weaponRange = Math.max(
-  0,
-  baseRange + ammoRangeModifier
+const baseRange = resolveWeaponRangeWithAmmo(
+  weapon,
+  actor,
+  ammo
 );
+
+const weaponRange = baseRange;
 
 const bands = CONFIG.SDP.rangeBands;
 

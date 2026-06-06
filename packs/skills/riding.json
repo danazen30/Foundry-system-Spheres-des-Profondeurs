@@ -1,0 +1,24 @@
+{
+  "name": "riding",
+  "type": "skill",
+  "img": "systems/sdp/assets/icons/items/skills.png",
+  "system": {
+    "key": "riding",
+    "characteristic": "agility",
+    "type": "advanced",
+    "advanced": true,
+    "canAdvance": true,
+    "advances": 0,
+    "modifier": 0,
+    "description": {
+      "value": ""
+    },
+    "gmNotes": {
+      "value": ""
+    },
+    "playerNotes": {
+      "value": ""
+    }
+  },
+  "flags": {}
+}

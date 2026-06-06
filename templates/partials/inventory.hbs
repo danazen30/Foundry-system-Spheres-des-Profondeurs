@@ -286,7 +286,7 @@
 
       <div>
         <strong>{{localize "SDP.Range"}}:</strong>
-        {{item.system.range}}
+        {{#if item.displayRange}}{{item.displayRange}}{{else}}{{item.system.range}}{{/if}}
 
         {{#if item.system.currentAmmo}}
           {{#each item.compatibleAmmo as |ammo|}}
@@ -390,7 +390,7 @@
 
 <td>{{item.displayName}}</td>
 
-<td>{{item.system.weaponGroup}}</td>
+<td>{{localizeWeaponGroup item.system.weaponGroup}}</td>
 
 <td>
   {{item.system.damage.base.value}}

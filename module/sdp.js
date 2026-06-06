@@ -34,6 +34,7 @@ import { LevelUpApp } from "./apps/level-up-app.js";
 
 
 import { SDP } from "./system/config.js";
+import { localizeWeaponGroupRef } from "./system/weapon-group-utils.js";
 import { SdpConditionEngine } from "./system/condition-engine.js";
 import { SdpTurnEngine } from "./system/turn-engine.js";
 import {
@@ -127,6 +128,11 @@ const SDP_ROLLTABLE_LOCALIZATION = {
     Handlebars.registerHelper(
       "localize",
       foundry.applications.handlebars.localize
+    );
+
+    Handlebars.registerHelper(
+      "localizeWeaponGroup",
+      (key) => localizeWeaponGroupRef(key)
     );
 
     Handlebars.registerHelper(

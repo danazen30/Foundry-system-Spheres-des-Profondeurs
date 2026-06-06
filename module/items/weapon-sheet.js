@@ -1,5 +1,11 @@
 import { SdpItemSheet } from "./item-sheet.js";
 import { WEAPON_TRAITS } from "../system/config.js";
+import {
+  formatLocalizedKeyList
+} from "../system/item-localization.js";
+import {
+  getWeaponGroupSelectOptions
+} from "../system/weapon-group-utils.js";
 
 export class SdpWeaponSheet extends SdpItemSheet {
 
@@ -13,8 +19,22 @@ export class SdpWeaponSheet extends SdpItemSheet {
 
   const base = await super._prepareContext(); // 🔥 CRUCIAL
 
+  const system = this.document.system ?? {};
+
   return {
     ...base, // 🔥 garde itemTraits
+
+    display: {
+      skill: formatLocalizedKeyList(
+        system.skill,
+        { type: "skill" }
+      )
+    },
+
+    weaponGroupOptions:
+      getWeaponGroupSelectOptions({
+        currentValue: system.weaponGroup
+      }),
 
     damageTypeOptions: [
   {

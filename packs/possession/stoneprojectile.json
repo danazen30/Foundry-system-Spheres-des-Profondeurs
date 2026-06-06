@@ -1,0 +1,29 @@
+{
+  "name": "stoneprojectile",
+  "type": "ammunition",
+  "img": "systems/sdp/assets/icons/items/ammunitions.png",
+  "system": {
+    "key": "stoneprojectile",
+    "weaponGroup": "sling",
+    "damage": {
+      "base": { "value": 0 },
+      "dice": { "value": "" }
+    },
+    "rangeModifier": 0,
+    "traits": [],
+    "flaws": "",
+    "quantity": { "value": 1 },
+    "encumbrance": { "value": 0 },
+    "price": {
+      "platinum": 0,
+      "gold": 0,
+      "silver": 0,
+      "copper": 0
+    },
+    "description": { "value": "" },
+    "gmNotes": { "value": "" },
+    "playerNotes": { "value": "" }
+  },
+  "effects": [],
+  "flags": {}
+}

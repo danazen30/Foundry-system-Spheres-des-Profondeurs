@@ -105,16 +105,27 @@
         name="system.skill"
         value="{{system.skill}}" />
 
+      {{#if display.skill}}
+      <p class="career-field-hint">{{display.skill}}</p>
+      {{/if}}
+
     </div>
 
     <div class="form-group full-width">
 
       <label>{{localize "SDP.WeaponGroup"}}</label>
 
-      <input
-        type="text"
-        name="system.weaponGroup"
-        value="{{system.weaponGroup}}" />
+      <select name="system.weaponGroup">
+        {{#each weaponGroupOptions}}
+          <option
+            value="{{this.value}}"
+            {{#if (eq ../system.weaponGroup this.value)}}
+              selected
+            {{/if}}>
+            {{this.label}}
+          </option>
+        {{/each}}
+      </select>
 
     </div>
 
@@ -259,25 +270,19 @@
 
   <div class="weapon-grid">
 
-    <div class="form-group">
+    <div class="form-group full-width">
 
       <label>{{localize "SDP.Range"}}</label>
 
       <input
-        type="number"
-        name="system.range"
-        value="{{system.range}}">
-
-    </div>
-
-    <div class="form-group full-width">
-
-      <label>{{localize "SDP.AmmunitionGroup"}}</label>
-
-      <input
         type="text"
-        name="system.ammunitionGroup"
-        value="{{system.ammunitionGroup}}">
+        name="system.range"
+        value="{{system.range}}"
+        placeholder="30, SB, SB x 3">
+
+      <p class="career-field-hint">
+        {{localize "SDP.WeaponRangeHint"}}
+      </p>
 
     </div>
 

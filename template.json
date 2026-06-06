@@ -486,9 +486,9 @@
       },
 
       "range": {
-        "type": "number",
+        "type": "String",
         "label": "Range",
-        "value": 0
+        "value": ""
       },
 
       "ammunitionGroup": {
@@ -808,9 +808,8 @@
       },
 
       "traits": {
-        "type": "string",
-        "label": "Traits",
-        "value": ""
+        "type": "array",
+        "value": []
       },
 
       "flaws": {

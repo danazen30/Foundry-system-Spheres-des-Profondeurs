@@ -1,5 +1,8 @@
 import { SdpItemSheet } from "./item-sheet.js";
 import { WEAPON_TRAITS } from "../system/config.js";
+import {
+  getWeaponGroupSelectOptions
+} from "../system/weapon-group-utils.js";
 
 export class SdpAmmunitionSheet extends SdpItemSheet {
 
@@ -13,6 +16,8 @@ export class SdpAmmunitionSheet extends SdpItemSheet {
 
     const base =
       await super._prepareContext();
+
+    const system = this.document.system ?? {};
 
     const traitsArray =
       this.document.system.traits ?? [];
@@ -58,10 +63,15 @@ export class SdpAmmunitionSheet extends SdpItemSheet {
     return {
       ...base,
 
-      positiveWeaponTraits:
+      weaponGroupOptions:
+        getWeaponGroupSelectOptions({
+          currentValue: system.weaponGroup
+        }),
+
+      positiveTraits:
         mapTraits("positive"),
 
-      negativeWeaponTraits:
+      negativeTraits:
         mapTraits("negative")
     };
 

@@ -1,5 +1,8 @@
 import { SDP } from "../system/config.js";
 import { getItemLayer, applyFinalWeight} from "./actor-sheet-utils.js";
+import {
+  resolveWeaponRange
+} from "../system/formula-utils.js";
 
 export function prepareWeapons(actor) {
 
@@ -36,9 +39,15 @@ export function prepareWeapons(actor) {
 
   for (let w of rangedWeapons) {
 
+    const weaponGroup =
+      w.system.weaponGroup ||
+      w.system.ammunitionGroup;
+
     w.compatibleAmmo = allAmmo.filter(a =>
-      a.system.weaponGroup === w.system.ammunitionGroup
+      a.system.weaponGroup === weaponGroup
     );
+
+    w.displayRange = resolveWeaponRange(w, actor);
 
     const weaponTraits = Array.isArray(w.system.traits)
       ? w.system.traits

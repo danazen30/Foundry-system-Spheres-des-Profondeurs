@@ -48,7 +48,8 @@ Hooks.on("createActor", async (actor) => {
   const DEFAULT_ADVANCED_SKILL_KEYS = [
     "discretion",
     "entertainment",
-    "art"
+    "art",
+    "riding"
   ];
 
   const basicSkills =

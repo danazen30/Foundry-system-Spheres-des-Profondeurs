@@ -67,10 +67,17 @@
 
       <label>{{localize "SDP.WeaponGroup"}}</label>
 
-      <input
-        type="text"
-        name="system.weaponGroup"
-        value="{{system.weaponGroup}}">
+      <select name="system.weaponGroup">
+        {{#each weaponGroupOptions}}
+          <option
+            value="{{this.value}}"
+            {{#if (eq ../system.weaponGroup this.value)}}
+              selected
+            {{/if}}>
+            {{this.label}}
+          </option>
+        {{/each}}
+      </select>
 
     </div>
 
@@ -116,6 +123,94 @@
         type="text"
         name="system.damage.dice.value"
         value="{{system.damage.dice.value}}">
+
+    </div>
+
+  </div>
+
+</div>
+
+<div class="weapon-traits-layout">
+
+  <div class="weapon-trait-block">
+
+    <h3>{{localize "SDP.Advantages"}}</h3>
+
+    <div class="weapon-traits-grid">
+
+      {{#each positiveTraits}}
+
+      <div class="trait-row" title="{{localize this.description}}">
+
+        <label class="trait-label">
+
+          <input
+            type="checkbox"
+            name="system.traits.{{this.key}}.selected"
+            {{checked this.checked}} />
+
+          <span class="trait-name">
+            {{localize this.label}}
+          </span>
+
+        </label>
+
+        {{#if this.hasValue}}
+
+        <input
+          type="text"
+          class="trait-value"
+          name="system.traits.{{this.key}}.value"
+          value="{{this.value}}"
+          placeholder="0" />
+
+        {{/if}}
+
+      </div>
+
+      {{/each}}
+
+    </div>
+
+  </div>
+
+  <div class="weapon-trait-block">
+
+    <h3>{{localize "SDP.Drawbacks"}}</h3>
+
+    <div class="weapon-traits-grid">
+
+      {{#each negativeTraits}}
+
+      <div class="trait-row" title="{{localize this.description}}">
+
+        <label class="trait-label">
+
+          <input
+            type="checkbox"
+            name="system.traits.{{this.key}}.selected"
+            {{checked this.checked}} />
+
+          <span class="trait-name">
+            {{localize this.label}}
+          </span>
+
+        </label>
+
+        {{#if this.hasValue}}
+
+        <input
+          type="text"
+          class="trait-value"
+          name="system.traits.{{this.key}}.value"
+          value="{{this.value}}"
+          placeholder="0" />
+
+        {{/if}}
+
+      </div>
+
+      {{/each}}
 
     </div>
 

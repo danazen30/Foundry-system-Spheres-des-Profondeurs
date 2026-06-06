@@ -380,6 +380,18 @@ prepareDerivedData(){
   if (this.type === "weapon") {
     this._prepareWeaponSystem(system);
   }
+  else if (this.type === "ammunition") {
+    this._preparePhysicalFields(system);
+    system.weaponGroup ??= "";
+    system.traits ??= [];
+    system.damage ??= {
+      base: { value: 0 },
+      dice: { value: "" }
+    };
+    system.damage.base ??= { value: 0 };
+    system.damage.dice ??= { value: "" };
+    system.rangeModifier ??= 0;
+  }
   else if (this.type === "skill") {
     this._prepareSkillSystem(system);
   }

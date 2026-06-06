@@ -514,6 +514,13 @@ export const WEAPON_TRAITS = {
     hasValue: false
   },
 
+  repetition: {
+    label: "SDP.WeaponTraitRepetition",
+    type: "positive",
+    description: "SDP.WeaponTraitRepetitionDescription",
+    hasValue: true
+  },
+
   explosion: {
     label: "SDP.WeaponTraitExplosion",
     type: "positive",
@@ -774,7 +781,93 @@ SDP.sizes = {
 
 };
 
+export const WEAPON_GROUPS = {
+
+  basic: {
+    label: "SDP.WeaponGroups.basic"
+  },
+
+  polearm: {
+    label: "SDP.WeaponGroups.polearm"
+  },
+
+  twohanded: {
+    label: "SDP.WeaponGroups.twohanded"
+  },
+
+  brawl: {
+    label: "SDP.WeaponGroups.brawl"
+  },
+
+  cavalry: {
+    label: "SDP.WeaponGroups.cavalry"
+  },
+
+  fencing: {
+    label: "SDP.WeaponGroups.fencing"
+  },
+
+  sword: {
+    label: "SDP.WeaponGroups.sword"
+  },
+
+  axe: {
+    label: "SDP.WeaponGroups.axe"
+  },
+
+  hammer: {
+    label: "SDP.WeaponGroups.hammer"
+  },
+
+  shield: {
+    label: "SDP.WeaponGroups.shield"
+  },
+
+  flail: {
+    label: "SDP.WeaponGroups.flail"
+  },
+
+  parry: {
+    label: "SDP.WeaponGroups.parry"
+  },
+
+  crossbow: {
+    label: "SDP.WeaponGroups.crossbow"
+  },
+
+  bow: {
+    label: "SDP.WeaponGroups.bow"
+  },
+
+  entangle: {
+    label: "SDP.WeaponGroups.entangle"
+  },
+
+  explosives: {
+    label: "SDP.WeaponGroups.explosives"
+  },
+
+  sling: {
+    label: "SDP.WeaponGroups.sling"
+  },
+
+  engineering: {
+    label: "SDP.WeaponGroups.engineering"
+  },
+
+  throwing: {
+    label: "SDP.WeaponGroups.throwing"
+  },
+
+  blackpowder: {
+    label: "SDP.WeaponGroups.blackpowder"
+  }
+
+};
+
 CONFIG.SDP.WEAPON_TRAITS = WEAPON_TRAITS;
+CONFIG.SDP.WEAPON_GROUPS = WEAPON_GROUPS;
+SDP.WEAPON_GROUPS = WEAPON_GROUPS;
 SDP.ARMOR_TRAITS = ARMOR_TRAITS;
 SDP.WEAPON_TRAITS = WEAPON_TRAITS;
 SDP.ITEM_TRAITS = ITEM_TRAITS;
