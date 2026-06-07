@@ -143,6 +143,20 @@ const SDP_ROLLTABLE_LOCALIZATION = {
       }
     );
 
+    Handlebars.registerHelper(
+      "localizeAttributeAbbr",
+      (key) => {
+        if (!key) return "";
+        const normalized =
+          key.charAt(0).toUpperCase() + key.slice(1);
+        const i18nKey =
+          `SDP.AttributeAbbr.${normalized}`;
+        return game.i18n.has(i18nKey)
+          ? game.i18n.localize(i18nKey)
+          : key;
+      }
+    );
+
     console.log(
   "SYSTEM JSON",
   game.system

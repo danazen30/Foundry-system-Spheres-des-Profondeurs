@@ -982,6 +982,8 @@
 "SDP.Item.Skill.haggle.Description": "Haggle represents your ability to negotiate prices, assess the value of goods, and strike advantageous deals. Whether buying merchandise, selling an item, or discussing the terms of an agreement, this Skill helps you obtain better conditions than most people.\n\nIt is generally used to lower a price, increase the value of a sale, or identify the best offers available when searching among merchants.",
 "SDP.Item.Skill.gamble.Name": "Gamble",
 "SDP.Item.Skill.gamble.Description": "The Gamble Skill represents your ability to assess risk, read the flow of a game, and make the right decisions when money or important stakes are involved. It is used to participate in games of chance, contests of skill, or any other form of wagering.\n\nWhen a wager pits several participants against one another, each makes a Gamble Test, modified according to their knowledge of the game or the circumstances. The participant achieving the highest SL wins the pot.\n\nIn case of a tie, participants with the lowest results are eliminated, then the remaining players make a new Test. This process repeats until a winner is determined.\n\nIf you wish to influence the outcome through cheating, manipulation, or sleight of hand, use the Sleight of Hand Skill instead.",
+"SDP.Item.Skill.sleightofhand.Name": "Sleight of Hand",
+"SDP.Item.Skill.sleightofhand.Description": "The Sleight of Hand Skill represents your ability to conceal, steal, or discreetly manipulate small objects without attracting attention.\n\nIt notably allows pickpocketing, hiding or stealing an object, performing sleight-of-hand tricks, or cheating at certain games of chance. Sleight of Hand Tests are generally opposed by the target's Perception. On a success, your action goes unnoticed.\n\nYou may also use Sleight of Hand to improve your chances in a game of chance. Before each round, you may make a Sleight of Hand Test. If successful, add the SL from your own roll to your next Gamble Test.",
 "SDP.Item.Skill.gossip.Name": "Gossip",
 "SDP.Item.Skill.gossip.Description": "The Gossip Skill represents your ability to gather information, listen to local conversations, and spread your own rumors. It allows you to quickly discover what is being said in a region, whether verified facts, half-truths, or mere hearsay.\n\nA successful Gossip Test allows you to obtain useful information regarding the region or current situation. The GM then provides a relevant piece of intelligence.\n\nEach SL achieved may be used to:\nObtain an additional piece of information (at the risk that nothing interesting is available);\nLearn another rumor circulating in the area;\nSpread a rumor among a number of people equal to your Sociability Bonus.\n\nThe speed at which a rumor spreads depends on the local population, available means of communication, and the number of people willing to relay it.\n\nKeep in mind, however, that not all rumors are true. Some may be incomplete, distorted, or entirely false.",
 "SDP.Item.Skill.alcoholtolerance.Name": "Alcohol Tolerance",
@@ -1056,6 +1058,8 @@
 "SDP.Item.Skill.tracking.Description": "The Tracking Skill allows you to follow the trail left by a creature or individual by interpreting the subtle signs of their passage.\n\nUnlike a simple Perception Test, Tracking relies on observing more discreet signs: displaced vegetation, broken branches, partial footprints, signs of activity, or other clues left in the environment.\n\nFollowing a trail generally requires an extended Tracking Test, with difficulty depending in particular on how old the tracks are and the nature of the terrain. Loose or damp earth preserves clues better than rocky or heavily travelled ground.\n\nIt is also possible to attempt to conceal your own tracks. In that case, the pursuer's Tracking Test is opposed by the Test of the person trying to hide their passage.\n\nIf the situation involves an active pursuit, use the usual pursuit rules, replacing the appropriate Tests with Tracking Tests.",
 "SDP.Item.Skill.trapping.Name": "Trapping",
 "SDP.Item.Skill.trapping.Description": "The Trapping Skill represents your ability to set, conceal, spot, and disarm all kinds of traps.\n\nPossessing this Skill allows you to place or disarm simple traps without difficulty when you have the necessary time. A Trapping Test is generally required when you act under pressure, in urgency, or when the mechanism is particularly complex.\n\nMost traps require an Accessible Trapping Test (+20). More elaborate devices may require an extended Test, needing several SL over multiple rounds before they can be properly set or disarmed.",
+"SDP.Item.Skill.lockpicking.Name": "Lockpicking",
+"SDP.Item.Skill.lockpicking.Description": "The Lockpicking Skill represents your knowledge of locks and locking mechanisms, as well as your ability to open them without possessing the appropriate key.\n\nOpening a lock often requires an extended Lockpicking Test. The number of SL required and the difficulty of the Test depend on the quality and complexity of the mechanism.\n\nThe indicated difficulties assume the use of suitable lockpicking tools. Improvised tools may be used, but generally incur penalties. Each attempt normally takes one full round.\n\nFor the simplest locks, the GM may allow a character who does not possess this Skill to attempt a single Dexterity Test, usually with a penalty.",
 "SDP.Item.Skill.trade.Name": "Trade (choose)",
 "SDP.Item.Skill.trade.Description": "The Trade Skill represents the practical, technical, and theoretical knowledge related to a specific profession.\n\nPossessing this Skill is generally sufficient to carry out the routine tasks of your trade, provided you have the necessary materials, resources, and time. No Test is required for everyday work.\n\nA Trade Test becomes necessary when you work under difficult conditions, wish to complete a task quickly, create a particularly complex item, or produce work of exceptional quality. Depending on the scope of the project, the GM may call for an extended Test, with difficulty and duration depending on the scale of the work.\n\nThis Skill may also be used like a Lore Skill to obtain information related to your field of expertise. In such cases, the GM may call for a Test based on Intelligence rather than the Characteristic usually associated with the trade.\n\nSpecializations: Apothecary, Herbalist, Woodworking, Blacksmith, Tanner, Weaver, Engineer, Jeweler, Alchemist, Cartographer.",
 "SDP.Item.Skill.tradeapothecary.Name": "Trade (Apothecary)",
@@ -1210,6 +1214,16 @@
 "SDP.Item.Talent.menacing.Description": "Your mere presence is sometimes enough to make even the bravest hesitate. Whether through your build, your gaze, or your reputation, you naturally inspire fear.\n\nWhen you use the Intimidation Skill, gain an SL bonus equal to your Menacing level.",
 "SDP.Item.Talent.robust.Name": "Robust",
 "SDP.Item.Talent.robust.Description": "You are particularly resilient and able to withstand wounds that would put others out of action.\n\nReduce all Damage taken by 1 per Robust level. However, you always suffer a minimum of 1 Wound, regardless of the source of the damage.",
+"SDP.Item.Talent.characterjudge.Name": "Character Judge",
+"SDP.Item.Talent.characterjudge.Description": "Max: Initiative Bonus. Bonus: SL.\n\nYou can quickly determine what kind of person you are dealing with.\n\nAfter a few minutes of conversation, you may ask the GM one question about an individual's motivations, reliability, or general intentions. The player is entitled to one question per Talent level without needing to roll.",
+"SDP.Item.Talent.scholar.Name": "Scholar",
+"SDP.Item.Talent.scholar.Description": "Max: Intelligence Bonus. Bonus: SL.\n\nYou have devoted much of your life to study and the acquisition of knowledge. Your erudition covers many fields and allows you to make connections that others would not notice.\n\nYou gain an SL bonus equal to your Scholar level on all Lore Tests corresponding to knowledge your character possesses.\n\nAs with any Lore Test, the GM may provide additional information depending on your degree of success.",
+"SDP.Item.Talent.alleycat.Name": "Alley Cat",
+"SDP.Item.Talent.alleycat.Description": "Max: Agility Bonus. Bonus: SL.\n\nYou are at ease in urban environments. When you use Stealth (Urban), add your Talent level as an SL bonus.",
+"SDP.Item.Talent.breaking.Name": "Breaking",
+"SDP.Item.Talent.breaking.Description": "Max: Strength Bonus. Bonus: SL.\n\nYou know where to strike and how to apply enough force to break through obstacles quickly.\n\nWhen you attempt to break or force an inanimate object, such as a door, window, chest, or similar obstacle, you gain a bonus of +1 SL or +1 damage per Breaking level.",
+"SDP.Item.Talent.briber.Name": "Briber",
+"SDP.Item.Talent.briber.Description": "You know who to talk to, how much to offer, and how to present a bribe without arousing suspicion.\n\nWhen you attempt to corrupt someone, the GM may reduce the base cost of the bribe by 10% per Briber level.",
 
     "SDP.Item.Specie.human.Name" : "Human",
   "SDP.Item.Specie.elf.Name": "Elf",
@@ -1397,8 +1411,9 @@
   "SDP.Item.Ammunition.improvisedammo.Name": "Improvised ammunition",
   "SDP.Item.Ammunition.smallammopowder.Name": "Small ammunition and powder",
 
-  "SDP.Item.Clothing.tunic.Name" : "Basic tunic",
-  "SDP.Item.Clothing.tunic.Description" : "it's a basic tunic",
+  "SDP.Item.Clothing.ordinaryclothes.Name": "Ordinary clothes",
+  "SDP.Item.Clothing.ordinaryclothes.Description": "A simple, modest set of clothes worn by most of the population (shoes, belt, top, and trousers).",
+  "SDP.Item.Clothing.qualityclothes.Name": "Quality clothing",
 
   "SDP.Item.Container.backpack.Name" : "backpack",
   "SDP.Item.Container.backpack.Description" : "it's a basic backpack",
@@ -1406,6 +1421,9 @@
   "SDP.Item.Container.handcart.Description" : "This small handcart is designed to transport goods, equipment, or supplies over short and medium distances. It may be pulled by hand or hitched to a mule, donkey, or any other suitable draft animal.\n\nSimple but sturdy, it is commonly used by merchants, artisans, travelers, and farmers to move loads too cumbersome to carry on one's back.",
   "SDP.Item.Container.riverboat.Name" : "River transport boat",
   "SDP.Item.Container.wagon.Name" : "Wagons",
+
+  "SDP.Item.Container.satchel.Name": "Satchel",
+  "SDP.Item.Container.saddlehorse.Name": "Saddle horse",
 
   "SDP.Item.Possession.grimoire.Name" : "Grimoire",
   "SDP.Item.Possession.grimoire.Description" : "it's a grimoire",
@@ -1418,6 +1436,18 @@
   "SDP.Item.Possession.largeestate.Name" : "Large Estate",
   "SDP.Item.Possession.seagoingships.Name" : "Seagoing Ships",
   "SDP.Item.Possession.luxuryclothing.Name" : "Luxury Clothing",
+
+  "SDP.Item.Possession.lantern.Name": "Lantern",
+  "SDP.Item.Possession.lantern.Description": "Provides light to 20 meters.",
+  "SDP.Item.Possession.journal.Name": "Journal",
+  "SDP.Item.Possession.writingkit.Name": "Writing kit",
+  "SDP.Item.Possession.writingkit.Description": "Contains everything needed to write a letter or draft a report (paper, pen, and ink).",
+  "SDP.Item.Possession.lockpick.Name": "Lockpick",
+  "SDP.Item.Possession.magnifyingglass.Name": "Magnifying glass",
+  "SDP.Item.Possession.desk.Name": "Desk",
+  "SDP.Item.Possession.informant.Name": "Informant",
+  "SDP.Item.Possession.spyglass.Name": "Spyglass",
+  "SDP.Item.Possession.informantnetwork.Name": "Informant network",
 
   "SDP.Item.Injury.lightBody.Name": "Light body injury",
   "SDP.Item.Injury.lightBody.Description": "−10 penalty to MA, RA, Strength and Agility for 1d4 rounds.",
@@ -1490,6 +1520,11 @@
   "SDP.Item.Career.mastermerchant.Name" : "Master Merchant",
   "SDP.Item.Career.tradebaron.Name" : "Baron of Commerce",
 
+  "SDP.Item.Career.informant.Name": "Informant",
+  "SDP.Item.Career.investigator.Name": "Investigator",
+  "SDP.Item.Career.inspector.Name": "Inspector",
+  "SDP.Item.Career.detective.Name": "Detective",
+
   "SDP.Journal.Career.SpeciesLabel": "Species",
   "SDP.Journal.Career.EntryName": "Career",
   "SDP.Journal.Entry.career": "Career",
@@ -1507,9 +1542,8 @@
 
   "SDP.Journal.Career.merchant.Title": "Merchants",
   "SDP.Journal.Career.merchant.Epigraph1": "\"Trade is the art of turning trust into profit.\"",
-  "SDP.Journal.Career.merchant.Epigraph2": "\"A good deal is worth more than a good sword.\"",
   "SDP.Journal.Career.merchant.Intro": "Merchants travel roads and markets to exchange goods and information.\n\nTheir reputation and network are worth as much as their purse.",
-  "SDP.Journal.Career.merchant.Species": "human",
+  "SDP.Journal.Career.merchant.Species": "human, elf",
   "SDP.Journal.Career.merchant.CareerGroup": "merchant",
 
   "SDP.Folder.weapons.Name": "Weapons",
