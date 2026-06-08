@@ -10,6 +10,28 @@ function formatWoundSeverityKey(severity) {
 
 }
 
+function resolveAttackerFromButton(button) {
+
+  const attackerId =
+    button.dataset.attacker
+    || button.closest(".damage-card")?.dataset?.attacker
+    || button.closest(".sdp-attack")?.dataset?.actor
+    || button.closest(".sdp-spell")?.dataset?.actor;
+
+  return attackerId
+    ? game.actors.get(attackerId)
+    : null;
+
+}
+
+function getAttackerInjurySeverityBonus(attacker) {
+
+  return Number(
+    attacker?.system?.custom?.injurySeverityBonus || 0
+  );
+
+}
+
 export function registerDamageHandlers(html, message) {
 
   // ===================
@@ -149,6 +171,7 @@ await roll.toMessage({
        }))
      )}'
      data-total="${roll.total}"
+     data-attacker="${actorId}"
      data-target="${targetId}"
      data-location="${location}">
 
@@ -394,6 +417,7 @@ if (card.classList.contains("sdp-spell")) {
     ChatMessage.create({
       content: `
             <div class="damage-card"
+            data-attacker="${actorId}"
             data-location-profile="${card.dataset.locationProfile || "humanoid"}"
            data-traits='${card.dataset.traits || "[]"}'>
       <h3>
@@ -429,6 +453,7 @@ ${getHitLocationLabel(
   )}: ${finalDamage}
 </p>
       <button class="apply-damage"
+        data-attacker="${actorId}"
         data-target="${card.classList.contains("sdp-spell") ? "" : targetId}"
         data-damage="${damageAfterArmor ?? finalDamage}"
         data-location="${location}"
@@ -454,6 +479,8 @@ ${getHitLocationLabel(
         const damage = Number(button.dataset.damage);
     const location = button.dataset.location;
         let targetId = button.dataset.target;
+    const attacker = resolveAttackerFromButton(button);
+    const severitySteps = getAttackerInjurySeverityBonus(attacker);
 
     // =========================
 // FLAWED ARMOR (BREAK)
@@ -589,7 +616,8 @@ if (hasTaille) {
 const result = await SdpDamage.applyFullDamage({
   actor: token.actor,
   damage,
-  location
+  location,
+  severitySteps
 });
 
 const { finalDamage, armor, newHealth, current, severity } = result;
@@ -748,7 +776,8 @@ if (hasTaille && targetId) {
     const result = await SdpDamage.applyFullDamage({
   actor,
   damage,
-  location
+  location,
+  severitySteps
 });
 
 const {
@@ -1068,6 +1097,7 @@ ${getHitLocationLabel(
 </p>
 
 <button class="apply-damage"
+  data-attacker="${card.dataset.attacker || ""}"
   data-target="${targetId || ""}"
   data-damage="${damageAfterArmor}"
   data-location="${location}">

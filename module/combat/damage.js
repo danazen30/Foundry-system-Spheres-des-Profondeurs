@@ -1,4 +1,5 @@
 import { SdpSizeEngine } from "../system/size-engine.js";
+import { SdpRoll } from "../rolls/roll.js";
 
 export class SdpDamage {
 
@@ -134,6 +135,32 @@ static getWoundSeverity(damage, WT) {
   }
 
   return "instant";
+}
+
+static applyInjurySeverityBonus(severity, steps = 0) {
+
+  if (!severity || steps <= 0) {
+    return severity;
+  }
+
+  const order = [
+    "light",
+    "moderate",
+    "severe",
+    "critical",
+    "instant"
+  ];
+
+  const index = order.indexOf(severity);
+
+  if (index < 0) {
+    return severity;
+  }
+
+  return order[
+    Math.min(index + steps, order.length - 1)
+  ];
+
 }
 
 static async rollDamage({ actor, weapon, target, location, critical, brutal, ammoId, defenseType }) {
@@ -457,6 +484,20 @@ console.log("SDP | SIZE DAMAGE MULTIPLIER", {
   finalDamage: damage
 });
 
+const talentDamageBonus = SdpRoll.getAttackDamageBonus(
+  actor,
+  dialogMods.talents || []
+);
+
+if (talentDamageBonus) {
+  damage += talentDamageBonus;
+
+  console.log("SDP | TALENT ATTACK DAMAGE BONUS", {
+    actor: actor.name,
+    bonus: talentDamageBonus
+  });
+}
+
   // =========================
   // BRUTAL
   // =========================
@@ -504,7 +545,7 @@ weaponDetail.push(
   // TOTAL FINAL
   // =========================
 
-damage = weaponMax + signTotal + baseWeapon + (useSB ? statBonus : 0);
+  damage = weaponMax + signTotal + baseWeapon + (useSB ? statBonus : 0) + talentDamageBonus;
 
   const damageAfterArmor = Math.max(damage - armor, 0);
 
@@ -550,7 +591,7 @@ damage = weaponMax + signTotal + baseWeapon + (useSB ? statBonus : 0);
 };
 }
 
-static async applyFullDamage({ actor, damage, location }) {
+static async applyFullDamage({ actor, damage, location, severitySteps = 0 }) {
 
   const WT =
     this.getEffectiveWoundThreshold(actor);
@@ -565,7 +606,10 @@ static async applyFullDamage({ actor, damage, location }) {
     "system.health.value": newHealth
   });
 
-  const severity = this.getWoundSeverity(finalDamage, WT);
+  const severity = this.applyInjurySeverityBonus(
+    this.getWoundSeverity(finalDamage, WT),
+    severitySteps
+  );
 
   return {
     armor: 0,

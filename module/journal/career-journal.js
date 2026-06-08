@@ -564,6 +564,19 @@ function formatIntro(text) {
 
 }
 
+function formatEpigraph(text) {
+
+  if (!text?.trim()) return "";
+
+  return text
+    .split(/\n{2,}/)
+    .map(paragraph =>
+      `<p>${foundry.utils.escapeHTML(paragraph.trim()).replace(/\n/g, "<br>")}</p>`
+    )
+    .join("");
+
+}
+
 async function buildItemUuidLink(type, ref, packId) {
 
   const doc =
@@ -785,10 +798,14 @@ export async function prepareCareerJournalContext(page) {
     showTiers,
     title,
     epigraph1: showIntro
-      ? localizeJournalField(journalKey, "Epigraph1")
+      ? formatEpigraph(
+          localizeJournalField(journalKey, "Epigraph1")
+        )
       : "",
     epigraph2: showIntro
-      ? localizeJournalField(journalKey, "Epigraph2")
+      ? formatEpigraph(
+          localizeJournalField(journalKey, "Epigraph2")
+        )
       : "",
     intro: showIntro
       ? formatIntro(
@@ -834,8 +851,12 @@ export function prepareLoreJournalContext(page) {
   return {
     pageKey,
     title: localizeLoreField(pageKey, "Title"),
-    epigraph1: localizeLoreField(pageKey, "Epigraph1"),
-    epigraph2: localizeLoreField(pageKey, "Epigraph2"),
+    epigraph1: formatEpigraph(
+      localizeLoreField(pageKey, "Epigraph1")
+    ),
+    epigraph2: formatEpigraph(
+      localizeLoreField(pageKey, "Epigraph2")
+    ),
     intro: formatIntro(
       localizeLoreField(pageKey, "Intro")
     )

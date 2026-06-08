@@ -540,6 +540,18 @@
   opacity: 0.9;
 }
 
+.sdp-lore-journal .sdp-lore-epigraph p {
+  margin: 0.45em 0;
+}
+
+.sdp-lore-journal .sdp-lore-epigraph p:first-child {
+  margin-top: 0;
+}
+
+.sdp-lore-journal .sdp-lore-epigraph p:last-child {
+  margin-bottom: 0;
+}
+
 .sdp-lore-journal .sdp-lore-intro p {
   margin: 0 0 1rem;
 }
@@ -562,6 +574,18 @@
   opacity: 0.92;
   border-left: 3px solid rgba(160, 110, 60, 0.55);
   padding-left: 0.85em;
+}
+
+.sdp-career-journal .sdp-career-epigraph p {
+  margin: 0.45em 0;
+}
+
+.sdp-career-journal .sdp-career-epigraph p:first-child {
+  margin-top: 0;
+}
+
+.sdp-career-journal .sdp-career-epigraph p:last-child {
+  margin-bottom: 0;
 }
 
 .sdp-career-journal .sdp-career-intro p {

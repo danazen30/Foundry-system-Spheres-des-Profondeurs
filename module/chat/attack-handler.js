@@ -105,7 +105,7 @@ if (hasEntangling) {
     // ===== SIDESTEP CHECK =====
     const sidestepTalent = target.items.find(i =>
       i.type === "talent" &&
-      i.name.toLowerCase().includes("sidestep")
+      (i.system.key || "").toLowerCase().trim() === "sidestep"
     );
 
     const hasSidestep = sidestepTalent && (sidestepTalent.system.advances || 0) > 0;

@@ -89,6 +89,10 @@ export class SdpActor extends Actor {
     system.custom.healthBonus ??= 0;
 system.custom.manaBonus ??= 0;
     system.custom.meleeActionBonus ??= 0;
+    system.custom.parryBonus ??= 0;
+    system.custom.evasionBonus ??= 0;
+    system.custom.combatInitiativeBonus ??= 0;
+    system.custom.injurySeverityBonus ??= 0;
     system.custom.toughnessHealthMultiplier ??= 0;
     system.custom.encumbranceStatMultiplier ??= 0;
     system.custom.woundThresholdModifier ??= 0;
@@ -271,6 +275,10 @@ system.bonuses.successSL = system.bonuses.successSL || 0;
 
 system.custom.offhandReduction = 0;
 system.custom.meleeActionBonus = 0;
+system.custom.parryBonus = 0;
+system.custom.evasionBonus = 0;
+system.custom.combatInitiativeBonus = 0;
+system.custom.injurySeverityBonus = 0;
 system.custom.toughnessHealthMultiplier = 0;
 system.custom.encumbranceStatMultiplier = 0;
 system.custom.woundThresholdModifier = 0;
@@ -329,6 +337,38 @@ if (change.key === "system.custom.meleeActionBonus") {
   const base = Number(change.value || 0);
 
   system.custom.meleeActionBonus += base * level;
+
+}
+
+if (change.key === "system.custom.parryBonus") {
+
+  const base = Number(change.value || 0);
+
+  system.custom.parryBonus += base * level;
+
+}
+
+if (change.key === "system.custom.evasionBonus") {
+
+  const base = Number(change.value || 0);
+
+  system.custom.evasionBonus += base * level;
+
+}
+
+if (change.key === "system.custom.combatInitiativeBonus") {
+
+  const base = Number(change.value || 0);
+
+  system.custom.combatInitiativeBonus += base * level;
+
+}
+
+if (change.key === "system.custom.injurySeverityBonus") {
+
+  const base = Number(change.value || 0);
+
+  system.custom.injurySeverityBonus += base * level;
 
 }
 
@@ -881,7 +921,10 @@ if (cond.frightened) conditionPenalty -= 3;
 // APPLY TO VALUES
 // =====================
 
-const finalParry = (parryBase / 10 + 5) + conditionPenalty;
+const finalParry =
+  (parryBase / 10 + 5) +
+  conditionPenalty +
+  (system.custom.parryBonus || 0);
 system.derived.parry.value = Math.max(
   Math.round(finalParry * 10) / 10,
   0
@@ -892,7 +935,10 @@ const evasionBase =
   system.attributes.agility.value ??
   0;
 
-const finalEvasion = (evasionBase / 10 + 5) + conditionPenalty;
+const finalEvasion =
+  (evasionBase / 10 + 5) +
+  conditionPenalty +
+  (system.custom.evasionBonus || 0);
 system.derived.evasion.value = Math.max(
   Math.round(finalEvasion * 10) / 10,
   0

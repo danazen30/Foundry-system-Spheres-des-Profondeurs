@@ -122,6 +122,16 @@ static applyTalentSLModifiers(SL, actor, selectedTalents = []) {
   return this.applySuccessBonus(SL, actor, selectedTalents);
 }
 
+static getAttackDamageBonus(actor, selectedTalents = []) {
+
+  return this._getTalentEffectBonus(
+    actor,
+    selectedTalents,
+    "system.modifiers.attackDamageBonus"
+  );
+
+}
+
 // =====================
 // SL LABEL
 // =====================
