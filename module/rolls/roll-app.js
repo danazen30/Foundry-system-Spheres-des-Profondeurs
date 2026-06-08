@@ -43,7 +43,7 @@ export class SdpRollApp extends HandlebarsApplicationMixin(ApplicationV2) {
   resizable: true
 },
   position: {
-    width: 400,
+    width: 440,
     height: "auto",
     top: null,
 left: null
@@ -69,7 +69,8 @@ async _prepareContext() {
       id: item.id,
       name: getActorItemDisplayName(item),
       advances: item.system.advances ?? 0
-    }));
+    }))
+    .filter(talent => talent.advances > 0);
 
   let conditionMod = 0;
   let conditionDetails = [];

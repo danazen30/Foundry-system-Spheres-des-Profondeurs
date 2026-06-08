@@ -1,140 +1,162 @@
-<div class="sdp-roll-dialog" style="overflow-y: auto; max-height: 100%;">
+<div class="sdp-roll-dialog">
 
-<h2>{{label}}</h2>
+<header class="sdp-roll-dialog__header">
+  <h2>{{label}}</h2>
+</header>
 
 <!-- ===================== -->
 <!-- MODIFIERS -->
 <!-- ===================== -->
 
-<h3>{{localize "SDP.Modifiers"}}</h3>
+<section class="sdp-roll-section">
+  <h3>{{localize "SDP.Modifiers"}}</h3>
 
-<label>{{localize "SDP.Difficulty"}}</label>
-<select name="difficulty">
-  <option value="60">+60</option>
-  <option value="40">+40</option>
-  <option value="20">+20</option>
-  <option value="10">+10</option>
-  <option value="0" selected>0</option>
-  <option value="-10">-10</option>
-  <option value="-20">-20</option>
-  <option value="-40">-40</option>
-  <option value="-60">-60</option>
-</select>
+  <div class="sdp-roll-fields sdp-roll-fields--grid">
+    <div class="sdp-roll-field">
+      <label>{{localize "SDP.Difficulty"}}</label>
+      <select name="difficulty">
+        <option value="60">+60</option>
+        <option value="40">+40</option>
+        <option value="20">+20</option>
+        <option value="10">+10</option>
+        <option value="0" selected>0</option>
+        <option value="-10">-10</option>
+        <option value="-20">-20</option>
+        <option value="-40">-40</option>
+        <option value="-60">-60</option>
+      </select>
+    </div>
 
-<label>{{localize "SDP.Custom"}}</label>
-<input type="number" name="customMod" value="0">
-
-<div class="modifier-box">
-
-  {{localize "SDP.Modifier"}}:
-  <span id="totalModifier">0</span>
-
-  <div class="modifier-tooltip">
-    {{#each modifiers}}
-      <div>{{this.label}} : {{this.value}}</div>
-    {{/each}}
+    <div class="sdp-roll-field">
+      <label>{{localize "SDP.Custom"}}</label>
+      <input type="number" name="customMod" value="0">
+    </div>
   </div>
 
-</div>
+  <div class="modifier-box sdp-roll-modifier-total">
+    {{localize "SDP.Modifier"}}:
+    <span id="totalModifier">0</span>
+
+    <div class="modifier-tooltip">
+      {{#each modifiers}}
+        <div>{{this.label}} : {{this.value}}</div>
+      {{/each}}
+    </div>
+  </div>
+</section>
 
 {{#if (and (eq type "skill") (not isAttribute))}}
+<section class="sdp-roll-section">
+  <h3>{{localize "SDP.Attributes"}}</h3>
 
-<h3>{{localize "SDP.Attributes"}}</h3>
+  <div class="sdp-roll-field">
+    <select name="attributeOverride">
+      <option value="">
+        {{localize "SDP.Default"}}
+      </option>
 
-<select name="attributeOverride">
+      <option value="meleeAbility">
+        {{localize "SDP.MeleeAbility"}}
+      </option>
 
-  <option value="">
-    {{localize "SDP.Default"}}
-  </option>
+      <option value="rangedAbility">
+        {{localize "SDP.RangedAbility"}}
+      </option>
 
-  <option value="meleeAbility">
-    {{localize "SDP.MeleeAbility"}}
-  </option>
+      <option value="strength">
+        {{localize "SDP.Strength"}}
+      </option>
 
-  <option value="rangedAbility">
-    {{localize "SDP.RangedAbility"}}
-  </option>
+      <option value="toughness">
+        {{localize "SDP.Toughness"}}
+      </option>
 
-  <option value="strength">
-    {{localize "SDP.Strength"}}
-  </option>
+      <option value="initiative">
+        {{localize "SDP.Initiative"}}
+      </option>
 
-  <option value="toughness">
-    {{localize "SDP.Toughness"}}
-  </option>
+      <option value="agility">
+        {{localize "SDP.Agility"}}
+      </option>
 
-  <option value="initiative">
-    {{localize "SDP.Initiative"}}
-  </option>
+      <option value="dexterity">
+        {{localize "SDP.Dexterity"}}
+      </option>
 
-  <option value="agility">
-    {{localize "SDP.Agility"}}
-  </option>
+      <option value="intelligence">
+        {{localize "SDP.Intelligence"}}
+      </option>
 
-  <option value="dexterity">
-    {{localize "SDP.Dexterity"}}
-  </option>
+      <option value="willpower">
+        {{localize "SDP.Willpower"}}
+      </option>
 
-  <option value="intelligence">
-    {{localize "SDP.Intelligence"}}
-  </option>
-
-  <option value="willpower">
-    {{localize "SDP.Willpower"}}
-  </option>
-
-  <option value="charisma">
-    {{localize "SDP.Charisma"}}
-  </option>
-
-</select>
-
+      <option value="charisma">
+        {{localize "SDP.Charisma"}}
+      </option>
+    </select>
+  </div>
+</section>
 {{/if}}
 
-<h3>{{localize "SDP.Talents"}}</h3>
+{{#if talents.length}}
+<section class="sdp-roll-section">
+  <h3>{{localize "SDP.Talents"}}</h3>
 
-{{#each talents}}
-<label>
-  <input type="checkbox" name="talent" value="{{this.id}}">
-  {{this.name}} ({{this.advances}})
-</label>
-{{/each}}
+  <div class="sdp-roll-checklist">
+    {{#each talents}}
+    <label class="sdp-roll-check">
+      <input type="checkbox" name="talent" value="{{this.id}}">
+      <span class="sdp-roll-check__label">{{this.name}} ({{this.advances}})</span>
+    </label>
+    {{/each}}
+  </div>
+</section>
+{{/if}}
 
-{{#each effects}}
-<label>
-  <input type="checkbox" name="effect" value="{{this.id}}">
-  {{this.name}}
-</label>
-{{/each}}
+{{#if effects.length}}
+<section class="sdp-roll-section">
+  <h3>{{localize "SDP.Effects"}}</h3>
+
+  <div class="sdp-roll-checklist">
+    {{#each effects}}
+    <label class="sdp-roll-check">
+      <input type="checkbox" name="effect" value="{{this.id}}">
+      <span class="sdp-roll-check__label">{{this.name}}</span>
+    </label>
+    {{/each}}
+  </div>
+</section>
+{{/if}}
 
 <!-- ===================== -->
 <!-- INSPIRATION -->
 <!-- ===================== -->
 
 {{#if inspirationDice}}
-<div class="inspiration-block">
+<section class="sdp-roll-section sdp-roll-section--inspiration">
+  <div class="inspiration-block">
+    <h3>{{localize "SDP.Inspiration"}}</h3>
 
-  <h3>{{localize "SDP.Inspiration"}}</h3>
-
-  <p>
-    {{localize "SDP.Dice"}}:
-    {{inspirationDice}}
-  </p>
-
-  <button data-action="rollInspiration">
-    {{localize "SDP.RollInspiration"}}
-  </button>
-
-  {{#if inspirationResult}}
-    <p>
-      <strong>
-        {{localize "SDP.BonusSL"}}:
-      </strong>
-      +{{inspirationResult}}
+    <p class="sdp-roll-inspiration-dice">
+      {{localize "SDP.Dice"}}:
+      <strong>{{inspirationDice}}</strong>
     </p>
-  {{/if}}
 
-</div>
+    <button type="button" data-action="rollInspiration">
+      {{localize "SDP.RollInspiration"}}
+    </button>
+
+    {{#if inspirationResult}}
+      <p class="sdp-roll-inspiration-result">
+        <strong>
+          {{localize "SDP.BonusSL"}}:
+        </strong>
+        +{{inspirationResult}}
+      </p>
+    {{/if}}
+  </div>
+</section>
 {{/if}}
 
 <!-- ===================== -->
@@ -142,67 +164,67 @@
 <!-- ===================== -->
 
 {{#if (or isAttack isSpell)}}
+<section class="sdp-roll-section">
+  <h3>{{localize "SDP.Combat"}}</h3>
 
-<h3>{{localize "SDP.Combat"}}</h3>
+  <div class="sdp-roll-fields">
+    <div class="sdp-roll-field">
+      <label>{{localize "SDP.HitTable"}}</label>
+      <select name="hitLocationProfile">
+        {{#each hitProfiles}}
+          <option value="{{@key}}">
+            {{localize this.label}}
+          </option>
+        {{/each}}
+      </select>
+    </div>
 
-<label>{{localize "SDP.HitTable"}}</label>
+    <div class="sdp-roll-field">
+      <label>{{localize "SDP.Target"}}</label>
+      <select name="location">
+        <option value="">
+          {{localize "SDP.Random"}}
+        </option>
 
-<select name="hitLocationProfile">
+        {{#each hitLocations}}
+          <option value="{{this.key}}">
+            {{this.label}}
+            ({{this.modifier}})
+          </option>
+        {{/each}}
+      </select>
+    </div>
+  </div>
 
-  {{#each hitProfiles}}
+  <div class="sdp-roll-checklist sdp-roll-checklist--compact">
+    <label class="sdp-roll-check">
+      <input type="checkbox" name="brutal">
+      <span class="sdp-roll-check__label">{{localize "SDP.BrutalStrike"}}</span>
+    </label>
 
-    <option value="{{@key}}">
-  {{localize this.label}}
-</option>
+    <label class="sdp-roll-check">
+      <input type="checkbox" name="charge">
+      <span class="sdp-roll-check__label">{{localize "SDP.ChargeAttack"}}</span>
+    </label>
 
-  {{/each}}
-
-</select>
-
-<label>{{localize "SDP.Target"}}</label>
-
-<select name="location">
-
-  <option value="">
-    {{localize "SDP.Random"}}
-  </option>
-
-  {{#each hitLocations}}
-
-    <option value="{{this.key}}">
-      {{this.label}}
-      ({{this.modifier}})
-    </option>
-
-  {{/each}}
-
-</select>
-
-<label>
-  <input type="checkbox" name="brutal">
-  {{localize "SDP.BrutalStrike"}}
-</label>
-
-<label>
-  <input type="checkbox" name="charge">
-  {{localize "SDP.ChargeAttack"}}
-</label>
-
-{{#if hasFinesseTrait}}
-<label>
-  <input type="checkbox" name="finesse"/>
-  {{localize "SDP.UseFinesse"}}
-</label>
-{{/if}}
-
+    {{#if hasFinesseTrait}}
+    <label class="sdp-roll-check">
+      <input type="checkbox" name="finesse"/>
+      <span class="sdp-roll-check__label">{{localize "SDP.UseFinesse"}}</span>
+    </label>
+    {{/if}}
+  </div>
+</section>
 {{/if}}
 
 <!-- ===================== -->
 <!-- BUTTON -->
 <!-- ===================== -->
 
-<button data-action="roll">
-  {{localize "SDP.Roll"}}
-</button>
+<footer class="sdp-roll-dialog__footer">
+  <button type="button" data-action="roll">
+    {{localize "SDP.Roll"}}
+  </button>
+</footer>
 
 </div>

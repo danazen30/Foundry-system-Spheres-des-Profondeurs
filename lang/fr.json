@@ -1548,6 +1548,11 @@
   "SDP.Journal.Career.merchant.Species": "human, elf",
   "SDP.Journal.Career.merchant.CareerGroup": "merchant",
 
+  "SDP.Journal.Career.investigator.Title": "Enquêteurs",
+  "SDP.Journal.Career.investigator.Epigraph1": "« Lorsque j'arrivai sur les lieux, tous accusaient le fils du meunier. Une heure plus tard, je remarquai des traces de boue sous les bottes du magistrat. Trois jours après, il avoua tout. Les coupables redoutent les épées ; moi, je préfère les questions. »\n— Elarion Sylwen, Détective",
+  "SDP.Journal.Career.investigator.Intro": "Les enquêteurs consacrent leur vie à découvrir la vérité, qu'elle soit dissimulée derrière un mensonge, un meurtre ou une conspiration. Habitués à observer ce que les autres ignorent, ils rassemblent indices, témoignages et rumeurs afin de reconstituer les événements avec précision.\n\nCertains travaillent pour les autorités, les guildes ou la noblesse, tandis que d'autres exercent leur métier de manière indépendante, louant leurs services à quiconque peut se les offrir. Un bon enquêteur sait que les réponses se trouvent rarement au premier regard et que les détails les plus insignifiants sont souvent les plus révélateurs.\n\nDans un monde rempli de secrets, de corruption et de faux-semblants, leur patience, leur perspicacité et leur détermination sont leurs armes les plus précieuses.",
+  "SDP.Journal.Career.investigator.CareerGroup": "investigator",
+
   "SDP.Folder.weapons.Name": "Armes",
   "SDP.Folder.armors.Name": "Armures",
   "SDP.Folder.ammunitions.Name": "Munitions",

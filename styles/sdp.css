@@ -244,6 +244,188 @@
   display: block;
 }
 
+/* ========================= */
+/* ROLL DIALOG               */
+/* ========================= */
+
+.sdp-roll-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  overflow-y: auto;
+  max-height: 100%;
+  padding: 0.25rem 0.15rem 0.5rem;
+}
+
+.sdp-roll-dialog__header {
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.sdp-roll-dialog__header h2 {
+  margin: 0;
+  font-size: 1.35rem;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.sdp-roll-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.sdp-roll-section h3 {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.sdp-roll-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.sdp-roll-fields--grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem 0.75rem;
+}
+
+.sdp-roll-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.sdp-roll-field label {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.sdp-roll-field select,
+.sdp-roll-field input[type="number"] {
+  width: 100%;
+  min-height: 1.75rem;
+}
+
+.sdp-roll-modifier-total {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 0.35rem;
+  margin-top: 0.15rem;
+  padding: 0.35rem 0.65rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.sdp-roll-modifier-total #totalModifier {
+  min-width: 1.5rem;
+  text-align: center;
+}
+
+.sdp-roll-checklist {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.35rem 0.65rem;
+  max-height: 11rem;
+  overflow-y: auto;
+  padding-right: 0.15rem;
+}
+
+.sdp-roll-checklist--compact {
+  max-height: none;
+  overflow: visible;
+}
+
+.sdp-roll-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0.3rem 0.4rem;
+  border-radius: 4px;
+  cursor: pointer;
+  line-height: 1.25;
+  font-size: 0.82rem;
+}
+
+.sdp-roll-check:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.sdp-roll-check input[type="checkbox"] {
+  flex: 0 0 auto;
+  margin: 0.1rem 0 0;
+}
+
+.sdp-roll-check__label {
+  flex: 1 1 auto;
+  min-width: 0;
+  word-break: break-word;
+}
+
+.sdp-roll-section--inspiration {
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+
+.sdp-roll-dialog .inspiration-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.sdp-roll-dialog .inspiration-block h3 {
+  margin: 0;
+}
+
+.sdp-roll-inspiration-dice,
+.sdp-roll-inspiration-result {
+  margin: 0;
+  font-size: 0.88rem;
+}
+
+.sdp-roll-dialog .inspiration-block button {
+  align-self: flex-start;
+}
+
+.sdp-roll-dialog__footer {
+  padding-top: 0.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.sdp-roll-dialog__footer button[data-action="roll"] {
+  width: 100%;
+  min-height: 2rem;
+  font-weight: 600;
+}
+
+@media (max-width: 420px) {
+  .sdp-roll-fields--grid,
+  .sdp-roll-checklist {
+    grid-template-columns: 1fr;
+  }
+}
+
 .encumbrance-container {
   margin-top: 10px;
 }

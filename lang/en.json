@@ -1546,6 +1546,11 @@
   "SDP.Journal.Career.merchant.Species": "human, elf",
   "SDP.Journal.Career.merchant.CareerGroup": "merchant",
 
+  "SDP.Journal.Career.investigator.Title": "Investigators",
+  "SDP.Journal.Career.investigator.Epigraph1": "\"When I arrived at the scene, everyone blamed the miller's son. An hour later, I noticed mud stains under the magistrate's boots. Three days after that, he confessed everything. The guilty fear swords; I prefer questions.\"\n— Elarion Sylwen, Detective",
+  "SDP.Journal.Career.investigator.Intro": "Investigators devote their lives to uncovering the truth, whether it lies hidden behind a lie, a murder, or a conspiracy. Accustomed to noticing what others overlook, they gather clues, testimony, and rumors to reconstruct events with precision.\n\nSome work for authorities, guilds, or nobility, while others practice their trade independently, hiring out their services to whoever can afford them. A good investigator knows that answers are rarely found at first glance and that the most insignificant details are often the most revealing.\n\nIn a world filled with secrets, corruption, and false appearances, their patience, insight, and determination are their most valuable weapons.",
+  "SDP.Journal.Career.investigator.CareerGroup": "investigator",
+
   "SDP.Folder.weapons.Name": "Weapons",
   "SDP.Folder.armors.Name": "Armors",
   "SDP.Folder.ammunitions.Name": "Ammunitions",
