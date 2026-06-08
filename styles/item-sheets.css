@@ -1137,3 +1137,24 @@
   white-space: pre-line;
 
 }
+
+/* =========================
+   COMPENDIUM VIEWER
+========================= */
+
+.sdp-item-sheet--compendium-viewer input,
+.sdp-item-sheet--compendium-viewer select,
+.sdp-item-sheet--compendium-viewer textarea {
+  pointer-events: none;
+  opacity: 0.92;
+}
+
+.sdp-item-sheet--compendium-viewer .item-header-image img {
+  cursor: default;
+}
+
+.sdp-item-sheet--compendium-viewer .note-edit-btn,
+.sdp-item-sheet--compendium-viewer .effect-create-button,
+.sdp-item-sheet--compendium-viewer .effect-control {
+  display: none !important;
+}

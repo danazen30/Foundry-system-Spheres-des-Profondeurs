@@ -61,6 +61,7 @@
 
   <div class="weapon-grid">
 
+    {{#if isGM}}
     <div class="form-group full-width">
 
       <label>{{localize "SDP.Key"}}</label>
@@ -71,6 +72,7 @@
         value="{{system.key}}" />
 
     </div>
+    {{/if}}
 
     <div class="form-group">
 

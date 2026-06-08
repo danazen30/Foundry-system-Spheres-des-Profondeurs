@@ -61,6 +61,44 @@ get title() {
 
 }
 
+get isEditable() {
+
+  if (game.user.isGM) {
+    return true;
+  }
+
+  if (super.isEditable) {
+    return true;
+  }
+
+  // Compendium en observateur : afficher tous les onglets (sans droit d'édition réel).
+  if (
+    this.document.collection &&
+    this.document.testUserPermission(
+      game.user,
+      CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER
+    )
+  ) {
+    return true;
+  }
+
+  return false;
+
+}
+
+get isCompendiumViewer() {
+
+  return (
+    !!this.document.collection &&
+    !game.user.isGM &&
+    !this.document.testUserPermission(
+      game.user,
+      CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER
+    )
+  );
+
+}
+
 async _prepareContext() {
 
   const traitsArray = this.document.system.itemTraits ?? [];
@@ -242,7 +280,8 @@ negativeArmorTraits,
   activeTab: this.activeTab,
   editors,
   effects: this.document.effects,
-  isGM: game.user.isGM
+  isGM: game.user.isGM,
+  isCompendiumViewer: this.isCompendiumViewer
 };
 
 }
@@ -283,7 +322,7 @@ if (scrollEl && !scrollEl.dataset.scrollRegistered) {
   const img =
     root.querySelector(".item-header-image img");
 
-  if (img) {
+  if (img && !this.isCompendiumViewer) {
 
     img.addEventListener("click", () => {
 
@@ -309,15 +348,26 @@ if (scrollEl && !scrollEl.dataset.scrollRegistered) {
 
   this._registerTabs(root);
 
-  registerEditorToggles(root);
+  if (this.isCompendiumViewer) {
+    this._applyCompendiumViewerMode(root);
+  }
+  else {
 
-  setupRichTextEditors(root);
+    registerEditorToggles(root);
 
-  setupTextareaResize(root);
+    setupRichTextEditors(root);
+
+    setupTextareaResize(root);
+
+  }
 
   root.querySelectorAll("[data-action]").forEach(el => {
 
   el.addEventListener("click", (event) => {
+
+    if (this.isCompendiumViewer) {
+      return;
+    }
 
     const action =
       el.dataset.action;
@@ -333,7 +383,7 @@ if (scrollEl && !scrollEl.dataset.scrollRegistered) {
         break;
 
       case "delete-effect":
-        this._deleteEffect(event);
+        this._deleteEffect();
         break;
 
     }
@@ -375,6 +425,31 @@ _registerTabs(root) {
       this.render();
 
     });
+
+  });
+
+}
+
+_applyCompendiumViewerMode(root) {
+
+  const sheet =
+    root.querySelector(".sdp-item-sheet")
+    || root;
+
+  sheet.classList.add("sdp-item-sheet--compendium-viewer");
+
+  sheet.querySelectorAll(
+    "input, select, textarea, prose-mirror"
+  ).forEach(el => {
+
+    el.disabled = true;
+
+    if (
+      el.tagName === "INPUT" ||
+      el.tagName === "TEXTAREA"
+    ) {
+      el.readOnly = true;
+    }
 
   });
 
@@ -430,6 +505,10 @@ async _deleteEffect(event) {
 }
 
 async _onChangeForm(formConfig, event) {
+
+  if (this.isCompendiumViewer) {
+    return;
+  }
 
   await super._onChangeForm(
     formConfig,
