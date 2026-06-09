@@ -105,7 +105,7 @@ if (crit.failure){
   ${newRoll} (${oldRoll})
 </p>
   <p>
-  ${game.i18n.localize("SDP.SL")}:
+  ${game.i18n.localize("SDP.SuccessLevel")}:
   ${SL} (${game.sdp.Roll.getSLLabel(SL)})
 </p>
 
@@ -292,7 +292,7 @@ if (rollEl){
 const slEl = card.querySelector(".spell-sl");
 if (slEl){
   slEl.innerHTML =
-    `<strong>${game.i18n.localize("SDP.SL")}:</strong> ${SL} (${game.sdp.Roll.getSLLabel(SL)})`;
+    `<strong>${game.i18n.localize("SDP.SuccessLevel")}:</strong> ${SL} (${game.sdp.Roll.getSLLabel(SL)})`;
 }
 
 let overcastEl = card.querySelector(".spell-overcast");
@@ -562,7 +562,7 @@ if (isImpaling && isRound && newRoll <= target) {
 
   <h3>
   ${game.i18n.format(
-    "SDP.ActorShootsWithWeapon",
+    "SDP.ShootsWith",
     {
       actor: actor.name,
       weapon: weapon.name
@@ -598,7 +598,7 @@ if (isImpaling && isRound && newRoll <= target) {
 </p>
 
 <p>
-  ${game.i18n.localize("SDP.SL")}:
+  ${game.i18n.localize("SDP.SuccessLevel")}:
   ${SL} (${game.sdp.Roll.getSLLabel(SL)})
 </p>
 
@@ -747,7 +747,7 @@ if (isImpaling && isRound && successCheck) {
 
  <h3>
 ${game.i18n.format(
-  "SDP.ActorAttacksWithWeapon",
+  "SDP.AttacksWith",
   {
     actor: actor.name,
     weapon: weapon.name
@@ -777,7 +777,7 @@ ${game.i18n.format(
 </p>
 
 <p>
-  ${game.i18n.localize("SDP.SL")}:
+  ${game.i18n.localize("SDP.SuccessLevel")}:
   ${SL}
 </p>
 

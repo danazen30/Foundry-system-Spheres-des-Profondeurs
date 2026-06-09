@@ -59,7 +59,7 @@ html.find(".stunned-roll").click(async ev => {
 
 <p>
   ${game.i18n.localize(
-    "SDP.SL"
+    "SDP.SuccessLevel"
   )}: ${SL}
 </p>
 
@@ -164,7 +164,7 @@ const newTotal = Math.max(total - removed, 0);
 
 <p>
   ${game.i18n.localize(
-    "SDP.SL"
+    "SDP.SuccessLevel"
   )}: ${SL}
 </p>
     <p>
@@ -300,7 +300,7 @@ await roll.toMessage({
 
 <p>
   ${game.i18n.localize(
-    "SDP.SL"
+    "SDP.SuccessLevel"
   )}: ${SL}
 </p>
 
@@ -426,7 +426,7 @@ html.find(".strength-roll").click(async ev => {
 
 <p>
   ${game.i18n.localize(
-    "SDP.SL"
+    "SDP.SuccessLevel"
   )}: ${SL}
 </p>
 
