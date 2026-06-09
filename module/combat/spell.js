@@ -99,6 +99,14 @@ if (dialogMods.location) {
   locationMod =
     hitProfile.locations?.[dialogMods.location]?.modifier || 0;
 
+  locationMod = SdpRoll.applyLocationModifierReduction(
+    locationMod,
+    SdpRoll.getLocationPenaltyReduction(
+      actor,
+      selectedTalents
+    )
+  );
+
 }
 
 const targetValue =

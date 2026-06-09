@@ -132,6 +132,52 @@ static getAttackDamageBonus(actor, selectedTalents = []) {
 
 }
 
+static getLocationPenaltyReduction(actor, selectedTalents = []) {
+
+  return this._getTalentEffectBonus(
+    actor,
+    selectedTalents,
+    "system.modifiers.locationPenaltyReduction"
+  );
+
+}
+
+static applyLocationModifierReduction(modifier, reduction = 0) {
+
+  const value = Number(modifier || 0);
+
+  if (value >= 0 || !reduction) {
+    return value;
+  }
+
+  return Math.min(
+    value + Number(reduction),
+    0
+  );
+
+}
+
+static getMeleeLocationModifier(locationMod, reductionRanged = 0) {
+
+  const meleeMod = Math.floor(Number(locationMod || 0) / 10);
+
+  if (meleeMod >= 0 || !reductionRanged) {
+    return meleeMod;
+  }
+
+  const meleeReduction = Math.floor(Number(reductionRanged) / 10);
+
+  if (!meleeReduction) {
+    return meleeMod;
+  }
+
+  return Math.min(
+    meleeMod + meleeReduction,
+    0
+  );
+
+}
+
 // =====================
 // SL LABEL
 // =====================

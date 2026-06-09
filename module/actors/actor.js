@@ -240,9 +240,43 @@ _getActiveEffectModifier(changeKey) {
 
 _getWoundThresholdModifier() {
 
-  return this._getActiveEffectModifier(
-    "system.custom.woundThresholdModifier"
-  );
+  let total = 0;
+
+  for (const item of this.items.contents) {
+
+    for (const effect of item.effects ?? []) {
+
+      if (effect.disabled) continue;
+
+      for (const change of effect.changes ?? []) {
+
+        if (change.key !== "system.custom.woundThresholdModifier") {
+          continue;
+        }
+
+        const base = Number(change.value || 0);
+
+        if (item.type === "talent") {
+
+          const level = Number(item.system.advances || 0);
+
+          if (level <= 0) continue;
+
+          total += base * level;
+
+        } else {
+
+          total += base;
+
+        }
+
+      }
+
+    }
+
+  }
+
+  return total;
 
 }
 

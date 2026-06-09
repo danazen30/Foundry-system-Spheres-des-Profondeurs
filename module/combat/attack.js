@@ -381,6 +381,14 @@ if (dialogMods.location) {
   locationMod =
     hitProfile.locations?.[hitLocation.location]?.modifier || 0;
 
+  locationMod = SdpRoll.applyLocationModifierReduction(
+    locationMod,
+    SdpRoll.getLocationPenaltyReduction(
+      actor,
+      dialogMods.talents || []
+    )
+  );
+
 }
 
 const dynamicModifierTotal =
@@ -995,6 +1003,16 @@ if (dialogMods.location) {
 
 }
 
+const locationReduction = SdpRoll.getLocationPenaltyReduction(
+  actor,
+  dialogMods.talents || []
+);
+
+const meleeLocationMod = SdpRoll.getMeleeLocationModifier(
+  locationMod,
+  locationReduction
+);
+
 const totalModifier =
   (dialogMods.totalMod || 0) +
   (dialogMods.conditionMod || 0) +
@@ -1013,7 +1031,7 @@ let attackScore =
   bonus +
   inspiration +
   chargeBonus +
-  Math.floor(locationMod / 10);
+  meleeLocationMod;
 
 let context = {
   actor,
