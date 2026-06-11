@@ -6,6 +6,142 @@
 import { SDP } from "./config.js";
 import { getLocalizedRollTableName } from "./roll-table-utils.js";
 
+/** Champs requis pour traduire l'index (tri + recherche Foundry). */
+const SDP_ITEM_INDEX_FIELDS = [
+  "name",
+  "type",
+  "system.key",
+  "flags.sdp.key"
+];
+
+/**
+ * Fusionne les champs d'index nécessaires à la traduction SDP.
+ */
+function withSdpIndexFields(options = {}) {
+
+  if (!options?.fields?.length) {
+    return options;
+  }
+
+  const merged = new Set([
+    ...options.fields,
+    ...SDP_ITEM_INDEX_FIELDS
+  ]);
+
+  return {
+    ...options,
+    fields: [...merged]
+  };
+
+}
+
+/**
+ * Clé i18n d'une entrée d'index compendium SDP.
+ */
+export function resolveSdpIndexEntryKey(entry) {
+
+  if (!entry) return "";
+
+  const systemKey =
+    typeof entry.system?.key === "string"
+      ? entry.system.key.trim()
+      : "";
+
+  if (systemKey) return systemKey;
+
+  const flagKey =
+    typeof entry.flags?.sdp?.key === "string"
+      ? entry.flags.sdp.key.trim()
+      : "";
+
+  if (flagKey) return flagKey;
+
+  const sourceName =
+    entry._sdpSourceName
+    ?? entry.name
+    ?? "";
+
+  return typeof sourceName === "string"
+    ? sourceName.trim()
+    : "";
+
+}
+
+/**
+ * Localise le nom d'une entrée d'index compendium Item SDP.
+ */
+function applySdpIndexEntryLocalization(entry) {
+
+  if (!entry?.type) return;
+
+  const systemKey =
+    typeof entry.system?.key === "string"
+      ? entry.system.key.trim()
+      : "";
+
+  const flagKey =
+    typeof entry.flags?.sdp?.key === "string"
+      ? entry.flags.sdp.key.trim()
+      : "";
+
+  const itemKey = systemKey || flagKey;
+
+  if (!itemKey) return;
+
+  if (!entry._sdpSourceName) {
+    entry._sdpSourceName = entry.name;
+  }
+
+  entry.name = getLocalizedItemName(
+    entry.type,
+    itemKey,
+    entry._sdpSourceName
+  );
+
+}
+
+/**
+ * Réindexe la recherche globale Foundry (DocumentIndex) après traduction.
+ */
+export async function refreshSdpDocumentIndex() {
+
+  const documentIndex =
+    game.documentIndex;
+
+  if (typeof documentIndex?.index !== "function") {
+    return;
+  }
+
+  try {
+    await documentIndex.index();
+  }
+  catch (error) {
+    console.warn(
+      "SDP | Échec de la réindexation DocumentIndex",
+      error
+    );
+  }
+
+}
+
+/**
+ * Enregistre les champs d'index compendium Item pour system.key.
+ */
+export function registerSdpCompendiumIndexFields() {
+
+  const existing =
+    CONFIG.Item.compendiumIndexFields ?? [];
+
+  const merged = new Set([
+    ...existing,
+    "system.key",
+    "flags.sdp.key"
+  ]);
+
+  CONFIG.Item.compendiumIndexFields = [...merged];
+
+}
+
 /**
  * Dérive une clé i18n à partir d'un nom de dossier ("Weapons" → "weapons").
  */
@@ -840,8 +976,10 @@ export function localizeCompendiumItems(element, pack) {
 
     return getLocalizedItemName(
       indexEntry.type,
-      indexEntry.system?.key,
-      indexEntry.name
+      indexEntry.system?.key
+        ?? indexEntry.flags?.sdp?.key,
+      indexEntry._sdpSourceName
+        ?? indexEntry.name
     );
 
   });
@@ -1023,17 +1161,7 @@ export function localizeSdpPackIndex(
   if (pack.documentName === "Item") {
 
     for (const entry of pack.index.values()) {
-
-      if (!entry._sdpSourceName) {
-        entry._sdpSourceName = entry.name;
-      }
-
-      entry.name = getLocalizedItemName(
-        entry.type,
-        entry.system?.key,
-        entry._sdpSourceName
-      );
-
+      applySdpIndexEntryLocalization(entry);
     }
 
     return;
@@ -1108,6 +1236,16 @@ export function localizeAllSdpCompendiumIndices(
 
 }
 
+export async function localizeAllSdpCompendiumIndicesAsync(
+  rolltableMap = null
+) {
+
+  await indexSdpItemPacks();
+
+  localizeAllSdpCompendiumIndices(rolltableMap);
+
+}
+
 /**
  * Localise l'index après chaque getIndex() (tri/recherche avant le rendu).
  */
@@ -1134,7 +1272,9 @@ export function installSdpCompendiumIndexLocalization(
     pack.getIndex = async function(options) {
 
       const index =
-        await originalGetIndex(options);
+        await originalGetIndex(
+          withSdpIndexFields(options)
+        );
 
       localizeSdpPackIndex(
         pack,
@@ -1193,14 +1333,7 @@ export async function indexSdpItemPacks() {
     if (pack.metadata.system !== "sdp") continue;
     if (pack.documentName !== "Item") continue;
 
-    await pack.getIndex({
-      fields: [
-        "name",
-        "type",
-        "system.key",
-        "flags.sdp.key"
-      ]
-    });
+    await pack.getIndex();
 
     localizeSdpPackIndex(pack);
 

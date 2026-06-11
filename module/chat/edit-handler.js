@@ -106,7 +106,7 @@ if (crit.failure){
 </p>
   <p>
   ${game.i18n.localize("SDP.SuccessLevel")}:
-  ${SL} (${game.sdp.Roll.getSLLabel(SL)})
+  ${game.sdp.Roll.formatSL(SL, success)} (${game.sdp.Roll.getSLLabel(SL, success)})
 </p>
 
   <p><strong>${success
@@ -292,7 +292,7 @@ if (rollEl){
 const slEl = card.querySelector(".spell-sl");
 if (slEl){
   slEl.innerHTML =
-    `<strong>${game.i18n.localize("SDP.SuccessLevel")}:</strong> ${SL} (${game.sdp.Roll.getSLLabel(SL)})`;
+    `<strong>${game.i18n.localize("SDP.SuccessLevel")}:</strong> ${game.sdp.Roll.formatSL(SL, success)} (${game.sdp.Roll.getSLLabel(SL, success)})`;
 }
 
 let overcastEl = card.querySelector(".spell-overcast");
@@ -599,7 +599,7 @@ if (isImpaling && isRound && newRoll <= target) {
 
 <p>
   ${game.i18n.localize("SDP.SuccessLevel")}:
-  ${SL} (${game.sdp.Roll.getSLLabel(SL)})
+  ${game.sdp.Roll.formatSL(SL, success)} (${game.sdp.Roll.getSLLabel(SL, success)})
 </p>
 
   ${critText}

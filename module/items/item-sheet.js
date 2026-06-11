@@ -383,7 +383,7 @@ if (scrollEl && !scrollEl.dataset.scrollRegistered) {
         break;
 
       case "delete-effect":
-        this._deleteEffect();
+        this._deleteEffect(event);
         break;
 
     }

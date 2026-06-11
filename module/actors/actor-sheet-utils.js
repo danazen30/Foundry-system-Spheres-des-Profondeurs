@@ -1,4 +1,5 @@
 import { SDP } from "../system/config.js";
+import { SdpLevelService } from "../services/level-service.js";
 
 export function getCost(type, value) {
 
@@ -124,10 +125,14 @@ export function getXPBar(actor, xpData) {
   const xpTotal = xpData.total;
   const currentLevel = actor.system.details?.level ?? 0;
 
-  const nextXP = game.sdp.level.getNextLevelXP(currentLevel);
+  const levelService =
+    game.sdp?.level ?? SdpLevelService;
+
+  const nextXP =
+    levelService.getNextLevelXP(currentLevel);
 
   const currentLevelXP =
-    game.sdp.level.LEVELS.find(
+    levelService.LEVELS.find(
       l => l.level === currentLevel
     )?.xp ?? 0;
 

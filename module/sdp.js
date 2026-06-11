@@ -46,6 +46,7 @@ import {
   localizeSidebarFolders,
   localizeSidebarItems,
   refreshSdpUiLocalization,
+  registerSdpCompendiumIndexFields,
   requestSdpCompendiumResort,
   resetSdpCompendiumResortFlag
 } from "./system/item-localization.js";
@@ -125,6 +126,8 @@ const SDP_ROLLTABLE_LOCALIZATION = {
 
   Hooks.once("init", async () => {
 
+    registerSdpCompendiumIndexFields();
+
     Handlebars.registerHelper(
       "localize",
       foundry.applications.handlebars.localize
@@ -194,6 +197,7 @@ const templateJson = await templateResponse.json();
 
   game.sdp = game.sdp || {};
 game.sdp.Roll = SdpRoll;
+game.sdp.level = SdpLevelService;
 
   CONFIG.Actor.documentClass = SdpActor;
   CONFIG.Item.documentClass = SdpItem;

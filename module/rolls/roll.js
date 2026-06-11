@@ -142,6 +142,26 @@ static getLocationPenaltyReduction(actor, selectedTalents = []) {
 
 }
 
+static getRangePenaltyReduction(actor, selectedTalents = []) {
+
+  return this._getTalentEffectBonus(
+    actor,
+    selectedTalents,
+    "system.modifiers.rangePenaltyReduction"
+  );
+
+}
+
+static getTargetBonus(actor, selectedTalents = []) {
+
+  return this._getTalentEffectBonus(
+    actor,
+    selectedTalents,
+    "system.modifiers.targetBonus"
+  );
+
+}
+
 static applyLocationModifierReduction(modifier, reduction = 0) {
 
   const value = Number(modifier || 0);
@@ -154,6 +174,36 @@ static applyLocationModifierReduction(modifier, reduction = 0) {
     value + Number(reduction),
     0
   );
+
+}
+
+static adjustDynamicModifiersForRange(
+  modifiers,
+  reduction = 0
+) {
+
+  if (!reduction || !modifiers?.length) {
+    return modifiers;
+  }
+
+  const rangePrefix =
+    game.i18n.localize("SDP.Range");
+
+  return modifiers.map(m => {
+
+    if (!String(m.label || "").startsWith(rangePrefix)) {
+      return m;
+    }
+
+    return {
+      ...m,
+      value: this.applyLocationModifierReduction(
+        m.value,
+        reduction
+      )
+    };
+
+  });
 
 }
 
@@ -182,7 +232,21 @@ static getMeleeLocationModifier(locationMod, reductionRanged = 0) {
 // SL LABEL
 // =====================
 
-static getSLLabel(SL){
+static formatSL(SL, success = null) {
+
+  if (SL === 0 && success === false) {
+    return "-0";
+  }
+
+  return String(SL);
+
+}
+
+static getSLLabel(SL, success = null){
+
+if (SL === 0 && success === false) {
+  return game.i18n.localize("SDP.MinorFailure");
+}
 
 if (SL >= 6) {
   return game.i18n.localize("SDP.SpectacularSuccess");
@@ -255,7 +319,7 @@ if (target >= critFailBase && result >= critFailBase){
     if (result === 1){
       return {
         success: true,
-        SL: 1 // crit → SL positif
+        SL: 1
       };
     }
   }

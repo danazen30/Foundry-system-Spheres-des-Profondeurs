@@ -112,7 +112,11 @@ if (dialogMods.location) {
 const targetValue =
   (skillValue || INT) +
   (dialogMods.totalMod || 0) +
-  locationMod;
+  locationMod +
+  SdpRoll.getTargetBonus(
+    actor,
+    selectedTalents
+  );
 
   const roll = await (new Roll("1d100")).roll();
   const result = roll.total;
@@ -375,7 +379,7 @@ await actor.update({
   <p class="spell-target"><strong>${game.i18n.localize("SDP.Target")}:</strong> ${targetValue}</p>
 <p class="spell-roll"><strong>${game.i18n.localize("SDP.Roll")}:</strong> ${result}</p>
 <p class="spell-sl">
-  <strong>${game.i18n.localize("SDP.SuccessLevel")}:</strong> ${SL} (${SdpRoll.getSLLabel(SL)})
+  <strong>${game.i18n.localize("SDP.SuccessLevel")}:</strong> ${SdpRoll.formatSL(SL, success)} (${SdpRoll.getSLLabel(SL, success)})
 </p>
 
  <div class="crit-block">

@@ -711,13 +711,34 @@ const finesse = root.querySelector('[name="finesse"]')?.checked || false;
 // SAVE MODIFIERS
 // =========================
 
-game.sdp.dialogModifiers = {
-  dynamicModifiers:
+let dynamicModifiers =
   (this._modifiers || [])
     .filter(m =>
       m.label !== "Custom" &&
       m.label !== "Difficulty"
-    ),
+    );
+
+if (
+  this.type === "attack" &&
+  this.weapon?.system?.category === "ranged"
+) {
+
+  const rangeReduction =
+    SdpRoll.getRangePenaltyReduction(
+      this.actor,
+      selectedTalents
+    );
+
+  dynamicModifiers =
+    SdpRoll.adjustDynamicModifiersForRange(
+      dynamicModifiers,
+      rangeReduction
+    );
+
+}
+
+game.sdp.dialogModifiers = {
+  dynamicModifiers,
   totalMod: modValue + diffValue,
   hitLocationProfile,
 
@@ -820,7 +841,11 @@ if (this.type === "skill" && dialogMods.attributeOverride) {
 const target =
   baseTarget +
   (dialogMods.totalMod || 0) +
-  (dialogMods.conditionMod || 0);
+  (dialogMods.conditionMod || 0) +
+  SdpRoll.getTargetBonus(
+    this.actor,
+    selectedTalents
+  );
 
 let success =
   result <= target ||
@@ -888,7 +913,7 @@ await roll.toMessage({
 ` : ""}
     <p>
 <strong>${game.i18n.localize("SDP.SuccessLevel")}:</strong>
-${SL} (${game.sdp.Roll.getSLLabel(SL)})</p>
+${SdpRoll.formatSL(SL, success)} (${game.sdp.Roll.getSLLabel(SL, success)})</p>
     ${talentsHTML}
 
     <p>

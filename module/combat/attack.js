@@ -404,6 +404,11 @@ let targetValue =
   dynamicModifierTotal +
   locationMod;
 
+targetValue += SdpRoll.getTargetBonus(
+  actor,
+  dialogMods.talents || []
+);
+
   // =========================
 // OFFHAND (RANGED)
 // =========================
@@ -747,8 +752,8 @@ ${displayTraits.length ? `
   ${inspiration > 0 ? `<p>${game.i18n.localize("SDP.Inspiration")}: +${inspiration}</p>` : ""}
   <p>
   ${game.i18n.localize("SDP.SuccessLevel")}:
-  ${SL}
-  (${SdpRoll.getSLLabel(SL)})
+  ${SdpRoll.formatSL(SL, success)}
+  (${SdpRoll.getSLLabel(SL, success)})
 </p>
   
   ${critText}
