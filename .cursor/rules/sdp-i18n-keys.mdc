@@ -1,0 +1,31 @@
+---
+description: Clés SDP en anglais (flags.sdp.key, i18n, compendiums)
+alwaysApply: true
+---
+
+# Clés SDP — toujours en anglais
+
+Lors de la création de **nouvelles clés** pour le système SDP, utiliser **exclusivement l'anglais** en **camelCase**, sans accents ni espaces.
+
+## Où s'applique la règle
+
+- `flags.sdp.key` (items, carrières, paliers, tables, résultats de table, journaux, etc.)
+- Segments de clés i18n après le type, ex. `SDP.Item.Talent.<key>`, `SDP.Item.Possession.<key>`, `SDP.Journal.Career.<key>`, `SDP.RollTableResult.<tableKey>.<resultKey>`
+
+## Conventions
+
+- **Clé** = identifiant technique anglais en camelCase (`lockpicker`, `darkclothes`, `grapplingcrossbow`, `secrethideout`)
+- **Nom affiché** = dans `lang/fr.json` et `lang/en.json` uniquement (« Crocheteur expérimenté », « Dark clothes », etc.)
+- Ne pas mettre de français, d'espaces ni de tirets dans les clés
+
+## Exemples
+
+```
+✅ criminal, nimblefingers, grapplingcrossbow, secrethideout, stolenvaluable
+❌ criminel, doigtsAgiles, repaireSecret, coupe-bourse, monteenlair (si créé aujourd'hui)
+```
+
+## Clés existantes
+
+- Ne **pas** renommer les clés legacy déjà en place (ex. `coupebourse`, `monteenlair`) sauf demande explicite de l'utilisateur.
+- Pour tout **nouveau** contenu, appliquer la règle anglaise même si des voisins du compendium utilisent d'anciennes clés françaises.
