@@ -1,3 +1,10 @@
+# Cursor / IDE
+.cursor/
+
+# Release artifacts
+*.zip
+release-staging/
+
 # Logs
 logs
 *.log

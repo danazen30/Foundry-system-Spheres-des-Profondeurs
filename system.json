@@ -1,15 +1,16 @@
 {
   "id": "sdp",
-  "title": "Spheres of the Depths",
-  "description": "Spheres of the Depths",
-  "version": "0.0.1",
+  "title": "Sphères des Profondeurs",
+  "description": "Official game system for Spheres of the Depths (Sphères des Profondeurs) on Foundry VTT v13. French and English supported. Requires the free socketlib module.",
+  "version": "0.1.1",
   "compatibility": {
     "minimum": "13",
     "verified": "13"
   },
   "authors": [
     {
-      "name": "Danazen"
+      "name": "Danazen",
+      "url": "https://github.com/danazen30"
     }
   ],
   "esmodules": [
@@ -23,8 +24,9 @@
 
 
   "url": "https://github.com/danazen30/Foundry-system-Spheres-des-Profondeurs",
-  "manifest": "",
-  "download": "",
+  "manifest": "https://github.com/danazen30/Foundry-system-Spheres-des-Profondeurs/releases/latest/download/system.json",
+  "download": "https://github.com/danazen30/Foundry-system-Spheres-des-Profondeurs/releases/download/0.1.0/sdp-0.1.1.zip",
+  "license": "LICENSE",
   "socket": true,
 
   "languages": [
@@ -113,6 +115,15 @@
     "path": "packs/rolltables",
     "type": "RollTable",
     "system": "sdp"
+  },
+
+  {
+    "name": "journals",
+    "label": "SDP.Pack.Journals",
+    "path": "packs/journals",
+    "type": "JournalEntry",
+    "system": "sdp",
+    "banner": "systems/sdp/assets/icons/default-banner.png"
   }
 
 ],

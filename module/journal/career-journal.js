@@ -963,6 +963,34 @@ export async function rebuildAllCareerJournalCaches() {
 
 }
 
+function shouldInjectCareerJournalPage(app) {
+
+  if (!app?.document) return false;
+
+  const className = app.constructor?.name ?? "";
+  const appId = `${app.id ?? ""} ${app.options?.id ?? ""}`.toLowerCase();
+  const classAndId = `${className} ${appId}`.toLowerCase();
+
+  if (/ownership|permission|documentownership|folderconfig/i.test(classAndId)) {
+    return false;
+  }
+
+  const docName = app.document.documentName;
+
+  if (docName === "JournalEntryPage") {
+    return isSdpJournalPage(app.document);
+  }
+
+  if (docName === "JournalEntry") {
+    if (!isSdpJournal(app.document)) return false;
+    if (/ownership|permission/i.test(className)) return false;
+    return /journalentry/i.test(className);
+  }
+
+  return false;
+
+}
+
 function resolveJournalPageFromApp(app) {
 
   const directPage =
@@ -997,9 +1025,18 @@ function resolveJournalPageFromApp(app) {
     return journal.pages.get(pageId) ?? null;
   }
 
-  return journal.pages.contents.find(page =>
-    isSdpJournalPage(page)
-  ) ?? null;
+  const className = app.constructor?.name ?? "";
+
+  if (
+    /JournalEntrySheet/i.test(className)
+    && !/ownership|permission/i.test(className)
+  ) {
+    return journal.pages.contents.find(page =>
+      isSdpJournalPage(page)
+    ) ?? null;
+  }
+
+  return null;
 
 }
 
@@ -1131,6 +1168,8 @@ function scheduleCareerJournalInjection(app, element, page) {
 }
 
 export function injectCareerJournalPage(app, element) {
+
+  if (!shouldInjectCareerJournalPage(app)) return;
 
   const page =
     resolveJournalPageFromApp(app);
@@ -1512,6 +1551,8 @@ export function registerCareerJournalHooks() {
   Hooks.on(
     "renderApplicationV2",
     (app, element) => {
+
+      if (!shouldInjectCareerJournalPage(app)) return;
 
       const docName =
         app.document?.documentName;
