@@ -25,7 +25,7 @@
 
   "url": "https://github.com/danazen30/Foundry-system-Spheres-des-Profondeurs",
   "manifest": "https://github.com/danazen30/Foundry-system-Spheres-des-Profondeurs/releases/latest/download/system.json",
-  "download": "https://github.com/danazen30/Foundry-system-Spheres-des-Profondeurs/releases/download/0.1.1/sdp-0.1.1.zip",
+  "download": "https://github.com/danazen30/Foundry-system-Spheres-des-Profondeurs/releases/download/v0.1.1/sdp-0.1.1.zip",
   "license": "LICENSE",
   "socket": true,
 

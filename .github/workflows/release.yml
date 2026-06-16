@@ -30,18 +30,22 @@ jobs:
 
       - name: Build archive
         run: |
+          set -euo pipefail
           VERSION="${{ steps.version.outputs.VERSION }}"
           ARCHIVE="sdp-${VERSION}.zip"
+          rm -rf package
           mkdir -p package/sdp
           rsync -a \
             --exclude '.git' \
             --exclude '.github' \
             --exclude '.cursor' \
             --exclude 'scripts' \
+            --exclude 'package' \
+            --exclude 'release-staging' \
             --exclude '*.zip' \
             ./ package/sdp/
-          (cd package && zip -r "../${ARCHIVE}" sdp)
-          mv "${ARCHIVE}" "sdp-${VERSION}.zip"
+          (cd package && zip -rq "../${ARCHIVE}" sdp)
+          ls -lh "${ARCHIVE}"
 
       - name: Publish GitHub release
         uses: softprops/action-gh-release@v2
