@@ -81,7 +81,7 @@ import {
   resolveSdpStartingScene,
   setCompendiumStartScene
 } from "./scene/scene-bootstrap.js";
-import { patchAllSdpSceneAssets } from "./scene/scene-assets.js";
+import { patchAllSdpSceneAssets, patchCompendiumSceneAssets } from "./scene/scene-assets.js";
 
 export let sdpSocket;
 
@@ -740,6 +740,7 @@ game.sdp.syncCareerJournal = syncSdpJournalDisplayNames;
 game.sdp.syncJournal = syncSdpJournalDisplayNames;
 game.sdp.bootstrapScenes = bootstrapSdpScenes;
 game.sdp.fixSceneAssets = patchAllSdpSceneAssets;
+game.sdp.fixCompendiumSceneAssets = patchCompendiumSceneAssets;
 game.sdp.resolveStartingScene = resolveSdpStartingScene;
 game.sdp.setCompendiumStartScene = setCompendiumStartScene;
 game.sdp.applyRollTableFlags = async () => {

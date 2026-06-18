@@ -41,6 +41,45 @@ Le compendium **SDP Journaux** (`sdp.journals`) contient les journaux de référ
 
 - Blessures, Talents, Compétences, Espèces, Carrières, Signes, Corruptions, Tables aléatoires, Journaux
 
+## Scènes et maps
+
+Les maps sont dans le système, **comme les icônes d'items** :
+
+```
+systems/sdp/assets/maps/Elysium V1.jpg
+systems/sdp/assets/maps/Fretanie V2.jpg
+systems/sdp/assets/maps/Katrade V4.jpg
+```
+
+### Intégration automatique (monde MJ)
+
+Au **premier lancement** d'un monde :
+
+1. Import des scènes depuis le compendium `sdp.scenes`
+2. Correction des chemins d'images → `systems/sdp/assets/maps/…` (comme les icônes)
+3. Affichage de la scène de départ (Elysium par défaut)
+
+Si les vignettes ou fonds sont encore cassés après une mise à jour, en console MJ :
+
+```javascript
+await game.sdp.fixSceneAssets();
+```
+
+Pour forcer un réimport complet :
+
+```javascript
+await game.settings.set("sdp", "scenesInitialized", false);
+await game.sdp.bootstrapScenes({ force: true });
+```
+
+### Export compendium (mainteneur, une fois)
+
+Après avoir corrigé les chemins en local, **réexporter** les 3 scènes vers `packs/scenes` pour figer les bons chemins dans le compendium (fond = `systems/sdp/assets/maps/…`).
+
+### The Forge
+
+Les assets système (icônes **et** maps) sont dans le zip de release. Si une scène affiche encore `worlds/…/assets/scenes/…`, c'est un **ancien chemin** enregistré dans le compendium — la v0.1.7 le corrige automatiquement au chargement.
+
 ## Publication / mise à jour (mainteneur)
 
 ### 1. Préparer une version

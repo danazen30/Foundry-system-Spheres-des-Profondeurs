@@ -6,7 +6,7 @@
  *   await game.sdp.setCompendiumStartScene("Elysium")
  */
 
-import { patchAllSdpSceneAssets, patchSceneMapAssets } from "./scene-assets.js";
+import { patchAllSdpSceneAssets, patchCompendiumSceneAssets, patchSceneMapAssets } from "./scene-assets.js";
 
 export const SDP_SCENES_PACK = "sdp.scenes";
 const IMPORT_SETTING = "scenesInitialized";
@@ -342,7 +342,7 @@ export async function bootstrapSdpScenes({
       sceneName: startingName
     });
 
-    // Corrige fond + miniature (Forge : CDN GitHub si assets système absents)
+    // Corrige fond + miniature → systems/sdp/assets/maps/… (comme les icônes)
     await patchAllSdpSceneAssets();
 
     if (shouldSkipStartView(startScene, force)) {
