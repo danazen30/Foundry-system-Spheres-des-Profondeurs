@@ -292,7 +292,6 @@
 
 "SDP.Notifications.NoValidJournalPage": "No valid journal page found",
 "SDP.Notifications.ScenesInitialized": "{count} scene(s) imported from the SDP compendium.",
-"SDP.Notifications.ScenesAssetsPatched": "{count} scene(s): background and thumbnail corrected.",
 "SDP.Notifications.StartSceneSet": "Default start scene set to {name}.",
 
 "SDP.JournalLinkedToNpc": "Journal page linked to NPC",

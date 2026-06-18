@@ -291,7 +291,6 @@
 
 "SDP.Notifications.NoValidJournalPage": "Aucune page de journal valide trouvée",
 "SDP.Notifications.ScenesInitialized": "{count} scène(s) importée(s) depuis le compendium SDP.",
-"SDP.Notifications.ScenesAssetsPatched": "{count} scène(s) : fond et miniature corrigés.",
 "SDP.Notifications.StartSceneSet": "Scène de départ définie : {name}.",
 
 "SDP.JournalLinkedToNpc": "Page de journal liée au PNJ",
