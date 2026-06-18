@@ -76,13 +76,9 @@ import {
   syncSdpJournalDisplayNames
 } from "./journal/career-journal.js";
 import {
-  bootstrapSdpScenes,
-  registerSceneBootstrapSettings,
-  resolveSdpStartingScene,
-  setCompendiumStartScene
+  bootstrapSdpStartScene,
+  registerSceneBootstrapSettings
 } from "./scene/scene-bootstrap.js";
-import { patchAllSdpSceneAssets, patchCompendiumSceneAssets } from "./scene/scene-assets.js";
-import { ensureSdpSceneMaps } from "./scene/scene-map-provision.js";
 
 export let sdpSocket;
 
@@ -135,7 +131,6 @@ const SDP_ROLLTABLE_LOCALIZATION = {
   Hooks.once("init", async () => {
 
     registerSceneBootstrapSettings();
-
     registerSdpCompendiumIndexFields();
 
     Handlebars.registerHelper(
@@ -739,12 +734,6 @@ game.sdp.resolveJournalEntry = resolveJournalEntry;
 game.sdp.resolveJournalPage = resolveJournalPage;
 game.sdp.syncCareerJournal = syncSdpJournalDisplayNames;
 game.sdp.syncJournal = syncSdpJournalDisplayNames;
-game.sdp.bootstrapScenes = bootstrapSdpScenes;
-game.sdp.fixSceneAssets = patchAllSdpSceneAssets;
-game.sdp.provisionSceneMaps = ensureSdpSceneMaps;
-game.sdp.fixCompendiumSceneAssets = patchCompendiumSceneAssets;
-game.sdp.resolveStartingScene = resolveSdpStartingScene;
-game.sdp.setCompendiumStartScene = setCompendiumStartScene;
 game.sdp.applyRollTableFlags = async () => {
 
   const rolltablePack =
@@ -788,7 +777,7 @@ localizeAllSdpCompendiumIndices(
   SDP_ROLLTABLE_LOCALIZATION
 );
 
-await bootstrapSdpScenes();
+await bootstrapSdpStartScene();
 
 await rebuildAllCareerJournalCaches();
 

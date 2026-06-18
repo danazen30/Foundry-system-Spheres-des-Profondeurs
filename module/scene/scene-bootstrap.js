@@ -1,22 +1,29 @@
 /**
- * Importe les scènes SDP depuis le compendium système au premier lancement d'un monde
- * et affiche la scène de départ.
- *
- * Définir la scène de départ (console MJ) :
- *   await game.sdp.setCompendiumStartScene("Elysium")
+ * Premier lancement MJ : importe les scènes SDP et affiche Elysium.
  */
 
-import { patchAllSdpSceneAssets, patchCompendiumSceneAssets, patchSceneMapAssets } from "./scene-assets.js";
-import { ensureSdpSceneMaps, MAPS_PROVISION_SETTING } from "./scene-map-provision.js";
-
 export const SDP_SCENES_PACK = "sdp.scenes";
-const IMPORT_SETTING = "scenesInitialized";
-const START_VIEWED_SETTING = "startSceneViewed";
-const START_SCENE_NAME_SETTING = "startSceneName";
+const START_SCENE = "Elysium";
+const MAP_DIR = "systems/sdp/assets/maps";
+const REPO = "danazen30/Foundry-system-Spheres-des-Profondeurs";
+
+/** @type {Record<string, string>} */
+const MAP_FILES = {
+  "Elysium": "ElysiumV1.jpg",
+  "Fretanie": "FretanieV2.jpg",
+  "Katrade": "KatradeV4.jpg"
+};
+
+/** @type {Record<string, string[]>} */
+const MAP_REMOTE_FALLBACKS = {
+  "ElysiumV1.jpg": ["Elysium V1.jpg"],
+  "FretanieV2.jpg": ["Fretanie V2.jpg"],
+  "KatradeV4.jpg": ["Katrade V4.jpg"]
+};
 
 export function registerSceneBootstrapSettings() {
 
-  game.settings.register("sdp", IMPORT_SETTING, {
+  game.settings.register("sdp", "scenesInitialized", {
     name: "SDP Scenes Initialized",
     scope: "world",
     config: false,
@@ -24,7 +31,7 @@ export function registerSceneBootstrapSettings() {
     default: false
   });
 
-  game.settings.register("sdp", START_VIEWED_SETTING, {
+  game.settings.register("sdp", "startSceneViewed", {
     name: "SDP Start Scene Viewed",
     scope: "world",
     config: false,
@@ -32,357 +39,211 @@ export function registerSceneBootstrapSettings() {
     default: false
   });
 
-  game.settings.register("sdp", START_SCENE_NAME_SETTING, {
-    name: "SDP Start Scene Name",
-    scope: "world",
-    config: false,
-    type: String,
-    default: ""
-  });
-
-  game.settings.register("sdp", MAPS_PROVISION_SETTING, {
-    name: "SDP Scene Maps Provision Version",
-    scope: "world",
-    config: false,
-    type: String,
-    default: ""
-  });
-
 }
 
-function hasStartSceneFlag(scene) {
+function buildUrl(relativePath) {
 
-  const value =
-    scene.getFlag?.("sdp", "startScene")
-    ?? scene.flags?.sdp?.startScene;
-
-  return value === true;
-
-}
-
-function hasStartKey(scene) {
-
-  const key =
-    scene.getFlag?.("sdp", "key")
-    ?? scene.flags?.sdp?.key;
-
-  return key === "start";
-
-}
-
-function sortScenes(scenes) {
-
-  return [...scenes].sort((a, b) => {
-    if (a.sort !== b.sort) return a.sort - b.sort;
-    return a.name.localeCompare(b.name, game.i18n.lang);
-  });
-
-}
-
-function pickStartingScene(candidates) {
-
-  if (!candidates.length) return null;
-
-  const flagged = candidates.filter(hasStartSceneFlag);
-
-  if (flagged.length) {
-    return sortScenes(flagged)[0];
-  }
-
-  const keyed = candidates.filter(hasStartKey);
-
-  if (keyed.length) {
-    return sortScenes(keyed)[0];
-  }
-
-  return sortScenes(candidates)[0];
+  const segments = relativePath.replace(/^\//, "").split("/");
+  return `${window.location.origin}/${segments.map(encodeURIComponent).join("/")}`;
 
 }
 
 /**
- * Détermine la scène de départ à partir des documents du compendium.
+ * @param {string} relativePath
+ * @returns {Promise<boolean>}
  */
-export async function resolveCompendiumStartingScene(pack) {
+async function pathExists(relativePath) {
 
-  if (!pack) return null;
+  try {
+    const response = await fetch(buildUrl(relativePath), {
+      method: "HEAD",
+      cache: "no-store"
+    });
+    return response.ok;
+  }
+  catch {
+    return false;
+  }
 
-  const documents = await pack.getDocuments();
+}
 
-  return pickStartingScene(documents);
+function uploadSource() {
+
+  return game.modules.get("forge")?.active ? "forgevtt" : "data";
 
 }
 
 /**
- * Retrouve la scène du monde à partir d'un document compendium.
+ * @param {string} filename
+ * @returns {Promise<Blob>}
  */
-export function findImportedScene(compendiumScene) {
+async function fetchMapBlob(filename) {
 
-  if (!compendiumScene) return null;
+  const candidates = [
+    `${MAP_DIR}/${filename}`,
+    ...((MAP_REMOTE_FALLBACKS[filename] ?? []).map(name => `${MAP_DIR}/${name}`))
+  ];
 
-  const byName = game.scenes.getName(compendiumScene.name);
+  for (const path of candidates) {
+    if (!await pathExists(path)) continue;
+    const response = await fetch(buildUrl(path), { cache: "no-store" });
+    if (response.ok) return response.blob();
+  }
 
+  const remoteNames = [filename, ...(MAP_REMOTE_FALLBACKS[filename] ?? [])];
+  const version = game.system.version;
+  const tags = [`v${version}`, "main"];
+
+  for (const tag of tags) {
+    for (const name of remoteNames) {
+      const url =
+        `https://raw.githubusercontent.com/${REPO}/${tag}/assets/maps/${encodeURIComponent(name)}`;
+      const response = await fetch(url, { cache: "no-store" });
+      if (response.ok) return response.blob();
+    }
+  }
+
+  throw new Error(`Map introuvable : ${filename}`);
+
+}
+
+/**
+ * @param {string} filename
+ * @returns {Promise<string>}
+ */
+async function resolveMapUrl(filename) {
+
+  const systemPath = `${MAP_DIR}/${filename}`;
+
+  if (await pathExists(systemPath)) {
+    return systemPath;
+  }
+
+  const worldPath = `worlds/${game.world.id}/assets/maps/${filename}`;
+
+  if (await pathExists(worldPath)) {
+    return worldPath;
+  }
+
+  const blob = await fetchMapBlob(filename);
+  const FP = foundry.applications.apps.FilePicker.implementation;
+  const uploadDir = `worlds/${game.world.id}/assets/maps`;
+  const file = new File([blob], filename, { type: blob.type || "image/jpeg" });
+  const response = await FP.upload(
+    uploadSource(),
+    uploadDir,
+    file,
+    {},
+    { notify: false }
+  );
+
+  return response.path ?? worldPath;
+
+}
+
+/**
+ * @param {Scene|SceneDocument} scene
+ */
+async function ensureSceneMap(scene) {
+
+  const filename = MAP_FILES[scene.name];
+
+  if (!filename) return;
+
+  const mapUrl = await resolveMapUrl(filename);
+  const bg = scene.background?.src ?? "";
+  const thumb = scene.thumbnail ?? "";
+
+  if (bg === mapUrl && thumb === mapUrl) return;
+
+  await scene.update({
+    "background.src": mapUrl,
+    thumbnail: mapUrl
+  });
+
+}
+
+function findImportedScene(pack, doc) {
+
+  const byName = game.scenes.getName(doc.name);
   if (byName) return byName;
 
-  const sourceUuid = compendiumScene.uuid;
-
   return game.scenes.find(scene =>
-    scene._stats?.compendiumSource === sourceUuid
-    || scene.getFlag?.("core", "sourceId") === sourceUuid
+    scene._stats?.compendiumSource === doc.uuid
+    || scene.getFlag?.("core", "sourceId") === doc.uuid
   ) ?? null;
 
 }
 
 /**
- * Scène à afficher au premier lancement.
+ * Importe les scènes si besoin, corrige la map, affiche Elysium (MJ, 1× par monde).
  */
-export function resolveSdpStartingScene({
-  compendiumScene = null,
-  sceneName = null
-} = {}) {
+export async function bootstrapSdpStartScene() {
 
-  const name =
-    sceneName
-    || compendiumScene?.name
-    || game.settings.get("sdp", START_SCENE_NAME_SETTING);
-
-  if (name) {
-    const byName = game.scenes.getName(name);
-    if (byName) return byName;
-  }
-
-  if (compendiumScene) {
-    return findImportedScene(compendiumScene);
-  }
-
-  return pickStartingScene(game.scenes.contents);
-
-}
-
-/**
- * Marque une scène du compendium comme scène de départ (MJ).
- */
-export async function setCompendiumStartScene(sceneName) {
+  if (!game.user.isGM) return;
 
   const pack = game.packs.get(SDP_SCENES_PACK);
 
   if (!pack) {
-    throw new Error(`Compendium introuvable : ${SDP_SCENES_PACK}`);
+    console.warn(`[sdp] Compendium introuvable : ${SDP_SCENES_PACK}`);
+    return;
   }
 
-  const wasLocked = pack.locked;
+  const initialized = game.settings.get("sdp", "scenesInitialized");
+  const startViewed = game.settings.get("sdp", "startSceneViewed");
 
-  if (wasLocked) {
-    await pack.configure({ locked: false });
+  if (!initialized) {
+
+    const documents = await pack.getDocuments();
+
+    if (!documents.length) {
+      console.warn("[sdp] Compendium scènes vide.");
+      return;
+    }
+
+    for (const doc of documents) {
+      if (!findImportedScene(pack, doc)) {
+        await game.scenes.importFromCompendium(pack, doc.id);
+      }
+    }
+
+    await game.settings.set("sdp", "scenesInitialized", true);
+    ui.sidebar?.tabs?.scenes?.render?.(true);
+
   }
 
-  const documents = await pack.getDocuments();
-  const target = documents.find(doc => doc.name === sceneName);
+  const startScene = game.scenes.getName(START_SCENE);
 
-  if (!target) {
-    if (wasLocked) await pack.configure({ locked: true });
-    throw new Error(
-      `Scène "${sceneName}" introuvable dans ${SDP_SCENES_PACK}`
-    );
+  if (!startScene) {
+    console.warn(`[sdp] Scène "${START_SCENE}" absente du monde.`);
+    return;
   }
 
-  for (const doc of documents) {
-    await doc.setFlag("sdp", "startScene", doc.id === target.id);
+  await ensureSceneMap(startScene);
+
+  if (startViewed && canvas.scene?.id === startScene.id) {
+    return;
   }
 
-  if (wasLocked) {
-    await pack.configure({ locked: true });
-  }
-
-  await game.settings.set("sdp", START_SCENE_NAME_SETTING, sceneName);
-
-  console.log(`[sdp] Scène de départ du compendium : ${sceneName}`);
-
-  ui.notifications.info(
-    game.i18n.format("SDP.Notifications.StartSceneSet", {
-      name: sceneName
-    })
-  );
-
-  return target;
-
-}
-
-async function importScenesFromPack(pack, startingDoc) {
-
-  const documents = await pack.getDocuments();
-  const starting = startingDoc ?? pickStartingScene(documents);
-  const others = documents.filter(doc => doc.id !== starting?.id);
-
-  for (const doc of sortScenes(others)) {
-    await game.scenes.importFromCompendium(pack, doc.id);
-    const imported = findImportedScene(doc);
-    await patchSceneMapAssets(imported);
-  }
-
-  if (starting) {
-    await game.scenes.importFromCompendium(pack, starting.id);
-    const imported = findImportedScene(starting);
-    await patchSceneMapAssets(imported);
-  }
-
-  if (starting) {
-    await game.settings.set("sdp", START_SCENE_NAME_SETTING, starting.name);
-  }
-
-  return {
-    count: documents.length,
-    startingName: starting?.name ?? null
-  };
-
-}
-
-async function activateStartingScene(scene) {
-
-  if (!scene) return false;
-
-  for (const other of game.scenes) {
-    if (other.id !== scene.id && other.active) {
-      await other.update({ active: false });
+  for (const scene of game.scenes) {
+    if (scene.id !== startScene.id && scene.active) {
+      await scene.update({ active: false });
     }
   }
 
-  if (!scene.active) {
-    await scene.update({ active: true });
+  if (!startScene.active) {
+    await startScene.update({ active: true });
   }
 
-  await scene.view();
+  await startScene.view();
 
-  if (canvas.scene?.id !== scene.id) {
+  if (canvas.scene?.id !== startScene.id) {
     await new Promise(resolve => setTimeout(resolve, 300));
-    await scene.view();
+    await startScene.view();
   }
 
-  console.log(
-    `[sdp] Canvas actif : ${canvas.scene?.name ?? "?"}`
-      + ` (attendu : ${scene.name})`
-  );
+  await game.settings.set("sdp", "startSceneViewed", true);
 
-  return canvas.scene?.id === scene.id;
-
-}
-
-function shouldSkipStartView(startScene, force) {
-
-  if (force || !startScene) return false;
-
-  const startViewed = game.settings.get("sdp", START_VIEWED_SETTING);
-  const canvasMatches = canvas.scene?.id === startScene.id;
-
-  return startViewed && canvasMatches;
-
-}
-
-/**
- * Importe les scènes du compendium et affiche la scène de départ (MJ, une fois par monde).
- */
-export async function bootstrapSdpScenes({
-  force = false
-} = {}) {
-
-  if (!game.user.isGM) {
-    return { imported: 0, skipped: true };
-  }
-
-  let imported = 0;
-  let startingName = game.settings.get("sdp", START_SCENE_NAME_SETTING);
-  let compendiumStartingScene = null;
-
-  try {
-
-    // Installe les maps dans le monde si besoin (Forge : systems/sdp/assets/maps absent)
-    await ensureSdpSceneMaps();
-
-    const pack = game.packs.get(SDP_SCENES_PACK);
-    const initialized = game.settings.get("sdp", IMPORT_SETTING);
-
-    if (pack) {
-      compendiumStartingScene =
-        await resolveCompendiumStartingScene(pack);
-
-      if (compendiumStartingScene?.name) {
-        startingName = compendiumStartingScene.name;
-      }
-    }
-
-    if (pack && (force || !initialized)) {
-
-      const index = await pack.getIndex({ force: true });
-
-      if (!index.size) {
-        console.warn(
-          "[sdp] Compendium scènes vide — exportez vos scènes vers sdp.scenes"
-        );
-      }
-      else if (force || game.scenes.size === 0) {
-
-        const result = await importScenesFromPack(
-          pack,
-          compendiumStartingScene
-        );
-
-        imported = result.count;
-        startingName = result.startingName ?? startingName;
-
-        ui.sidebar?.tabs?.scenes?.render?.(true);
-
-        if (imported > 0) {
-          ui.notifications.info(
-            game.i18n.format("SDP.Notifications.ScenesInitialized", {
-              count: imported
-            })
-          );
-        }
-
-      }
-
-      if (index.size || game.scenes.size > 0) {
-        await game.settings.set("sdp", IMPORT_SETTING, true);
-      }
-
-    }
-    else if (!pack) {
-      console.warn(`[sdp] Compendium introuvable : ${SDP_SCENES_PACK}`);
-    }
-
-    const startScene = resolveSdpStartingScene({
-      compendiumScene: compendiumStartingScene,
-      sceneName: startingName
-    });
-
-    // Corrige fond + miniature avec chemins provisionnés (monde ou système)
-    await patchAllSdpSceneAssets();
-
-    if (shouldSkipStartView(startScene, force)) {
-      return {
-        imported,
-        skipped: true,
-        startScene: startScene?.name ?? null
-      };
-    }
-
-    if (startScene) {
-      console.log(`[sdp] Scène de départ : ${startScene.name}`);
-      await activateStartingScene(startScene);
-      await game.settings.set("sdp", START_VIEWED_SETTING, true);
-      await game.settings.set("sdp", START_SCENE_NAME_SETTING, startScene.name);
-    }
-
-    return {
-      imported,
-      skipped: false,
-      startScene: startScene?.name ?? null,
-      canvasScene: canvas.scene?.name ?? null
-    };
-
-  }
-  catch (error) {
-    console.error("[sdp] Échec bootstrap scènes :", error);
-    return { imported, skipped: true, error };
-  }
+  console.log(`[sdp] Scène de départ : ${START_SCENE}`);
 
 }

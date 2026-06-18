@@ -41,31 +41,6 @@ Le compendium **SDP Journaux** (`sdp.journals`) contient les journaux de référ
 
 - Blessures, Talents, Compétences, Espèces, Carrières, Signes, Corruptions, Tables aléatoires, Journaux
 
-## Scènes et maps
-
-Les maps sont incluses dans le système (`assets/maps/`). Au **premier lancement MJ** :
-
-1. **Installation auto** des JPG dans `worlds/<monde>/assets/maps/sdp/` (obligatoire sur The Forge où `systems/sdp/assets/maps` n'est pas accessible)
-2. **Import** des scènes depuis le compendium `sdp.scenes`
-3. **Correction** des chemins (fond + miniature) vers les maps installées
-4. **Scène de départ** (Elysium par défaut)
-
-En local, les maps restent lues depuis `systems/sdp/assets/maps/` si disponibles.
-
-Console MJ si besoin :
-
-```javascript
-await game.sdp.provisionSceneMaps();  // installe les maps dans le monde
-await game.sdp.fixSceneAssets();      // corrige fond + vignettes
-```
-
-Réimport complet :
-
-```javascript
-await game.settings.set("sdp", "scenesInitialized", false);
-await game.sdp.bootstrapScenes({ force: true });
-```
-
 ## Publication / mise à jour (mainteneur)
 
 ### 1. Préparer une version
