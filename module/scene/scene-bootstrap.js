@@ -7,6 +7,7 @@
  */
 
 import { patchAllSdpSceneAssets, patchCompendiumSceneAssets, patchSceneMapAssets } from "./scene-assets.js";
+import { ensureSdpSceneMaps, MAPS_PROVISION_SETTING } from "./scene-map-provision.js";
 
 export const SDP_SCENES_PACK = "sdp.scenes";
 const IMPORT_SETTING = "scenesInitialized";
@@ -33,6 +34,14 @@ export function registerSceneBootstrapSettings() {
 
   game.settings.register("sdp", START_SCENE_NAME_SETTING, {
     name: "SDP Start Scene Name",
+    scope: "world",
+    config: false,
+    type: String,
+    default: ""
+  });
+
+  game.settings.register("sdp", MAPS_PROVISION_SETTING, {
+    name: "SDP Scene Maps Provision Version",
     scope: "world",
     config: false,
     type: String,
@@ -285,6 +294,9 @@ export async function bootstrapSdpScenes({
 
   try {
 
+    // Installe les maps dans le monde si besoin (Forge : systems/sdp/assets/maps absent)
+    await ensureSdpSceneMaps();
+
     const pack = game.packs.get(SDP_SCENES_PACK);
     const initialized = game.settings.get("sdp", IMPORT_SETTING);
 
@@ -342,7 +354,7 @@ export async function bootstrapSdpScenes({
       sceneName: startingName
     });
 
-    // Corrige fond + miniature → systems/sdp/assets/maps/… (comme les icônes)
+    // Corrige fond + miniature avec chemins provisionnés (monde ou système)
     await patchAllSdpSceneAssets();
 
     if (shouldSkipStartView(startScene, force)) {

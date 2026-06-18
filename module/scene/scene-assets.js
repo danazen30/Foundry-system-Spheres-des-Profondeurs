@@ -1,24 +1,21 @@
 /**
- * Maps de scènes SDP — même principe que les icônes d'items :
- *   systems/sdp/assets/maps/<fichier>.jpg
+ * Chemins des maps de scènes SDP.
  *
- * Au chargement du monde (MJ) :
- *   1. Corrige compendium + scènes importées (chemins worlds/… → systems/sdp/…)
- *   2. Réimporte depuis le compendium si besoin (scene-bootstrap)
- *
- * Secours si le fichier système est absent sur le serveur (rare) :
- *   worlds/<monde>/assets/maps/ puis GitHub raw.
+ * Les icônes restent dans systems/sdp/assets/icons/.
+ * Les maps sont provisionnées automatiquement (voir scene-map-provision.js) :
+ *   - local : systems/sdp/assets/maps/
+ *   - Forge / hébergé : worlds/<monde>/assets/maps/sdp/
  */
 
-const SDP_SCENES_PACK = "sdp.scenes";
-const REPO = "danazen30/Foundry-system-Spheres-des-Profondeurs";
+import {
+  ensureSdpSceneMaps,
+  getResolvedSceneMapPath,
+  SDP_SCENE_MAP_FILES
+} from "./scene-map-provision.js";
 
-/** @type {Record<string, string>} */
-export const SDP_SCENE_MAP_FILES = {
-  "Elysium": "Elysium V1.jpg",
-  "Fretanie": "Fretanie V2.jpg",
-  "Katrade": "Katrade V4.jpg"
-};
+const SDP_SCENES_PACK = "sdp.scenes";
+
+export { SDP_SCENE_MAP_FILES };
 
 export function getSystemMapUrl(sceneName) {
 
@@ -27,61 +24,13 @@ export function getSystemMapUrl(sceneName) {
 
 }
 
-function getWorldMapUrl(filename) {
-
-  return `worlds/${game.world.id}/assets/maps/${filename}`;
-
-}
-
-function getRemoteMapUrl(filename, version = game.system.version) {
-
-  return `https://raw.githubusercontent.com/${REPO}/v${version}/assets/maps/${encodeURIComponent(filename)}`;
-
-}
-
 /**
- * @param {string} path
- * @returns {Promise<boolean>}
- */
-async function pathExistsOnServer(path) {
-
-  if (!path?.startsWith("systems/") && !path?.startsWith("worlds/")) {
-    return false;
-  }
-
-  try {
-    const url = `${window.location.origin}/${path.replace(/^\//, "")}`;
-    const response = await fetch(url, { method: "HEAD", cache: "no-store" });
-    return response.ok;
-  }
-  catch {
-    return false;
-  }
-
-}
-
-/**
- * Chemin canonique — identique aux icônes (systems/sdp/assets/…).
  * @returns {Promise<string|null>}
  */
 export async function resolveSceneMapUrl(sceneName) {
 
-  const filename = SDP_SCENE_MAP_FILES[sceneName];
-  const systemPath = getSystemMapUrl(sceneName);
-
-  if (!filename || !systemPath) return null;
-
-  if (await pathExistsOnServer(systemPath)) {
-    return systemPath;
-  }
-
-  const worldPath = getWorldMapUrl(filename);
-
-  if (await pathExistsOnServer(worldPath)) {
-    return worldPath;
-  }
-
-  return getRemoteMapUrl(filename);
+  await ensureSdpSceneMaps();
+  return getResolvedSceneMapPath(sceneName);
 
 }
 
@@ -94,14 +43,18 @@ function sceneNeedsAssetPatch(scene, mapUrl) {
 
   if (bg === mapUrl && thumb === mapUrl) return false;
 
-  // Anciens exports depuis un monde (vignettes générées par Foundry)
+  if (/^worlds\/.*\/assets\/scenes\//.test(bg)) return true;
+  if (/^worlds\/.*\/assets\/scenes\//.test(thumb)) return true;
   if (/^worlds\//.test(bg) || /^worlds\//.test(thumb)) return true;
 
-  // Chemins relatifs incorrects (assets/… sans systems/sdp)
   if (bg.startsWith("assets/") && !bg.startsWith("systems/")) return true;
   if (thumb.startsWith("assets/") && !thumb.startsWith("systems/")) return true;
 
-  // URL externe ou autre chemin que le canonique
+  if (bg.startsWith("systems/sdp/assets/maps/") && bg !== mapUrl) return true;
+  if (thumb.startsWith("systems/sdp/assets/maps/") && thumb !== mapUrl) return true;
+
+  if (/^https?:\/\//.test(bg) || /^https?:\/\//.test(thumb)) return true;
+
   return bg !== mapUrl || thumb !== mapUrl;
 
 }
@@ -164,6 +117,8 @@ export async function patchCompendiumSceneAssets() {
 export async function patchAllSdpSceneAssets() {
 
   if (!game.user.isGM) return { world: 0, compendium: 0 };
+
+  await ensureSdpSceneMaps();
 
   const compendium = await patchCompendiumSceneAssets();
 

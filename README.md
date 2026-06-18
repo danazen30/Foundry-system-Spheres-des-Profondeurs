@@ -43,42 +43,28 @@ Le compendium **SDP Journaux** (`sdp.journals`) contient les journaux de référ
 
 ## Scènes et maps
 
-Les maps sont dans le système, **comme les icônes d'items** :
+Les maps sont incluses dans le système (`assets/maps/`). Au **premier lancement MJ** :
 
-```
-systems/sdp/assets/maps/Elysium V1.jpg
-systems/sdp/assets/maps/Fretanie V2.jpg
-systems/sdp/assets/maps/Katrade V4.jpg
-```
+1. **Installation auto** des JPG dans `worlds/<monde>/assets/maps/sdp/` (obligatoire sur The Forge où `systems/sdp/assets/maps` n'est pas accessible)
+2. **Import** des scènes depuis le compendium `sdp.scenes`
+3. **Correction** des chemins (fond + miniature) vers les maps installées
+4. **Scène de départ** (Elysium par défaut)
 
-### Intégration automatique (monde MJ)
+En local, les maps restent lues depuis `systems/sdp/assets/maps/` si disponibles.
 
-Au **premier lancement** d'un monde :
-
-1. Import des scènes depuis le compendium `sdp.scenes`
-2. Correction des chemins d'images → `systems/sdp/assets/maps/…` (comme les icônes)
-3. Affichage de la scène de départ (Elysium par défaut)
-
-Si les vignettes ou fonds sont encore cassés après une mise à jour, en console MJ :
+Console MJ si besoin :
 
 ```javascript
-await game.sdp.fixSceneAssets();
+await game.sdp.provisionSceneMaps();  // installe les maps dans le monde
+await game.sdp.fixSceneAssets();      // corrige fond + vignettes
 ```
 
-Pour forcer un réimport complet :
+Réimport complet :
 
 ```javascript
 await game.settings.set("sdp", "scenesInitialized", false);
 await game.sdp.bootstrapScenes({ force: true });
 ```
-
-### Export compendium (mainteneur, une fois)
-
-Après avoir corrigé les chemins en local, **réexporter** les 3 scènes vers `packs/scenes` pour figer les bons chemins dans le compendium (fond = `systems/sdp/assets/maps/…`).
-
-### The Forge
-
-Les assets système (icônes **et** maps) sont dans le zip de release. Si une scène affiche encore `worlds/…/assets/scenes/…`, c'est un **ancien chemin** enregistré dans le compendium — la v0.1.7 le corrige automatiquement au chargement.
 
 ## Publication / mise à jour (mainteneur)
 
