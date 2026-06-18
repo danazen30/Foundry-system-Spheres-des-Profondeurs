@@ -75,6 +75,12 @@ import {
   resolveJournalPage,
   syncSdpJournalDisplayNames
 } from "./journal/career-journal.js";
+import {
+  bootstrapSdpScenes,
+  registerSceneBootstrapSettings,
+  resolveSdpStartingScene,
+  setCompendiumStartScene
+} from "./scene/scene-bootstrap.js";
 
 export let sdpSocket;
 
@@ -125,6 +131,8 @@ const SDP_ROLLTABLE_LOCALIZATION = {
 /* ========================================= */
 
   Hooks.once("init", async () => {
+
+    registerSceneBootstrapSettings();
 
     registerSdpCompendiumIndexFields();
 
@@ -729,6 +737,9 @@ game.sdp.resolveJournalEntry = resolveJournalEntry;
 game.sdp.resolveJournalPage = resolveJournalPage;
 game.sdp.syncCareerJournal = syncSdpJournalDisplayNames;
 game.sdp.syncJournal = syncSdpJournalDisplayNames;
+game.sdp.bootstrapScenes = bootstrapSdpScenes;
+game.sdp.resolveStartingScene = resolveSdpStartingScene;
+game.sdp.setCompendiumStartScene = setCompendiumStartScene;
 game.sdp.applyRollTableFlags = async () => {
 
   const rolltablePack =
@@ -771,6 +782,8 @@ await indexSdpItemPacks();
 localizeAllSdpCompendiumIndices(
   SDP_ROLLTABLE_LOCALIZATION
 );
+
+await bootstrapSdpScenes();
 
 await rebuildAllCareerJournalCaches();
 
