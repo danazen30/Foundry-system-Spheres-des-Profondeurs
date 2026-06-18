@@ -21,6 +21,9 @@ const MAP_REMOTE_FALLBACKS = {
   "KatradeV4.jpg": ["Katrade V4.jpg"]
 };
 
+/** @type {Record<string, string>} */
+const resolvedMapUrls = {};
+
 export function registerSceneBootstrapSettings() {
 
   game.settings.register("sdp", "scenesInitialized", {
@@ -113,15 +116,21 @@ async function fetchMapBlob(filename) {
  */
 async function resolveMapUrl(filename) {
 
+  if (resolvedMapUrls[filename]) {
+    return resolvedMapUrls[filename];
+  }
+
   const systemPath = `${MAP_DIR}/${filename}`;
 
   if (await pathExists(systemPath)) {
+    resolvedMapUrls[filename] = systemPath;
     return systemPath;
   }
 
   const worldPath = `worlds/${game.world.id}/assets/maps/${filename}`;
 
   if (await pathExists(worldPath)) {
+    resolvedMapUrls[filename] = worldPath;
     return worldPath;
   }
 
@@ -137,7 +146,28 @@ async function resolveMapUrl(filename) {
     { notify: false }
   );
 
-  return response.path ?? worldPath;
+  const path = response.path ?? worldPath;
+  resolvedMapUrls[filename] = path;
+  return path;
+
+}
+
+/**
+ * @param {Scene|SceneDocument} scene
+ * @param {string} mapUrl
+ */
+function needsMapPatch(scene, mapUrl) {
+
+  const bg = scene.background?.src ?? "";
+  const thumb = scene.thumbnail ?? "";
+
+  if (bg === mapUrl && thumb === mapUrl) return false;
+
+  if (/-thumb\.webp$/i.test(thumb)) return true;
+  if (/^worlds\/.*\/assets\/scenes\//.test(thumb)) return true;
+  if (/^worlds\//.test(thumb) || /^worlds\//.test(bg)) return true;
+
+  return bg !== mapUrl || thumb !== mapUrl;
 
 }
 
@@ -148,30 +178,58 @@ async function ensureSceneMap(scene) {
 
   const filename = MAP_FILES[scene.name];
 
-  if (!filename) return;
+  if (!filename) return false;
 
   const mapUrl = await resolveMapUrl(filename);
-  const bg = scene.background?.src ?? "";
-  const thumb = scene.thumbnail ?? "";
 
-  if (bg === mapUrl && thumb === mapUrl) return;
+  if (!needsMapPatch(scene, mapUrl)) return false;
 
   await scene.update({
     "background.src": mapUrl,
     thumbnail: mapUrl
   });
 
+  return true;
+
 }
 
-function findImportedScene(pack, doc) {
+function findImportedScene(doc) {
 
   const byName = game.scenes.getName(doc.name);
   if (byName) return byName;
 
   return game.scenes.find(scene =>
     scene._stats?.compendiumSource === doc.uuid
-    || scene.getFlag?.("core", "sourceId") === doc.uuid
   ) ?? null;
+
+}
+
+/**
+ * Corrige fond + miniature (monde + compendium).
+ * @param {CompendiumCollection} pack
+ */
+async function ensureAllSceneMaps(pack) {
+
+  for (const name of Object.keys(MAP_FILES)) {
+    const scene = game.scenes.getName(name);
+    if (scene) await ensureSceneMap(scene);
+  }
+
+  const wasLocked = pack.locked;
+
+  if (wasLocked) await pack.configure({ locked: false });
+
+  try {
+    for (const doc of await pack.getDocuments()) {
+      await ensureSceneMap(doc);
+    }
+  }
+  finally {
+    if (wasLocked) await pack.configure({ locked: true });
+  }
+
+  ui.sidebar?.tabs?.scenes?.render?.(true);
+  ui.sidebar?.tabs?.compendium?.render?.(true);
 
 }
 
@@ -202,15 +260,16 @@ export async function bootstrapSdpStartScene() {
     }
 
     for (const doc of documents) {
-      if (!findImportedScene(pack, doc)) {
+      if (!findImportedScene(doc)) {
         await game.scenes.importFromCompendium(pack, doc.id);
       }
     }
 
     await game.settings.set("sdp", "scenesInitialized", true);
-    ui.sidebar?.tabs?.scenes?.render?.(true);
 
   }
+
+  await ensureAllSceneMaps(pack);
 
   const startScene = game.scenes.getName(START_SCENE);
 
@@ -218,8 +277,6 @@ export async function bootstrapSdpStartScene() {
     console.warn(`[sdp] Scène "${START_SCENE}" absente du monde.`);
     return;
   }
-
-  await ensureSceneMap(startScene);
 
   if (startViewed && canvas.scene?.id === startScene.id) {
     return;

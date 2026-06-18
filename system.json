@@ -2,7 +2,7 @@
   "id": "sdp",
   "title": "Sphères des Profondeurs",
   "description": "Official game system for Spheres of the Depths (Sphères des Profondeurs) on Foundry VTT v13. French and English supported. Requires the free socketlib module.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "compatibility": {
     "minimum": "13",
     "verified": "13"
@@ -25,7 +25,7 @@
 
   "url": "https://github.com/danazen30/Foundry-system-Spheres-des-Profondeurs",
   "manifest": "https://github.com/danazen30/Foundry-system-Spheres-des-Profondeurs/releases/latest/download/system.json",
-  "download": "https://github.com/danazen30/Foundry-system-Spheres-des-Profondeurs/releases/download/v0.2.0/sdp-0.2.0.zip",
+  "download": "https://github.com/danazen30/Foundry-system-Spheres-des-Profondeurs/releases/download/v0.2.1/sdp-0.2.1.zip",
   "license": "LICENSE",
   "socket": true,
 
