@@ -156,18 +156,55 @@ async function resolveMapUrl(filename) {
  * @param {Scene|SceneDocument} scene
  * @param {string} mapUrl
  */
-function needsMapPatch(scene, mapUrl) {
+function needsBackgroundPatch(scene, mapUrl) {
 
   const bg = scene.background?.src ?? "";
+
+  if (bg === mapUrl) return false;
+
+  if (/^worlds\//.test(bg)) return true;
+  if (bg.startsWith("assets/") && !bg.startsWith("systems/")) return true;
+
+  return bg !== mapUrl;
+
+}
+
+/**
+ * @param {string} thumb
+ * @returns {Promise<boolean>}
+ */
+async function thumbnailIsValid(thumb) {
+
+  if (!thumb || !/\.webp$/i.test(thumb)) return false;
+
+  return pathExists(thumb);
+
+}
+
+/**
+ * @param {Scene|SceneDocument} scene
+ */
+async function ensureSceneThumbnail(scene) {
+
   const thumb = scene.thumbnail ?? "";
 
-  if (bg === mapUrl && thumb === mapUrl) return false;
+  if (await thumbnailIsValid(thumb)) return;
 
-  if (/-thumb\.webp$/i.test(thumb)) return true;
-  if (/^worlds\/.*\/assets\/scenes\//.test(thumb)) return true;
-  if (/^worlds\//.test(thumb) || /^worlds\//.test(bg)) return true;
+  if (!scene.background?.src) return;
 
-  return bg !== mapUrl || thumb !== mapUrl;
+  try {
+    const data = await scene.createThumbnail({
+      format: "image/webp",
+      quality: 0.8
+    });
+
+    if (data?.thumb && data.thumb !== thumb) {
+      await scene.update({ thumbnail: data.thumb });
+    }
+  }
+  catch (error) {
+    console.warn(`[sdp] Miniature "${scene.name}":`, error);
+  }
 
 }
 
@@ -178,18 +215,15 @@ async function ensureSceneMap(scene) {
 
   const filename = MAP_FILES[scene.name];
 
-  if (!filename) return false;
+  if (!filename) return;
 
   const mapUrl = await resolveMapUrl(filename);
 
-  if (!needsMapPatch(scene, mapUrl)) return false;
+  if (needsBackgroundPatch(scene, mapUrl)) {
+    await scene.update({ "background.src": mapUrl });
+  }
 
-  await scene.update({
-    "background.src": mapUrl,
-    thumbnail: mapUrl
-  });
-
-  return true;
+  await ensureSceneThumbnail(scene);
 
 }
 

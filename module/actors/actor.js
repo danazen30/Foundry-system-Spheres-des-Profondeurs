@@ -1,5 +1,10 @@
 import { SdpActorInventory } from "./actor-inventory.js";
 import { SdpSizeEngine } from "../system/size-engine.js";
+import {
+  actorHasWeaponSkill,
+  findActorSkillForRef,
+  parseWeaponSkillRefs
+} from "../system/weapon-skill-utils.js";
 
 export class SdpActor extends Actor {
 
@@ -767,19 +772,9 @@ const hasDefensive = traits.some(t => t.key === "defensive");
 // SKILL CHECK
 // =========================
 
-const actorSkills = this.items.filter(i => i.type === "skill");
-
-const actorSkillNames = actorSkills.map(s =>
-  (s.name || "").toLowerCase().trim()
-);
-
-const weaponSkills = (defenseWeapon.system.skill || "")
-  .split(",")
-  .map(s => s.trim().toLowerCase())
-  .filter(s => s);
-
-const hasValidSkill = weaponSkills.some(group =>
-  actorSkillNames.includes(group)
+const hasValidSkill = actorHasWeaponSkill(
+  this,
+  defenseWeapon
 );
 
 // =========================
@@ -805,20 +800,7 @@ else if (meleeWeapons.length > 0) {
 
 for (let weapon of meleeWeapons) {
 
-  const actorSkills = this.items.filter(i => i.type === "skill");
-
-  const actorSkillNames = actorSkills.map(s =>
-    (s.name || "").toLowerCase().trim()
-  );
-
-  const weaponSkills = (weapon.system.skill || "")
-    .split(",")
-    .map(s => s.trim().toLowerCase())
-    .filter(s => s);
-
-  const hasValidSkill = weaponSkills.some(group =>
-    actorSkillNames.includes(group)
-  );
+  const hasValidSkill = actorHasWeaponSkill(this, weapon);
 
   const skill = getSkill(weapon.system.skill);
 
@@ -859,28 +841,12 @@ else {
     if (equippedWeapons.length > 0) {
 
       const values = [];
-      const actorSkills = this.items.filter(i => i.type === "skill");
-
-const actorSkillNames = actorSkills.map(s =>
-  (s.name || "").toLowerCase().trim()
-);
 
     for (let weapon of equippedWeapons) {
 
   let base = this._getBestWeaponSkill(weapon);
 
-  // =========================
-  // SKILL CHECK
-  // =========================
-
-  const weaponSkills = (weapon.system.skill || "")
-    .split(",")
-    .map(s => s.trim().toLowerCase())
-    .filter(s => s);
-
-  const hasValidSkill = weaponSkills.some(group =>
-    actorSkillNames.includes(group)
-  );
+  const hasValidSkill = actorHasWeaponSkill(this, weapon);
 
   // =========================
   // BASE VALUE
@@ -1228,21 +1194,7 @@ _getBestWeaponSkill(weapon) {
 
   const actor = this;
 
-  let weaponSkills = [];
-
-  if (Array.isArray(weapon.system.skills)) {
-    weaponSkills = weapon.system.skills;
-  }
-  else if (typeof weapon.system.skill === "string") {
-    weaponSkills = weapon.system.skill
-      .split(",")
-      .map(s => s.trim().toLowerCase())
-      .filter(s => s.length > 0);
-  }
-
-  if (!weaponSkills.length) {
-    weaponSkills = [weapon.system.skill];
-  }
+  const weaponSkills = parseWeaponSkillRefs(weapon);
 
   const actorSkills = actor.items.filter(i => i.type === "skill");
 
@@ -1264,14 +1216,7 @@ _getBestWeaponSkill(weapon) {
 
   for (const group of weaponSkills) {
 
-    const skill = actorSkills.find(s => {
-
-      const key = (s.system.key || "").trim().toLowerCase();
-      const name = (s.name || "").trim().toLowerCase();
-
-      return key === group || name === group;
-
-    });
+    const skill = findActorSkillForRef(actorSkills, group);
 
     if (!skill) continue;
 

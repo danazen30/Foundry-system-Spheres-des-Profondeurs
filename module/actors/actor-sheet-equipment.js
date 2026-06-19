@@ -3,6 +3,10 @@ import { getItemLayer, applyFinalWeight} from "./actor-sheet-utils.js";
 import {
   resolveWeaponRange
 } from "../system/formula-utils.js";
+import {
+  actorHasWeaponSkill,
+  formatWeaponSkillDisplay
+} from "../system/weapon-skill-utils.js";
 
 export function prepareWeapons(actor) {
 
@@ -11,18 +15,6 @@ export function prepareWeapons(actor) {
     !i.system.containerId
   );
 
-  console.log(
-  "WEAPON DEBUG",
-  weapons.map(w => ({
-    name: w.name,
-    category: w.system.category,
-    type: w.type,
-    system: foundry.utils.deepClone(w.system)
-  }))
-);
-
-  console.log("ALL WEAPONS", weapons);
-
   const meleeWeapons = weapons.filter(
     w => w.system.category === "melee"
   );
@@ -30,8 +22,6 @@ export function prepareWeapons(actor) {
   const rangedWeapons = weapons.filter(
     w => w.system.category === "ranged"
   );
-  console.log("MELEE", meleeWeapons);
-  console.log("RANGED", rangedWeapons);
 
   const allAmmo = actor.items.filter(
     i => i.type === "ammunition"
@@ -101,14 +91,6 @@ export function prepareWeapons(actor) {
 
   }
 
-  const actorSkills = actor.items.filter(
-    i => i.type === "skill"
-  );
-
-  const actorSkillNames = actorSkills.map(s =>
-    (s.name || "").toLowerCase().trim()
-  );
-
   for (let w of weapons) {
 
     const weaponTraits = w.system.traits || [];
@@ -125,16 +107,7 @@ export function prepareWeapons(actor) {
       }))
     ];
 
-    const weaponSkills = (w.system.skill || "")
-      .split(",")
-      .map(s => s.trim().toLowerCase())
-      .filter(s => s);
-
-    const hasValidSkill = weaponSkills.some(group =>
-      actorSkillNames.includes(
-        group.toLowerCase().trim()
-      )
-    );
+    const hasValidSkill = actorHasWeaponSkill(actor, w);
 
     w.displayTraits = normalized.map(t => {
 
@@ -157,7 +130,7 @@ export function prepareWeapons(actor) {
   "SDP.NoDescription",
 
         disabled: (
-          t.key !== "protectrice" &&
+          !["protective", "protectrice"].includes(t.key) &&
           t.source === "weapon" &&
           isPositive &&
           !hasValidSkill
@@ -166,25 +139,7 @@ export function prepareWeapons(actor) {
 
     });
 
-    const displaySkills = weaponSkills.map(group => {
-
-      const skill = actorSkills.find(s =>
-        (s.system.key || "").toLowerCase() === group ||
-        (s.name || "").toLowerCase() === group
-      );
-
-      if (skill) return skill.name;
-
-      return group.charAt(0).toUpperCase() +
-        group.slice(1);
-
-    });
-
-    w.displaySkill = displaySkills.length
-      ? displaySkills.join(", ")
-      : game.i18n.localize(
-    "SDP.NoSkill"
-  );
+    w.displaySkill = formatWeaponSkillDisplay(w, actor);
 
   }
 

@@ -14,7 +14,7 @@ import {
   getInjuryLocationLabel
 } from "../system/injury-utils.js";
 
-import { getCost, getTalentCost, getTalentMax, getAttributes, getXPData, getSkillMap, getCurrentCareer, getXPBar, getSpellsByType} from "./actor-sheet-utils.js";
+import { getCost, getTalentCost, getTalentMax, getAttributes, getXPData, getSkillMap, getCurrentCareer, getXPBar, getSpellsByType, sortCurrencyItems} from "./actor-sheet-utils.js";
 import { registerAttributeListeners, registerSkillListeners} from "./actor-sheet-listeners.js";
 import { prepareWeapons, prepareArmors, prepareInventory, prepareContainerData, prepareEquipmentSlots} from "./actor-sheet-equipment.js";
 import { registerCombatListeners } from "./actor-sheet-combat.js";
@@ -343,8 +343,10 @@ if (handed === "special") {
 
 }
 
-const currency = this.document.items.filter(i =>
-  i.type === "currency"
+const currency = sortCurrencyItems(
+  this.document.items.filter(i =>
+    i.type === "currency"
+  )
 );
 
 const injuries =
@@ -933,7 +935,7 @@ let skillLabel = "Intelligence";
 let skillValue = actor.system.attributes.intelligence.value;
 
 if (bestSkill){
-  skillLabel = bestSkill.name;
+  skillLabel = getActorItemDisplayName(bestSkill) || bestSkill.name;
   skillValue = bestSkill.system.value;
 }
 

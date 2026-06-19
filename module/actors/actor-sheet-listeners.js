@@ -1,4 +1,5 @@
 import { SdpRoll } from "../rolls/roll.js";
+import { getActorItemDisplayName } from "../system/item-localization.js";
 
 export function registerAttributeListeners(sheet) {
 
@@ -39,7 +40,8 @@ export function registerSkillListeners(sheet) {
       SdpRoll.openDialog({
         actor: sheet.document,
         type: "skill",
-        label: skill.name,
+        label: getActorItemDisplayName(skill) || skill.name,
+        item: skill,
         target: skill.system.value
       });
 

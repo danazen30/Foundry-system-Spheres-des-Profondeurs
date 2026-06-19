@@ -1,3 +1,5 @@
-2026/06/18-19:56:48.855 fd4 Recovering log #818
-2026/06/18-19:56:48.859 fd4 Delete type=0 #818
-2026/06/18-19:56:48.859 fd4 Delete type=3 #817
+2026/06/19-23:07:44.534 64fc Recovering log #826
+2026/06/19-23:07:44.534 64fc Level-0 table #828: started
+2026/06/19-23:07:44.536 64fc Level-0 table #828: 4581 bytes OK
+2026/06/19-23:07:44.540 64fc Delete type=0 #826
+2026/06/19-23:07:44.541 64fc Delete type=3 #825

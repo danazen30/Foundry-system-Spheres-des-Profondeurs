@@ -7,6 +7,9 @@ import { SdpSizeEngine } from "../system/size-engine.js";
 import {
   resolveWeaponRangeWithAmmo
 } from "../system/formula-utils.js";
+import {
+  getBestActorSkillForWeapon
+} from "../system/weapon-skill-utils.js";
 
 export class SdpAttack {
 
@@ -294,27 +297,7 @@ const negativeTraits = normalizedTraits.filter(t =>
 // SKILL CHECK
 // =========================
 
-const weaponSkills = (weapon.system.skill || "")
-  .split(",")
-  .map(s => s.trim().toLowerCase());
-
-const actorSkills = actor.items.filter(i => i.type === "skill");
-
-let bestSkill = null;
-
-for (const group of weaponSkills) {
-  const skill = actorSkills.find(s =>
-    (s.system.key || "").toLowerCase() === group ||
-    (s.name || "").toLowerCase() === group
-  );
-
-  if (!skill) continue;
-
-  if (!bestSkill || skill.system.value > bestSkill.system.value) {
-    bestSkill = skill;
-  }
-}
-
+const bestSkill = getBestActorSkillForWeapon(actor, weapon);
 const hasValidSkill = !!bestSkill;
 
 // =========================
@@ -818,27 +801,7 @@ const negativeTraits = normalizedTraits.filter(t =>
 // SKILL CHECK
 // =========================
 
-const weaponSkills = (weapon.system.skill || "")
-  .split(",")
-  .map(s => s.trim().toLowerCase());
-
-const actorSkills = actor.items.filter(i => i.type === "skill");
-
-let bestSkill = null;
-
-for (const group of weaponSkills) {
-  const skill = actorSkills.find(s =>
-    (s.system.key || "").toLowerCase() === group ||
-    (s.name || "").toLowerCase() === group
-  );
-
-  if (!skill) continue;
-
-  if (!bestSkill || skill.system.value > bestSkill.system.value) {
-    bestSkill = skill;
-  }
-}
-
+const bestSkill = getBestActorSkillForWeapon(actor, weapon);
 const hasValidSkill = !!bestSkill;
 
 // =========================

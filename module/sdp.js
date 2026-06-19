@@ -79,6 +79,10 @@ import {
   bootstrapSdpStartScene,
   registerSceneBootstrapSettings
 } from "./scene/scene-bootstrap.js";
+import {
+  registerPackMigrationSettings,
+  removeTradeAlchemistSkill
+} from "./system/pack-migrations.js";
 
 export let sdpSocket;
 
@@ -131,6 +135,7 @@ const SDP_ROLLTABLE_LOCALIZATION = {
   Hooks.once("init", async () => {
 
     registerSceneBootstrapSettings();
+    registerPackMigrationSettings();
     registerSdpCompendiumIndexFields();
 
     Handlebars.registerHelper(
@@ -772,6 +777,8 @@ installSdpCompendiumIndexLocalization(
 );
 
 await indexSdpItemPacks();
+
+await removeTradeAlchemistSkill();
 
 localizeAllSdpCompendiumIndices(
   SDP_ROLLTABLE_LOCALIZATION

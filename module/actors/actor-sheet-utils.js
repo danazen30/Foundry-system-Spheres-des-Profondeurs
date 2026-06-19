@@ -181,6 +181,41 @@ export function getSpellsByType(actor) {
 
 }
 
+const CURRENCY_DENOMINATIONS = [
+  "platinum",
+  "gold",
+  "silver",
+  "copper"
+];
+
+export function sortCurrencyItems(items = []) {
+
+  const rank = Object.fromEntries(
+    CURRENCY_DENOMINATIONS.map(
+      (denomination, index) => [denomination, index]
+    )
+  );
+
+  return [...items].sort((a, b) => {
+
+    const aRank =
+      rank[
+        String(a.system?.denomination?.value || "")
+          .toLowerCase()
+      ] ?? 99;
+
+    const bRank =
+      rank[
+        String(b.system?.denomination?.value || "")
+          .toLowerCase()
+      ] ?? 99;
+
+    return aRank - bRank;
+
+  });
+
+}
+
 export function getWeapons(actor) {
 
   const weapons = actor.items.filter(i =>

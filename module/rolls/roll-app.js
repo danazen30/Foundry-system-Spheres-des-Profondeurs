@@ -6,25 +6,21 @@ import { SdpSizeEngine } from "../system/size-engine.js";
 import {
   resolveWeaponRangeWithAmmo
 } from "../system/formula-utils.js";
+import {
+  getBestActorSkillForWeapon
+} from "../system/weapon-skill-utils.js";
 
 const { ApplicationV2 } = foundry.applications.api;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 
 export class SdpRollApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
-  constructor({ actor, type, label, target, weapon, spellData = null }) {
+  constructor({ actor, type, label, target, weapon, spellData = null, item = null }) {
     super();
 
     this.actor = actor;
     this.type = type;
-    this.label =
-  typeof label === "string" && label.startsWith("SDP.")
-    ? game.i18n.localize(label)
-    : label;
-    console.log("ROLL LABEL", {
-  raw: label,
-  localized: this.label
-});
+    this.label = SdpRollApp.resolveLabel(label, { item, weapon });
     this.target = target;
     this.weapon = weapon;
     this.spellData = spellData;
@@ -34,6 +30,24 @@ export class SdpRollApp extends HandlebarsApplicationMixin(ApplicationV2) {
     this.signEffects = actor.getSignEffects();
     this.options.window.title =
   game.i18n.localize("SDP.Roll");
+  }
+
+  static resolveLabel(label, { item = null, weapon = null } = {}) {
+
+    if (typeof label === "string" && label.startsWith("SDP.")) {
+      return game.i18n.localize(label);
+    }
+
+    if (item) {
+      return getActorItemDisplayName(item) || label;
+    }
+
+    if (weapon) {
+      return getActorItemDisplayName(weapon) || label;
+    }
+
+    return label;
+
   }
 
   static DEFAULT_OPTIONS = {
@@ -316,31 +330,10 @@ if (this.weapon) {
   // SKILL CHECK
   // =========================
 
-  const weaponSkills = (this.weapon.system.skill || "")
-    .split(",")
-    .map(s => s.trim().toLowerCase());
-
-  const actorSkills =
-    this.actor.items.filter(i => i.type === "skill");
-
-  let bestSkill = null;
-
-  for (const group of weaponSkills) {
-
-    const skill = actorSkills.find(s =>
-      (s.system.key || "").toLowerCase() === group ||
-      (s.name || "").toLowerCase() === group
-    );
-
-    if (!skill) continue;
-
-    if (
-      !bestSkill ||
-      skill.system.value > bestSkill.system.value
-    ) {
-      bestSkill = skill;
-    }
-  }
+  const bestSkill = getBestActorSkillForWeapon(
+    this.actor,
+    this.weapon
+  );
 
   const hasValidSkill = !!bestSkill;
 

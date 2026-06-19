@@ -1,5 +1,6 @@
 import { SdpRoll } from "../rolls/roll.js";
 import { SdpSpell } from "../combat/spell.js";
+import { getActorItemDisplayName } from "../system/item-localization.js";
 
 export function registerCombatListeners(sheet, root) {
 
@@ -183,7 +184,7 @@ registerWeaponToggle(
         actor.system.attributes.intelligence.value;
 
       if (bestSkill) {
-        skillLabel = bestSkill.name;
+        skillLabel = getActorItemDisplayName(bestSkill) || bestSkill.name;
         skillValue = bestSkill.system.value;
       }
 
