@@ -895,6 +895,14 @@ Hooks.on("deleteItem", async (item) => {
 
 });
 
+Hooks.on("preUpdateActor", (document, update) => {
+
+  if (document.documentName !== "Actor") return;
+
+  SdpActor.normalizeInitialUpdate(document, update);
+
+});
+
 Hooks.on("updateActor", async (actor, changes) => {
 
   const cond = changes.system?.conditions;

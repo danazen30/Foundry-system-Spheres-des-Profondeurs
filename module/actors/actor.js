@@ -170,50 +170,167 @@ if (lvl.inspirationDice) {
 }
 
   // =====================
-  // ITEM MODIFIERS (ATTRIBUTES)
+  // ACTIVE EFFECTS (ATTRIBUTES)
   // =====================
 
-_getItemModifiers(targetKey) {
+  /**
+   * Attribute storage/derived fields are computed in prepareDerivedData.
+   * Foundry must not mutate them each prepare cycle (would stack on save).
+   */
+  static isRuntimeAttributeEffectKey(key) {
+    if (!key || typeof key !== "string") return false;
+    return /^system\.attributes\.[a-zA-Z]+\.(initial|advances|levelBonus|value|bonus|itemModifier|totalModifier|encumbranceModifier|sizeModifier)$/.test(key)
+      || /^system\.attributes\.[a-zA-Z]+$/.test(key);
+  }
 
-  let total = 0;
+  /** @inheritdoc */
+  applyActiveEffects() {
+    const pendingRestore = [];
 
-  for (const item of this.items.contents) {
+    for (const effect of this.allApplicableEffects()) {
+      const original = effect.changes ?? [];
+      const filtered = original.filter(
+        change => !SdpActor.isRuntimeAttributeEffectKey(change.key)
+      );
 
-  if (
-  item.type !== "injury" &&
-  item.type !== "armor" &&
-  item.type !== "possession" &&
-  item.type !== "trait" &&
-  item.type !== "disease" &&
-  item.type !== "weapon" &&
-  item.type !== "clothing" &&
-  item.type !== "container"
-) continue;
+      if (filtered.length !== original.length) {
+        pendingRestore.push([effect, original]);
+        effect.changes = filtered;
+      }
+    }
 
-    // 🔥 ARMOR ACTIVE SEULEMENT SI ÉQUIPÉE
-    if (item.type === "armor" && !item.system?.worn?.value) continue;
-    if (item.type === "clothing" && !item.system?.equipped) continue;
-
-    for (const effect of item.effects) {
-
-      if (effect.disabled) continue;
-
-      for (const change of effect.changes) {
-
-        if (!change.key) continue;
-
-        if (change.key.startsWith("system.conditions")) continue;
-        if (change.key.endsWith(".modifier")) continue;
-
-        if (!change.key.startsWith(`system.attributes.${targetKey}`)) continue;
-
-        total += Number(change.value || 0);
+    try {
+      super.applyActiveEffects();
+    } finally {
+      for (const [effect, original] of pendingRestore) {
+        effect.changes = original;
       }
     }
   }
 
-  return total;
-}
+  // =====================
+  // ITEM MODIFIERS (ATTRIBUTES)
+  // =====================
+
+  _isItemEffectSourceActive(item) {
+
+    if (!item?.documentName || item.documentName !== "Item") return true;
+
+    switch (item.type) {
+
+      case "armor":
+        return item.system?.worn?.value === true;
+
+      case "clothing":
+        return item.system?.equipped === true;
+
+      case "talent":
+        return Number(item.system?.advances || 0) > 0;
+
+      default:
+        return true;
+
+    }
+
+  }
+
+  _getAttributeEffectModifiers(targetKey, { initialOnly = false, excludeInitial = false } = {}) {
+
+    let total = 0;
+    const initialKey = `system.attributes.${targetKey}.initial`;
+
+    for (const effect of this.allApplicableEffects()) {
+
+      if (effect.disabled) continue;
+
+      const source = effect.parent;
+      if (source?.documentName === "Item" && !this._isItemEffectSourceActive(source)) continue;
+
+      for (const change of effect.changes ?? []) {
+
+        if (!change.key) continue;
+        if (change.key.startsWith("system.conditions")) continue;
+        if (change.key.endsWith(".modifier")) continue;
+
+        if (initialOnly) {
+          if (change.key !== initialKey) continue;
+        } else if (excludeInitial) {
+          if (change.key === initialKey) continue;
+          if (!change.key.startsWith(`system.attributes.${targetKey}`)) continue;
+        } else if (!change.key.startsWith(`system.attributes.${targetKey}`)) {
+          continue;
+        }
+
+        total += Number(change.value || 0);
+
+      }
+
+    }
+
+    return total;
+
+  }
+
+  _getInitialFieldModifiers(targetKey) {
+
+    return this._getAttributeEffectModifiers(targetKey, { initialOnly: true });
+
+  }
+
+  _getItemModifiers(targetKey) {
+
+    return this._getAttributeEffectModifiers(targetKey, { excludeInitial: true });
+
+  }
+
+  _getStoredAttributeInitial(key) {
+
+    const fromSource = foundry.utils.getProperty(
+      this._source,
+      `system.attributes.${key}.initial`
+    );
+
+    if (fromSource !== undefined && fromSource !== null) {
+      return Number(fromSource);
+    }
+
+    const fromSystem = this.system.attributes?.[key]?.initial;
+
+    if (fromSystem !== undefined && fromSystem !== null) {
+      return Number(fromSystem);
+    }
+
+    return 20;
+
+  }
+
+  /**
+   * Initial inputs show base + active effect bonus.
+   * Persist only the base; ignore accidental saves of the effective value.
+   */
+  static normalizeInitialUpdate(actor, update) {
+
+    const attributes = foundry.utils.getProperty(update, "system.attributes");
+    if (!attributes || typeof attributes !== "object") return;
+
+    for (const [key, data] of Object.entries(attributes)) {
+
+      if (!data || data.initial === undefined) continue;
+
+      const bonus = actor._getInitialFieldModifiers?.(key) ?? 0;
+      if (!bonus) continue;
+
+      const submitted = Number(data.initial);
+      const stored = actor._getStoredAttributeInitial(key);
+      const effective = stored + bonus;
+
+      if (submitted === effective) {
+        data.initial = stored;
+      }
+
+    }
+
+  }
 
 _getActiveEffectModifier(changeKey) {
 
@@ -299,7 +416,10 @@ _getCarryingCapacityModifier() {
   // =====================
 
   prepareDerivedData() {
-    
+
+    for (const [key, attr] of Object.entries(this.system.attributes ?? {})) {
+      attr.initial = this._getStoredAttributeInitial(key);
+    }
 
     super.prepareDerivedData();
 
@@ -487,10 +607,14 @@ const sizeModifiers =
 
     for (let [key, attr] of Object.entries(system.attributes)) {
 
+      const storedInitial = this._getStoredAttributeInitial(key);
+      const initialBonus = this._getInitialFieldModifiers(key);
       const itemMod = this._getItemModifiers(key) ?? 0;
       const manualMod = Number(attr.modifier || 0);
 
-      attr.itemModifier = itemMod;
+      attr.initial = storedInitial + initialBonus;
+      attr.initialBonus = initialBonus;
+      attr.itemModifier = itemMod + initialBonus;
       // 👉 ENCUMBRANCE MODIFIER
 let encMod = 0;
 
@@ -518,7 +642,7 @@ attr.sizeModifier = sizeMod;
 attr.totalModifier = manualMod + itemMod + encMod + sizeMod;
 
 let baseValue =
-  Number(attr.initial || 0) +
+  attr.initial +
   Number(attr.advances || 0) +
   attr.totalModifier +
   Number(attr.levelBonus || 0);

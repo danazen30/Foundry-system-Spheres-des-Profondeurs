@@ -18,6 +18,8 @@ export function registerInteractionListeners(sheet, root) {
 
   registerAttributeModifiers(sheet, root);
 
+  registerAttributeInitials(sheet, root);
+
   registerSpellMemory(sheet, root);
 
   registerTalentAdv(sheet, root);
@@ -111,6 +113,27 @@ function registerMovement(sheet, root) {
   "system.resources.movement.value":
     newBase
 });
+
+    });
+
+  });
+
+}
+
+function registerAttributeInitials(sheet, root) {
+
+  root.querySelectorAll(".attr-initial-input").forEach(el => {
+
+    el.addEventListener("change", async (event) => {
+
+      const input = event.currentTarget;
+      const key = input.dataset.key;
+      const actor = sheet.document;
+      const newBase = Number(input.value) || 0;
+
+      await actor.update({
+        [`system.attributes.${key}.initial`]: newBase
+      });
 
     });
 
