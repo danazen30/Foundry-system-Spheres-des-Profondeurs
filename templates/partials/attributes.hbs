@@ -86,8 +86,9 @@
 
           <input
             type="number"
+            class="attr-advances-input"
+            data-key="{{attr.key}}"
             value="{{attr.advances}}"
-            name="system.attributes.{{attr.key}}.advances"
             data-dtype="Number"
             step="1"
             {{#unless @root.user.isGM}}

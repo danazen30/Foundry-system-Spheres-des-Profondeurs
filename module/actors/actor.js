@@ -294,10 +294,19 @@ if (lvl.inspirationDice) {
       return Number(fromSource);
     }
 
-    const fromSystem = this.system.attributes?.[key]?.initial;
+    return 20;
 
-    if (fromSystem !== undefined && fromSystem !== null) {
-      return Number(fromSystem);
+  }
+
+  static getPersistedAttributeInitial(actor, key) {
+
+    const fromSource = foundry.utils.getProperty(
+      actor._source,
+      `system.attributes.${key}.initial`
+    );
+
+    if (fromSource !== undefined && fromSource !== null) {
+      return Number(fromSource);
     }
 
     return 20;
@@ -310,23 +319,40 @@ if (lvl.inspirationDice) {
    */
   static normalizeInitialUpdate(actor, update) {
 
-    const attributes = foundry.utils.getProperty(update, "system.attributes");
-    if (!attributes || typeof attributes !== "object") return;
-
-    for (const [key, data] of Object.entries(attributes)) {
-
-      if (!data || data.initial === undefined) continue;
+    const normalizeKey = (key, submitted) => {
 
       const bonus = actor._getInitialFieldModifiers?.(key) ?? 0;
-      if (!bonus) continue;
+      if (!bonus) return submitted;
 
-      const submitted = Number(data.initial);
       const stored = actor._getStoredAttributeInitial(key);
       const effective = stored + bonus;
 
-      if (submitted === effective) {
-        data.initial = stored;
+      if (submitted === effective) return stored;
+
+      return submitted;
+
+    };
+
+    const attributes = foundry.utils.getProperty(update, "system.attributes");
+
+    if (attributes && typeof attributes === "object") {
+
+      for (const [key, data] of Object.entries(attributes)) {
+
+        if (!data || data.initial === undefined) continue;
+
+        data.initial = normalizeKey(key, Number(data.initial));
+
       }
+
+    }
+
+    for (const [path, value] of Object.entries(update)) {
+
+      const match = path.match(/^system\.attributes\.([^.]+)\.initial$/);
+      if (!match) continue;
+
+      update[path] = normalizeKey(match[1], Number(value));
 
     }
 

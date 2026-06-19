@@ -20,6 +20,8 @@ export function registerInteractionListeners(sheet, root) {
 
   registerAttributeInitials(sheet, root);
 
+  registerAttributeAdvances(sheet, root);
+
   registerSpellMemory(sheet, root);
 
   registerTalentAdv(sheet, root);
@@ -129,10 +131,42 @@ function registerAttributeInitials(sheet, root) {
       const input = event.currentTarget;
       const key = input.dataset.key;
       const actor = sheet.document;
-      const newBase = Number(input.value) || 0;
+      const typed = Number(input.value) || 0;
+      const bonus = actor._getInitialFieldModifiers?.(key) ?? 0;
+      const stored = actor._getStoredAttributeInitial(key);
+
+      let newBase = typed;
+
+      if (bonus > 0 && typed === stored + bonus) {
+        newBase = stored;
+      }
+
+      if (newBase === stored) return;
 
       await actor.update({
         [`system.attributes.${key}.initial`]: newBase
+      });
+
+    });
+
+  });
+
+}
+
+function registerAttributeAdvances(sheet, root) {
+
+  root.querySelectorAll(".attr-advances-input").forEach(el => {
+
+    el.addEventListener("change", async (event) => {
+
+      if (!game.user.isGM) return;
+
+      const input = event.currentTarget;
+      const key = input.dataset.key;
+      const value = Number(input.value) || 0;
+
+      await sheet.document.update({
+        [`system.attributes.${key}.advances`]: value
       });
 
     });

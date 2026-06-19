@@ -31,6 +31,7 @@ import {
   getLocalizedSignLevelDescription
 } from "../system/item-localization.js";
 import { formatPlainTextAsHtml } from "../system/text-format.js";
+import { SdpActor } from "./actor.js";
 
 const { ActorSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -1174,30 +1175,53 @@ if (game.dice3d) {
 
 }
 
-Hooks.on("createItem", async (item, options, userId) => {
+Hooks.on("createItem", async (item, options) => {
 
   if (item.type !== "specie") return;
 
   const actor = item.parent;
   if (!actor) return;
 
-  console.log("SPECIE ADDED → APPLY EFFECT");
+  if (options.sdpSkipSpecieAttributes) return;
+
+  const existingSpecies = actor.items.filter(
+    i => i.type === "specie" && i.id !== item.id
+  );
+
+  if (existingSpecies.length > 0) return;
 
   const updates = {};
-
   const baseAttrs = item.system.baseAttributes || {};
 
   for (const [key, value] of Object.entries(baseAttrs)) {
 
     if (!value) continue;
 
+    const current = SdpActor.getPersistedAttributeInitial(actor, key);
+
+    // Do not overwrite characteristics set by the generator or the player.
+    if (current !== 20 && current !== 0) continue;
+
     updates[`system.attributes.${key}.initial`] = value;
+
   }
 
-  // movement
   if (item.system.movement?.walk !== undefined) {
-    updates["system.resources.movement.value"] = item.system.movement.walk;
+
+    const currentMovement = Number(
+      foundry.utils.getProperty(
+        actor._source,
+        "system.resources.movement.value"
+      ) ?? 0
+    );
+
+    if (currentMovement === 0 || currentMovement === 4) {
+      updates["system.resources.movement.value"] = item.system.movement.walk;
+    }
+
   }
+
+  if (Object.keys(updates).length === 0) return;
 
   await actor.update(updates);
 
