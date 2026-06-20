@@ -1,5 +1,120 @@
 import { SDP } from "../system/config.js";
 import { SdpLevelService } from "../services/level-service.js";
+import { getActorItemDisplayName } from "../system/item-localization.js";
+
+export function resolveXPLogTarget(actor, entry) {
+
+  if (entry.targetType === "attribute") {
+
+    const labelKey =
+      CONFIG.SDP?.ATTRIBUTE_LABELS?.[entry.targetRef];
+
+    return labelKey
+      ? game.i18n.localize(labelKey)
+      : entry.targetRef;
+
+  }
+
+  if (
+    entry.targetType === "skill"
+    || entry.targetType === "talent"
+    || entry.targetType === "career"
+  ) {
+
+    const item =
+      actor.items.get(entry.targetRef);
+
+    let name =
+      item
+        ? getActorItemDisplayName(item)
+        : (entry.targetRef || "");
+
+    if (entry.targetSuffix) {
+      name += ` (${game.i18n.localize(entry.targetSuffix)})`;
+    }
+
+    return name;
+
+  }
+
+  if (entry.targetType === "manual") {
+
+    return game.i18n.has(entry.targetRef)
+      ? game.i18n.localize(entry.targetRef)
+      : entry.targetRef;
+
+  }
+
+  return entry.target || entry.targetRef || "";
+
+}
+
+export function formatXPLogEntry(actor, entry) {
+
+  if (entry.label && !entry.type) {
+    return entry.label;
+  }
+
+  const spent = entry.spent ?? 0;
+  const total = entry.total ?? 0;
+
+  if (entry.type === "gain") {
+
+    return game.i18n.format(
+      "SDP.XPLog.Gain",
+      {
+        amount: entry.amount,
+        spent,
+        total,
+        reason: entry.reason || ""
+      }
+    );
+
+  }
+
+  const target = resolveXPLogTarget(actor, entry);
+
+  if (entry.type === "refund") {
+
+    return game.i18n.format(
+      "SDP.XPLog.Refund",
+      {
+        target,
+        old: entry.old ?? "",
+        value: entry.value ?? "",
+        amount: entry.amount,
+        spent,
+        total,
+        reason: entry.reason || ""
+      }
+    );
+
+  }
+
+  return game.i18n.format(
+    "SDP.XPLog.Spend",
+    {
+      target,
+      old: entry.old ?? "",
+      value: entry.value ?? "",
+      amount: entry.amount,
+      spent,
+      total,
+      reason: entry.reason || ""
+    }
+  );
+
+}
+
+export function formatXPLog(actor, log = []) {
+
+  if (!Array.isArray(log)) return [];
+
+  return log.map(entry => ({
+    label: formatXPLogEntry(actor, entry)
+  }));
+
+}
 
 export function getCost(type, value) {
 
@@ -92,12 +207,13 @@ export function getAttributes(actor) {
 export function getXPData(actor) {
 
   const xp = actor.system.details?.experience ?? {};
+  const rawLog = Array.isArray(xp.log) ? xp.log : [];
 
   return {
     total: xp.total ?? 0,
     spent: xp.spent ?? 0,
     available: (xp.total ?? 0) - (xp.spent ?? 0),
-    log: Array.isArray(xp.log) ? xp.log : []
+    log: formatXPLog(actor, rawLog)
   };
 
 }

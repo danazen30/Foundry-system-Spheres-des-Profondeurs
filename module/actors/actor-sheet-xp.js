@@ -45,7 +45,8 @@ export function registerXPListeners(sheet, root) {
       await sheet._addXPLog({
         type: "spend",
         amount: cost,
-        target: item.name,
+        targetType: "skill",
+        targetRef: item.id,
         old: current,
         value: current + 1
       });
@@ -67,7 +68,7 @@ export function registerXPListeners(sheet, root) {
 
       const newValue = current - 1;
 
-      const cost = getCost("attribute", current);
+      const cost = getCost("skill", newValue);
 
       const xp = actor.system.details.experience;
 
@@ -83,7 +84,8 @@ export function registerXPListeners(sheet, root) {
       await sheet._addXPLog({
         type: "refund",
         amount: cost,
-        target: item.name,
+        targetType: "skill",
+        targetRef: item.id,
         old: current,
         value: newValue
       });
@@ -105,7 +107,7 @@ export function registerXPListeners(sheet, root) {
       const current =
         actor.system.attributes[key].advances || 0;
 
-      const cost = getCost("skill", current);
+      const cost = getCost("attribute", current);
 
       const xp = actor.system.details.experience;
       const available = xp.total - xp.spent;
@@ -130,9 +132,8 @@ export function registerXPListeners(sheet, root) {
       await sheet._addXPLog({
         type: "spend",
         amount: cost,
-        target: game.i18n.localize(
-  CONFIG.SDP.ATTRIBUTE_LABELS[key]
-),
+        targetType: "attribute",
+        targetRef: key,
         old: current,
         value: current + 1
       });
@@ -168,9 +169,8 @@ export function registerXPListeners(sheet, root) {
       await sheet._addXPLog({
         type: "refund",
         amount: cost,
-        target: game.i18n.localize(
-  CONFIG.SDP.ATTRIBUTE_LABELS[key]
-),
+        targetType: "attribute",
+        targetRef: key,
         old: current,
         value: newValue
       });
@@ -230,7 +230,8 @@ export function registerXPListeners(sheet, root) {
       await sheet._addXPLog({
         type: "spend",
         amount: cost,
-        target: item.name,
+        targetType: "talent",
+        targetRef: item.id,
         old: current,
         value: current + 1
       });
@@ -268,7 +269,8 @@ export function registerXPListeners(sheet, root) {
       await sheet._addXPLog({
         type: "refund",
         amount: cost,
-        target: item.name,
+        targetType: "talent",
+        targetRef: item.id,
         old: current,
         value: newValue
       });
@@ -376,7 +378,11 @@ export function registerXPListeners(sheet, root) {
 
                 amount: Math.abs(diff),
 
-                target: type.toUpperCase(),
+                targetType: "manual",
+                targetRef:
+                  type === "total"
+                    ? "SDP.Total"
+                    : "SDP.Spent",
 
                 old: oldValue,
 
@@ -433,7 +439,11 @@ export function registerXPListeners(sheet, root) {
 
     const cost = getCost("skill", current);
 
-    el.title = `Cost: ${cost} XP`;
+    el.title =
+  game.i18n.format(
+    "SDP.XPCost",
+    { cost }
+  );
 
   });
 
@@ -445,7 +455,11 @@ export function registerXPListeners(sheet, root) {
 
     const cost = getTalentCost(current);
 
-    el.title = `Cost: ${cost} XP`;
+    el.title =
+  game.i18n.format(
+    "SDP.XPCost",
+    { cost }
+  );
 
   });
 

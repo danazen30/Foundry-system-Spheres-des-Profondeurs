@@ -25,6 +25,8 @@ import {
   findActorItemByRef,
   getActorItemDisplayName,
   getLocalizedItemDescription,
+  localizeCareerGroupRef,
+  localizeStanding,
   matchesItemRef,
   parseKeyList,
   resolveItemRef,
@@ -504,6 +506,25 @@ editors.sharedNpcNotes =
     { async: true }
   );
 
+const details =
+  this.document.system.details ?? {};
+
+const statusDisplay = {
+  career: currentCareer
+    ? getActorItemDisplayName(currentCareer)
+    : (details.career?.value || ""),
+  careerGroup: localizeCareerGroupRef(
+    details.careerGroup?.value
+      || currentCareer?.system?.careerGroup
+      || ""
+  ),
+  standing: localizeStanding(
+    details.standing?.value
+      || currentCareer?.system?.standing
+      || ""
+  )
+};
+
   console.log(
   "WEAPONS",
   meleeWeapons,
@@ -557,6 +578,7 @@ return {
   sharedJournalPage,
   sharedNpcNotes,
   editors,
+  statusDisplay,
 };
   }
 
@@ -702,61 +724,18 @@ async _addXPLog(entry) {
 
   const log = Array.isArray(xp.log) ? [...xp.log] : [];
 
-  const total = xp.total || 0;
-  const spent = (xp.spent || 0);
-
-  let label = "";
-
-  if (entry.type === "spend") {
-
-  label = game.i18n.format(
-    "SDP.XPLog.Spend",
-    {
-      target: entry.target,
-      old: entry.old,
-      value: entry.value,
-      amount: entry.amount,
-      spent,
-      total,
-      reason: entry.reason || ""
-    }
-  );
-
-}
-
-else if (entry.type === "refund") {
-
-  label = game.i18n.format(
-    "SDP.XPLog.Refund",
-    {
-      target: entry.target,
-      old: entry.old,
-      value: entry.value,
-      amount: entry.amount,
-      spent,
-      total,
-      reason: entry.reason || ""
-    }
-  );
-
-}
-
-else if (entry.type === "gain") {
-
-  label = game.i18n.format(
-    "SDP.XPLog.Gain",
-    {
-      amount: entry.amount,
-      spent,
-      total,
-      reason: entry.reason || ""
-    }
-  );
-
-}
-
   log.unshift({
-    label
+    type: entry.type,
+    amount: entry.amount,
+    old: entry.old ?? "",
+    value: entry.value ?? "",
+    reason: entry.reason || "",
+    spent: xp.spent || 0,
+    total: xp.total || 0,
+    target: entry.target,
+    targetType: entry.targetType,
+    targetRef: entry.targetRef,
+    targetSuffix: entry.targetSuffix
   });
 
   await this.document.update({

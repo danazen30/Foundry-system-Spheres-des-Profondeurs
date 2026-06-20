@@ -1,5 +1,8 @@
 {
 "SDP.SystemDescription": "Sphères en formation",
+  "TYPES.Actor.character": "Personnage",
+  "TYPES.Actor.npc": "PNJ",
+  "TYPES.Actor.creature": "Créature",
   "TYPES.Item.skill": "Compétence",
 "TYPES.Item.talent": "Talent",
 "TYPES.Item.weapon": "Arme",

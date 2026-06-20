@@ -302,12 +302,9 @@ function registerCareer(sheet, root) {
         await sheet._addXPLog({
           type: "spend",
           amount: cost,
-          target:
-  `${item.name} (${
-    game.i18n.localize(
-      "SDP.CareerCompleted"
-    )
-  })`,
+          targetType: "career",
+          targetRef: item.id,
+          targetSuffix: "SDP.CareerCompleted",
           old: "",
           value: ""
         });
@@ -328,12 +325,9 @@ function registerCareer(sheet, root) {
         await sheet._addXPLog({
           type: "refund",
           amount: cost,
-          target:
-  `${item.name} (${
-    game.i18n.localize(
-      "SDP.CareerUncompleted"
-    )
-  })`,
+          targetType: "career",
+          targetRef: item.id,
+          targetSuffix: "SDP.CareerUncompleted",
           old: "",
           value: ""
         });

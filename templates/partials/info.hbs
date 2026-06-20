@@ -75,7 +75,7 @@
       <div class="resource-row">
         <label>{{localize "SDP.Species"}}</label>
         {{#if species}}
-          <span>{{species.name}}</span>
+          <span>{{species.displayName}}</span>
         {{else}}
           <span>{{localize "SDP.None"}}</span>
         {{/if}}
@@ -84,7 +84,7 @@
       <div class="resource-row">
         <label>{{localize "SDP.Sign"}}</label>
         {{#if sign}}
-          <span>{{sign.name}}</span>
+          <span>{{sign.displayName}}</span>
         {{else}}
           <span>{{localize "SDP.NoSign"}}</span>
         {{/if}}
@@ -107,17 +107,41 @@
 
       <div class="resource-row">
         <label>{{localize "SDP.Career"}}</label>
-        <textarea name="system.details.career.value">{{system.details.career.value}}</textarea>
+        <input
+          type="text"
+          class="status-display-input"
+          readonly
+          value="{{statusDisplay.career}}">
+        <input
+          type="hidden"
+          name="system.details.career.value"
+          value="{{system.details.career.value}}">
       </div>
 
       <div class="resource-row">
-  <label>{{localize "SDP.CareerGroup"}}</label>
-  <textarea name="system.details.careerGroup.value">{{system.details.careerGroup.value}}</textarea>
-</div>
+        <label>{{localize "SDP.CareerGroup"}}</label>
+        <input
+          type="text"
+          class="status-display-input"
+          readonly
+          value="{{statusDisplay.careerGroup}}">
+        <input
+          type="hidden"
+          name="system.details.careerGroup.value"
+          value="{{system.details.careerGroup.value}}">
+      </div>
 
       <div class="resource-row">
         <label>{{localize "SDP.Standing"}}</label>
-        <input type="text" name="system.details.standing.value" value="{{system.details.standing.value}}">
+        <input
+          type="text"
+          class="status-display-input"
+          readonly
+          value="{{statusDisplay.standing}}">
+        <input
+          type="hidden"
+          name="system.details.standing.value"
+          value="{{system.details.standing.value}}">
       </div>
 
     </div>
