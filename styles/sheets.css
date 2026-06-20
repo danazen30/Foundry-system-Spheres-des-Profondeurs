@@ -915,8 +915,8 @@ input.movement-value {
 
 .character-portrait {
   width: 100%;
-  aspect-ratio: 1 / 1; /* carré propre */
-  
+  aspect-ratio: 1 / 1;
+
   margin-bottom: 10px;
 
   border: 1px solid #444;
@@ -925,18 +925,17 @@ input.movement-value {
   overflow: hidden;
   background: #111;
 
-  flex-shrink: 0; /* 🔥 évite qu’il se fasse écraser */
+  flex-shrink: 0;
 }
 
 .character-portrait img {
   width: 100%;
   height: 100%;
 
-  object-fit: cover; /* 🔥 important pour éviter déformation */
-  display: block;
-}
+  object-fit: contain;
+  object-position: center center;
 
-.character-portrait img {
+  display: block;
   cursor: pointer;
   transition: 0.2s;
 }
@@ -3252,7 +3251,8 @@ text-align:center;
   width: 100%;
   height: 100%;
 
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center center;
 }
 
 /* center */
@@ -3391,7 +3391,8 @@ text-align:center;
   width: 100%;
   height: 100%;
 
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center center;
 
   display: block;
 }

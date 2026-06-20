@@ -138,6 +138,13 @@
         {{/if}}
       </div>
 
+      {{#if item.system.durability.max}}
+      <div>
+        <strong>{{localize "SDP.Durability"}}:</strong>
+        {{item.system.durability.value}} / {{item.system.durability.max}}
+      </div>
+      {{/if}}
+
       <div class="traits-inline">
         <strong>{{localize "SDP.Traits"}}:</strong>
 
@@ -326,6 +333,13 @@
         {{/if}}
       </div>
 
+      {{#if item.system.durability.max}}
+      <div>
+        <strong>{{localize "SDP.Durability"}}:</strong>
+        {{item.system.durability.value}} / {{item.system.durability.max}}
+      </div>
+      {{/if}}
+
       <div class="traits-inline">
         <strong>{{localize "SDP.Traits"}}:</strong>
 
@@ -494,6 +508,13 @@
   <td colspan="100%">
 
     <div class="armor-details-content">
+
+      {{#if item.system.durability.max}}
+      <div class="armor-durability">
+        <strong>{{localize "SDP.Durability"}}:</strong>
+        {{item.system.durability.value}} / {{item.system.durability.max}}
+      </div>
+      {{/if}}
 
       <!-- TRAITS ARMOR -->
       <div class="traits-inline">
