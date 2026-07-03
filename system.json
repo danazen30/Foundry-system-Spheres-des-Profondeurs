@@ -42,7 +42,7 @@
   }
 ],
 
-  "initiative": "1d20 + @attributes.initiative.value + (@custom.combatInitiativeBonus ?? 0)",
+  "initiative": "1d20 + @custom.reflexesValue + @custom.combatInitiativeBonus",
 
   "packs": [
 

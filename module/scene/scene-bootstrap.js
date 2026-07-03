@@ -227,7 +227,7 @@ async function ensureAllSceneMaps(pack) {
 }
 
 /**
- * Importe les scènes si besoin, corrige la map, affiche Elysium (MJ, 1× par monde).
+ * Importe les scènes si besoin, corrige les maps, affiche Elysium au premier lancement MJ uniquement.
  */
 export async function bootstrapSdpStartScene() {
 
@@ -264,14 +264,16 @@ export async function bootstrapSdpStartScene() {
 
   await ensureAllSceneMaps(pack);
 
+  await ensureAllSceneMaps(pack);
+
+  if (startViewed) {
+    return;
+  }
+
   const startScene = game.scenes.getName(START_SCENE);
 
   if (!startScene) {
     console.warn(`[sdp] Scène "${START_SCENE}" absente du monde.`);
-    return;
-  }
-
-  if (startViewed && canvas.scene?.id === startScene.id) {
     return;
   }
 

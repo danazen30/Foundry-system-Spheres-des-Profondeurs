@@ -1,6 +1,7 @@
 import { SdpRoll } from "../rolls/roll.js";
 import { rollHitLocation, getHitLocationProfile} from "./hit-location.js";
 import { resolveSdpFormula } from "../system/formula-utils.js";
+import { getActorItemDisplayName } from "../system/item-localization.js";
 
 export class SdpSpell {
 
@@ -225,7 +226,7 @@ const talentsHTML =
         <ul>
           ${selectedTalentObjects.map(t => `
             <li>
-              ${t.name}
+              ${getActorItemDisplayName(t)}
               ${t.system.advances
                 ? `(${t.system.advances})`
                 : ""}

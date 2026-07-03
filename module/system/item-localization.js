@@ -276,12 +276,19 @@ export function getActorItemDisplayName(item) {
       ? item.system.key.trim()
       : "";
 
-  if (systemKey && type) {
+  const flagKey =
+    typeof item.flags?.sdp?.key === "string"
+      ? item.flags.sdp.key.trim()
+      : "";
+
+  const itemKey = systemKey || flagKey;
+
+  if (itemKey && type) {
 
     const localized =
       getLocalizedItemName(
         type,
-        systemKey,
+        itemKey,
         ""
       );
 
@@ -293,7 +300,7 @@ export function getActorItemDisplayName(item) {
 
   const key =
     normalizeItemRef(
-      systemKey
+      itemKey
       || item.name
       || ""
     );

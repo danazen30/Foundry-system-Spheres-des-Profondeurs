@@ -670,9 +670,6 @@ const crit = SdpRoll.getCritical(
   }
 );
 
-// 🔥 melee : désactive uniquement les crit success natifs
-crit.success = false;
-
 // 🔥 HARD OVERRIDE
 if (newRoll === 100) {
   crit.success = false;
@@ -722,10 +719,9 @@ const traitsData = traits.map(t => ({
 const isImpaling = traits.some(t => t.key === "impaling");
 const isRound = newRoll % 10 === 0;
 
-// ⚠️ IMPORTANT → condition de succès melee
 const successCheck = newRoll <= (baseAttack * 10);
 
-if (isImpaling && isRound && successCheck) {
+if (isImpaling && isRound && successCheck && !crit.failure) {
   crit.success = true;
 }
 

@@ -97,6 +97,7 @@ system.custom.manaBonus ??= 0;
     system.custom.parryBonus ??= 0;
     system.custom.evasionBonus ??= 0;
     system.custom.combatInitiativeBonus ??= 0;
+    system.custom.reflexesValue ??= 0;
     system.custom.injurySeverityBonus ??= 0;
     system.custom.toughnessHealthMultiplier ??= 0;
     system.custom.encumbranceStatMultiplier ??= 0;
@@ -839,6 +840,12 @@ const extraMod =
     Number(skill.system.modifier || 0) +
     extraMod;
 }
+
+    const reflexes = getSkill("reflexes");
+    system.custom.reflexesValue =
+      reflexes?.system.value ??
+      system.attributes.initiative?.value ??
+      0;
 
     // =====================
     // WEAPON DAMAGE

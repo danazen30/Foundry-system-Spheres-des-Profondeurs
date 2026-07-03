@@ -10,6 +10,7 @@ import {
 import {
   getBestActorSkillForWeapon
 } from "../system/weapon-skill-utils.js";
+import { getActorItemDisplayName } from "../system/item-localization.js";
 
 export class SdpAttack {
 
@@ -613,7 +614,7 @@ const talentsHTML =
         <ul>
           ${selectedTalentObjects.map(t => `
             <li>
-              ${t.name}
+              ${getActorItemDisplayName(t)}
               ${t.system.advances
                 ? `(${t.system.advances})`
                 : ""}
@@ -894,9 +895,6 @@ const crit = SdpRoll.getCritical(
   }
 );
 
-// 🔥 melee : désactive uniquement les crit success natifs
-crit.success = false;
-
 // =========================
 // FLAWED ITEM TRAIT (BREAK)
 // =========================
@@ -948,7 +946,7 @@ const isRound = result % 10 === 0;
 
 const successCheck = result <= (baseAttack * 10);
 
-if (isImpaling && isRound && successCheck) {
+if (isImpaling && isRound && successCheck && !crit.failure) {
   crit.success = true;
 }
 
@@ -1049,7 +1047,7 @@ const talentsHTML =
         <ul>
           ${selectedTalentObjects.map(t => `
             <li>
-              ${t.name}
+              ${getActorItemDisplayName(t)}
               ${t.system.advances
                 ? `(${t.system.advances})`
                 : ""}

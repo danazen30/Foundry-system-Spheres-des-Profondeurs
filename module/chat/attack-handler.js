@@ -276,7 +276,8 @@ console.log("SDP | Defense decision (FINAL)", {
 const selected = forcedChoice;
 
 const defense = selected === "parry" ? parry : evasion;
-const result = attackScore > defense ? "HIT" : "MISS";
+const isCriticalSuccess = critical === "true";
+const result = isCriticalSuccess || attackScore > defense ? "HIT" : "MISS";
 
 // ======================
 // CREATE DEFENSE CARD
@@ -436,7 +437,8 @@ if (hasEntangling) {
 }
     const evasion = target.system.derived.evasion.value;
 const defense = selected === "parry" ? parry : evasion;
-const result = attackScore > defense ? "HIT" : "MISS";
+const isCriticalSuccess = card.dataset.critical === "true";
+const result = isCriticalSuccess || attackScore > defense ? "HIT" : "MISS";
 
     console.log("SDP | Defense selected", { selected, defense });
 

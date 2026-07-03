@@ -12,7 +12,7 @@
  *   flags.sdp.view  = "intro" | "tiers" | "full" (défaut : full)
  *
  *   intro → titre, épigraphes, description, espèces, classe, tableau de progression
- *   tiers → paliers I, II, III… uniquement
+ *   tiers → paliers I, II, III… (numérotation via system.level sur chaque item carrière)
  *
  * Configuration d'une page lore (description) :
  *   flags.sdp.type  = "lore"
@@ -40,6 +40,18 @@ const TALENTS_PACK = "sdp.talents";
 const TIER_ROMAN = [
   "I", "II", "III", "IV", "V", "VI", "VII", "VIII"
 ];
+
+function getCareerTierRoman(level, fallbackIndex = 0) {
+
+  const numericLevel = Number(level);
+  const tierIndex =
+    Number.isFinite(numericLevel) && numericLevel >= 1
+      ? numericLevel - 1
+      : fallbackIndex;
+
+  return TIER_ROMAN[tierIndex] ?? String(tierIndex + 1);
+
+}
 
 const CAREER_CHARACTERISTICS = [
   "meleeAbility",
@@ -622,12 +634,12 @@ function getCharacteristicAbbr(key) {
 
 }
 
-function buildProgressionTable(tierCharacteristicKeys) {
+function buildProgressionTable(tierRows) {
 
-  if (!tierCharacteristicKeys.length) return null;
+  if (!tierRows.length) return null;
 
-  const hasAny = tierCharacteristicKeys.some(
-    keys => keys.length
+  const hasAny = tierRows.some(
+    row => row.characteristicKeys?.length
   );
 
   if (!hasAny) return null;
@@ -637,19 +649,23 @@ function buildProgressionTable(tierCharacteristicKeys) {
       key,
       abbr: getCharacteristicAbbr(key)
     })),
-    rows: tierCharacteristicKeys.map((characteristicKeys, tierIndex) => ({
-      roman: TIER_ROMAN[tierIndex] ?? String(tierIndex + 1),
-      cells: CAREER_CHARACTERISTICS.map(charKey =>
-        characteristicKeys.includes(charKey)
-          ? (TIER_ROMAN[tierIndex] ?? String(tierIndex + 1))
-          : ""
-      )
-    }))
+    rows: tierRows.map((row, tierIndex) => {
+      const roman = getCareerTierRoman(row.level, tierIndex);
+
+      return {
+        roman,
+        cells: CAREER_CHARACTERISTICS.map(charKey =>
+          row.characteristicKeys.includes(charKey)
+            ? roman
+            : ""
+        )
+      };
+    })
   };
 
 }
 
-async function prepareTierContext(careerItem, index) {
+async function prepareTierContext(careerItem, fallbackIndex = 0) {
 
   const key =
     careerItem.system?.key?.trim()
@@ -663,7 +679,7 @@ async function prepareTierContext(careerItem, index) {
     );
 
   const roman =
-    TIER_ROMAN[index] ?? String(index + 1);
+    getCareerTierRoman(careerItem.system?.level, fallbackIndex);
 
   const system = careerItem.system ?? {};
 
@@ -714,7 +730,7 @@ export async function prepareCareerJournalContext(page) {
   const showTiers = view === "full" || view === "tiers";
 
   const tiers = [];
-  const tierCharacteristicKeys = [];
+  const tierProgressionRows = [];
 
   for (const tierKey of tierKeys) {
 
@@ -728,9 +744,11 @@ export async function prepareCareerJournalContext(page) {
     if (!careerItem) continue;
 
     if (showIntro) {
-      tierCharacteristicKeys.push(
-        parseKeyList(careerItem.system?.characteristics)
-      );
+      tierProgressionRows.push({
+        level: careerItem.system?.level,
+        characteristicKeys:
+          parseKeyList(careerItem.system?.characteristics)
+      });
     }
 
     if (showTiers) {
@@ -746,7 +764,7 @@ export async function prepareCareerJournalContext(page) {
 
   const progressionTable =
     showIntro
-      ? buildProgressionTable(tierCharacteristicKeys)
+      ? buildProgressionTable(tierProgressionRows)
       : null;
 
   const title =
