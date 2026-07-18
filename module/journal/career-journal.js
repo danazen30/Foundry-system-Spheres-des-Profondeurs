@@ -9,10 +9,13 @@
  *   flags.sdp.type  = "career"
  *   flags.sdp.key   = "merchant"         → clés SDP.Journal.Career.merchant.*
  *   flags.sdp.tiers = ["trader", ...]    → clés d'items carrière (compendium), dans l'ordre
+ *   flags.sdp.branchKey = "roadpatrol"   → branche optionnelle (nom de page via i18n)
  *   flags.sdp.view  = "intro" | "tiers" | "full" (défaut : full)
  *
  *   intro → titre, épigraphes, description, espèces, classe, tableau de progression
  *   tiers → paliers I, II, III… (numérotation via system.level sur chaque item carrière)
+ *
+ *   Espèces affichées : system.species du palier III (branche), sinon palier I, sinon i18n branche/journal.
  *
  * Configuration d'une page lore (description) :
  *   flags.sdp.type  = "lore"
@@ -193,11 +196,41 @@ export function getLocalizedLorePageDisplayName(page) {
 
 }
 
+function getCareerBranchKey(page) {
+
+  const branchKey =
+    page.getFlag?.("sdp", "branchKey")
+    ?? page.flags?.sdp?.branchKey;
+
+  return typeof branchKey === "string"
+    ? branchKey.trim()
+    : "";
+
+}
+
 export function getLocalizedCareerPageDisplayName(page) {
 
   if (!isCareerJournalPage(page)) return "";
 
   const journalKey = getCareerJournalKey(page);
+  const branchKey = getCareerBranchKey(page);
+
+  if (branchKey) {
+
+    const branchPageNameKey =
+      `SDP.Journal.Career.${journalKey}.Branch.${branchKey}.PageName`;
+
+    if (game.i18n.has(branchPageNameKey)) {
+      return game.i18n.localize(branchPageNameKey);
+    }
+
+  }
+
+  const pageName =
+    localizeJournalField(journalKey, "PageName");
+
+  if (pageName) return pageName;
+
   const groupRef =
     localizeJournalField(journalKey, "CareerGroup");
 
@@ -543,6 +576,59 @@ async function getPrimaryCareerItem(tierKeys) {
 
 }
 
+/**
+ * Item carrière d'un palier donné (ex. III pour les espèces de branche).
+ */
+async function getTierCareerItem(tierKeys, targetLevel = 3) {
+
+  const tierItems = [];
+
+  for (const tierKey of tierKeys) {
+
+    const careerItem =
+      await findCompendiumItemByRef(
+        CAREER_PACK,
+        "career",
+        tierKey
+      );
+
+    if (careerItem) {
+      tierItems.push(careerItem);
+    }
+
+  }
+
+  const byLevel = tierItems.find(item =>
+    Number(item.system?.level) === targetLevel
+  );
+
+  if (byLevel) return byLevel;
+
+  return tierItems[targetLevel - 1] ?? null;
+
+}
+
+function localizeCareerJournalField(
+  journalKey,
+  field,
+  branchKey = ""
+) {
+
+  if (branchKey) {
+
+    const branchTranslationKey =
+      `SDP.Journal.Career.${journalKey}.Branch.${branchKey}.${field}`;
+
+    if (game.i18n.has(branchTranslationKey)) {
+      return game.i18n.localize(branchTranslationKey);
+    }
+
+  }
+
+  return localizeJournalField(journalKey, field);
+
+}
+
 function localizeJournalField(journalKey, field) {
 
   const translationKey =
@@ -778,11 +864,21 @@ export async function prepareCareerJournalContext(page) {
   const primaryCareer =
     await getPrimaryCareerItem(tierKeys);
 
+  const branchKey = getCareerBranchKey(page);
+
+  const speciesCareer =
+    await getTierCareerItem(tierKeys, 3)
+    ?? primaryCareer;
+
   const speciesFromItem =
-    primaryCareer?.system?.species;
+    speciesCareer?.system?.species;
 
   const speciesFromLang =
-    localizeJournalField(journalKey, "Species");
+    localizeCareerJournalField(
+      journalKey,
+      "Species",
+      branchKey
+    );
 
   const speciesSource =
     speciesFromItem || speciesFromLang;
@@ -1297,6 +1393,7 @@ export async function configureCareerJournalPage(
   {
     journalKey = "merchant",
     tiers = ["trader"],
+    branchKey = null,
     view = "full"
   } = {}
 ) {
@@ -1309,6 +1406,12 @@ export async function configureCareerJournalPage(
   await page.setFlag("sdp", "key", journalKey);
   await page.setFlag("sdp", "tiers", tiers);
   await page.setFlag("sdp", "view", view);
+
+  if (branchKey) {
+    await page.setFlag("sdp", "branchKey", branchKey);
+  } else {
+    await page.unsetFlag("sdp", "branchKey");
+  }
 
   await refreshSdpJournalPageCache(page);
 

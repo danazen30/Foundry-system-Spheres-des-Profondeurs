@@ -1,7 +1,7 @@
 /**
  * Résout une formule SDP (SB, S, SB x 3, etc.) pour un acteur.
  */
-export function resolveSdpFormula(value, actor) {
+export function resolveSdpFormula(value, actor, options = {}) {
 
   if (value === null || value === undefined || value === "") {
     return 0;
@@ -28,9 +28,10 @@ export function resolveSdpFormula(value, actor) {
 
   let str = trimmed.toUpperCase();
   const attrs = actor.system?.attributes ?? {};
+  const overrides = options.overrides ?? {};
 
   const map = {
-    SB: attrs.strength?.bonus ?? 0,
+    SB: overrides.SB ?? attrs.strength?.bonus ?? 0,
     S: attrs.strength?.value ?? 0,
     TB: attrs.toughness?.bonus ?? 0,
     T: attrs.toughness?.value ?? 0,
@@ -71,6 +72,68 @@ export function resolveSdpFormula(value, actor) {
     return 0;
   }
 
+}
+
+export function hasWeaponDamageStatBonus(value) {
+  return /\b(SB|WPB(\s*\/\s*2)?)\b/i.test(String(value ?? ""));
+}
+
+export function parseWeaponDamageFormula(value, actor, { useFinesse = false } = {}) {
+
+  if (value === null || value === undefined || value === "") {
+    return { statBonus: 0, flatBase: 0 };
+  }
+
+  if (!actor) {
+    return { statBonus: 0, flatBase: 0 };
+  }
+
+  let str = String(value).trim();
+
+  if (!str) {
+    return { statBonus: 0, flatBase: 0 };
+  }
+
+  const attrs = actor.system?.attributes ?? {};
+  const SB = useFinesse
+    ? (attrs.dexterity?.bonus ?? 0)
+    : (attrs.strength?.bonus ?? 0);
+  const WPB = attrs.willpower?.bonus ?? 0;
+  const halfWPB = Math.floor(WPB / 2);
+
+  let statBonus = 0;
+
+  const wpbHalfRegex = /\bWPB\s*\/\s*2\b/gi;
+  const wpbHalfCount = (str.match(wpbHalfRegex) || []).length;
+  statBonus += wpbHalfCount * halfWPB;
+  str = str.replace(wpbHalfRegex, "");
+
+  const wpbRegex = /\bWPB\b/gi;
+  const wpbCount = (str.match(wpbRegex) || []).length;
+  statBonus += wpbCount * WPB;
+  str = str.replace(wpbRegex, "");
+
+  const sbRegex = /\bSB\b/gi;
+  const sbCount = (str.match(sbRegex) || []).length;
+  statBonus += sbCount * SB;
+  str = str.replace(sbRegex, "");
+
+  str = str
+    .replace(/\+/g, " ")
+    .trim()
+    .split(/\s+/)
+    .filter(p => p)
+    .join(" + ");
+
+  const flatBase = str ? resolveSdpFormula(str, actor) : 0;
+
+  return { statBonus, flatBase };
+
+}
+
+export function resolveWeaponDamageBase(value, actor, options = {}) {
+  const { statBonus, flatBase } = parseWeaponDamageFormula(value, actor, options);
+  return statBonus + flatBase;
 }
 
 export function resolveWeaponRange(weapon, actor) {

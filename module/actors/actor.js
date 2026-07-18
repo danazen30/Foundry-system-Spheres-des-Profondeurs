@@ -5,6 +5,10 @@ import {
   findActorSkillForRef,
   parseWeaponSkillRefs
 } from "../system/weapon-skill-utils.js";
+import {
+  hasWeaponDamageStatBonus,
+  resolveWeaponDamageBase
+} from "../system/formula-utils.js";
 
 export class SdpActor extends Actor {
 
@@ -851,26 +855,14 @@ const extraMod =
     // WEAPON DAMAGE
     // =====================
 
-    const SB_damage = system.attributes.strength.bonus;
-
     const weapons = this.items.filter(i => i.type === "weapon");
 
     for (let weapon of weapons) {
 
-      weapon.system.usesSB = weapon.system.damage?.includes("SB");
+      const formula = weapon.system.damage || "0";
 
-      let formula = weapon.system.damage || "0";
-      formula = formula.replace("SB", SB_damage);
-
-      let value = 0;
-
-      try {
-        value = Roll.safeEval(formula);
-      } catch {
-        value = 0;
-      }
-
-      weapon.system.finalDamage = value;
+      weapon.system.usesSB = hasWeaponDamageStatBonus(formula);
+      weapon.system.finalDamage = resolveWeaponDamageBase(formula, this);
     }
 
     // =====================

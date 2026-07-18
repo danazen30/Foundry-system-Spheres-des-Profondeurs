@@ -10,7 +10,7 @@ const MELEE_WEAPON_GROUP_SKILL_KEYS = {
   polearm: "meleepolearm",
   twohanded: "meleetwohanded",
   brawl: "meleebrawl",
-  cavalry: "meleecavalry",
+  cavalry: "meleepolearm",
   fencing: "meleefencing",
   sword: "meleesword",
   axe: "meleeaxe",
@@ -25,7 +25,7 @@ const LEGACY_WEAPON_SKILL_ALIASES = {
 };
 
 const WEAPON_KEY_SKILL_DEFAULTS = {
-  becdecorbin: ["meleecavalry", "meleehammer"],
+  becdecorbin: ["meleepolearm", "meleehammer"],
   warhammer: ["meleehammer"]
 };
 

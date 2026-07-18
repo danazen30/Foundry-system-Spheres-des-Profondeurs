@@ -1156,6 +1156,18 @@ export function refreshSdpUiLocalization() {
 }
 
 /**
+ * Reconstruit l'arbre du compendium après localisation des noms d'index.
+ * Foundry trie à partir de collection.tree, pas directement depuis l'index.
+ */
+function refreshSdpPackDirectoryTree(pack) {
+
+  if (typeof pack?.initializeTree === "function") {
+    pack.initializeTree();
+  }
+
+}
+
+/**
  * Met à jour les noms dans l'index compendium (tri + recherche Foundry).
  */
 export function localizeSdpPackIndex(
@@ -1170,6 +1182,8 @@ export function localizeSdpPackIndex(
     for (const entry of pack.index.values()) {
       applySdpIndexEntryLocalization(entry);
     }
+
+    refreshSdpPackDirectoryTree(pack);
 
     return;
 
@@ -1216,6 +1230,8 @@ export function localizeSdpPackIndex(
       entry.name = localized;
 
     }
+
+    refreshSdpPackDirectoryTree(pack);
 
   }
 

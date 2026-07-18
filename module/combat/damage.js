@@ -1,24 +1,23 @@
 import { SdpSizeEngine } from "../system/size-engine.js";
 import { SdpRoll } from "../rolls/roll.js";
+import {
+  hasWeaponDamageStatBonus,
+  parseWeaponDamageFormula,
+  resolveWeaponDamageBase
+} from "../system/formula-utils.js";
 
 export class SdpDamage {
 
   static getDamageFormula(actor, weapon){
 
-    const SB = actor.system.attributes.strength.bonus;
-
-    let baseFormula = weapon.system.damage || "0";
-
-    baseFormula = baseFormula.replace("SB", SB);
-
+    const base = resolveWeaponDamageBase(weapon.system.damage || "0", actor);
     const dice = weapon.system.damageDice || "";
 
-
     if(dice){
-      return `${baseFormula} + ${dice}`;
+      return `${base} + ${dice}`;
     }
 
-    return baseFormula;
+    return String(base);
 
   }
 
@@ -219,13 +218,6 @@ if (hasInoffensive) {
   });
 }
 
- const SB = actor.system.attributes.strength.bonus;
-const DB = actor.system.attributes.dexterity.bonus;
-
-const statBonus = useFinesse ? DB : SB;
-
-let baseWeapon = 0;
-
 let impactfulTrait = null;
 
 let devastating = false;
@@ -349,20 +341,19 @@ if (Array.isArray(diceFormula)) {
 baseFormula = String(baseFormula).trim();
 diceFormula = String(diceFormula).trim();
 
-let useSB = baseFormula.includes("SB");
+const { statBonus, flatBase } = parseWeaponDamageFormula(
+  baseFormula,
+  actor,
+  { useFinesse }
+);
+
+const useStatBonus = hasWeaponDamageStatBonus(baseFormula);
 
 // =========================
 // BASE WEAPON
 // =========================
 
-let weaponBase = baseFormula
-  .replace("SB", "")
-  .replace("+", "")
-  .trim();
-
-weaponBase = Number(weaponBase) || 0;
-
-baseWeapon = weaponBase;
+let baseWeapon = flatBase;
 
 // =========================
 // AMMO (BASE + DICE)
@@ -396,7 +387,7 @@ const signEffects = actor.getSignEffects();
 let bonus = signEffects.damageBonus || null;
 let signDiceFormula = null;
 
-if (useSB && bonus) {
+if (useStatBonus && bonus) {
 
   if (typeof bonus === "string" && bonus.includes("d")) {
     signDiceFormula = bonus; // 🎯 on garde pour roll séparé
@@ -426,7 +417,7 @@ if (useSB && bonus) {
   // =========================
 let formula = "";
 
-if (useSB) formula += `${statBonus}`;
+if (statBonus) formula += `${statBonus}`;
 if (baseWeapon > 0) formula += (formula ? " + " : "") + baseWeapon;
 if (diceFormula) formula += (formula ? " + " : "") + diceFormula;
 
@@ -545,7 +536,7 @@ weaponDetail.push(
   // TOTAL FINAL
   // =========================
 
-  damage = weaponMax + signTotal + baseWeapon + (useSB ? statBonus : 0) + talentDamageBonus;
+  damage = weaponMax + signTotal + baseWeapon + statBonus + talentDamageBonus;
 
   const damageAfterArmor = Math.max(damage - armor, 0);
 
@@ -563,7 +554,7 @@ weaponDetail.push(
   devastating,
   weaponDetail: weaponDetail.join(" + "),
   baseWeapon,
-  SB: useSB ? statBonus : 0
+  SB: statBonus
 };
 }
 
