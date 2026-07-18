@@ -1043,6 +1043,8 @@ await this.render(false);
   
 _onLevelUp() {
 
+  if (!game.user.isGM) return;
+
   const actor = this.document;
 
   let newLevel;

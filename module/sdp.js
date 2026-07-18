@@ -901,6 +901,35 @@ Hooks.on("preUpdateActor", (document, update) => {
 
   SdpActor.normalizeInitialUpdate(document, update);
 
+  if (game.user.isGM || document.type !== "character") return;
+
+  // Players cannot change character size
+  if (update.system?.details?.size?.value !== undefined) {
+    delete update.system.details.size.value;
+    if (!Object.keys(update.system.details.size).length) {
+      delete update.system.details.size;
+    }
+    if (!Object.keys(update.system.details).length) {
+      delete update.system.details;
+    }
+  }
+
+  // Players cannot change attribute modifiers manually
+  const attrs = update.system?.attributes;
+  if (attrs) {
+    for (const key of Object.keys(attrs)) {
+      if (attrs[key]?.modifier !== undefined) {
+        delete attrs[key].modifier;
+      }
+      if (attrs[key] && !Object.keys(attrs[key]).length) {
+        delete attrs[key];
+      }
+    }
+    if (!Object.keys(attrs).length) {
+      delete update.system.attributes;
+    }
+  }
+
 });
 
 Hooks.on("updateActor", async (actor, changes) => {

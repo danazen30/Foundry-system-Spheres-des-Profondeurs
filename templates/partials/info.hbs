@@ -46,7 +46,9 @@
 <div class="resource-row">
   <label>{{localize "SDP.Size"}}</label>
 
-  <select name="system.details.size.value">
+  <select
+    name="system.details.size.value"
+    {{#unless user.isGM}}disabled{{/unless}}>
 
     {{#each config.sizes as |size key|}}
 
@@ -329,7 +331,7 @@
 
   {{#if canLevelUp}}
     <div class="level-up">
-      <button data-action="levelUp">
+      <button data-action="levelUp" {{#unless user.isGM}}disabled{{/unless}}>
         {{localize "SDP.LevelUpAvailable"}} → {{availableLevel}}
       </button>
     </div>

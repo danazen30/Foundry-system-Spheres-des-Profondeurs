@@ -64,7 +64,8 @@
               <input type="number"
                      value="{{item.system.advances}}"
                      data-action="updateSkillAdv"
-                     data-item-id="{{item.id}}">
+                     data-item-id="{{item.id}}"
+                     {{#unless @root.user.isGM}}readonly{{/unless}}>
             </td>
 
             <!-- VALUE -->
@@ -157,7 +158,8 @@
               <input type="number"
                      value="{{item.system.advances}}"
                      data-action="updateSkillAdv"
-                     data-item-id="{{item.id}}">
+                     data-item-id="{{item.id}}"
+                     {{#unless @root.user.isGM}}readonly{{/unless}}>
             </td>
 
             <!-- VALUE -->

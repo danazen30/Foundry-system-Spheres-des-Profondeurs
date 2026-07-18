@@ -357,9 +357,11 @@ export function registerTalentRows(sheet, root) {
 
   root.querySelectorAll(".talent-row").forEach(row => {
 
-    row.addEventListener("click", (event) => {
+    const nameEl = row.querySelector(".talent-name");
 
-      if (event.target.closest("button, input")) return;
+    nameEl?.addEventListener("click", (event) => {
+
+      event.stopPropagation();
 
       const itemId = row.dataset.itemId;
 

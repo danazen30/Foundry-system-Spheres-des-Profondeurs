@@ -181,6 +181,8 @@ function registerAttributeModifiers(sheet, root) {
 
     el.addEventListener("change", async (event) => {
 
+      if (!game.user.isGM) return;
+
       const input = event.currentTarget;
 
       const key = input.dataset.key;

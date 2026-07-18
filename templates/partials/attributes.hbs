@@ -117,7 +117,8 @@
             type="number"
             class="attr-modifier-input"
             data-key="{{attr.key}}"
-            value="{{attr.modifier}}">
+            value="{{attr.modifier}}"
+            {{#unless @root.user.isGM}}readonly{{/unless}}>
 
         </td>
 

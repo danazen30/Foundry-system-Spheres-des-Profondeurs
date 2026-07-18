@@ -470,6 +470,7 @@ export function registerXPListeners(sheet, root) {
   root.querySelectorAll('[data-action="levelUp"]').forEach(el => {
 
     el.addEventListener("click", () => {
+      if (!game.user.isGM) return;
       sheet._onLevelUp();
     });
 

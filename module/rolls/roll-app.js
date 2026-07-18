@@ -79,6 +79,7 @@ async _prepareContext() {
 
   const talents = this.actor.items
     .filter(i => i.type === "talent")
+    .filter(i => i.system.showInRollDialog !== false)
     .map(item => ({
       id: item.id,
       name: getActorItemDisplayName(item),

@@ -1328,10 +1328,11 @@ input.movement-value {
 
 .talent-name {
   flex: 1;
+  cursor: pointer;
 }
 
 .talent-row {
-  cursor: pointer;
+  cursor: default;
 }
 
 .talent-description td {
