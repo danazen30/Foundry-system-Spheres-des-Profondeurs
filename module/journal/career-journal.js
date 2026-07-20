@@ -1272,6 +1272,7 @@ function scheduleCareerJournalInjection(app, element, page) {
       findJournalPageInjectRoot(root, page);
 
     applyCareerJournalHtml(content, page, html);
+    syncSdpJournalPagesColumn(app, root);
 
   };
 
@@ -1616,7 +1617,182 @@ export async function configureLoreJournalPage(
 
 }
 
+/**
+ * SDP journal TOC stability
+ *
+ * Foundry `_synchronizeSidebar` jumps the pages column after our HTML injection
+ * changes content height. Keep the user's scroll and the active highlight.
+ */
+function getSdpJournalRoot(app, element = null) {
+
+  const root = app?.element?.[0] ?? app?.element ?? element;
+  return root instanceof HTMLElement ? root : root?.[0] ?? null;
+
+}
+
+function getSdpJournalPagesScrollEl(root) {
+
+  if (!(root instanceof HTMLElement)) return null;
+
+  return root.querySelector("[data-application-part='sidebar'] .scrollable")
+    ?? root.querySelector("aside.sidebar .scrollable")
+    ?? root.querySelector(".journal-sidebar .scrollable")
+    ?? root.querySelector(".sidebar .scrollable")
+    ?? null;
+
+}
+
+function rememberSdpJournalPagesScroll(app, root = null) {
+
+  const scrollEl = getSdpJournalPagesScrollEl(root ?? getSdpJournalRoot(app));
+  if (!app || !scrollEl) return;
+  app._sdpPagesScrollTop = scrollEl.scrollTop;
+
+}
+
+function restoreSdpJournalPagesScroll(app, root = null) {
+
+  if (!app || app._sdpPagesScrollTop == null) return;
+
+  const apply = () => {
+    const scrollEl = getSdpJournalPagesScrollEl(root ?? getSdpJournalRoot(app));
+    if (scrollEl) scrollEl.scrollTop = app._sdpPagesScrollTop;
+  };
+
+  apply();
+  requestAnimationFrame(() => {
+    apply();
+    requestAnimationFrame(apply);
+  });
+
+}
+
+function highlightSdpJournalActivePage(app, root = null) {
+
+  const sheetRoot = root ?? getSdpJournalRoot(app);
+  if (!app || !sheetRoot) return;
+
+  const pageId =
+    resolveJournalPageFromApp(app)?.id
+    ?? sheetRoot.querySelector("[data-application-part='pages'] [data-page-id]")?.dataset?.pageId
+    ?? sheetRoot.querySelector(".journal-entry-page.active, article[data-page-id]")?.dataset?.pageId
+    ?? app._currentPageId
+    ?? null;
+
+  if (!pageId) return;
+
+  const tocRoot =
+    sheetRoot.querySelector("[data-application-part='sidebar']")
+    ?? sheetRoot.querySelector("aside.sidebar")
+    ?? sheetRoot.querySelector(".journal-sidebar")
+    ?? sheetRoot;
+
+  tocRoot.querySelectorAll("[data-page-id].active").forEach(el => {
+    el.classList.remove("active");
+  });
+
+  tocRoot.querySelectorAll(`[data-page-id="${pageId}"]`).forEach(el => {
+    el.classList.add("active");
+  });
+
+}
+
+function syncSdpJournalPagesColumn(app, root = null) {
+
+  highlightSdpJournalActivePage(app, root);
+  restoreSdpJournalPagesScroll(app, root);
+
+}
+
+function isSdpJournalSheetElement(appRoot) {
+
+  if (!(appRoot instanceof HTMLElement)) return false;
+  if (appRoot.classList.contains("sdp-journal-sheet")) return true;
+
+  const documentId =
+    appRoot.dataset?.documentId
+    ?? appRoot.querySelector?.("[data-document-id]")?.dataset?.documentId;
+
+  if (documentId) {
+    const entry = game.journal.get(documentId);
+    if (entry && isSdpJournal(entry)) return true;
+  }
+
+  const instances = foundry.applications?.instances;
+  if (!instances) return false;
+
+  for (const app of instances.values()) {
+    const el = app.element?.[0] ?? app.element;
+    if (el === appRoot) return isSdpJournal(app.document);
+  }
+
+  return false;
+
+}
+
+function installSdpJournalPagesScrollGuard() {
+
+  if (Element.prototype._sdpJournalPagesScrollGuard) return;
+  Element.prototype._sdpJournalPagesScrollGuard = true;
+
+  const original = Element.prototype.scrollIntoView;
+
+  Element.prototype.scrollIntoView = function(...args) {
+
+    const appRoot = this.closest?.(".sdp-journal-sheet, .application, .journal-sheet");
+
+    if (
+      appRoot
+      && isSdpJournalSheetElement(appRoot)
+      && this.closest?.("aside.sidebar, [data-application-part='sidebar'], .pages-list")
+    ) {
+      return;
+    }
+
+    return original.apply(this, args);
+
+  };
+
+}
+
+function patchSdpJournalPagesColumn(app, element) {
+
+  if (!app || app._sdpPagesColumnPatched || !isSdpJournal(app.document)) return;
+
+  app._sdpPagesColumnPatched = true;
+
+  const root = getSdpJournalRoot(app, element);
+  root?.classList.add("sdp-journal-sheet");
+
+  root?.addEventListener("pointerdown", (event) => {
+
+    if (!event.target?.closest?.(
+      "aside.sidebar [data-page-id], [data-application-part='sidebar'] [data-page-id], .pages-list [data-page-id], .pages-list li"
+    )) {
+      return;
+    }
+
+    rememberSdpJournalPagesScroll(app, getSdpJournalRoot(app, element));
+
+  }, true);
+
+  if (typeof app._synchronizeSidebar !== "function") return;
+
+  const activatePages =
+    typeof app._activatePagesInView === "function"
+      ? app._activatePagesInView.bind(app)
+      : null;
+
+  app._synchronizeSidebar = function() {
+    activatePages?.();
+    syncSdpJournalPagesColumn(this);
+  };
+
+}
+
 export function registerCareerJournalHooks() {
+
+  installSdpJournalPagesScrollGuard();
 
   const pageHooks = [
     "renderJournalEntryPageTextSheet",
@@ -1638,11 +1814,14 @@ export function registerCareerJournalHooks() {
     "renderJournalEntrySheet",
     (app, element) => {
 
+      patchSdpJournalPagesColumn(app, element);
+
       injectCareerJournalPage(app, element);
 
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           localizeCareerJournalSheet(app, element);
+          syncSdpJournalPagesColumn(app, element);
         });
       });
 
