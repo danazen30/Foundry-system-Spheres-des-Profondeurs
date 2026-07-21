@@ -1,0 +1,44 @@
+<div class="sdp-sheet">
+
+  {{> "systems/sdp/templates/partials/vehicle-header.hbs"}}
+
+  <div class="sdp-body">
+
+    <div class="sdp-content">
+      <div class="sdp-content-inner">
+
+        {{#if (eq activeTab "inventory")}}
+          {{> "systems/sdp/templates/partials/inventory.hbs"}}
+        {{/if}}
+
+        {{#if (eq activeTab "info")}}
+          {{#if user.isGM}}
+            {{> "systems/sdp/templates/partials/vehicle-info.hbs"}}
+          {{/if}}
+        {{/if}}
+
+      </div>
+
+      <div class="sdp-tabs">
+
+        <button
+          data-tab="inventory"
+          data-label="{{localize 'SDP.Inventory'}}">
+          <img src="systems/sdp/assets/icons/ui/inventory-pouch.png" alt="" class="sdp-tab-icon">
+        </button>
+
+        {{#if user.isGM}}
+        <button
+          data-tab="info"
+          data-label="{{localize 'SDP.Information'}}">
+          📜
+        </button>
+        {{/if}}
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

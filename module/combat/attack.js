@@ -689,7 +689,7 @@ if (finalTraits.some(t => t.key === "reload")) {
      data-location-profile="${hitProfileKey}"
      data-talents='${JSON.stringify(dialogMods.talents || [])}'
      data-traits='${JSON.stringify(normalizedTraits)}'
-     data-damagetype="${weapon.system.damageType || "slashing"}">
+     data-damagetype="${(typeof weapon.system.damageType === "object" ? weapon.system.damageType?.value : weapon.system.damageType) || "slashing"}">
 
   <h3>
   ${game.i18n.format("SDP.ShootsWith", {
@@ -1038,7 +1038,7 @@ const talentsHTML =
      data-critical="${crit.success}"
      data-brutal="${dialogMods.brutal}"
      data-traits='${JSON.stringify(normalizedTraits)}'
-     data-damagetype="${weapon.system.damageType || "slashing"}">
+     data-damagetype="${(typeof weapon.system.damageType === "object" ? weapon.system.damageType?.value : weapon.system.damageType) || "slashing"}">
 
   <h3>
   ${game.i18n.format("SDP.AttacksWith", {

@@ -1,0 +1,200 @@
+<div class="vehicle-info-grid tab-info">
+
+  <div class="vehicle-info-card vehicle-info-wide">
+    <div class="vehicle-info-title">
+      {{localize "SDP.Details"}}
+    </div>
+
+    <div class="vehicle-info-fields vehicle-info-fields-grid">
+
+      <div class="resource-row">
+        <label>{{localize "SDP.Type"}}</label>
+        <input
+          type="text"
+          name="system.details.vehicleType.value"
+          value="{{system.details.vehicleType.value}}"
+          placeholder="{{localize 'SDP.VehicleTypePlaceholder'}}"
+          {{#unless user.isGM}}disabled{{/unless}}>
+      </div>
+
+      <div class="resource-row">
+        <label>{{localize "SDP.Size"}}</label>
+        <select
+          name="system.details.size.value"
+          {{#unless user.isGM}}disabled{{/unless}}>
+          {{#each config.sizes as |size key|}}
+            <option
+              value="{{key}}"
+              {{#if (eq @root.system.details.size.value key)}}selected{{/if}}>
+              {{localize size.label}}
+            </option>
+          {{/each}}
+        </select>
+      </div>
+
+      <div class="resource-row">
+        <label>{{localize "SDP.VehicleDrivers"}}</label>
+        <input
+          type="number"
+          name="system.crew.drivers.value"
+          value="{{system.crew.drivers.value}}"
+          min="0"
+          {{#unless user.isGM}}disabled{{/unless}}>
+      </div>
+
+      <div class="resource-row">
+        <label>{{localize "SDP.VehiclePassengers"}}</label>
+        <input
+          type="number"
+          name="system.crew.passengers.value"
+          value="{{system.crew.passengers.value}}"
+          min="0"
+          {{#unless user.isGM}}disabled{{/unless}}>
+      </div>
+
+      <div class="resource-row">
+        <label>{{localize "SDP.DraftAnimalsRequired"}}</label>
+        <input
+          type="number"
+          name="system.draft.required.value"
+          value="{{system.draft.required.value}}"
+          min="0"
+          {{#unless user.isGM}}disabled{{/unless}}>
+      </div>
+
+      <div class="resource-row">
+        <label>{{localize "SDP.CarryingCapacity"}}</label>
+        <input
+          type="number"
+          name="system.capacity.value"
+          value="{{system.capacity.value}}"
+          min="0"
+          {{#unless user.isGM}}disabled{{/unless}}>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="vehicle-info-card vehicle-info-wide">
+    <div class="vehicle-info-title">
+      {{localize "SDP.VehicleArmorTraits"}}
+    </div>
+
+    <div class="vehicle-armor-traits">
+      {{#each vehicleArmorTraits as |trait|}}
+        <div class="vehicle-armor-trait-row" title="{{localize trait.hint}}">
+          <input
+            type="checkbox"
+            data-vehicle-armor-trait="{{trait.key}}"
+            {{checked trait.selected}}
+            {{#unless @root.user.isGM}}disabled{{/unless}}>
+          <div class="vehicle-armor-trait-text">
+            <span>{{localize trait.label}}</span>
+            <small>{{localize trait.hint}}</small>
+          </div>
+        </div>
+      {{/each}}
+    </div>
+  </div>
+
+  <div class="vehicle-info-card vehicle-info-wide">
+    <div class="resource-block note-block">
+
+      <div class="note-header">
+        <label>{{localize "SDP.TabDescription"}}</label>
+        <button
+          type="button"
+          class="note-edit-btn"
+          data-action="toggleEditor"
+          data-target="description">
+          ✏️ {{localize "SDP.Edit"}}
+        </button>
+      </div>
+
+      <div class="note-display" data-display="description">
+        {{{editors.description}}}
+      </div>
+
+      <div
+        class="note-editor"
+        data-editor="description"
+        style="display:none;">
+        <prose-mirror
+          name="system.description.value"
+          value="{{system.description.value}}">
+          {{{system.description.value}}}
+        </prose-mirror>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="vehicle-info-card vehicle-info-wide">
+    <div class="resource-block note-block">
+
+      <div class="note-header">
+        <label>{{localize "SDP.PlayerNotes"}}</label>
+        {{#if canEditPlayerNotes}}
+        <button
+          type="button"
+          class="note-edit-btn"
+          data-action="toggleEditor"
+          data-target="playerNotes">
+          ✏️ {{localize "SDP.Edit"}}
+        </button>
+        {{/if}}
+      </div>
+
+      <div class="note-display" data-display="playerNotes">
+        {{{editors.playerNotes}}}
+      </div>
+
+      <div
+        class="note-editor"
+        data-editor="playerNotes"
+        style="display:none;">
+        <prose-mirror
+          name="system.details.playerNotes.value"
+          value="{{system.details.playerNotes.value}}">
+          {{{system.details.playerNotes.value}}}
+        </prose-mirror>
+      </div>
+
+    </div>
+  </div>
+
+  {{#if user.isGM}}
+  <div class="vehicle-info-card vehicle-info-wide">
+    <div class="resource-block note-block">
+
+      <div class="note-header">
+        <label>{{localize "SDP.GMNotes"}}</label>
+        <button
+          type="button"
+          class="note-edit-btn"
+          data-action="toggleEditor"
+          data-target="gmNotes">
+          ✏️ {{localize "SDP.Edit"}}
+        </button>
+      </div>
+
+      <div class="note-display" data-display="gmNotes">
+        {{{editors.gmNotes}}}
+      </div>
+
+      <div
+        class="note-editor"
+        data-editor="gmNotes"
+        style="display:none;">
+        <prose-mirror
+          name="system.details.gmNotes.value"
+          value="{{system.details.gmNotes.value}}">
+          {{{system.details.gmNotes.value}}}
+        </prose-mirror>
+      </div>
+
+    </div>
+  </div>
+  {{/if}}
+
+</div>

@@ -1,8 +1,91 @@
 import { LevelUpApp } from "../apps/level-up-app.js";
 
+function getDefaultCurrencyItems() {
+  return [
+    {
+      name: game.i18n.localize("SDP.CurrencyPlatinum"),
+      type: "currency",
+      img: "systems/sdp/assets/icons/currency/platinum.png",
+      system: {
+        denomination: { value: "platinum" },
+        quantity: { value: 0 },
+        encumbrance: { value: 0.001 }
+      }
+    },
+    {
+      name: game.i18n.localize("SDP.CurrencyGold"),
+      type: "currency",
+      img: "systems/sdp/assets/icons/currency/gold.png",
+      system: {
+        denomination: { value: "gold" },
+        quantity: { value: 0 },
+        encumbrance: { value: 0.001 }
+      }
+    },
+    {
+      name: game.i18n.localize("SDP.CurrencySilver"),
+      type: "currency",
+      img: "systems/sdp/assets/icons/currency/silver.png",
+      system: {
+        denomination: { value: "silver" },
+        quantity: { value: 0 },
+        encumbrance: { value: 0.001 }
+      }
+    },
+    {
+      name: game.i18n.localize("SDP.CurrencyCopper"),
+      type: "currency",
+      img: "systems/sdp/assets/icons/currency/copper.png",
+      system: {
+        denomination: { value: "copper" },
+        quantity: { value: 0 },
+        encumbrance: { value: 0.001 }
+      }
+    }
+  ];
+}
+
+export async function ensureDefaultCurrencies(actor) {
+  if (!actor) return false;
+
+  // Prevent createActor + sheet open from racing into duplicates.
+  if (actor._sdpEnsuringCurrencies) return false;
+  actor._sdpEnsuringCurrencies = true;
+
+  try {
+    const existing = new Set(
+      actor.items
+        .filter(i => i.type === "currency")
+        .map(i => String(i.system?.denomination?.value || "").toLowerCase())
+    );
+
+    const missing = getDefaultCurrencyItems().filter(
+      item => !existing.has(
+        String(item.system.denomination.value || "").toLowerCase()
+      )
+    );
+
+    if (!missing.length) return false;
+
+    await actor.createEmbeddedDocuments("Item", missing);
+    return true;
+  } finally {
+    delete actor._sdpEnsuringCurrencies;
+  }
+}
+
 export function registerActorHandlers() {
 
 Hooks.on("createActor", async (actor) => {
+
+  // =========================
+  // VEHICLE → currencies only (like character inventory money)
+  // =========================
+
+  if (actor.type === "vehicle") {
+    await ensureDefaultCurrencies(actor);
+    return;
+  }
 
   // =========================
   // TYPES VALIDES
@@ -115,125 +198,7 @@ Hooks.on("createActor", async (actor) => {
   // DEFAULT CURRENCIES
   // =========================
 
-  const currencies = [
-
-    {
-      name:
-        game.i18n.localize(
-          "SDP.CurrencyPlatinum"
-        ),
-
-      type: "currency",
-
-      img:
-        "systems/sdp/assets/icons/currency/platinum.png",
-
-      system: {
-
-        denomination: {
-          value: "platinum"
-        },
-
-        quantity: {
-          value: 0
-        },
-
-        encumbrance: {
-          value: 0.001
-        }
-
-      }
-
-    },
-
-    {
-      name:
-        game.i18n.localize(
-          "SDP.CurrencyGold"
-        ),
-
-      type: "currency",
-
-      img:
-        "systems/sdp/assets/icons/currency/gold.png",
-
-      system: {
-
-        denomination: {
-          value: "gold"
-        },
-
-        quantity: {
-          value: 0
-        },
-
-        encumbrance: {
-          value: 0.001
-        }
-
-      }
-
-    },
-
-    {
-      name:
-        game.i18n.localize(
-          "SDP.CurrencySilver"
-        ),
-
-      type: "currency",
-
-      img:
-        "systems/sdp/assets/icons/currency/silver.png",
-
-      system: {
-
-        denomination: {
-          value: "silver"
-        },
-
-        quantity: {
-          value: 0
-        },
-
-        encumbrance: {
-          value: 0.001
-        }
-
-      }
-
-    },
-
-    {
-      name:
-        game.i18n.localize(
-          "SDP.CurrencyCopper"
-        ),
-
-      type: "currency",
-
-      img:
-        "systems/sdp/assets/icons/currency/copper.png",
-
-      system: {
-
-        denomination: {
-          value: "copper"
-        },
-
-        quantity: {
-          value: 0
-        },
-
-        encumbrance: {
-          value: 0.001
-        }
-
-      }
-
-    }
-
-  ];
+  const currencies = getDefaultCurrencyItems();
 
   // =========================
   // CREATE

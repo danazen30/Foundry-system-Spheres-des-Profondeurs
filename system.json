@@ -170,6 +170,13 @@
           "system.details.playerNotes.value",
           "system.details.motivation.value"
         ]
+      },
+      "vehicle": {
+        "htmlFields": [
+          "system.description.value",
+          "system.details.gmNotes.value",
+          "system.details.playerNotes.value"
+        ]
       }
     },
     "Item": {

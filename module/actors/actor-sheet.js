@@ -237,6 +237,32 @@ for (const item of this.document.items) {
 
 }
 
+const isAdvancedSkill = (skill) => {
+  const advanced = skill.system?.advanced;
+  if (advanced === true || advanced === "true") return true;
+  if (skill.system?.type === "advanced") return true;
+  return false;
+};
+
+const sortSkillsByLocalizedName = (a, b) =>
+  String(a.displayName || a.name || "").localeCompare(
+    String(b.displayName || b.name || ""),
+    game.i18n.lang,
+    { sensitivity: "base" }
+  );
+
+const skillItems = this.document.items.filter(
+  (item) => item.type === "skill"
+);
+
+const basicSkills = skillItems
+  .filter((skill) => !isAdvancedSkill(skill))
+  .sort(sortSkillsByLocalizedName);
+
+const advancedSkills = skillItems
+  .filter((skill) => isAdvancedSkill(skill))
+  .sort(sortSkillsByLocalizedName);
+
 const xpBar = getXPBar(this.document, xpData);
 const currentLevel = xpBar.currentLevel;
 
@@ -579,6 +605,8 @@ return {
   sharedNpcNotes,
   editors,
   statusDisplay,
+  basicSkills,
+  advancedSkills,
 };
   }
 

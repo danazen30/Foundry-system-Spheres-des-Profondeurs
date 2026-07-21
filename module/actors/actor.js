@@ -1,5 +1,6 @@
 import { SdpActorInventory } from "./actor-inventory.js";
 import { SdpSizeEngine } from "../system/size-engine.js";
+import { SdpDamage } from "../combat/damage.js";
 import {
   actorHasWeaponSkill,
   findActorSkillForRef,
@@ -172,7 +173,158 @@ if (lvl.inspirationDice) {
 }
 
   return effects;
-}
+  }
+
+  _prepareVehicleDerivedData() {
+    const system = this.system;
+
+    system.custom ??= {};
+    system.bonuses ??= {};
+
+    system.description ??= { value: "" };
+    if (typeof system.description === "string") {
+      system.description = { value: system.description };
+    }
+    system.description.value ??= "";
+
+    system.details ??= {};
+    system.details.vehicleType ??= { value: "" };
+    if (typeof system.details.vehicleType === "string") {
+      system.details.vehicleType = { value: system.details.vehicleType };
+    }
+    system.details.vehicleType.value ??= "";
+
+    system.details.size ??= { value: "average" };
+    if (typeof system.details.size === "string") {
+      system.details.size = { value: system.details.size };
+    }
+    system.details.size.value ??= "average";
+
+    // Keep combat helpers (size engine / damage) in sync with sheet field.
+    system.size = system.details.size.value;
+
+    system.details.gmNotes ??= { value: "" };
+    system.details.playerNotes ??= { value: "" };
+    if (typeof system.details.gmNotes === "string") {
+      system.details.gmNotes = { value: system.details.gmNotes };
+    }
+    if (typeof system.details.playerNotes === "string") {
+      system.details.playerNotes = { value: system.details.playerNotes };
+    }
+    system.details.gmNotes.value ??= "";
+    system.details.playerNotes.value ??= "";
+
+    system.price ??= {};
+    system.price.platinum ??= 0;
+    system.price.gold ??= 0;
+    system.price.silver ??= 0;
+    system.price.copper ??= 0;
+
+    system.armor ??= { value: 0 };
+    if (typeof system.armor === "number") {
+      system.armor = { value: system.armor };
+    }
+    system.armor.value = Math.max(
+      0,
+      Number(system.armor.value) || 0
+    );
+
+    // Strict booleans only — never treat objects as selected.
+    system.armorTraits = SdpDamage.normalizeVehicleArmorTraits(
+      system.armorTraits
+    );
+
+    for (const key of ["platinum", "gold", "silver", "copper"]) {
+      const priceValue = system.price?.[key];
+      system.price[key] = typeof priceValue === "object"
+        ? Math.max(0, Number(priceValue?.value) || 0)
+        : Math.max(0, Number(priceValue) || 0);
+    }
+
+    system.woundThreshold ??= { value: 3 };
+    if (typeof system.woundThreshold === "number") {
+      system.woundThreshold = { value: system.woundThreshold };
+    }
+    system.woundThreshold.value = Math.max(
+      0,
+      Number(system.woundThreshold.value) || 0
+    );
+
+    system.criticalWounds ??= { value: 0, max: 3 };
+    if (typeof system.criticalWounds === "number") {
+      system.criticalWounds = { value: system.criticalWounds, max: 3 };
+    }
+    system.criticalWounds.max = Math.max(
+      1,
+      Number(system.criticalWounds.max) || 3
+    );
+    system.criticalWounds.value = Math.max(
+      0,
+      Math.min(
+        system.criticalWounds.max,
+        Number(system.criticalWounds.value) || 0
+      )
+    );
+
+    system.capacity ??= { value: 0 };
+    if (typeof system.capacity === "number") {
+      system.capacity = { value: system.capacity };
+    }
+    system.capacity.value ??= 0;
+
+    system.crew ??= {};
+    system.crew.drivers ??= { value: 1 };
+    system.crew.passengers ??= { value: 0 };
+    if (typeof system.crew.drivers === "number") {
+      system.crew.drivers = { value: system.crew.drivers };
+    }
+    if (typeof system.crew.passengers === "number") {
+      system.crew.passengers = { value: system.crew.passengers };
+    }
+    system.crew.drivers.value ??= 1;
+    system.crew.passengers.value ??= 0;
+
+    system.draft ??= {};
+    system.draft.required ??= { value: 0 };
+    if (typeof system.draft.required === "number") {
+      system.draft.required = { value: system.draft.required };
+    }
+    system.draft.required.value ??= 0;
+
+    system.health ??= {};
+    system.health.value ??= 10;
+    system.health.max ??= 10;
+    if (system.health.value > system.health.max) {
+      system.health.value = system.health.max;
+    }
+    if (system.health.value < 0) {
+      system.health.value = 0;
+    }
+
+    system.resources ??= {};
+    system.resources.movement ??= {};
+    system.resources.movement.value ??= 4;
+    const baseMove = Math.max(0, Number(system.resources.movement.value) || 0);
+    system.resources.movement.current = baseMove;
+    system.resources.movement.walk = baseMove * 2;
+    system.resources.movement.run = baseMove * 4;
+
+    system.derived ??= {};
+    system.derived.carryingCapacity = {
+      value: Math.max(0, Number(system.capacity.value) || 0)
+    };
+    system.derived.woundThreshold = {
+      value: system.woundThreshold.value
+    };
+
+    const outOfService =
+      system.health.value <= 0 ||
+      system.criticalWounds.value >= system.criticalWounds.max;
+
+    system.outOfService = outOfService;
+
+    SdpActorInventory.applyEncumbrance(this);
+  }
 
   // =====================
   // ACTIVE EFFECTS (ATTRIBUTES)
@@ -453,6 +605,11 @@ _getCarryingCapacityModifier() {
     }
 
     super.prepareDerivedData();
+
+    if (this.type === "vehicle") {
+      this._prepareVehicleDerivedData();
+      return;
+    }
 
 const system = this.system;
 system.custom.manaMultiplierBonus = 0;

@@ -139,6 +139,17 @@
   height: 40px;
   font-size: 20px;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sdp-tabs button .sdp-tab-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  pointer-events: none;
+  border: none;
 }
 
 .sdp-sheet {
@@ -3551,4 +3562,239 @@ text-align:center;
 /* réduit gros espace du content */
 .creature-combat-tab + * {
   margin-top: 0;
+}
+/* =========================
+   VEHICLE SHEET
+   ========================= */
+
+.vehicle-header {
+  padding: 8px;
+  flex-shrink: 0;
+}
+
+.vehicle-header-main {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+  width: 100%;
+}
+
+.vehicle-portrait,
+.application.sdp.sheet.actor.vehicle .character-portrait.vehicle-portrait {
+  width: 130px;
+  height: 130px;
+  aspect-ratio: auto;
+  margin-bottom: 0;
+  flex: 0 0 130px;
+}
+
+.vehicle-portrait img,
+.application.sdp.sheet.actor.vehicle .vehicle-portrait .profile-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center center;
+}
+
+.vehicle-resource-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.vehicle-name-row .actor-name {
+  width: 100%;
+}
+
+.vehicle-price-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.vehicle-price-row > label {
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.vehicle-header-price {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px;
+  width: 100%;
+}
+
+.vehicle-header-price input {
+  text-align: center;
+  min-width: 0;
+  padding: 0 4px;
+}
+
+.vehicle-combat-side {
+  flex: 0 0 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.vehicle-combat-side .resource-box.vehicle-stats-grid {
+  padding: 5px;
+  margin: 0;
+  gap: 4px;
+}
+
+.vehicle-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4px;
+}
+
+.vehicle-stats-grid .derived-cell {
+  padding: 3px 8px;
+  gap: 6px;
+  min-height: 0;
+  border-radius: 6px;
+  align-items: center;
+}
+
+.vehicle-stats-grid .derived-cell label {
+  font-size: 12px;
+  line-height: 1.15;
+}
+
+.vehicle-stats-grid .derived-cell input {
+  width: 56px;
+  max-width: 56px;
+  height: 22px;
+  min-height: 22px;
+  padding: 0 3px;
+  font-size: 13px;
+}
+
+.vehicle-critical-wounds {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.vehicle-critical-wounds input {
+  width: 40px;
+  max-width: 40px;
+  height: 22px;
+  min-height: 22px;
+  padding: 0 3px;
+  font-size: 13px;
+}
+
+.vehicle-critical-wounds span {
+  font-size: 12px;
+}
+
+.vehicle-combat-side .movement-header-box {
+  margin: 0;
+  padding: 4px;
+}
+
+.vehicle-combat-side .movement-grid {
+  gap: 2px 4px;
+}
+
+.vehicle-combat-side .movement-header {
+  font-size: 10px;
+}
+
+.vehicle-combat-side .movement-value {
+  height: 20px;
+  min-height: 20px;
+  font-size: 12px;
+  padding: 0 2px;
+}
+
+.vehicle-out-of-service {
+  padding: 6px 8px;
+  text-align: center;
+  font-weight: bold;
+  color: #ffb4b4;
+  background: rgba(140, 20, 20, 0.45);
+  border: 1px solid #a33;
+  border-radius: 6px;
+}
+
+.vehicle-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.vehicle-info-card {
+  border: 1px solid #666;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.vehicle-info-wide {
+  grid-column: 1 / -1;
+}
+
+.vehicle-info-title {
+  font-weight: bold;
+}
+
+.vehicle-info-fields,
+.vehicle-price-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.vehicle-info-fields-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 12px;
+}
+
+.vehicle-info-card textarea {
+  width: 100%;
+  min-height: 80px;
+  resize: vertical;
+}
+
+.vehicle-armor-traits {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.vehicle-armor-trait-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2px 8px;
+  align-items: start;
+}
+
+.vehicle-armor-trait-row input[type="checkbox"] {
+  margin-top: 3px;
+  cursor: pointer;
+}
+
+.vehicle-armor-trait-text {
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+  user-select: none;
+}
+
+.vehicle-armor-trait-text small {
+  opacity: 0.75;
+  font-size: 0.85em;
+}
+
+.application.sdp.sheet.actor.vehicle .sdp-tabs {
+  justify-content: center;
 }

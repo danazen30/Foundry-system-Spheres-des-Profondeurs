@@ -360,6 +360,135 @@
         "modifiers",
         "conditions"
       ]
+    },
+    "vehicle": {
+      "description": {
+        "type": "string",
+        "label": "Description",
+        "value": ""
+      },
+      "details": {
+        "vehicleType": {
+          "type": "string",
+          "label": "Vehicle Type",
+          "value": ""
+        },
+        "size": {
+          "type": "string",
+          "label": "Size",
+          "value": "average"
+        },
+        "gmNotes": {
+          "type": "string",
+          "label": "GM notes",
+          "value": ""
+        },
+        "playerNotes": {
+          "type": "string",
+          "label": "PJ notes",
+          "value": ""
+        }
+      },
+      "price": {
+        "platinum": {
+          "type": "number",
+          "label": "Platinum",
+          "value": 0
+        },
+        "gold": {
+          "type": "number",
+          "label": "Gold",
+          "value": 0
+        },
+        "silver": {
+          "type": "number",
+          "label": "Silver",
+          "value": 0
+        },
+        "copper": {
+          "type": "number",
+          "label": "Copper",
+          "value": 0
+        }
+      },
+      "armor": {
+        "type": "number",
+        "label": "Armor",
+        "value": 0
+      },
+      "woundThreshold": {
+        "type": "number",
+        "label": "Wound Threshold",
+        "value": 3
+      },
+      "criticalWounds": {
+        "type": "number",
+        "label": "Critical Wounds",
+        "value": 0,
+        "max": 3
+      },
+      "outOfService": {
+        "type": "boolean",
+        "label": "Out of Service",
+        "value": false
+      },
+      "capacity": {
+        "type": "number",
+        "label": "Carrying Capacity",
+        "value": 0
+      },
+      "crew": {
+        "drivers": {
+          "type": "number",
+          "label": "Drivers",
+          "value": 1
+        },
+        "passengers": {
+          "type": "number",
+          "label": "Passengers",
+          "value": 0
+        }
+      },
+      "draft": {
+        "required": {
+          "type": "number",
+          "label": "Draft Animals Required",
+          "value": 0
+        }
+      },
+      "resources": {
+        "movement": {
+          "type": "number",
+          "label": "Movement",
+          "value": 4,
+          "current": 4,
+          "walk": 0,
+          "run": 0
+        },
+        "encumbrance": {
+          "type": "number",
+          "label": "Encumbrance",
+          "value": 0
+        }
+      },
+      "health": {
+        "type": "number",
+        "label": "Health",
+        "value": 10,
+        "max": 10
+      },
+      "derived": {
+        "carryingCapacity": {
+          "type": "number",
+          "label": "carryingCapacity",
+          "value": 0
+        },
+        "woundThreshold": {
+          "type": "number",
+          "label": "Wound Threshold",
+          "value": 3
+        }
+      }
     }
   },
   "Item": {

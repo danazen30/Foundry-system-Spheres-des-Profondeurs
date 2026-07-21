@@ -2,37 +2,10 @@ import { SdpSizeEngine } from "../system/size-engine.js";
 import { SdpRoll } from "../rolls/roll.js";
 import {
   hasWeaponDamageStatBonus,
-  parseWeaponDamageFormula,
-  resolveWeaponDamageBase
+  parseWeaponDamageFormula
 } from "../system/formula-utils.js";
 
 export class SdpDamage {
-
-  static getDamageFormula(actor, weapon){
-
-    const base = resolveWeaponDamageBase(weapon.system.damage || "0", actor);
-    const dice = weapon.system.damageDice || "";
-
-    if(dice){
-      return `${base} + ${dice}`;
-    }
-
-    return String(base);
-
-  }
-
-
-  static async applyDamage(target, damage){
-
-    const current = target.system.health.value;
-
-    const newHealth = Math.max(current - damage, 0);
-
-    await target.update({
-      "system.health.value": newHealth
-    });
-
-  }
 
 static getTalentDamageReduction(actor) {
 
@@ -73,32 +46,6 @@ static resolveIncomingDamage(damageAfterArmor, actor) {
   const reduction = this.getTalentDamageReduction(actor);
 
   return Math.max(1, damageAfterArmor - reduction);
-
-}
-
-static async applyDamage(target, damage, location){
-
-  const armor = this.getArmorValue(target, location);
-
-  const damageAfterArmor = Math.max(damage - armor, 0);
-
-  const finalDamage = this.resolveIncomingDamage(
-    damageAfterArmor,
-    target
-  );
-
-  const current = target.system.health.value;
-
-  const newHealth = Math.max(current - finalDamage, 0);
-
-  await target.update({
-    "system.health.value": newHealth
-  });
-
-  return {
-    armor,
-    finalDamage
-  };
 
 }
 
@@ -162,7 +109,7 @@ static applyInjurySeverityBonus(severity, steps = 0) {
 
 }
 
-static async rollDamage({ actor, weapon, target, location, critical, brutal, ammoId, defenseType }) {
+static async rollDamage({ actor, weapon, target, location, critical, brutal, ammoId, damageType = null, defenseType }) {
 
   const dialogMods = game.sdp?.dialogModifiers || {};
 const useFinesse = dialogMods.finesse;
@@ -177,17 +124,25 @@ if (ammoId) {
   ammo = actor.items.get(ammoId);
 }
 
-console.log("SDP | Damage ammo", ammo?.name);
-
   // =========================
   // ARMOR
   // =========================
   let armor = 0;
+  let armorBase = 0;
+  let armorMultiplierReason = "";
 
 if (target) {
-  const damageType = weapon.system.damageType;
+  const resolvedDamageType = this.normalizeDamageType(
+    damageType ?? weapon.system.damageType
+  );
 
-armor = this.getArmorValue(target, location, damageType, defenseType);
+armorBase = this.getArmorValue(
+  target,
+  location,
+  resolvedDamageType,
+  defenseType
+);
+armor = armorBase;
 }
 
 // =========================
@@ -200,7 +155,7 @@ const hasInoffensive = traits.some(t => {
 
   if (!t) return false;
 
-  const key = (t.key || "")
+  const key = (typeof t === "string" ? t : (t.key || ""))
     .replace(/([a-z])([A-Z])/g, "$1-$2")
     .toLowerCase()
     .replace(/[\s_]/g, "-");
@@ -209,13 +164,9 @@ const hasInoffensive = traits.some(t => {
 
 });
 
-if (hasInoffensive) {
+if (hasInoffensive && armor > 0) {
   armor *= 2;
-
-  console.log("SDP | INOFFENSIVE APPLIED", {
-    weapon: weapon.name,
-    doubledArmor: armor
-  });
+  armorMultiplierReason = "inoffensive";
 }
 
 let impactfulTrait = null;
@@ -236,13 +187,7 @@ for (let t of traits) {
     .replace(/[\s_]/g, "-");
 
   if (key === "devastating") {
-
     devastating = true;
-
-    console.log("SDP | DEVASTATING (WEAPON)", {
-      weapon: weapon.name
-    });
-
     break;
   }
 }
@@ -255,19 +200,12 @@ if (
   !devastating &&
   target &&
   SdpSizeEngine.grantsDevastating(
-    actor.system.size,
-    target.system.size
+    this.resolveActorSize(actor),
+    this.resolveActorSize(target)
   )
 ) {
 
   devastating = true;
-
-  console.log("SDP | DEVASTATING (SIZE)", {
-    attacker: actor.name,
-    attackerSize: actor.system.size,
-    defender: target.name,
-    defenderSize: target.system.size
-  });
 
 }
 
@@ -447,12 +385,6 @@ if (impactfulTrait && dialogMods.charge) {
 // ROLL FINAL
 // =========================
 
-console.log("=== DAMAGE DEBUG ===");
-console.log("weapon.system.damage:", weapon.system.damage);
-console.log("weapon.system.damageDice:", weapon.system.damageDice);
-console.log("weapon.system.damage?.dice:", weapon.system.damage?.dice);
-console.log("baseFormula:", baseFormula);
-console.log("diceFormula:", diceFormula);
 console.log("FINAL FORMULA:", formula);
 const roll = new Roll(formula);
 await roll.evaluate();
@@ -464,16 +396,9 @@ let damage = roll.total;
 // =========================
 
 const sizeMultiplier =
-  CONFIG.SDP.sizes?.[actor.system.size]?.damageMultiplier || 1;
+  CONFIG.SDP.sizes?.[this.resolveActorSize(actor)]?.damageMultiplier || 1;
 
 damage = Math.floor(damage * sizeMultiplier);
-
-console.log("SDP | SIZE DAMAGE MULTIPLIER", {
-  actor: actor.name,
-  size: actor.system.size,
-  multiplier: sizeMultiplier,
-  finalDamage: damage
-});
 
 const talentDamageBonus = SdpRoll.getAttackDamageBonus(
   actor,
@@ -550,6 +475,8 @@ weaponDetail.push(
   damageAfterArmor,
   finalDamage,
   armor,
+  armorBase,
+  armorMultiplierReason,
   formula,
   devastating,
   weaponDetail: weaponDetail.join(" + "),
@@ -561,7 +488,7 @@ weaponDetail.push(
   // =========================
   // LOCATION MULT
   // =========================
-  if (location === "head") {
+  if (location === "head" && target?.type !== "vehicle") {
     damage = Math.floor(damage * 1.5);
   }
 
@@ -577,30 +504,108 @@ weaponDetail.push(
   damageAfterArmor,
   finalDamage,
   armor,
+  armorBase,
+  armorMultiplierReason,
   formula,
   devastating
 };
 }
 
-static async applyFullDamage({ actor, damage, location, severitySteps = 0 }) {
+static async applyFullDamage({
+  actor,
+  damage,
+  location,
+  severitySteps = 0
+}) {
 
   const WT =
     this.getEffectiveWoundThreshold(actor);
 
+  const current = actor.system.health.value;
+
+  // =========================
+  // VEHICLE
+  // Button damage is always AFTER armor (never subtract again).
+  // =========================
+
+  if (actor.type === "vehicle") {
+    const incoming = Math.max(0, Number(damage) || 0);
+    const severity = this.applyInjurySeverityBonus(
+      this.getWoundSeverity(incoming, WT),
+      severitySteps
+    );
+
+    return this.applyVehicleDamage({
+      actor,
+      finalDamage: incoming,
+      severity,
+      current,
+      WT
+    });
+  }
+
   // damage = après armure, avant réduction de talent
   const finalDamage = this.resolveIncomingDamage(damage, actor);
-
-  const current = actor.system.health.value;
   const newHealth = current - finalDamage;
 
   await actor.update({
     "system.health.value": newHealth
   });
 
-  const severity = this.applyInjurySeverityBonus(
-    this.getWoundSeverity(finalDamage, WT),
-    severitySteps
+  return {
+    armor: 0,
+    finalDamage,
+    newHealth,
+    severity: this.applyInjurySeverityBonus(
+      this.getWoundSeverity(finalDamage, WT),
+      severitySteps
+    ),
+    WT,
+    current
+  };
+}
+
+static async applyVehicleDamage({
+  actor,
+  finalDamage,
+  severity,
+  current,
+  WT
+}) {
+
+  const newHealth = Math.max(0, current - finalDamage);
+
+  const maxCritical = Math.max(
+    1,
+    Number(actor.system.criticalWounds?.max) || 3
   );
+
+  let criticalWounds = Number(
+    actor.system.criticalWounds?.value ?? 0
+  );
+
+  let addedCritical = false;
+  let destroyed = false;
+
+  if (severity === "instant") {
+    destroyed = true;
+    criticalWounds = maxCritical;
+    addedCritical = true;
+  } else if (severity === "critical") {
+    criticalWounds = Math.min(maxCritical, criticalWounds + 1);
+    addedCritical = true;
+  }
+
+  const outOfService =
+    destroyed ||
+    newHealth <= 0 ||
+    criticalWounds >= maxCritical;
+
+  await actor.update({
+    "system.health.value": newHealth,
+    "system.criticalWounds.value": criticalWounds,
+    "system.outOfService": outOfService
+  });
 
   return {
     armor: 0,
@@ -608,11 +613,88 @@ static async applyFullDamage({ actor, damage, location, severitySteps = 0 }) {
     newHealth,
     severity,
     WT,
-    current
+    current,
+    criticalWounds,
+    criticalWoundsMax: maxCritical,
+    addedCritical,
+    outOfService,
+    destroyed
   };
 }
 
+static normalizeDamageType(damageType) {
+  if (!damageType) return null;
+  if (typeof damageType === "string") return damageType;
+  if (typeof damageType === "object") {
+    return damageType.value || damageType.type || null;
+  }
+  return null;
+}
+
+static resolveActorSize(actor) {
+  return (
+    actor?.system?.details?.size?.value ||
+    actor?.system?.size ||
+    "average"
+  );
+}
+
+static normalizeVehicleArmorTraits(raw) {
+  const result = {
+    padded: false,
+    dense: false,
+    layered: false
+  };
+
+  if (!raw) return result;
+
+  if (Array.isArray(raw)) {
+    for (const entry of raw) {
+      const key = typeof entry === "string" ? entry : entry?.key;
+      if (key && Object.prototype.hasOwnProperty.call(result, key)) {
+        result[key] = true;
+      }
+    }
+    return result;
+  }
+
+  for (const key of Object.keys(result)) {
+    const entry = raw[key];
+    result[key] =
+      entry === true ||
+      entry === 1 ||
+      entry === "true" ||
+      entry?.selected === true ||
+      entry?.value === true;
+  }
+
+  return result;
+}
+
 static getArmorValue(actor, location, damageType = null, defenseType = null){
+
+  if (actor?.type === "vehicle") {
+    const base = Math.max(
+      0,
+      Number(
+        foundry.utils.getProperty(actor, "system.armor.value") ?? 0
+      ) || 0
+    );
+
+    const dt = this.normalizeDamageType(damageType);
+    const traits = this.normalizeVehicleArmorTraits(
+      actor.system?.armorTraits
+    );
+
+    let value = base;
+
+    // Only explicit true flags can double AP.
+    if (traits.padded && dt === "bludgeoning") value *= 2;
+    else if (traits.dense && dt === "slashing") value *= 2;
+    else if (traits.layered && dt === "piercing") value *= 2;
+
+    return value;
+  }
 
   let armor = 0;
 
@@ -629,13 +711,14 @@ for (let item of armors){
   // =========================
 
 const traits = item.system.armorTraits || [];
+const resolvedDamageType = this.normalizeDamageType(damageType);
 
 const hasPadded = traits.some(t => (t.key || "").toLowerCase() === "padded");
 const hasDense = traits.some(t => (t.key || "").toLowerCase() === "dense");
 const hasLayered = traits.some(t => (t.key || "").toLowerCase() === "layered");
 
 // PADDED → BLUDGEONING
-if (hasPadded && damageType === "bludgeoning") {
+if (hasPadded && resolvedDamageType === "bludgeoning") {
   ap *= 2;
 
   console.log("SDP | PADDED APPLIED", {
@@ -646,7 +729,7 @@ if (hasPadded && damageType === "bludgeoning") {
 }
 
 // DENSE → SLASHING
-if (hasDense && damageType === "slashing") {
+if (hasDense && resolvedDamageType === "slashing") {
   ap *= 2;
 
   console.log("SDP | DENSE APPLIED", {
@@ -657,7 +740,7 @@ if (hasDense && damageType === "slashing") {
 }
 
 // LAYERED → PIERCING
-if (hasLayered && damageType === "piercing") {
+if (hasLayered && resolvedDamageType === "piercing") {
   ap *= 2;
 
   console.log("SDP | LAYERED APPLIED", {

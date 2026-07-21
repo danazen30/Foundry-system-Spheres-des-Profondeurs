@@ -1,0 +1,190 @@
+<div class="sdp-header vehicle-header">
+
+  <div class="vehicle-header-main">
+
+    <div class="character-portrait vehicle-portrait">
+      <img
+        class="profile-img"
+        src="{{actor.img}}"
+        alt="{{actor.name}}"
+        data-edit="img"
+      >
+    </div>
+
+    <div class="vehicle-resource-column">
+
+      <div class="vehicle-name-row">
+        <input
+          type="text"
+          name="name"
+          value="{{actor.name}}"
+          class="actor-name"
+        >
+      </div>
+
+      <div class="resource-box resource-bar">
+        <div class="resource-top">
+          <div class="resource-label">
+            ❤️ {{localize "SDP.Health"}}
+          </div>
+          <div class="resource-values">
+            <input
+              type="number"
+              name="system.health.value"
+              value="{{system.health.value}}"
+              {{#unless user.isGM}}disabled{{/unless}}>
+            <span>/</span>
+            <input
+              type="number"
+              name="system.health.max"
+              value="{{system.health.max}}"
+              {{#unless user.isGM}}disabled{{/unless}}>
+          </div>
+        </div>
+        <div class="bar">
+          <div
+            class="bar-fill health-fill"
+            style="width: {{multiply (divide system.health.value system.health.max) 100}}%;">
+          </div>
+        </div>
+      </div>
+
+      <div class="encumbrance">
+        <span>
+          ⚖️ {{localize "SDP.Encumbrance"}}
+          {{system.resources.encumbrance.value}} /
+          {{system.resources.encumbrance.max}}
+        </span>
+        {{#if system.resources.encumbrance.state.label}}
+          <span class="encumbrance-warning">
+            {{system.resources.encumbrance.state.label}}
+          </span>
+        {{/if}}
+      </div>
+
+      <div class="vehicle-price-row">
+        <label>{{localize "SDP.Price"}}</label>
+        <div class="price-grid vehicle-header-price">
+          <input
+            type="number"
+            class="currency-input currency-platinum"
+            name="system.price.platinum"
+            value="{{system.price.platinum}}"
+            title="{{localize 'SDP.CurrencyPlatinum'}}"
+            placeholder="Pt"
+            min="0">
+          <input
+            type="number"
+            class="currency-input currency-gold"
+            name="system.price.gold"
+            value="{{system.price.gold}}"
+            title="{{localize 'SDP.CurrencyGold'}}"
+            placeholder="Or"
+            min="0">
+          <input
+            type="number"
+            class="currency-input currency-silver"
+            name="system.price.silver"
+            value="{{system.price.silver}}"
+            title="{{localize 'SDP.CurrencySilver'}}"
+            placeholder="Ar"
+            min="0">
+          <input
+            type="number"
+            class="currency-input currency-copper"
+            name="system.price.copper"
+            value="{{system.price.copper}}"
+            title="{{localize 'SDP.CurrencyCopper'}}"
+            placeholder="Cu"
+            min="0">
+        </div>
+      </div>
+
+    </div>
+
+    <div class="vehicle-combat-side">
+
+      <div class="resource-box derived-grid vehicle-stats-grid">
+
+        <div class="derived-cell">
+          <label>🛡️ {{localize "SDP.Armor"}}</label>
+          <input
+            type="number"
+            name="system.armor.value"
+            value="{{system.armor.value}}"
+            {{#unless user.isGM}}disabled{{/unless}}>
+        </div>
+
+        <div class="derived-cell">
+          <label>💢 {{localize "SDP.VehicleWoundThreshold"}}</label>
+          <input
+            type="number"
+            name="system.woundThreshold.value"
+            value="{{system.woundThreshold.value}}"
+            min="0"
+            {{#unless user.isGM}}disabled{{/unless}}>
+        </div>
+
+        <div class="derived-cell">
+          <label>💥 {{localize "SDP.VehicleCriticalWounds"}}</label>
+          <div class="vehicle-critical-wounds">
+            <input
+              type="number"
+              name="system.criticalWounds.value"
+              value="{{system.criticalWounds.value}}"
+              min="0"
+              {{#unless user.isGM}}disabled{{/unless}}>
+            <span>/</span>
+            <input
+              type="number"
+              name="system.criticalWounds.max"
+              value="{{system.criticalWounds.max}}"
+              min="1"
+              {{#unless user.isGM}}disabled{{/unless}}>
+          </div>
+        </div>
+
+      </div>
+
+      {{#if system.outOfService}}
+        <div class="vehicle-out-of-service">
+          {{localize "SDP.VehicleOutOfService"}}
+        </div>
+      {{/if}}
+
+      <div class="movement-header-box">
+        <div class="movement-grid">
+
+          <div class="movement-header">
+            {{localize "SDP.Move"}}
+          </div>
+          <div class="movement-header">
+            {{localize "SDP.Walk"}}
+          </div>
+          <div class="movement-header">
+            {{localize "SDP.Run"}}
+          </div>
+
+          <input
+            type="number"
+            class="movement-value"
+            name="system.resources.movement.value"
+            value="{{system.resources.movement.value}}"
+            {{#unless user.isGM}}disabled{{/unless}}>
+
+          <div class="movement-value">
+            {{system.resources.movement.walk}}
+          </div>
+
+          <div class="movement-value">
+            {{system.resources.movement.run}}
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

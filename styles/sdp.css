@@ -713,3 +713,52 @@
   width: 100%;
   min-height: 240px;
 }
+/* =========================
+   CURRENCY COLORS (price fields)
+   ========================= */
+
+:root {
+  --sdp-currency-platinum: #d7e6f5;
+  --sdp-currency-platinum-bg: rgba(180, 210, 235, 0.18);
+  --sdp-currency-platinum-border: #9bb6d0;
+
+  --sdp-currency-gold: #f0d060;
+  --sdp-currency-gold-bg: rgba(212, 160, 30, 0.22);
+  --sdp-currency-gold-border: #c9a227;
+
+  --sdp-currency-silver: #c8ced6;
+  --sdp-currency-silver-bg: rgba(170, 180, 195, 0.2);
+  --sdp-currency-silver-border: #8f99a6;
+
+  --sdp-currency-copper: #d08a55;
+  --sdp-currency-copper-bg: rgba(176, 100, 45, 0.24);
+  --sdp-currency-copper-border: #a65f2e;
+}
+
+.currency-input.currency-platinum,
+.price-grid input.currency-platinum {
+  background: var(--sdp-currency-platinum-bg);
+  border-color: var(--sdp-currency-platinum-border);
+  color: var(--sdp-currency-platinum);
+}
+
+.currency-input.currency-gold,
+.price-grid input.currency-gold {
+  background: var(--sdp-currency-gold-bg);
+  border-color: var(--sdp-currency-gold-border);
+  color: var(--sdp-currency-gold);
+}
+
+.currency-input.currency-silver,
+.price-grid input.currency-silver {
+  background: var(--sdp-currency-silver-bg);
+  border-color: var(--sdp-currency-silver-border);
+  color: var(--sdp-currency-silver);
+}
+
+.currency-input.currency-copper,
+.price-grid input.currency-copper {
+  background: var(--sdp-currency-copper-bg);
+  border-color: var(--sdp-currency-copper-border);
+  color: var(--sdp-currency-copper);
+}

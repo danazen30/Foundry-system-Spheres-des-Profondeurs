@@ -127,7 +127,7 @@ const result = await SdpDamage.rollDamage({
   defenseType
 });
 
-  const { roll, damage, damageAfterArmor, finalDamage, armor, formula, devastating, weaponDetail, baseWeapon, SB } = result;
+  const { roll, damage, damageAfterArmor, finalDamage, armor, armorBase, armorMultiplierReason, formula, devastating, weaponDetail, baseWeapon, SB } = result;
 
    if (!brutal) {
 
@@ -414,6 +414,10 @@ if (card.classList.contains("sdp-spell")) {
 
 }
 
+    const armorLabel = armorMultiplierReason === "inoffensive"
+      ? `${armorBase} ×2 (${game.i18n.localize("SDP.WeaponTraitInoffensive")}) = ${armor}`
+      : `${armor}`;
+
     ChatMessage.create({
       content: `
             <div class="damage-card"
@@ -434,7 +438,6 @@ ${getHitLocationLabel(
   location
 )}
 </p>
-</p>
       <p>
   ${game.i18n.localize(
     "SDP.RawDamage"
@@ -444,7 +447,7 @@ ${getHitLocationLabel(
 <p>
   ${game.i18n.localize(
     "SDP.Armor"
-  )}: ${armor}
+  )}: ${armorLabel}
 </p>
 
 <p>
@@ -641,11 +644,13 @@ ${getHitLocationLabel(
   )}: ${damage}
 </p>
 
-<p>
+${armor
+  ? `<p>
   ${game.i18n.localize(
     "SDP.Armor"
   )}: ${armor}
-</p>
+</p>`
+  : ""}
 
 <p>
 
@@ -783,10 +788,71 @@ if (hasTaille && targetId) {
 const {
   newHealth,
   current,
-  severity
+  severity,
+  criticalWounds,
+  criticalWoundsMax,
+  addedCritical,
+  outOfService,
+  destroyed
 } = result;
 
-if (severity) {
+if (actor.type === "vehicle") {
+
+  const severityKey = formatWoundSeverityKey(severity);
+  const crits = Number(
+    criticalWounds ?? actor.system.criticalWounds?.value ?? 0
+  );
+  const critMax = Number(
+    criticalWoundsMax ?? actor.system.criticalWounds?.max ?? 3
+  );
+
+  let vehicleExtra = "";
+
+  if (addedCritical) {
+    vehicleExtra += `
+      <p><strong>${game.i18n.format(
+        "SDP.VehicleCriticalWoundGained",
+        { current: crits, max: critMax }
+      )}</strong></p>
+    `;
+  }
+
+  if (destroyed) {
+    vehicleExtra += `
+      <p><strong>${game.i18n.localize(
+        "SDP.VehicleDestroyed"
+      )}</strong></p>
+    `;
+  } else if (outOfService) {
+    vehicleExtra += `
+      <p><strong>${game.i18n.localize(
+        "SDP.VehicleOutOfService"
+      )}</strong></p>
+    `;
+  }
+
+  ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    whisper: ChatMessage.getWhisperRecipients("GM"),
+    content: `
+      <div class="sdp-injury-card" data-actor="${actor.id}">
+        <h3>${game.i18n.localize("SDP.VehicleDamage")}</h3>
+        <p>
+          ${game.i18n.localize("SDP.Severity")}:
+          ${severity
+            ? game.i18n.localize(severityKey)
+            : game.i18n.localize("SDP.None")}
+        </p>
+        <p>
+          ${game.i18n.localize("SDP.VehicleCriticalWounds")}:
+          ${crits} / ${critMax}
+        </p>
+        ${vehicleExtra}
+      </div>
+    `
+  });
+
+} else if (severity) {
 
   const severityKey =
     formatWoundSeverityKey(severity);
@@ -1042,9 +1108,14 @@ html.on("click", ".validate-damage", async ev => {
   // =========================
 
   let armor = 0;
+  const damageType = card.dataset.damagetype || null;
 
   if (targets.length) {
-    armor = SdpDamage.getArmorValue(targets[0].actor, location);
+    armor = SdpDamage.getArmorValue(
+      targets[0].actor,
+      location,
+      damageType
+    );
   }
 
   const damageAfterArmor = Math.max(damage - armor, 0);

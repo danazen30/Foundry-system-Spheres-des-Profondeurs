@@ -19,9 +19,7 @@
 
         <tbody>
 
-          {{#each actor.items as |item|}}
-          {{#if (eq item.type "skill")}}
-          {{#unless item.system.advanced}}
+          {{#each basicSkills as |item|}}
 
           <tr>
 
@@ -84,8 +82,6 @@
 
           </tr>
 
-          {{/unless}}
-          {{/if}}
           {{/each}}
 
         </tbody>
@@ -113,9 +109,7 @@
 
         <tbody>
 
-          {{#each actor.items as |item|}}
-          {{#if (eq item.type "skill")}}
-          {{#if item.system.advanced}}
+          {{#each advancedSkills as |item|}}
 
           <tr>
 
@@ -178,8 +172,6 @@
 
           </tr>
 
-          {{/if}}
-          {{/if}}
           {{/each}}
 
         </tbody>

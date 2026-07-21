@@ -69,13 +69,13 @@ for (let item of actor.items) {
 
 }
 
-    const STR = actor.system.attributes.strength.value || 0;
-const TGH = actor.system.attributes.toughness.value || 0;
+    const STR = actor.system.attributes?.strength?.value || 0;
+const TGH = actor.system.attributes?.toughness?.value || 0;
 
 const max =
   actor.system.derived?.carryingCapacity?.value ??
   Math.floor((STR + TGH) / 2);
-const ratio = total / max;
+const ratio = max > 0 ? total / max : (total > 0 ? Infinity : 0);
 
 let encumbranceState = {
   level: 0,
