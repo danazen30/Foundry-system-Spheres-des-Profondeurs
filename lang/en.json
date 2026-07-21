@@ -88,6 +88,8 @@
   "SDP.WeaponTraitVersatile": "Versatile",
   "SDP.WeaponTraitStunning": "Stunning",
   "SDP.WeaponTraitBleeding": "Bleeding",
+  "SDP.BleedingPending": "Pending bleeding: +{stacks} (dice ≥ {threshold})",
+  "SDP.BleedingApplied": "Bleeding applied: +{stacks}",
   "SDP.WeaponTraitImpactful": "Impactful",
   "SDP.WeaponTraitEntangling": "Entangling",
   "SDP.WeaponTraitDevastating": "Devastating",

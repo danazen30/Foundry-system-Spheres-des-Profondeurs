@@ -88,6 +88,8 @@
   "SDP.WeaponTraitVersatile": "Polyvalente",
   "SDP.WeaponTraitStunning": "Assomante",
   "SDP.WeaponTraitBleeding": "Saignante",
+  "SDP.BleedingPending": "Saignement en attente : +{stacks} (dés ≥ {threshold})",
+  "SDP.BleedingApplied": "Saignement appliqué : +{stacks}",
   "SDP.WeaponTraitImpactful": "Impact",
   "SDP.WeaponTraitEntangling": "Enroulante",
   "SDP.WeaponTraitDevastating": "Dévastatrice",

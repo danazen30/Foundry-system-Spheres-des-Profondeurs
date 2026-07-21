@@ -1,6 +1,7 @@
 import { SdpDamage } from "../combat/damage.js";
 import { getHitLocationLabel } from "../combat/hit-location.js";
 import { getInjuryFromPack } from "../system/injury-utils.js";
+import { SdpConditionEngine } from "../system/condition-engine.js";
 
 function formatWoundSeverityKey(severity) {
 
@@ -30,6 +31,16 @@ function getAttackerInjurySeverityBonus(attacker) {
     attacker?.system?.custom?.injurySeverityBonus || 0
   );
 
+}
+
+async function applyBleedingFromDamageCard(actor, button) {
+  if (!actor || actor.type === "vehicle") return 0;
+
+  const stacks = Number(button.dataset.bleeding || 0);
+  if (stacks <= 0) return 0;
+
+  await SdpConditionEngine.add(actor, "bleeding", stacks);
+  return stacks;
 }
 
 export function registerDamageHandlers(html, message) {
@@ -127,7 +138,7 @@ const result = await SdpDamage.rollDamage({
   defenseType
 });
 
-  const { roll, damage, damageAfterArmor, finalDamage, armor, armorBase, armorMultiplierReason, formula, devastating, weaponDetail, baseWeapon, SB } = result;
+  const { roll, damage, damageAfterArmor, finalDamage, armor, armorBase, armorMultiplierReason, formula, devastating, weaponDetail, baseWeapon, SB, bleedingStacks = 0, bleedingThreshold = 0, rolledDiceFormula = "" } = result;
 
    if (!brutal) {
 
@@ -158,6 +169,8 @@ const diceHTML = dice.map((d, i) => `
   </button>
 `).join("");
 
+const traitsJson = JSON.stringify(weapon?.system?.traits || traits || []);
+
 await roll.toMessage({
   speaker: ChatMessage.getSpeaker({actor}),
   flavor: `
@@ -173,7 +186,10 @@ await roll.toMessage({
      data-total="${roll.total}"
      data-attacker="${actorId}"
      data-target="${targetId}"
-     data-location="${location}">
+     data-location="${location}"
+     data-damagetype="${damageType || ""}"
+     data-weapon-dice="${rolledDiceFormula || ""}"
+     data-traits='${traitsJson}'>
 
       <h3>
   ${game.i18n.localize(
@@ -418,6 +434,13 @@ if (card.classList.contains("sdp-spell")) {
       ? `${armorBase} ×2 (${game.i18n.localize("SDP.WeaponTraitInoffensive")}) = ${armor}`
       : `${armor}`;
 
+    const bleedingLine = bleedingStacks > 0
+      ? `<p><strong>${game.i18n.format("SDP.BleedingPending", {
+          stacks: bleedingStacks,
+          threshold: bleedingThreshold
+        })}</strong></p>`
+      : "";
+
     ChatMessage.create({
       content: `
             <div class="damage-card"
@@ -455,12 +478,14 @@ ${getHitLocationLabel(
     "SDP.FinalDamage"
   )}: ${finalDamage}
 </p>
+${bleedingLine}
       <button class="apply-damage"
         data-attacker="${actorId}"
         data-target="${card.classList.contains("sdp-spell") ? "" : targetId}"
         data-damage="${damageAfterArmor ?? finalDamage}"
         data-location="${location}"
-        data-critical="${critical}">
+        data-critical="${critical}"
+        data-bleeding="${bleedingStacks}">
         ${game.i18n.localize(
   "SDP.ApplyDamage"
 )}
@@ -624,6 +649,7 @@ const result = await SdpDamage.applyFullDamage({
 });
 
 const { finalDamage, armor, newHealth, current, severity } = result;
+const bleedingStacks = await applyBleedingFromDamageCard(token.actor, button);
 
   ChatMessage.create({
     content: `
@@ -669,6 +695,11 @@ ${armor
     "SDP.HP"
   )}: ${current} → ${newHealth}
 </p>
+${bleedingStacks > 0
+  ? `<p><strong>${game.i18n.format("SDP.BleedingApplied", {
+      stacks: bleedingStacks
+    })}</strong></p>`
+  : ""}
       ${
   severity
     ? `
@@ -795,6 +826,8 @@ const {
   outOfService,
   destroyed
 } = result;
+
+const bleedingStacks = await applyBleedingFromDamageCard(actor, button);
 
 if (actor.type === "vehicle") {
 
@@ -966,6 +999,13 @@ ${game.i18n.localize(
       : ""
   }
   <p><strong>${current} → ${newHealth}</strong></p>
+  ${
+    bleedingStacks > 0
+      ? `<p><strong>${game.i18n.format("SDP.BleedingApplied", {
+          stacks: bleedingStacks
+        })}</strong></p>`
+      : ""
+  }
   `
 });
 
@@ -1127,6 +1167,53 @@ html.on("click", ".validate-damage", async ev => {
     )
     : damageAfterArmor;
 
+  let traits = [];
+  try {
+    traits = JSON.parse(card.dataset.traits || "[]");
+  } catch (e) {
+    traits = [];
+  }
+
+  let dice = [];
+  try {
+    dice = JSON.parse(card.dataset.dice || "[]");
+  } catch (e) {
+    dice = [];
+  }
+
+  const weaponDiceFormula = card.dataset.weaponDice || "";
+  const neededFaces = [];
+  const formulaMatches = String(weaponDiceFormula).match(/(\d+)d(\d+)/gi) || [];
+  for (const match of formulaMatches) {
+    const parts = match.match(/(\d+)d(\d+)/i);
+    if (!parts) continue;
+    const count = Number(parts[1]);
+    const faces = Number(parts[2]);
+    for (let i = 0; i < count; i++) neededFaces.push(faces);
+  }
+
+  const remaining = [...neededFaces];
+  const weaponDieResults = [];
+  for (const die of dice) {
+    const faces = Number(die.faces);
+    const idx = remaining.indexOf(faces);
+    if (idx === -1) continue;
+    remaining.splice(idx, 1);
+    weaponDieResults.push(Number(die.result));
+  }
+
+  const bleeding = SdpDamage.countBleedingStacks(
+    traits,
+    weaponDieResults.length ? weaponDieResults : dice.map((d) => Number(d.result))
+  );
+
+  const bleedingLine = bleeding.stacks > 0
+    ? `<p><strong>${game.i18n.format("SDP.BleedingPending", {
+        stacks: bleeding.stacks,
+        threshold: bleeding.threshold
+      })}</strong></p>`
+    : "";
+
   // =========================
   // NORMAL DAMAGE RESOLUTION CARD
   // =========================
@@ -1166,12 +1253,14 @@ ${getHitLocationLabel(
     "SDP.FinalDamage"
   )}: ${finalDamage}
 </p>
+${bleedingLine}
 
 <button class="apply-damage"
   data-attacker="${card.dataset.attacker || ""}"
   data-target="${targetId || ""}"
   data-damage="${damageAfterArmor}"
-  data-location="${location}">
+  data-location="${location}"
+  data-bleeding="${bleeding.stacks}">
 
   ${game.i18n.localize(
     "SDP.ApplyDamage"

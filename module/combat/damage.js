@@ -109,6 +109,106 @@ static applyInjurySeverityBonus(severity, steps = 0) {
 
 }
 
+static normalizeTraitKey(trait) {
+  if (!trait) return "";
+  const raw = typeof trait === "string" ? trait : (trait.key || "");
+  return String(raw)
+    .replace(/([a-z])([A-Z])/g, "$1-$2")
+    .toLowerCase()
+    .replace(/[\s_]/g, "-");
+}
+
+static getBleedingThreshold(traits = []) {
+  const trait = (traits || []).find((t) =>
+    this.normalizeTraitKey(t) === "bleeding"
+  );
+  if (!trait) return null;
+
+  const raw = String(trait.value ?? "").trim();
+  // Versatile can store "5/4" — use the first threshold by default.
+  const match = raw.match(/(\d+)/);
+  if (!match) return null;
+
+  const threshold = Number(match[1]);
+  return threshold > 0 ? threshold : null;
+}
+
+static extractDieResultsFromRoll(roll) {
+  if (!roll?.dice?.length) return [];
+
+  const results = [];
+  for (const die of roll.dice) {
+    for (const entry of die.results || []) {
+      if (entry.active === false) continue;
+      results.push(Number(entry.result));
+    }
+  }
+  return results;
+}
+
+/** Keep only results that match the weapon/ammo dice formula (ignore sign dice, etc.). */
+static extractMatchingDieResults(roll, diceFormula) {
+  const neededFaces = [];
+  const matches = String(diceFormula || "").match(/(\d+)d(\d+)/gi) || [];
+
+  for (const match of matches) {
+    const parts = match.match(/(\d+)d(\d+)/i);
+    if (!parts) continue;
+    const count = Number(parts[1]);
+    const faces = Number(parts[2]);
+    for (let i = 0; i < count; i++) {
+      neededFaces.push(faces);
+    }
+  }
+
+  if (!neededFaces.length || !roll?.dice?.length) return [];
+
+  const remaining = [...neededFaces];
+  const results = [];
+
+  for (const die of roll.dice) {
+    for (const entry of die.results || []) {
+      if (entry.active === false) continue;
+      const idx = remaining.indexOf(die.faces);
+      if (idx === -1) continue;
+      remaining.splice(idx, 1);
+      results.push(Number(entry.result));
+    }
+  }
+
+  return results;
+}
+
+static expandMaxDieResults(diceFormula) {
+  const results = [];
+  const matches = String(diceFormula || "").match(/(\d+)d(\d+)/gi) || [];
+
+  for (const match of matches) {
+    const parts = match.match(/(\d+)d(\d+)/i);
+    if (!parts) continue;
+    const count = Number(parts[1]);
+    const faces = Number(parts[2]);
+    for (let i = 0; i < count; i++) {
+      results.push(faces);
+    }
+  }
+
+  return results;
+}
+
+static countBleedingStacks(traits, dieResults) {
+  const threshold = this.getBleedingThreshold(traits);
+  if (!threshold || !dieResults?.length) {
+    return { stacks: 0, threshold: threshold || 0 };
+  }
+
+  const stacks = dieResults.filter(
+    (result) => Number(result) >= threshold
+  ).length;
+
+  return { stacks, threshold };
+}
+
 static async rollDamage({ actor, weapon, target, location, critical, brutal, ammoId, damageType = null, defenseType }) {
 
   const dialogMods = game.sdp?.dialogModifiers || {};
@@ -359,6 +459,9 @@ if (statBonus) formula += `${statBonus}`;
 if (baseWeapon > 0) formula += (formula ? " + " : "") + baseWeapon;
 if (diceFormula) formula += (formula ? " + " : "") + diceFormula;
 
+// Weapon/ammo dice present in the formula (before impactful mutation below).
+const rolledDiceFormula = diceFormula;
+
 if (signDiceFormula) {
   formula += (formula ? " + " : "") + signDiceFormula;
 }
@@ -469,6 +572,9 @@ weaponDetail.push(
     ? this.resolveIncomingDamage(damageAfterArmor, target)
     : damageAfterArmor;
 
+  const brutalDieResults = this.expandMaxDieResults(weaponDiceFormula);
+  const bleeding = this.countBleedingStacks(traits, brutalDieResults);
+
   return {
   roll: signRoll,
   damage,
@@ -481,7 +587,9 @@ weaponDetail.push(
   devastating,
   weaponDetail: weaponDetail.join(" + "),
   baseWeapon,
-  SB: statBonus
+  SB: statBonus,
+  bleedingStacks: bleeding.stacks,
+  bleedingThreshold: bleeding.threshold
 };
 }
 
@@ -498,6 +606,11 @@ weaponDetail.push(
     ? this.resolveIncomingDamage(damageAfterArmor, target)
     : damageAfterArmor;
 
+  const bleeding = this.countBleedingStacks(
+    traits,
+    this.extractMatchingDieResults(roll, rolledDiceFormula)
+  );
+
   return {
   roll,
   damage,
@@ -507,7 +620,10 @@ weaponDetail.push(
   armorBase,
   armorMultiplierReason,
   formula,
-  devastating
+  devastating,
+  rolledDiceFormula,
+  bleedingStacks: bleeding.stacks,
+  bleedingThreshold: bleeding.threshold
 };
 }
 
