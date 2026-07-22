@@ -11,6 +11,7 @@ import {
   getBestActorSkillForWeapon
 } from "../system/weapon-skill-utils.js";
 import { getActorItemDisplayName } from "../system/item-localization.js";
+import { SdpMount } from "../system/mount-utils.js";
 
 export class SdpAttack {
 
@@ -820,7 +821,7 @@ const finalTraits = [...activePositiveTraits, ...negativeTraits];
 let chargeBonus = 0;
 
 if (dialogMods.charge) {
-  chargeBonus = 1;
+  chargeBonus = SdpMount.getChargeHitBonus(actor, true);
 }
 
 let baseAttack = actor.getWeaponAttack(weapon) / 10;
@@ -1078,7 +1079,14 @@ ${game.i18n.localize(
   ${critText}
   ${breakText}
   ${dialogMods.charge
-  ? `<p>${game.i18n.localize("SDP.Charge")}</p>`
+  ? `<p>${game.i18n.localize(
+    dialogMods.mountedCharge || SdpMount.isMounted(actor)
+      ? "SDP.ChargeMounted"
+      : "SDP.Charge"
+  )}</p>`
+  : ""}
+  ${dialogMods.counterCharge
+  ? `<p>${game.i18n.localize("SDP.CounterCharge")}</p>`
   : ""}
   ${talentsHTML}
   <p>${game.i18n.localize("SDP.AttackScore")}: ${attackScore}</p>

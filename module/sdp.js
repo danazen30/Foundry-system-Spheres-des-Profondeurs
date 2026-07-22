@@ -84,6 +84,7 @@ import {
   registerPackMigrationSettings,
   removeTradeAlchemistSkill
 } from "./system/pack-migrations.js";
+import { SdpMount } from "./system/mount-utils.js";
 
 export let sdpSocket;
 
@@ -212,6 +213,8 @@ const templateJson = await templateResponse.json();
   game.sdp = game.sdp || {};
 game.sdp.Roll = SdpRoll;
 game.sdp.level = SdpLevelService;
+
+  SdpMount.register();
 
   CONFIG.Actor.documentClass = SdpActor;
   CONFIG.Item.documentClass = SdpItem;

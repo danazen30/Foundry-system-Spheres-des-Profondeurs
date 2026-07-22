@@ -3,6 +3,7 @@ import { SdpSpell } from "../combat/spell.js";
 import { SdpRoll } from "../rolls/roll.js";
 import { getActorItemDisplayName } from "../system/item-localization.js";
 import { SdpSizeEngine } from "../system/size-engine.js";
+import { SdpMount } from "../system/mount-utils.js";
 import {
   resolveWeaponRangeWithAmmo
 } from "../system/formula-utils.js";
@@ -184,6 +185,38 @@ const sizeModifier =
 
   }
 
+}
+
+// -------------------------
+// MOUNTED TARGET (-10 to hit rider)
+// -------------------------
+
+if (
+  this.type === "attack" &&
+  this.weapon &&
+  targetActor &&
+  SdpMount.isMounted(targetActor)
+) {
+  modifiers.push({
+    label: game.i18n.localize("SDP.Mount.HitMountedTarget"),
+    value: -10
+  });
+}
+
+// -------------------------
+// MOUNTED ATTACKER WITHOUT CAVALRY WEAPON (-10)
+// -------------------------
+
+if (
+  this.type === "attack" &&
+  this.weapon &&
+  SdpMount.isMounted(this.actor) &&
+  !SdpMount.isCavalryWeapon(this.weapon)
+) {
+  modifiers.push({
+    label: game.i18n.localize("SDP.Mount.NonCavalryWeapon"),
+    value: -10
+  });
 }
 
 // -------------------------
@@ -501,10 +534,23 @@ const hasFinesseTrait =
 
   });
 
+const attackerMounted = SdpMount.isMounted(this.actor);
+const hasCounterCharge =
+  this.type === "attack" &&
+  this.weapon &&
+  SdpMount.hasAntiLargeTrait(this.weapon);
+
+const chargeLabel = attackerMounted
+  ? game.i18n.localize("SDP.ChargeAttackMounted")
+  : game.i18n.localize("SDP.ChargeAttack");
+
 return {
     actor: this.actor,
     label: this.label,
     hasFinesseTrait,
+    hasCounterCharge,
+    chargeLabel,
+    attackerMounted,
     target: this.target,
     isAttack: this.type === "attack",
     talents,
@@ -699,6 +745,7 @@ const talentsHTML =
 const location = root.querySelector('[name="location"]')?.value || null;
 const brutal = root.querySelector('[name="brutal"]')?.checked || false;
 const charge = root.querySelector('[name="charge"]')?.checked || false;
+const counterCharge = root.querySelector('[name="counterCharge"]')?.checked || false;
 const finesse = root.querySelector('[name="finesse"]')?.checked || false;
 
 // =========================
@@ -749,6 +796,8 @@ game.sdp.dialogModifiers = {
   location,
   brutal,
   charge,
+  counterCharge,
+  mountedCharge: charge && SdpMount.isMounted(this.actor),
   finesse,
   talents: selectedTalents,
   inspiration: this.inspirationResult,

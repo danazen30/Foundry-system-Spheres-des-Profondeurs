@@ -204,8 +204,15 @@
 
     <label class="sdp-roll-check">
       <input type="checkbox" name="charge">
-      <span class="sdp-roll-check__label">{{localize "SDP.ChargeAttack"}}</span>
+      <span class="sdp-roll-check__label">{{chargeLabel}}</span>
     </label>
+
+    {{#if hasCounterCharge}}
+    <label class="sdp-roll-check">
+      <input type="checkbox" name="counterCharge">
+      <span class="sdp-roll-check__label">{{localize "SDP.CounterCharge"}}</span>
+    </label>
+    {{/if}}
 
     {{#if hasFinesseTrait}}
     <label class="sdp-roll-check">

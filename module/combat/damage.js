@@ -1,5 +1,6 @@
 import { SdpSizeEngine } from "../system/size-engine.js";
 import { SdpRoll } from "../rolls/roll.js";
+import { SdpMount } from "../system/mount-utils.js";
 import {
   hasWeaponDamageStatBonus,
   parseWeaponDamageFormula
@@ -467,10 +468,14 @@ if (signDiceFormula) {
 }
 
   // =========================
-// IMPACTFUL (PERCUTANTE)
+// IMPACTFUL (PERCUTANTE) — foot charge only
 // =========================
 
-if (impactfulTrait && dialogMods.charge) {
+const mountedCharge =
+  dialogMods.mountedCharge
+  || (dialogMods.charge && SdpMount.isMounted(actor));
+
+if (impactfulTrait && dialogMods.charge && !mountedCharge) {
 
   const impactfulValue = impactfulTrait.value; // ex: "1d4"
 
@@ -479,6 +484,15 @@ if (impactfulTrait && dialogMods.charge) {
     diceFormula = diceFormula
       ? `${diceFormula} + ${impactfulValue}`
       : impactfulValue;
+
+    // Rebuild formula so impactful dice are rolled.
+    formula = "";
+    if (statBonus) formula += `${statBonus}`;
+    if (baseWeapon > 0) formula += (formula ? " + " : "") + baseWeapon;
+    if (diceFormula) formula += (formula ? " + " : "") + diceFormula;
+    if (signDiceFormula) {
+      formula += (formula ? " + " : "") + signDiceFormula;
+    }
 
     console.log("SDP | IMPACTFUL ADDED:", impactfulValue);
   }
@@ -515,6 +529,34 @@ if (talentDamageBonus) {
     actor: actor.name,
     bonus: talentDamageBonus
   });
+}
+
+// =========================
+// MOUNTED CHARGE (+50%) / COUNTER-CHARGE ANTI-LARGE (×2)
+// =========================
+
+if (mountedCharge) {
+  damage = Math.floor(damage * 1.5);
+  console.log("SDP | MOUNTED CHARGE DAMAGE ×1.5", { damage });
+}
+
+const hasAntiLarge = traits.some((t) => {
+  if (!t) return false;
+  const key = this.normalizeTraitKey(t);
+  return key === "anti-large" || key === "antilarge";
+});
+
+if (dialogMods.counterCharge && hasAntiLarge) {
+  damage = Math.floor(damage * 2);
+  console.log("SDP | COUNTER-CHARGE ANTI-LARGE ×2", { damage });
+}
+
+if (
+  dialogMods.counterCharge &&
+  target &&
+  SdpMount.isMounted(target)
+) {
+  await SdpMount.knockDownMounted(target);
 }
 
   // =========================
@@ -565,6 +607,14 @@ weaponDetail.push(
   // =========================
 
   damage = weaponMax + signTotal + baseWeapon + statBonus + talentDamageBonus;
+
+  if (mountedCharge) {
+    damage = Math.floor(damage * 1.5);
+  }
+
+  if (dialogMods.counterCharge && hasAntiLarge) {
+    damage = Math.floor(damage * 2);
+  }
 
   const damageAfterArmor = Math.max(damage - armor, 0);
 

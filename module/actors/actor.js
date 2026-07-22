@@ -1,6 +1,7 @@
 import { SdpActorInventory } from "./actor-inventory.js";
 import { SdpSizeEngine } from "../system/size-engine.js";
 import { SdpDamage } from "../combat/damage.js";
+import { SdpMount } from "../system/mount-utils.js";
 import {
   actorHasWeaponSkill,
   findActorSkillForRef,
@@ -101,6 +102,7 @@ system.custom.manaBonus ??= 0;
     system.custom.meleeActionBonus ??= 0;
     system.custom.parryBonus ??= 0;
     system.custom.evasionBonus ??= 0;
+    system.custom.mountedEvasionPenaltyReduction ??= 0;
     system.custom.combatInitiativeBonus ??= 0;
     system.custom.reflexesValue ??= 0;
     system.custom.injurySeverityBonus ??= 0;
@@ -624,6 +626,7 @@ system.custom.offhandReduction = 0;
 system.custom.meleeActionBonus = 0;
 system.custom.parryBonus = 0;
 system.custom.evasionBonus = 0;
+system.custom.mountedEvasionPenaltyReduction = 0;
 system.custom.combatInitiativeBonus = 0;
 system.custom.injurySeverityBonus = 0;
 system.custom.toughnessHealthMultiplier = 0;
@@ -700,6 +703,14 @@ if (change.key === "system.custom.evasionBonus") {
   const base = Number(change.value || 0);
 
   system.custom.evasionBonus += base * level;
+
+}
+
+if (change.key === "system.custom.mountedEvasionPenaltyReduction") {
+
+  const base = Number(change.value || 0);
+
+  system.custom.mountedEvasionPenaltyReduction += base * level;
 
 }
 
@@ -1244,7 +1255,8 @@ const evasionBase =
 const finalEvasion =
   (evasionBase / 10 + 5) +
   conditionPenalty +
-  (system.custom.evasionBonus || 0);
+  (system.custom.evasionBonus || 0) +
+  SdpMount.getMountedEvasionPenalty(this);
 system.derived.evasion.value = Math.max(
   Math.round(finalEvasion * 10) / 10,
   0
