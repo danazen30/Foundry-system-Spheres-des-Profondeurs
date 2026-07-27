@@ -113,8 +113,35 @@ system.custom.manaBonus ??= 0;
 
     system.details ??= {};
 
-system.details.size ??= {};
-system.details.size.value ??= "average";
+    system.details.size ??= {};
+    if (typeof system.details.size === "string") {
+      system.details.size = { value: system.details.size };
+    }
+
+    // Canonical: details.size.value (character / vehicle / creature sheet).
+    // Legacy creatures only stored system.size — keep that if details is still default.
+    const sourceDetailsSize = this._source?.system?.details?.size;
+    const sourceDetailsValue =
+      typeof sourceDetailsSize === "string"
+        ? sourceDetailsSize
+        : sourceDetailsSize?.value;
+    const sourceFlatSize =
+      typeof this._source?.system?.size === "string"
+        ? this._source.system.size
+        : undefined;
+
+    let resolvedSize = "average";
+    if (sourceDetailsValue && sourceDetailsValue !== "average") {
+      resolvedSize = sourceDetailsValue;
+    } else if (sourceFlatSize) {
+      resolvedSize = sourceFlatSize;
+    } else if (sourceDetailsValue) {
+      resolvedSize = sourceDetailsValue;
+    }
+
+    system.details.size.value = resolvedSize;
+    // Keep system.size in sync for combat code that still reads it.
+    system.size = resolvedSize;
 
 system.combat ??= {};
 

@@ -2,6 +2,10 @@ import { SimpleDialog } from "../apps/simple-dialog.js";
 import { SdpRoll } from "../rolls/roll.js";
 import { WEAPON_TRAITS } from "../system/config.js";
 import { getHitLocationLabel } from "../combat/hit-location.js";
+import {
+  resolveActorFromIds,
+  resolveActorItem
+} from "../system/actor-utils.js";
 
 export function registerEditHandlers(html, message) {
 
@@ -80,7 +84,7 @@ if (crit.failure){
             const oldTarget = Number(card.dataset.target);
             const oldRoll = Number(card.dataset.roll);
 
-            const actor = game.actors.get(card.dataset.actor);
+            const actor = resolveActorFromIds(card.dataset.actor, card.dataset.token);
             const label = card.querySelector("h3")?.textContent || actor.name;
 
             const newHtml = `
@@ -184,7 +188,7 @@ ${critText}
     app.element.querySelector('[name="target"]').value
   );
 
-  const actor = game.actors.get(card.dataset.actor);
+  const actor = resolveActorFromIds(card.dataset.actor, card.dataset.token);
 if (!actor) return;
 
 let success =
@@ -207,7 +211,7 @@ SL = game.sdp.Roll.applyTalentSLModifiers(SL, actor, selectedTalents);
 
 const overcast = game.sdp.Roll.getOvercast(SL);
 
-const spell = actor.items.get(card.dataset.weapon);
+const spell = resolveActorItem(actor, card.dataset.weapon);
 if (!spell) return;
 
 const hasSkill = card.dataset.hasskill === "true";
@@ -406,7 +410,7 @@ await message.update({
 
             if(type === "ranged"){
 
-              const actor = game.actors.get(card.dataset.actor);
+              const actor = resolveActorFromIds(card.dataset.actor, card.dataset.token);
 if (!actor) return;
 
 const rawTraits = JSON.parse(card.dataset.traits || "[]");
@@ -444,7 +448,7 @@ const selectedTalents = JSON.parse(card.dataset.talents || "[]");
 
 SL = game.sdp.Roll.applyTalentSLModifiers(SL, actor, selectedTalents);
 
-              const weapon = actor.items.get(card.dataset.weapon);
+              const weapon = resolveActorItem(actor, card.dataset.weapon);
 
               const ammoId = card.dataset.ammo;
 const ammo = ammoId ? actor.items.get(ammoId) : null;
@@ -497,7 +501,7 @@ let critText = "";
   `;
 }
 
-const item = actor.items.get(card.dataset.weapon);
+const item = resolveActorItem(actor, card.dataset.weapon);
 const itemTraits = item.system.itemTraits || [];
 
 if (crit.failure && itemTraits.some(t => t.key === "flawed")) {
@@ -649,8 +653,8 @@ if (traits.some(t => t.key === "fast")) {
 
 const attackScore = baseAttack + meleeBonus + SL + fastBonus;
 
-const actor = game.actors.get(card.dataset.actor);
-const weapon = actor.items.get(card.dataset.weapon);
+const actor = resolveActorFromIds(card.dataset.actor, card.dataset.token);
+const weapon = resolveActorItem(actor, card.dataset.weapon);
 
 let critFailMin = 96;
 
@@ -692,7 +696,7 @@ if (newRoll === 100) {
   `;
 }
 
-const item = actor.items.get(card.dataset.weapon);
+const item = resolveActorItem(actor, card.dataset.weapon);
 const itemTraits = item.system.itemTraits || [];
 
 if (crit.failure && itemTraits.some(t => t.key === "flawed")) {

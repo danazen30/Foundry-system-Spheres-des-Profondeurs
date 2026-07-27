@@ -2,6 +2,10 @@ import { SdpDamage } from "../combat/damage.js";
 import { getHitLocationLabel } from "../combat/hit-location.js";
 import { getInjuryFromPack } from "../system/injury-utils.js";
 import { SdpConditionEngine } from "../system/condition-engine.js";
+import {
+  resolveActorFromIds,
+  resolveActorItem
+} from "../system/actor-utils.js";
 
 function formatWoundSeverityKey(severity) {
 
@@ -13,15 +17,20 @@ function formatWoundSeverityKey(severity) {
 
 function resolveAttackerFromButton(button) {
 
-  const attackerId =
-    button.dataset.attacker
-    || button.closest(".damage-card")?.dataset?.attacker
-    || button.closest(".sdp-attack")?.dataset?.actor
-    || button.closest(".sdp-spell")?.dataset?.actor;
+  const card =
+    button.closest(".damage-card")
+    || button.closest(".sdp-attack")
+    || button.closest(".sdp-spell");
 
-  return attackerId
-    ? game.actors.get(attackerId)
-    : null;
+  return resolveActorFromIds(
+    button.dataset.attacker
+      || card?.dataset?.attacker
+      || card?.dataset?.actor
+      || "",
+    button.dataset.token
+      || card?.dataset?.token
+      || ""
+  );
 
 }
 
@@ -79,6 +88,7 @@ if (!card) {
 }
 
     const actorId = card.dataset.actor;
+    const tokenId = button.dataset.token || card.dataset.token;
     const defenseType = button.dataset.defenseType;
     const weaponId = card.dataset.weapon;
     let targetId = card.dataset.target;
@@ -99,9 +109,22 @@ if (!targetId) {
     const damageType = card.dataset.damagetype || "slashing";
     const critical = String(card.dataset.critical) === "true";
 
-    const actor = game.actors.get(actorId);
-    const weapon = actor.items.get(weaponId);
+    const actor = resolveActorFromIds(actorId, tokenId);
+    const weapon = resolveActorItem(actor, weaponId);
     const brutal = card.dataset.brutal === "true";
+
+    if (!actor || !weapon) {
+      console.error("SDP | rollDamage missing actor/weapon", {
+        actorId,
+        tokenId,
+        weaponId,
+        actor: actor?.name
+      });
+      ui.notifications.warn(
+        game.i18n.localize("SDP.Warning.UnlinkedActorWeapon")
+      );
+      return;
+    }
 
     if (brutal && weapon) {
 

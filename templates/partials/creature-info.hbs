@@ -12,13 +12,13 @@
 
       <div class="creature-size-value">
 
-        <select name="system.size">
+        <select name="system.details.size.value">
 
           {{#each config.sizes as |size key|}}
 
             <option
               value="{{key}}"
-              {{#if (eq ../system.size key)}}selected{{/if}}>
+              {{#if (eq @root.system.details.size.value key)}}selected{{/if}}>
 
               {{localize size.label}}
 

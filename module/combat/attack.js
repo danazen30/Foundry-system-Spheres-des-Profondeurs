@@ -12,6 +12,7 @@ import {
 } from "../system/weapon-skill-utils.js";
 import { getActorItemDisplayName } from "../system/item-localization.js";
 import { SdpMount } from "../system/mount-utils.js";
+import { getTokenIdForActor } from "../system/actor-utils.js";
 
 export class SdpAttack {
 
@@ -120,6 +121,7 @@ else if (hasReload && !weapon.system.loaded) {
 
 const targets = Array.from(game.user.targets);
 let targetId = targets.length ? targets[0].id : null;
+const tokenId = getTokenIdForActor(actor);
 
 let conditionText = "";
 let bonus = 0;
@@ -651,6 +653,7 @@ if (crit.failure) {
       damageButton = `
       <button type="button" type="button" class="roll-damage"
         data-actor="${actor.id}"
+        data-token="${tokenId}"
         data-weapon="${weapon.id}"
         data-ammo="${ammo?.id || ""}"
         data-target="${targetId ?? ""}">
@@ -678,6 +681,7 @@ if (finalTraits.some(t => t.key === "reload")) {
     const html = `
 <div class="sdp-attack" data-sdp-safe="true"
      data-actor="${actor.id}"
+     data-token="${tokenId}"
      data-ammo="${ammo?.id || ""}"
      data-roll="${result}"
      data-type="ranged"
@@ -1032,6 +1036,7 @@ const talentsHTML =
     data-type="melee"
     data-meleemodifier="${meleeModifier}"
      data-actor="${actor.id}"
+     data-token="${tokenId}"
      data-weapon="${weapon.id}"
      data-target="${targetId ?? ""}"
      data-location="${hitLocation.location}"

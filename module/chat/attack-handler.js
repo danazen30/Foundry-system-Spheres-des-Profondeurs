@@ -1,6 +1,10 @@
 import { getHitLocationLabel } from "../combat/hit-location.js";
 import { SdpSizeEngine } from "../system/size-engine.js";
 import { findSdpRollTable } from "../system/roll-table-utils.js";
+import {
+  resolveActorFromIds,
+  resolveActorItem
+} from "../system/actor-utils.js";
 
 export function registerAttackHandlers(html, message) {
 
@@ -18,6 +22,7 @@ let hasEntangling = traits.some(t => t?.key === "entangling");
 
 const attackScore = Number(card.dataset.attack);
 const actorId = card.dataset.actor;
+const tokenId = card.dataset.token;
 const weaponId = card.dataset.weapon;
 const location = card.dataset.location;
 const critical = card.dataset.critical;
@@ -58,7 +63,7 @@ let parry = target.system.derived.parry.value;
 // SIZE MODIFIER
 // ======================
 
-const attacker = game.actors.get(actorId);
+const attacker = resolveActorFromIds(actorId, tokenId);
 
 if (attacker) {
 
@@ -222,6 +227,7 @@ console.log("SDP | Defense decision (FINAL)", {
         <div class="sdp-defense-choice"
              data-attack="${attackScore}"
              data-actor="${actorId}"
+             data-token="${tokenId || ""}"
              data-weapon="${weaponId}"
              data-target=""
              data-location="${location}"
@@ -333,6 +339,7 @@ await updateAttackCard(msg.id, {
   result,
   selected,
   actorId,
+  tokenId,
   weaponId,
   targetId
 });
@@ -380,6 +387,7 @@ const targetId = token.id;
 const target = token.actor;
 
     const actorId = card.dataset.actor;
+    const tokenId = card.dataset.token;
     const weaponId = card.dataset.weapon;
 
     const attackMessageId = card.dataset.attackMessageId;
@@ -394,7 +402,7 @@ const target = token.actor;
 // SIZE MODIFIER
 // ======================
 
-const attacker = game.actors.get(actorId);
+const attacker = resolveActorFromIds(actorId, tokenId);
 
 if (attacker) {
 
@@ -498,6 +506,7 @@ const result = isCriticalSuccess || attackScore > defense ? "HIT" : "MISS";
       result,
       selected,
       actorId,
+      tokenId,
       weaponId,
       targetId
     });
@@ -637,10 +646,10 @@ html.on("click", ".roll-reload-critical", async ev => {
 // UPDATE ATTACK CARD (PATCH STYLE)
 //===================
 
-async function updateAttackCard(messageId, { defense, result, selected, actorId, weaponId, targetId }) {
+async function updateAttackCard(messageId, { defense, result, selected, actorId, tokenId, weaponId, targetId }) {
 
-  const actor = game.actors.get(actorId);
-const weapon = actor?.items.get(weaponId);
+  const actor = resolveActorFromIds(actorId, tokenId);
+const weapon = resolveActorItem(actor, weaponId);
 
 const weaponTraits = weapon?.system?.traits || [];
 
@@ -784,6 +793,7 @@ if (hasTaille && selected === "parry" && targetId) {
     const btn = document.createElement("button");
     btn.classList.add("roll-damage");
     btn.dataset.actor = actorId;
+    btn.dataset.token = tokenId || card.dataset.token || "";
     btn.dataset.weapon = weaponId;
     btn.dataset.target = targetId;
     btn.dataset.defenseType = selected; // 🔥 IMPORTANT

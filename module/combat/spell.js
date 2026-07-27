@@ -2,6 +2,7 @@ import { SdpRoll } from "../rolls/roll.js";
 import { rollHitLocation, getHitLocationProfile} from "./hit-location.js";
 import { resolveSdpFormula } from "../system/formula-utils.js";
 import { getActorItemDisplayName } from "../system/item-localization.js";
+import { getTokenIdForActor } from "../system/actor-utils.js";
 
 export class SdpSpell {
 
@@ -334,12 +335,15 @@ await actor.update({
   // DAMAGE BUTTON
   // ======================
 
+  const tokenId = getTokenIdForActor(actor);
+
   let damageButton = "";
 
   if (success && hasDamage) {
     damageButton = `
     <button class="roll-damage"
       data-actor="${actor.id}"
+      data-token="${tokenId}"
       data-weapon="${spell.id}"
       data-target="${Array.from(game.user.targets)[0]?.id || ""}">
       ${game.i18n.localize("SDP.RollDamage")}
@@ -355,6 +359,7 @@ await actor.update({
 <div class="sdp-spell" data-sdp-safe="true"
      data-type="spell"
      data-actor="${actor.id}"
+     data-token="${tokenId}"
      data-roll="${result}"
      data-testtarget="${targetValue}"
      data-critical="${crit.success}"
