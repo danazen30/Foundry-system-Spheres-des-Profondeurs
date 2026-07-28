@@ -45,8 +45,36 @@
 
           {{#each actor.itemTypes.trait}}
 
-            <div class="creature-trait-row">
-              {{this.name}}
+            <div class="creature-trait-row" data-item-id="{{this.id}}">
+              <span class="creature-trait-name">{{this.displayName}}</span>
+              <div class="creature-trait-actions">
+                {{#if this.isToggleableTrait}}
+                <button
+                  type="button"
+                  class="creature-trait-toggle {{#if this.system.active}}is-active{{/if}}"
+                  data-action="toggleTraitActive"
+                  data-item-id="{{this.id}}"
+                  title="{{#if this.system.active}}{{localize "SDP.TraitActive"}}{{else}}{{localize "SDP.TraitInactive"}}{{/if}}">
+                  {{#if this.system.active}}●{{else}}○{{/if}}
+                </button>
+                {{/if}}
+                <button
+                  type="button"
+                  class="creature-trait-edit"
+                  data-action="editItem"
+                  data-item-id="{{this.id}}"
+                  title="{{localize "SDP.Edit"}}">
+                  ✏️
+                </button>
+                <button
+                  type="button"
+                  class="creature-trait-delete"
+                  data-action="deleteItem"
+                  data-item-id="{{this.id}}"
+                  title="{{localize "SDP.Delete"}}">
+                  🗑️
+                </button>
+              </div>
             </div>
 
           {{/each}}
@@ -114,6 +142,52 @@
 
   <!-- RIGHT -->
   <div class="creature-info-right">
+
+    <!-- DESCRIPTION -->
+    <div class="creature-info-card">
+
+      <div class="note-header">
+
+        <label>📜 {{localize "SDP.TabDescription"}}</label>
+
+        <button
+          type="button"
+          class="note-edit-btn"
+          data-action="toggleEditor"
+          data-target="creatureDescription">
+
+          ✏️ {{localize "SDP.Edit"}}
+
+        </button>
+
+      </div>
+
+      <!-- DISPLAY -->
+      <div
+        class="creature-note-display"
+        data-display="creatureDescription">
+
+        {{{system.description.value}}}
+
+      </div>
+
+      <!-- EDITOR -->
+      <div
+        class="creature-note-editor"
+        data-editor="creatureDescription"
+        style="display:none;">
+
+        <prose-mirror
+          name="system.description.value"
+          value="{{system.description.value}}">
+
+          {{{system.description.value}}}
+
+        </prose-mirror>
+
+      </div>
+
+    </div>
 
     <!-- PLAYER NOTES -->
     <div class="creature-info-card">

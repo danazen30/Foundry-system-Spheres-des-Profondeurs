@@ -3359,6 +3359,11 @@ text-align:center;
 }
 
 .creature-trait-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+
   padding: 6px 8px;
 
   border-radius: 6px;
@@ -3366,6 +3371,55 @@ text-align:center;
   background: rgba(255,255,255,0.04);
 
   border: 1px solid rgba(255,255,255,0.06);
+}
+
+.creature-trait-name {
+  flex: 1;
+  min-width: 0;
+}
+
+.creature-trait-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex: 0 0 auto;
+}
+
+.creature-trait-toggle,
+.creature-trait-edit,
+.creature-trait-delete {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.creature-trait-toggle {
+  font-size: 16px;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.creature-trait-toggle.is-active {
+  opacity: 1;
+  color: #7dcea0;
+}
+
+.creature-trait-toggle:hover,
+.creature-trait-edit:hover,
+.creature-trait-delete:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.08);
 }
 
 /* =========================
@@ -3429,19 +3483,27 @@ text-align:center;
   padding: 4px;
 }
 
+.creature-attributes-table th:first-child,
+.creature-attributes-table td:first-child {
+  text-align: left;
+  white-space: nowrap;
+  width: 1%;
+  padding-right: 8px;
+}
+
 .creature-attributes-table input {
   width: 100%;
   text-align: center;
 }
 
-.creature-attr-roll {
+.creature-attributes-table input.creature-attr-final {
   cursor: pointer;
-  transition: 0.15s;
+  font-weight: bold;
 }
 
-.creature-attr-roll:hover {
+.creature-attributes-table input.creature-attr-final:hover {
   color: var(--color-text-hyperlink);
-  text-shadow: 0 0 6px rgba(255,255,255,0.4);
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.4);
 }
 
 .creature-combat-tab .skills-wrapper {

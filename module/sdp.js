@@ -46,6 +46,7 @@ import {
   localizeSdpCompendium,
   localizeSidebarFolders,
   localizeSidebarItems,
+  localizeSdpPackIndex,
   refreshSdpUiLocalization,
   registerSdpCompendiumIndexFields,
   requestSdpCompendiumResort,
@@ -996,6 +997,77 @@ Hooks.on(
 
   }
 );
+
+function getDirectoryRootElement(app, html) {
+  if (html instanceof HTMLElement) return html;
+  if (html?.[0] instanceof HTMLElement) return html[0];
+  if (app?.element instanceof HTMLElement) return app.element;
+  if (app?.element?.[0] instanceof HTMLElement) return app.element[0];
+  return null;
+}
+
+function refreshItemDirectoryLabels(app, html) {
+  const element = getDirectoryRootElement(app, html);
+  if (!element) return;
+
+  requestAnimationFrame(() => {
+    localizeSidebarFolders(element);
+    localizeSidebarItems(element);
+  });
+}
+
+// Foundry V13 ApplicationV2 ItemDirectory
+Hooks.on("renderItemDirectory", refreshItemDirectoryLabels);
+
+Hooks.on("updateItem", (item, changes) => {
+  if (item.isEmbedded) return;
+
+  const touchesIndex =
+    foundry.utils.hasProperty(changes, "system.index")
+    || foundry.utils.hasProperty(changes, "system.key")
+    || ("name" in changes);
+
+  if (!touchesIndex) return;
+
+  // Monde : rafraîchir l'onglet Items
+  const itemsApp =
+    ui.items
+    ?? ui.sidebar?.tabs?.items;
+
+  if (itemsApp?.rendered) {
+    refreshItemDirectoryLabels(itemsApp, itemsApp.element);
+  }
+
+  // Compendium ouvert : réappliquer l'index localisé
+  if (item.pack) {
+    const pack = game.packs.get(item.pack);
+    if (pack?.metadata?.system === "sdp") {
+      // Mettre à jour l'entrée d'index en mémoire (inclut system.index)
+      const indexEntry = pack.index.get(item.id);
+      if (indexEntry) {
+        if (indexEntry.system) {
+          indexEntry.system.index = item.system?.index ?? "";
+          indexEntry.system.key = item.system?.key ?? indexEntry.system.key;
+        } else {
+          indexEntry.system = {
+            key: item.system?.key ?? "",
+            index: item.system?.index ?? ""
+          };
+        }
+        indexEntry.name = item.name;
+        delete indexEntry._sdpSourceName;
+        localizeSdpPackIndex(pack);
+      }
+
+      for (const app of Object.values(ui.windows)) {
+        if (app.collection === pack) {
+          const el = getDirectoryRootElement(app, app.element);
+          if (el) localizeSdpCompendium(el, pack);
+        }
+      }
+    }
+  }
+});
 
 function refreshSdpItemSheets() {
 

@@ -29,6 +29,7 @@
 "SDP.Pack.Signs": "SDP Signes",
 "SDP.Pack.Possessions": "SDP Possessions",
 "SDP.Pack.Corruptions": "SDP Corruptions",
+"SDP.Pack.Traits": "SDP Traits",
 "SDP.Pack.Journals": "SDP Journaux",
 "SDP.Pack.Scenes": "SDP Scènes",
 
@@ -623,6 +624,8 @@
   "SDP.WeaponDamageHint": "Formule : SB, WPB, WPB/2, nombre fixe ou combinaison (ex. SB + 2, WPB/2 + 1). SB = bonus de Force, WPB = bonus de Force Mentale.",
   "SDP.InspirationDice": "Dés d'Inspiration",
   "SDP.Key": "Clé",
+  "SDP.Index": "Indice",
+  "SDP.TraitIndexHint": "ex. 6, feu, II, 12…",
 "SDP.Characteristic": "Caractéristique",
 "SDP.Basic": "Basique",
 "SDP.Advanced": "Avancée",
@@ -912,6 +915,162 @@
 
 "SDP.Item.Trait.voidHunger.Name": "Faim du Vide",
 "SDP.Item.Trait.voidHunger.Description": "Vous ressentez parfois un besoin irrépressible de détruire quelque chose. Non par colère, ni par haine, mais simplement parce que son existence vous paraît déplacée. Au début, cette pulsion ne vise que des objets insignifiants. Avec le temps, elle s'étend à des lieux, puis à des êtres vivants. Un simple animal, un individu innocent, voire une espèce entière peuvent finir par vous sembler n'être rien de plus qu'une anomalie qu'il conviendrait d'effacer.",
+
+"SDP.Item.Trait.chimera.Name": "Chimère",
+"SDP.Item.Trait.chimera.Description": "La créature a subi une profonde transformation magique, qui l'a éloignée de son espèce d'origine. Son anatomie, son métabolisme ou ses capacités ont été durablement altérés.\nUne chimère peut développer des caractéristiques, des membres ou des pouvoirs normalement impossibles pour son espèce. Elle est également susceptible d'être naturellement agressive.",
+
+"SDP.Item.Trait.alpha.Name": "Alpha",
+"SDP.Item.Trait.alpha.Description": "La créature est le meneur naturel de son groupe. Par ses cris, sa posture ou son influence, elle coordonne les actions des membres de sa meute.\nLes créatures alliées de la même espèce situées dans un rayon, en mètres, égal à la valeur d'Initiative de l'Alpha bénéficient d'un bonus de +10 à tous leurs Tests d'Attaque, de Calme et d'Esquive. Ce bonus disparaît immédiatement si l'Alpha est tué, inconscient ou incapable de diriger sa meute.\nÀ la mort de l'Alpha, les membres de la meute se dispersent généralement ou tentent de fuir, sauf si un autre Alpha prend immédiatement sa place ou si leur instinct les pousse à continuer le combat.",
+
+"SDP.Item.Trait.vulnerability.Name": "Vulnérabilité",
+"SDP.Item.Trait.vulnerability.Description": "La créature présente une faiblesse extrême face au type de dégâts, à l'élément ou à l'effet indiqué par l'Indice.\nLes dégâts et effets subis sont doublés.",
+
+"SDP.Item.Trait.immunity.Name": "Immunité",
+"SDP.Item.Trait.immunity.Description": "La créature est totalement insensible au type de dégâts, à l'élément ou à l'effet indiqué par l'Indice.\nElle ne subit aucun dégât ni aucun effet provenant de cette source.",
+
+"SDP.Item.Trait.resistance.Name": "Résistance",
+"SDP.Item.Trait.resistance.Description": "La créature possède une résistance naturelle au type de dégâts, à l'élément ou à l'effet indiqué par l'Indice.\nLes dégâts et effets subis sont réduits de 50 %.",
+
+"SDP.Item.Trait.weakness.Name": "Faiblesse",
+"SDP.Item.Trait.weakness.Description": "La créature supporte difficilement le type de dégâts, l'élément ou l'effet indiqué par l'Indice.\nLes dégâts et effets subis sont augmentés de 50 %.",
+
+"SDP.Item.Trait.fearful.Name": "Craintif",
+"SDP.Item.Trait.fearful.Description": "La créature privilégie instinctivement la fuite à l'affrontement. Face à un bruit inhabituel, à une menace soudaine ou lorsqu'elle estime que le danger dépasse ses capacités, elle cherche à s'éloigner plutôt qu'à combattre. Sauf si elle est acculée, protège sa progéniture ou ne dispose d'aucune issue, elle tente toujours de fuir.",
+
+"SDP.Item.Trait.swallower.Name": "Gobeur",
+"SDP.Item.Trait.swallower.Description": "La créature est capable d'engloutir une proie entière grâce à sa gueule démesurée ou à une anatomie adaptée. Seules les créatures dont la taille est au moins inférieure d'une catégorie à la sienne peuvent être avalées.\nUne créature ainsi engloutie est considérée comme Entravée et demeure prisonnière dans le corps de son prédateur. Au début de chacun des tours de celui-ci, elle subit des dégâts bruts égaux au bonus d'Endurance de la créature, représentant les effets de la digestion. Elle reste emprisonnée jusqu'à ce qu'elle parvienne à s'échapper, qu'un allié la libère ou que la créature soit tuée.",
+
+"SDP.Item.Trait.burrower.Name": "Fouisseur",
+"SDP.Item.Trait.burrower.Description": "La créature est capable de creuser rapidement des galeries grâce à ses membres, à ses mandibules ou à d'autres adaptations naturelles. L'Indice indique sa vitesse de progression en mètres par round lorsqu'elle creuse dans un terrain adapté (terre, sable, neige, etc.). Les matériaux particulièrement durs, comme la roche, peuvent réduire cette vitesse ou rendre le creusement impossible, selon les capacités de la créature.",
+
+"SDP.Item.Trait.fluxVision.Name": "Vision des flux",
+"SDP.Item.Trait.fluxVision.Description": "La créature est capable de percevoir la magie qui l'entoure. Elle distingue les êtres, les objets, les lieux et les phénomènes imprégnés de magie, en perçoit l'intensité et peut identifier l'origine des flux magiques. Elle est également capable de repérer un lanceur de sorts en train de canaliser ou d'utiliser de la magie.",
+
+"SDP.Item.Trait.instinctive.Name": "Instinctif",
+"SDP.Item.Trait.instinctive.Description": "La créature est dépourvue de toute pensée complexe et de langage. Elle agit principalement selon son instinct, craint naturellement le feu et cherche généralement à le fuir. En combat, elle ne peut utiliser que la compétence Esquive pour se défendre.\nSi elle perd plus de la moitié de ses Blessures, elle tente de prendre la fuite, sauf si elle protège sa progéniture, défend son territoire ou se retrouve acculée. Dans ces cas, elle se bat jusqu'à la mort.\nCertaines espèces peuvent toutefois ignorer ou modifier une partie des effets de ce trait, lorsque leur description le précise.",
+
+"SDP.Item.Trait.constriction.Name": "Étreinte",
+"SDP.Item.Trait.constriction.Description": "La créature peut utiliser son corps comme une arme naturelle pour entraver une cible. Si son attaque réussit, la cible gagne immédiatement l'état Entravé.\nTant que la constriction est maintenue, la cible subit automatiquement, au début de chacun des tours de la créature, des dégâts bruts égaux au bonus de Force de cette dernière.\nL'Indice représente le DR bonus que reçoit la créature pour maintenir sa prise lors des tests opposés visant à empêcher sa proie de se libérer.",
+
+"SDP.Item.Trait.horns.Name": "Cornes",
+"SDP.Item.Trait.horns.Description": "La créature possède des cornes, des bois ou d'autres appendices pouvant être utilisés comme arme naturelle. Lorsqu'elle effectue une Charge avec ce trait, les dégâts infligés sont augmentés de 50 %.",
+
+"SDP.Item.Trait.bite.Name": "Morsure",
+"SDP.Item.Trait.bite.Description": "La créature possède une mâchoire, un bec ou d'autres pièces buccales pouvant être utilisés comme arme naturelle. Selon son anatomie, cette attaque peut également servir à agripper, déchirer ou maintenir une proie.",
+
+"SDP.Item.Trait.tailAttack.Name": "Attaque caudale",
+"SDP.Item.Trait.tailAttack.Description": "La créature possède une queue suffisamment puissante pour être utilisée comme arme naturelle. Selon son anatomie, elle peut servir à frapper, balayer ou écraser ses adversaires.",
+
+"SDP.Item.Trait.trampling.Name": "Piétinement",
+"SDP.Item.Trait.trampling.Description": "La créature peut utiliser le poids de son corps et la puissance de ses membres pour piétiner ses adversaires. Cette attaque est considérée comme une arme naturelle et ne peut généralement être utilisée que contre des créatures de taille inférieure à la sienne.",
+
+"SDP.Item.Trait.claws.Name": "Griffes",
+"SDP.Item.Trait.claws.Description": "La créature possède des griffes, des serres ou d'autres appendices tranchants pouvant être utilisés comme arme naturelle. Selon son anatomie, cette attaque peut également servir à lacérer, agripper, escalader ou immobiliser une proie.",
+
+"SDP.Item.Trait.corruptionSource.Name": "Source de corruption",
+"SDP.Item.Trait.corruptionSource.Description": "La créature est imprégnée de la corruption de Nihil et la propage naturellement autour d'elle. Toute créature exposée à cette corruption est soumise aux règles normales de contamination de la corruption.",
+
+"SDP.Item.Trait.voidCreature.Name": "Créature du Néant",
+"SDP.Item.Trait.voidCreature.Description": "Les créatures du Néant sont des créations de Nihil. Lorsqu'elles se trouvent dans une zone fortement corrompue, elles bénéficient de +10 en Force, Endurance, Force Mentale, Agilité, Intelligence et Initiative.\nLeur existence consume lentement la vie et la magie qui les entourent afin de maintenir leur propre corps. Si elles demeurent privées de créatures vivantes ou de magie à corrompre pendant plusieurs décennies, elles commencent progressivement à se désagréger jusqu'à disparaître.\nÀ leur mort, leur corps se désagrège rapidement en une matière noire ou en poussière, ne laissant aucun cadavre exploitable.\nLes créatures du Néant peuvent utiliser le sort Absorption vitale.",
+
+"SDP.Item.Trait.superiorConstitution.Name": "Constitution supérieure",
+"SDP.Item.Trait.superiorConstitution.Description": "La créature possède une constitution exceptionnellement résistante. Son nombre maximal de Points de santé est augmenté d'un montant égal à son bonus d'Endurance × Indice.",
+
+"SDP.Item.Trait.magicReserve.Name": "Réserve magique",
+"SDP.Item.Trait.magicReserve.Description": "La créature dispose d'une réserve de magie supérieure à la normale. Son nombre maximal de Points de Mana est augmenté d'un montant égal à son bonus de Force Mentale × Indice.",
+
+"SDP.Item.Trait.primalInstinct.Name": "Instinct primal",
+"SDP.Item.Trait.primalInstinct.Description": "Lorsqu'un élément indiqué par l'Indice (progéniture, partenaire, territoire, nid, ancre, etc.) est directement menacé, la créature agit sous l'effet de son instinct le plus primaire. Tant que cette menace subsiste, elle combat jusqu'à la mort et ne cherche plus à fuir ni à préserver sa propre vie.\nPendant cet état, elle bénéficie d'un bonus de +1 au toucher et de +10 en Force.\nL'effet prend fin lorsque la créature est apaisée, que la menace disparaît, qu'elle est neutralisée (par exemple en étant Sonnée ou Inconsciente) ou par tout autre effet capable de calmer son instinct. À la fin de cet état, elle gagne 1 état Exténué.",
+
+"SDP.Item.Trait.colony.Name": "Colonie",
+"SDP.Item.Trait.colony.Description": "La créature est constituée d'une multitude de petits individus agissant comme une seule entité. Les attaques capables d'affecter une zone ou un grand nombre d'individus sont résolues normalement.\n• Colonie I : Les attaques ne possédant pas la qualité Zone ou un effet similaire n'infligent qu'1 Point de Blessure, quel que soit le nombre de dégâts infligés.\n• Colonie II : Les attaques ne possédant pas la qualité Zone ou un effet similaire sont sans effet.",
+
+"SDP.Item.Trait.regeneration.Name": "Régénération",
+"SDP.Item.Trait.regeneration.Description": "La créature est capable de recourir à une puissante magie régénératrice afin de refermer rapidement ses blessures.\nCe trait permet l'utilisation du sort Régénération. L'Indice indique le bonus pour lancer le sort.",
+
+"SDP.Item.Trait.projection.Name": "Projection",
+"SDP.Item.Trait.projection.Description": "La créature est capable de projeter une puissante décharge d'énergie, de matière ou de magie. Selon son espèce, il peut s'agir de flammes, de glace, de venin, d'acide, de foudre ou de tout autre élément similaire.\nCe trait permet d'utiliser le sort Projection. La nature de la projection est précisée dans la description de la créature.",
+
+"SDP.Item.Trait.magicResistance.Name": "Résistance magique",
+"SDP.Item.Trait.magicResistance.Description": "Le corps, l'esprit ou l'âme de la créature opposent une résistance naturelle aux énergies magiques, lui permettant d'en atténuer les effets les plus néfastes.\n• Réduisez de 1 par niveau de l'Indice tous les dégâts infligés directement par des sorts.\n• La créature bénéficie d'un bonus de +10 par Indice à tous les Tests visant à résister aux effets d'un sort.\n• Lorsqu'un sort applique un effet normalement irrésistible, la créature peut effectuer un Test de Résistance ou de Calme (selon la nature de l'effet) afin de l'annuler, même si le sort ne prévoit normalement aucun Test. Le MJ détermine la compétence la plus appropriée en fonction de l'effet du sort.",
+
+"SDP.Item.Trait.venomous.Name": "Venimeux",
+"SDP.Item.Trait.venomous.Description": "La créature produit un venin capable d'affaiblir ou de tuer ses proies. Les attaques réalisées avec les armes naturelles indiquées sur sa fiche appliquent le Poison associé à ce trait. La nature et les effets du poison varient selon l'espèce.",
+
+"SDP.Item.Trait.web.Name": "Toile",
+"SDP.Item.Trait.web.Description": "La créature est capable de produire une toile particulièrement résistante afin d'entraver ses proies. Chaque fois qu'une attaque utilisant cette capacité touche sa cible, celle-ci gagne 1 état Ralenti par Indice.",
+
+"SDP.Item.Trait.trained.Name": "Dressé",
+"SDP.Item.Trait.trained.Description": "La créature a été dressée afin d'exécuter une ou plusieurs tâches précises sous les ordres de son maître. L'Indice indique les disciplines et les entraînements qu'elle maîtrise. Les entraînements peuvent se cumuler.\n• Dompté : La créature est habituée à la présence des humanoïdes et ignore son trait Bestial. Elle reçoit +20 en Sociabilité.\n• Monture : La créature accepte d'être montée et dirigée par son maître. Elle peut être utilisée comme monture et conserve son calme dans les situations ordinaires.\n• Entraînement à l'attaque : La créature reçoit +5 en Capacité de Combat.\n• Entraînement à l'agilité : La créature reçoit +5 en Agilité.\n• Entraînement à l'endurance : La créature reçoit +5 en Endurance.\n• Entraînement à la force : La créature reçoit +5 en Force.\n• Entraînement à la guerre : La créature est conditionnée à supporter le stress du combat et reçoit +5 en Force Mentale. (Retire le trait Craintif si présent)\n• Trait : La créature est entraînée à tirer un chariot, une carriole, une charrue, un carrosse ou toute autre charge similaire.\n• Retour : La créature retrouve instinctivement son lieu d'origine ou son maître lorsqu'elle est relâchée ou égarée.\n• Pistage : La créature est entraînée à suivre une piste. Elle doit disposer d'un sens adapté (odorat, vue, etc.).\n• Rapport : La créature est entraînée à rapporter un objet désigné à son maître.\n• Garde : La créature reste à un emplacement désigné et demeure à l'affût jusqu'à nouvel ordre.\n• Messager : La créature est capable de transporter un message ou un petit objet entre plusieurs destinations qu'elle connaît.",
+
+"SDP.Item.Trait.thickSkin.Name": "Peau épaisse",
+"SDP.Item.Trait.thickSkin.Description": "La créature possède une peau exceptionnellement dense, composée de plusieurs couches de cuir, de graisse et de muscles qui amortissent efficacement les impacts.\nLes dégâts contondants qu'elle subit sont réduits de 50 %. En revanche, les dégâts perforants qu'elle subit sont augmentés de 50 %.",
+
+"SDP.Item.Trait.scales.Name": "Écailles",
+"SDP.Item.Trait.scales.Description": "La créature est recouverte d'épaisses écailles imbriquées qui dévient naturellement les coups tranchants et protègent les parties vitales de son corps.\nLes dégâts tranchants qu'elle subit sont réduits de 50 %. En revanche, les dégâts perforants qu'elle subit sont augmentés de 50 %.",
+
+"SDP.Item.Trait.carapace.Name": "Carapace",
+"SDP.Item.Trait.carapace.Description": "La créature est protégée par une épaisse carapace rigide recouvrant une grande partie de son corps et lui offrant une protection exceptionnelle contre les armes.\nLes dégâts tranchants et perforants qu'elle subit sont réduits de 50 %. En revanche, les dégâts contondants qu'elle subit sont augmentés de 50 %.",
+
+"SDP.Item.Trait.climber.Name": "Grimpeur",
+"SDP.Item.Trait.climber.Description": "La créature est capable d'escalader avec aisance les surfaces verticales et peut même se déplacer au plafond. Elle se déplace sur ces surfaces à sa valeur de Marche et réussit automatiquement tous les tests d'Escalade.",
+
+"SDP.Item.Trait.tracker.Name": "Traqueur",
+"SDP.Item.Trait.tracker.Description": "Grâce à un odorat, une ouïe ou d'autres sens particulièrement développés, la créature excelle dans la poursuite de ses proies. L'Indice précise le sens utilisé (odorat, ouïe, vision des flux, vibrations, etc.).\n• Traqueur I : La créature peut effectuer les tests de Pistage en utilisant Perception à la place de la compétence normalement requise. Elle ajoute également son bonus d'Intelligence au DR obtenu.\n• Traqueur II : Tant qu'une créature se trouve à portée du sens indiqué par l'Indice, le traqueur connaît en permanence sa position approximative et peut la suivre sans effectuer de test de Pistage. Il ne perd sa trace que si la cible sort de la portée de détection, si le sens utilisé est neutralisé ou si un effet spécifique l'en empêche.",
+
+"SDP.Item.Trait.cunning.Name": "Astucieux",
+"SDP.Item.Trait.cunning.Description": "La créature fait preuve d'une intelligence remarquable et préfère exploiter les faiblesses de ses adversaires plutôt que de compter uniquement sur sa force. Elle tend volontiers des embuscades, utilise son environnement à son avantage et n'hésite pas à battre en retraite si la situation lui est défavorable.",
+
+"SDP.Item.Trait.fearless.Name": "Sans peur",
+"SDP.Item.Trait.fearless.Description": "Peu importe que la créature soit téméraire, extrêmement stupide ou juste dans le feu de l'action, elle n'a peur de rien. Elle ignore les règles de la Psychologie.",
+
+"SDP.Item.Trait.darkVision.Name": "Vision dans l'obscurité",
+"SDP.Item.Trait.darkVision.Description": "La créature est capable de voir parfaitement dans l'obscurité la plus totale.",
+
+"SDP.Item.Trait.magical.Name": "Magique",
+"SDP.Item.Trait.magical.Description": "La créature est capable d'utiliser la magie. Les animaux disposent généralement de pouvoirs propres à leur espèce, tandis que les créatures intelligentes peuvent maîtriser un ou plusieurs domaines de magie, selon leur nature.\nL'Indice indique le bonus à donner pour l'utilisation de la magie.",
+
+"SDP.Item.Trait.undead.Name": "Mort-vivant",
+"SDP.Item.Trait.undead.Description": "La créature est animée par une âme artificielle et n'est plus considérée comme un être vivant. Elle n'a pas besoin de respirer, de manger, de boire ou de dormir. Ce trait est principalement utilisé pour déterminer les effets des sorts, capacités ou règles qui ciblent spécifiquement les morts-vivants.",
+
+"SDP.Item.Trait.terrifying.Name": "Terrifiant",
+"SDP.Item.Trait.terrifying.Description": "La simple présence de la créature inspire une peur surnaturelle. Toute créature qui la voit pour la première fois doit réussir un Test étendu de Calme dont le DR est égal à son Indice de Peur.\nEn cas de réussite dès le premier test, la cible résiste à cette peur et ignore tous ses effets pendant la rencontre. En cas d'échec, elle gagne immédiatement l'état Effrayé, dont les règles s'appliquent normalement.",
+
+"SDP.Item.Trait.ethereal.Name": "Éthéré",
+"SDP.Item.Trait.ethereal.Description": "La créature est constituée d'énergie spirituelle et peut devenir partiellement ou totalement immatérielle. Elle peut traverser la plupart des obstacles solides et est insensible aux attaques non magiques, à l'exception de certains matériaux, comme le fer concentré, ou des objets et substances imprégnés de magie. Les attaques et effets magiques peuvent, en revanche, la blesser normalement.\nLa créature est liée à un objet, un lieu ou une dépouille qui constitue son ancre. Lorsqu'elle se manifeste dans le monde matériel, elle peut être blessée et détruite normalement.\nEn dehors de ces manifestations, elle demeure intangible et ne peut être atteinte, sauf en détruisant son ancre. Elle peut se dissiper volontairement ou disparaître spontanément par manque de stabilité avant de se manifester à nouveau, parfois plusieurs heures, voire plusieurs jours plus tard. Si son ancre est menacée, elle se manifeste presque instantanément afin de la défendre.",
+
+"SDP.Item.Trait.camouflage.Name": "Camouflage",
+"SDP.Item.Trait.camouflage.Description": "La créature est capable de dissimuler efficacement sa présence en se fondant dans son environnement, grâce à des adaptations naturelles ou à des capacités magiques. Cet avantage ne s'applique que lorsque les conditions sont favorables à son camouflage et peut être ignoré si la créature se trouve hors de son environnement ou si son moyen de dissimulation est inadapté.\n• Camouflage I : Tant qu'elle demeure immobile, la créature ajoute son bonus d'Agilité à tous ses Tests de Discrétion.\n• Camouflage II : Tant qu'elle demeure immobile, tous les Tests de Discrétion de la créature sont automatiquement réussis. Lorsqu'elle se déplace, elle ajoute à la place son bonus d'Agilité à ses Tests de Discrétion.",
+
+"SDP.Item.Trait.leap.Name": "Bond",
+"SDP.Item.Trait.leap.Description": "La créature est capable d'effectuer des bonds exceptionnels grâce à la puissance de ses membres, à la magie ou à d'autres adaptations naturelles. Les distances de saut qu'elle peut franchir sont considérablement supérieures à celles d'une créature ordinaire. Lorsqu'elle effectue un test lié à un saut, elle ajoute son bonus de Force au DR obtenu. Sa distance de saut de base est égale à sa valeur de Marche. Selon le résultat du test, elle peut parcourir une distance supérieure ou inférieure à cette valeur.",
+
+"SDP.Item.Trait.petrification.Name": "Pétrification",
+"SDP.Item.Trait.petrification.Description": "Les yeux de la créature servent de catalyseur à une puissante magie de pétrification. Lorsqu'elle libère ce pouvoir, toutes les créatures de son choix se trouvant dans son champ de vision sont affectées simultanément. La créature effectue un Test opposé en ajoutant son Indice au résultat obtenu. Chaque cible oppose un test de Résistance. Un lanceur de sorts peut effectuer un test d'Intelligence à la place de la Résistance afin de contrer la magie.\nPour chaque tranche de 2 DR par laquelle la créature remporte le test opposé, la cible gagne 1 état Sonné. Si elle l'emporte de 6 DR ou plus, la cible est immédiatement changée en pierre.\nL'énergie nécessaire à cette capacité étant considérable, la créature ne peut l'utiliser que ponctuellement et doit attendre un certain temps avant de pouvoir libérer à nouveau son regard pétrifiant.",
+
+"SDP.Item.Trait.combative.Name": "Combatif",
+"SDP.Item.Trait.combative.Description": "La créature excelle au combat au corps à corps. Une fois par tour, lorsqu'elle remporte un Test opposé en défense lors d'un combat au corps à corps, elle peut immédiatement effectuer une attaque de riposte contre son adversaire.",
+
+"SDP.Item.Trait.winged.Name": "Ailée",
+"SDP.Item.Trait.winged.Description": "La créature est capable de voler. L'Indice indique la distance maximale, en mètres, qu'elle peut parcourir en un round lorsqu'elle est en vol. Prendre son envol provoque les attaques d'opportunité habituelles.\n• Ailée I : Prendre son envol consomme la moitié de son déplacement aérien.\n• Ailée II : Prendre son envol sans consacrer une action de déplacement spécifique.\nUne créature en vol peut atterrir ou rester en vol stationnaire sans restriction.",
+
+"SDP.Item.Trait.vampire.Name": "Vampire",
+"SDP.Item.Trait.vampire.Description": "Le vampirisme est l'une des conséquences les plus redoutées de la démonologie. Ceux qui cherchent l'immortalité par cette magie finissent inévitablement frappés par une malédiction créée par Nihil. Leur corps cesse de vieillir et acquiert une force ainsi qu'une endurance exceptionnelles, mais ils deviennent entièrement dépendants du sang des humanoïdes pour survivre.\nEn se nourrissant, le vampire absorbe également la magie contenue dans le sang de ses victimes, ce qui régénère rapidement ses blessures. Cette soif est toutefois difficile à maîtriser et pousse la plupart des vampires à vider entièrement leurs proies. Chaque fois qu'il boit le sang d'une créature vivante, il récupère un nombre de Points de Blessure égal aux dégâts qu'il lui inflige.\nEn contrepartie, la lumière du soleil, créée par Fotismos, consume lentement la malédiction qui les anime, brûlant leur corps et affaiblissant considérablement leurs capacités.\nPlus un vampire cède à sa soif de sang, plus l'influence de Nihil grandit sur son esprit, jusqu'à pouvoir, dans les cas les plus extrêmes, lui imposer sa volonté.",
+
+"SDP.Item.Trait.aethyr.Name": "Aethyr",
+"SDP.Item.Trait.aethyr.Description": "L'Aethyr est une redoutable malédiction de la nécromancie. Les nécromanciens cherchant à libérer leur âme des limites de leur corps afin d'obtenir un pouvoir absolu risquent d'en être frappés. Leur corps acquiert alors la capacité de basculer dans un plan parallèle très proche du monde réel. Sous cette forme éthérée, ils peuvent observer les vivants sans être vus et traverser les murs, les portes, les barreaux et la plupart des obstacles légers.\nL'Aethyr peut également prendre temporairement possession des créatures dont l'âme ou la volonté est trop faible pour lui résister.\nChaque utilisation de sa forme éthérée absorbe la magie spirituelle des êtres vivants environnants afin de maintenir son existence entre les deux plans. Les victimes s'affaiblissent progressivement et une exposition prolongée finit par les corrompre lentement par le Néant.\nEn contrepartie, la lumière de la Lune lui est extrêmement nocive. Elle consume l'énergie qui maintient son âme entre les deux plans, l'oblige à retrouver une forme matérielle et, à terme, détruit progressivement son âme. Le clair de lune est ainsi son plus grand ennemi.",
+
+"SDP.Item.Trait.hibernation.Name": "Hibernation",
+"SDP.Item.Trait.hibernation.Description": "La créature est capable d'entrer dans un profond état de léthargie pendant une longue période afin d'économiser son énergie. Durant cet état, elle est extrêmement vulnérable et ne se réveille qu'en présence d'un danger, d'une source de nourriture ou d'un autre stimulus propre à son espèce.",
+
+"SDP.Item.Trait.aura.Name": "Aura",
+"SDP.Item.Trait.aura.Description": "La créature émet en permanence un phénomène magique qui affecte son environnement. Les effets exacts de cette aura sont précisés dans la description de la créature.",
+
+"SDP.Item.Trait.infectious.Name": "Infectieux",
+"SDP.Item.Trait.infectious.Description": "La créature est porteuse d'un parasite, d'une maladie ou d'un agent infectieux qu'elle transmet naturellement. La nature de cette maladie ainsi que les conditions de contamination sont précisées dans la description de la créature.",
+
+"SDP.TraitActive": "Actif",
+"SDP.TraitInactive": "Inactif",
 
 "SDP.RollTableCareerHuman": "Carrière Humain",
 "SDP.RollTableCareerElf": "Carrière Elfe",

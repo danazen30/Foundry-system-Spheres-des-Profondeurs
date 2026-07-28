@@ -110,6 +110,15 @@
   },
 
   {
+    "name": "traits",
+    "label": "SDP.Pack.Traits",
+    "system": "sdp",
+    "path": "packs/traits",
+    "type": "Item",
+    "banner": "systems/sdp/assets/icons/default-banner.png"
+  },
+
+  {
     "name": "rolltables",
     "label": "SDP Roll Tables",
     "path": "packs/rolltables",
@@ -166,6 +175,7 @@
       },
       "creature": {
         "htmlFields": [
+          "system.description.value",
           "system.details.gmNotes.value",
           "system.details.playerNotes.value",
           "system.details.motivation.value"

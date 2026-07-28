@@ -242,6 +242,7 @@ export function registerXPListeners(sheet, root) {
     el.addEventListener("contextmenu", async (event) => {
 
       event.preventDefault();
+      event.stopPropagation();
 
       const item = actor.items.get(
         event.currentTarget.dataset.itemId

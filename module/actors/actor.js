@@ -11,6 +11,12 @@ import {
   hasWeaponDamageStatBonus,
   resolveWeaponDamageBase
 } from "../system/formula-utils.js";
+import {
+  CREATURE_TRAIT_KEYS,
+  getActiveTraitAttackBonus,
+  getActiveTraitAttributeBonus,
+  getTraitIndexTotal
+} from "../system/creature-trait-utils.js";
 
 export class SdpActor extends Actor {
 
@@ -143,6 +149,14 @@ system.custom.manaBonus ??= 0;
     // Keep system.size in sync for combat code that still reads it.
     system.size = resolvedSize;
 
+    if (this.type === "creature") {
+      system.description ??= { value: "" };
+      if (typeof system.description === "string") {
+        system.description = { value: system.description };
+      }
+      system.description.value ??= "";
+    }
+
 system.combat ??= {};
 
 system.combat.defenseMode ??= "auto";
@@ -153,6 +167,10 @@ for (const item of this.items) {
 
   if (item.type === "armor") {
     item.system.worn ??= { value: false };
+  }
+
+  if (item.type === "trait") {
+    item.system.active ??= false;
   }
 
   // 🔥 FIX POSSESSION
@@ -865,7 +883,10 @@ if (key === "agility") {
 attr.encumbranceModifier = encMod; // 🔥 DEBUG / UI POSSIBLE
 attr.sizeModifier = sizeMod;
 
-attr.totalModifier = manualMod + itemMod + encMod + sizeMod;
+const traitMod = getActiveTraitAttributeBonus(this, key);
+attr.traitModifier = traitMod;
+
+attr.totalModifier = manualMod + itemMod + encMod + sizeMod + traitMod;
 
 let baseValue =
   attr.initial +
@@ -948,11 +969,18 @@ const healthBonus =
 const toughnessHealthBonus =
   (system.custom.toughnessHealthMultiplier || 0) * TB;
 
+const superiorConstitutionIndex = getTraitIndexTotal(
+  this,
+  CREATURE_TRAIT_KEYS.superiorConstitution
+);
+const superiorConstitutionBonus = TB * superiorConstitutionIndex;
+
 system.health.max =
   baseHealth +
   levelBonus +
   healthBonus +
-  toughnessHealthBonus;
+  toughnessHealthBonus +
+  superiorConstitutionBonus;
 
 const finalMax = system.health.max;
 
@@ -1295,9 +1323,13 @@ system.derived.evasion.value = Math.max(
 
     const finalAttack = Math.max(attackBase, 0);
 
+    const traitAttackBonus = getActiveTraitAttackBonus(this);
+    system.custom.traitAttackBonus = traitAttackBonus;
+
    system.derived.attack.value =
      Math.round((finalAttack / 10) * 10) / 10 +
-     (system.custom.meleeActionBonus || 0);
+     (system.custom.meleeActionBonus || 0) +
+     traitAttackBonus;
 
     // =====================
     // MOVEMENT
@@ -1358,8 +1390,14 @@ this.system.resources.mana = this.system.resources.mana || {};
 const manaBonus =
   system.custom.manaBonus || 0;
 
+const magicReserveIndex = getTraitIndexTotal(
+  this,
+  CREATURE_TRAIT_KEYS.magicReserve
+);
+const magicReserveBonus = wpb * magicReserveIndex;
+
 this.system.resources.mana.max =
-  (wpb * multiplier) + manaBonus;
+  (wpb * multiplier) + manaBonus + magicReserveBonus;
 
 // =========================
 // 🔋 MANA CLAMP (ANTI OVERFLOW)

@@ -5,6 +5,7 @@ import {
   hasWeaponDamageStatBonus,
   parseWeaponDamageFormula
 } from "../system/formula-utils.js";
+import { getIncomingDamageTypeMultiplier } from "../system/creature-trait-utils.js";
 
 export class SdpDamage {
 
@@ -40,13 +41,25 @@ static getTalentDamageReduction(actor) {
 
 }
 
-static resolveIncomingDamage(damageAfterArmor, actor) {
+static resolveIncomingDamage(damageAfterArmor, actor, damageType = null) {
 
   if (damageAfterArmor <= 0) return 0;
 
+  let damage = Number(damageAfterArmor) || 0;
+  const typeMult = getIncomingDamageTypeMultiplier(
+    actor,
+    this.normalizeDamageType(damageType)
+  );
+
+  if (typeMult !== 1) {
+    damage = Math.floor(damage * typeMult);
+  }
+
+  if (damage <= 0) return 0;
+
   const reduction = this.getTalentDamageReduction(actor);
 
-  return Math.max(1, damageAfterArmor - reduction);
+  return Math.max(1, damage - reduction);
 
 }
 
@@ -231,12 +244,11 @@ if (ammoId) {
   let armor = 0;
   let armorBase = 0;
   let armorMultiplierReason = "";
-
-if (target) {
   const resolvedDamageType = this.normalizeDamageType(
-    damageType ?? weapon.system.damageType
+    damageType ?? weapon?.system?.damageType
   );
 
+if (target) {
 armorBase = this.getArmorValue(
   target,
   location,
@@ -619,7 +631,7 @@ weaponDetail.push(
   const damageAfterArmor = Math.max(damage - armor, 0);
 
   const finalDamage = target
-    ? this.resolveIncomingDamage(damageAfterArmor, target)
+    ? this.resolveIncomingDamage(damageAfterArmor, target, resolvedDamageType)
     : damageAfterArmor;
 
   const brutalDieResults = this.expandMaxDieResults(weaponDiceFormula);
@@ -653,7 +665,7 @@ weaponDetail.push(
   const damageAfterArmor = Math.max(damage - armor, 0);
 
   const finalDamage = target
-    ? this.resolveIncomingDamage(damageAfterArmor, target)
+    ? this.resolveIncomingDamage(damageAfterArmor, target, resolvedDamageType)
     : damageAfterArmor;
 
   const bleeding = this.countBleedingStacks(
@@ -681,7 +693,8 @@ static async applyFullDamage({
   actor,
   damage,
   location,
-  severitySteps = 0
+  severitySteps = 0,
+  damageType = null
 }) {
 
   const WT =
@@ -710,8 +723,8 @@ static async applyFullDamage({
     });
   }
 
-  // damage = après armure, avant réduction de talent
-  const finalDamage = this.resolveIncomingDamage(damage, actor);
+  // damage = après armure, avant réduction de talent / traits de type
+  const finalDamage = this.resolveIncomingDamage(damage, actor, damageType);
   const newHealth = current - finalDamage;
 
   await actor.update({

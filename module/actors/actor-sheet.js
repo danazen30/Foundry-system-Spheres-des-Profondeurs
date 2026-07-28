@@ -32,6 +32,7 @@ import {
   resolveItemRef,
   getLocalizedSignLevelDescription
 } from "../system/item-localization.js";
+import { isToggleableTrait } from "../system/creature-trait-utils.js";
 import { formatPlainTextAsHtml } from "../system/text-format.js";
 import { SdpActor } from "./actor.js";
 
@@ -158,6 +159,10 @@ if (!Array.isArray(careerTalents)) {
 for (const item of this.document.items) {
   item.displayName =
     getActorItemDisplayName(item);
+
+  if (item.type === "trait") {
+    item.isToggleableTrait = isToggleableTrait(item);
+  }
 }
 
 for (const item of this.document.items) {

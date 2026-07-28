@@ -381,6 +381,15 @@ export function registerTalentRows(sheet, root) {
 
     row.addEventListener("contextmenu", (event) => {
 
+      // Ne pas ouvrir la fiche depuis le + ou l'input de niveau.
+      if (
+        event.target.closest(
+          ".talent-advance-btn, input, button, .item-actions"
+        )
+      ) {
+        return;
+      }
+
       event.preventDefault();
 
       const item = sheet.document.items.get(row.dataset.itemId);

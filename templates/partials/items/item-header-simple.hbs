@@ -20,6 +20,10 @@
           value="{{item.displayName}}"
           placeholder="{{localize 'SDP.ItemName'}}" />
 
+        {{#if item.nameSuffix}}
+          <span class="item-name-suffix">{{item.nameSuffix}}</span>
+        {{/if}}
+
       </div>
 
       <div class="item-meta-wrapper">

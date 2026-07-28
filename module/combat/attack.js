@@ -13,6 +13,7 @@ import {
 import { getActorItemDisplayName } from "../system/item-localization.js";
 import { SdpMount } from "../system/mount-utils.js";
 import { getTokenIdForActor } from "../system/actor-utils.js";
+import { getActiveTraitAttackBonus } from "../system/creature-trait-utils.js";
 
 export class SdpAttack {
 
@@ -394,6 +395,9 @@ targetValue += SdpRoll.getTargetBonus(
   actor,
   dialogMods.talents || []
 );
+
+// Traits activables (ex. Instinct primal) : +1 toucher = +10
+targetValue += getActiveTraitAttackBonus(actor) * 10;
 
   // =========================
 // OFFHAND (RANGED)
@@ -831,6 +835,7 @@ if (dialogMods.charge) {
 let baseAttack = actor.getWeaponAttack(weapon) / 10;
 
 baseAttack += Number(actor.system.custom.meleeActionBonus || 0);
+baseAttack += getActiveTraitAttackBonus(actor);
 
 const roll = await (new Roll("1d100")).roll();
 const result = roll.total;

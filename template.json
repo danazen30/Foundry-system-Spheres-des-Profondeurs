@@ -359,7 +359,12 @@
         "derived",
         "modifiers",
         "conditions"
-      ]
+      ],
+      "description": {
+        "type": "string",
+        "label": "Description",
+        "value": ""
+      }
     },
     "vehicle": {
       "description": {
@@ -1183,8 +1188,19 @@
       "templates": [
         "description",
         "gmNotes",
-        "playerNotes"
-      ]
+        "playerNotes",
+        "key"
+      ],
+      "index": {
+        "type": "string",
+        "label": "Index",
+        "value": ""
+      },
+      "active": {
+        "type": "Boolean",
+        "label": "Active",
+        "value": false
+      }
     },
     "clothing": {
       "templates": [

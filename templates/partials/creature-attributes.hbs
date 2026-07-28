@@ -2,40 +2,49 @@
 
   <thead>
     <tr>
-
+      <th></th>
       {{#each attributes as |attr|}}
-
-        <th
-          class="creature-attr-roll"
-          data-action="rollAttribute"
-          data-attr="{{attr.key}}"
-        >
-          {{attr.label}}
-        </th>
-
+        <th>{{attr.label}}</th>
       {{/each}}
-
     </tr>
   </thead>
 
   <tbody>
+
+    <!-- BASE / INITIAL -->
     <tr>
-
+      <td>
+        <strong>{{localize "SDP.InitialAbbr"}}</strong>
+      </td>
       {{#each attributes as |attr|}}
-
         <td>
-
           <input
             type="number"
             class="attr-initial-input"
             data-key="{{attr.key}}"
             value="{{attr.initial}}">
-
         </td>
-
       {{/each}}
-
     </tr>
+
+    <!-- FINAL (roll) -->
+    <tr>
+      <td>
+        <strong>{{localize "SDP.FinalAbbr"}}</strong>
+      </td>
+      {{#each attributes as |attr|}}
+        <td>
+          <input
+            type="number"
+            class="creature-attr-final"
+            value="{{attr.value}}"
+            readonly
+            data-action="rollAttribute"
+            data-attr="{{attr.key}}">
+        </td>
+      {{/each}}
+    </tr>
+
   </tbody>
 
 </table>

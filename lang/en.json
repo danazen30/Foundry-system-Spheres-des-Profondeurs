@@ -29,6 +29,7 @@
 "SDP.Pack.Signs": "SDP Signs",
 "SDP.Pack.Possessions": "SDP Possessions",
 "SDP.Pack.Corruptions": "SDP Corruptions",
+"SDP.Pack.Traits": "SDP Traits",
 "SDP.Pack.Journals": "SDP Journals",
 "SDP.Pack.Scenes": "SDP Scenes",
 
@@ -625,6 +626,8 @@
   "SDP.WeaponDamageHint": "Formula: SB, WPB, WPB/2, fixed number, or combination (e.g. SB + 2, WPB/2 + 1). SB = Strength bonus, WPB = Willpower bonus.",
   "SDP.InspirationDice": "Inspiration Dice",
   "SDP.Key": "Key",
+  "SDP.Index": "Index",
+  "SDP.TraitIndexHint": "e.g. 6, fire, II, 12…",
 "SDP.Characteristic": "Characteristic",
 "SDP.Basic": "Basic",
 "SDP.Advanced": "Advanced",
@@ -896,6 +899,162 @@
 "SDP.Item.Trait.finalTruth.Description": "You are sometimes convinced you have glimpsed a fundamental truth about the universe. A terrible truth, so vast and deep that no word seems capable of describing it.\nSomething that renders all struggle useless.\nSomething that renders all hope absurd.\nYou cannot clearly explain what you have understood, but this certainty never leaves you.\nDeep in your mind echoes a growing conviction:\nEverything that exists must disappear.\nAs corruption progresses, this idea ceases to be a mere thought and becomes self-evident. You then begin to act in accordance with this truth and become, consciously or not, a servant of this will to destroy.",
 "SDP.Item.Trait.voidHunger.Name": "Hunger of the Void",
 "SDP.Item.Trait.voidHunger.Description": "You sometimes feel an irresistible need to destroy something. Not out of anger or hatred, but simply because its existence seems out of place to you. At first, this urge targets only insignificant objects. Over time, it extends to places, then to living beings. A simple animal, an innocent individual, or even an entire species may come to seem like nothing more than an anomaly that ought to be erased.",
+
+"SDP.Item.Trait.chimera.Name": "Chimera",
+"SDP.Item.Trait.chimera.Description": "The creature has undergone a profound magical transformation that has set it apart from its original species. Its anatomy, metabolism, or abilities have been permanently altered.\nA chimera may develop features, limbs, or powers normally impossible for its species. It is also likely to be naturally aggressive.",
+
+"SDP.Item.Trait.alpha.Name": "Alpha",
+"SDP.Item.Trait.alpha.Description": "The creature is the natural leader of its group. Through cries, posture, or influence, it coordinates the actions of its pack.\nAllied creatures of the same species within a radius in meters equal to the Alpha's Initiative value gain a +10 bonus to all Attack, Calm, and Dodge Tests. This bonus disappears immediately if the Alpha is killed, unconscious, or unable to lead its pack.\nOn the Alpha's death, pack members generally scatter or try to flee, unless another Alpha immediately takes its place or their instincts drive them to keep fighting.",
+
+"SDP.Item.Trait.vulnerability.Name": "Vulnerability",
+"SDP.Item.Trait.vulnerability.Description": "The creature has an extreme weakness to the damage type, element, or effect indicated by the Index.\nDamage and effects suffered are doubled.",
+
+"SDP.Item.Trait.immunity.Name": "Immunity",
+"SDP.Item.Trait.immunity.Description": "The creature is completely immune to the damage type, element, or effect indicated by the Index.\nIt suffers no damage and no effects from that source.",
+
+"SDP.Item.Trait.resistance.Name": "Resistance",
+"SDP.Item.Trait.resistance.Description": "The creature has a natural resistance to the damage type, element, or effect indicated by the Index.\nDamage and effects suffered are reduced by 50%.",
+
+"SDP.Item.Trait.weakness.Name": "Weakness",
+"SDP.Item.Trait.weakness.Description": "The creature poorly withstands the damage type, element, or effect indicated by the Index.\nDamage and effects suffered are increased by 50%.",
+
+"SDP.Item.Trait.fearful.Name": "Fearful",
+"SDP.Item.Trait.fearful.Description": "The creature instinctively prefers flight over confrontation. Faced with an unusual noise, a sudden threat, or when it judges the danger beyond its abilities, it seeks to withdraw rather than fight. Unless it is cornered, protecting its young, or has no escape, it always tries to flee.",
+
+"SDP.Item.Trait.swallower.Name": "Swallower",
+"SDP.Item.Trait.swallower.Description": "The creature can swallow prey whole thanks to its oversized maw or adapted anatomy. Only creatures at least one size category smaller than itself can be swallowed.\nA swallowed creature is considered Entangled and remains trapped inside its predator. At the start of each of the predator's turns, it suffers raw damage equal to the creature's Toughness Bonus, representing digestion. It remains imprisoned until it escapes, an ally frees it, or the creature is killed.",
+
+"SDP.Item.Trait.burrower.Name": "Burrower",
+"SDP.Item.Trait.burrower.Description": "The creature can quickly dig tunnels with its limbs, mandibles, or other natural adaptations. The Index indicates its digging speed in meters per round through suitable terrain (earth, sand, snow, etc.). Particularly hard materials, such as rock, may reduce this speed or make digging impossible, depending on the creature's abilities.",
+
+"SDP.Item.Trait.fluxVision.Name": "Flux Vision",
+"SDP.Item.Trait.fluxVision.Description": "The creature can perceive the magic around it. It distinguishes beings, objects, places, and phenomena imbued with magic, senses their intensity, and can identify the origin of magical flows. It can also spot a spellcaster who is channeling or using magic.",
+
+"SDP.Item.Trait.instinctive.Name": "Instinctive",
+"SDP.Item.Trait.instinctive.Description": "The creature lacks complex thought and language. It acts mainly on instinct, naturally fears fire, and generally seeks to flee from it. In combat, it may only use the Dodge skill to defend itself.\nIf it loses more than half its Wounds, it tries to flee, unless it is protecting its young, defending its territory, or cornered. In those cases, it fights to the death.\nSome species may ignore or modify part of this trait's effects when their description says so.",
+
+"SDP.Item.Trait.constriction.Name": "Constriction",
+"SDP.Item.Trait.constriction.Description": "The creature can use its body as a natural weapon to restrain a target. If its attack succeeds, the target immediately gains the Entangled condition.\nWhile the constriction is maintained, at the start of each of the creature's turns the target automatically suffers raw damage equal to the creature's Strength Bonus.\nThe Index is the SL bonus the creature receives to maintain its grip on opposed Tests to prevent the prey from escaping.",
+
+"SDP.Item.Trait.horns.Name": "Horns",
+"SDP.Item.Trait.horns.Description": "The creature has horns, antlers, or other appendages that can be used as a natural weapon. When it Charges with this trait, damage dealt is increased by 50%.",
+
+"SDP.Item.Trait.bite.Name": "Bite",
+"SDP.Item.Trait.bite.Description": "The creature has a jaw, beak, or other mouthparts that can be used as a natural weapon. Depending on its anatomy, this attack may also grab, tear, or hold prey.",
+
+"SDP.Item.Trait.tailAttack.Name": "Tail Attack",
+"SDP.Item.Trait.tailAttack.Description": "The creature has a tail strong enough to be used as a natural weapon. Depending on its anatomy, it may strike, sweep, or crush opponents.",
+
+"SDP.Item.Trait.trampling.Name": "Trampling",
+"SDP.Item.Trait.trampling.Description": "The creature can use its body weight and the power of its limbs to trample opponents. This attack is a natural weapon and can generally only be used against creatures smaller than itself.",
+
+"SDP.Item.Trait.claws.Name": "Claws",
+"SDP.Item.Trait.claws.Description": "The creature has claws, talons, or other cutting appendages that can be used as a natural weapon. Depending on its anatomy, this attack may also slash, grab, climb, or pin prey.",
+
+"SDP.Item.Trait.corruptionSource.Name": "Corruption Source",
+"SDP.Item.Trait.corruptionSource.Description": "The creature is steeped in Nihil's corruption and naturally spreads it around itself. Any creature exposed to this corruption is subject to the normal corruption contamination rules.",
+
+"SDP.Item.Trait.voidCreature.Name": "Void Creature",
+"SDP.Item.Trait.voidCreature.Description": "Void creatures are creations of Nihil. When in a heavily corrupted area, they gain +10 to Strength, Toughness, Willpower, Agility, Intelligence, and Initiative.\nTheir existence slowly consumes the life and magic around them to sustain their own bodies. If they remain deprived of living creatures or magic to corrupt for several decades, they gradually disintegrate until they vanish.\nOn death, their bodies quickly break down into black matter or dust, leaving no usable corpse.\nVoid creatures can use the Vital Absorption spell.",
+
+"SDP.Item.Trait.superiorConstitution.Name": "Superior Constitution",
+"SDP.Item.Trait.superiorConstitution.Description": "The creature has an exceptionally resilient constitution. Its maximum Health Points are increased by an amount equal to its Toughness Bonus × Index.",
+
+"SDP.Item.Trait.magicReserve.Name": "Magic Reserve",
+"SDP.Item.Trait.magicReserve.Description": "The creature has a greater than normal magic reserve. Its maximum Mana Points are increased by an amount equal to its Willpower Bonus × Index.",
+
+"SDP.Item.Trait.primalInstinct.Name": "Primal Instinct",
+"SDP.Item.Trait.primalInstinct.Description": "When something indicated by the Index (offspring, mate, territory, nest, anchor, etc.) is directly threatened, the creature acts under its most primal instinct. While this threat lasts, it fights to the death and no longer tries to flee or preserve its own life.\nDuring this state, it gains a +1 bonus to hit and +10 Strength.\nThe effect ends when the creature is calmed, the threat disappears, it is neutralized (for example Stunned or Unconscious), or by any other effect that can soothe its instinct. When this state ends, it gains 1 Exhausted condition.",
+
+"SDP.Item.Trait.colony.Name": "Colony",
+"SDP.Item.Trait.colony.Description": "The creature is made up of a multitude of small individuals acting as a single entity. Attacks able to affect an area or a large number of individuals are resolved normally.\n• Colony I: Attacks without the Area quality or a similar effect inflict only 1 Wound, regardless of the damage dealt.\n• Colony II: Attacks without the Area quality or a similar effect have no effect.",
+
+"SDP.Item.Trait.regeneration.Name": "Regeneration",
+"SDP.Item.Trait.regeneration.Description": "The creature can call upon powerful regenerative magic to quickly close its wounds.\nThis trait allows the use of the Regeneration spell. The Index indicates the bonus to cast the spell.",
+
+"SDP.Item.Trait.projection.Name": "Projection",
+"SDP.Item.Trait.projection.Description": "The creature can project a powerful discharge of energy, matter, or magic. Depending on its species, this may take the form of flames, ice, venom, acid, lightning, or any similar element.\nThis trait allows the use of the Projection spell. The nature of the projection is specified in the creature's description.",
+
+"SDP.Item.Trait.magicResistance.Name": "Magic Resistance",
+"SDP.Item.Trait.magicResistance.Description": "The creature's body, mind, or soul offers natural resistance to magical energies, allowing it to lessen their most harmful effects.\n• Reduce by 1 per Index level all damage inflicted directly by spells.\n• The creature gains a +10 bonus per Index to all Tests made to resist a spell's effects.\n• When a spell applies an effect that is normally irresistible, the creature may make a Resistance or Calm Test (depending on the nature of the effect) to cancel it, even if the spell normally provides no Test. The GM determines the most appropriate skill based on the spell's effect.",
+
+"SDP.Item.Trait.venomous.Name": "Venomous",
+"SDP.Item.Trait.venomous.Description": "The creature produces a venom able to weaken or kill its prey. Attacks made with the natural weapons listed on its sheet apply the Poison associated with this trait. The nature and effects of the poison vary by species.",
+
+"SDP.Item.Trait.web.Name": "Web",
+"SDP.Item.Trait.web.Description": "The creature can produce a particularly resilient web to hinder its prey. Each time an attack using this ability hits its target, the target gains 1 Slowed condition per Index.",
+
+"SDP.Item.Trait.trained.Name": "Trained",
+"SDP.Item.Trait.trained.Description": "The creature has been trained to perform one or more specific tasks under its master's orders. The Index indicates the disciplines and trainings it has mastered. Trainings can stack.\n• Tamed: The creature is used to the presence of humanoids and ignores its Bestial trait. It gains +20 Fellowship.\n• Mount: The creature accepts being ridden and directed by its master. It can be used as a mount and keeps its calm in ordinary situations.\n• Attack Training: The creature gains +5 Weapon Skill.\n• Agility Training: The creature gains +5 Agility.\n• Toughness Training: The creature gains +5 Toughness.\n• Strength Training: The creature gains +5 Strength.\n• War Training: The creature is conditioned to endure the stress of combat and gains +5 Willpower. (Removes the Fearful trait if present)\n• Draft: The creature is trained to pull a cart, wagon, plough, carriage, or any similar load.\n• Homing: The creature instinctively finds its way back to its place of origin or its master when released or lost.\n• Tracking: The creature is trained to follow a trail. It must have a suitable sense (smell, sight, etc.).\n• Retrieve: The creature is trained to bring a designated object back to its master.\n• Guard: The creature stays at a designated location and remains on watch until given a new order.\n• Messenger: The creature can carry a message or a small object between several destinations it knows.",
+
+"SDP.Item.Trait.thickSkin.Name": "Thick Skin",
+"SDP.Item.Trait.thickSkin.Description": "The creature has exceptionally dense skin, made of several layers of hide, fat, and muscle that effectively cushion impacts.\nBludgeoning damage it suffers is reduced by 50%. However, piercing damage it suffers is increased by 50%.",
+
+"SDP.Item.Trait.scales.Name": "Scales",
+"SDP.Item.Trait.scales.Description": "The creature is covered in thick interlocking scales that naturally deflect slashing blows and protect its vital parts.\nSlashing damage it suffers is reduced by 50%. However, piercing damage it suffers is increased by 50%.",
+
+"SDP.Item.Trait.carapace.Name": "Carapace",
+"SDP.Item.Trait.carapace.Description": "The creature is protected by a thick rigid carapace covering a large part of its body and offering exceptional protection against weapons.\nSlashing and piercing damage it suffers is reduced by 50%. However, bludgeoning damage it suffers is increased by 50%.",
+
+"SDP.Item.Trait.climber.Name": "Climber",
+"SDP.Item.Trait.climber.Description": "The creature can easily climb vertical surfaces and even move across ceilings. It moves on these surfaces at its Walk value and automatically succeeds on all Climb Tests.",
+
+"SDP.Item.Trait.tracker.Name": "Tracker",
+"SDP.Item.Trait.tracker.Description": "Thanks to a particularly keen sense of smell, hearing, or other developed senses, the creature excels at pursuing its prey. The Index specifies the sense used (smell, hearing, flux vision, vibrations, etc.).\n• Tracker I: The creature may make Track Tests using Perception instead of the normally required skill. It also adds its Intelligence Bonus to the SL obtained.\n• Tracker II: As long as a creature is within range of the sense indicated by the Index, the tracker permanently knows its approximate position and can follow it without making a Track Test. It only loses the trail if the target leaves detection range, if the sense used is neutralized, or if a specific effect prevents it.",
+
+"SDP.Item.Trait.cunning.Name": "Cunning",
+"SDP.Item.Trait.cunning.Description": "The creature shows remarkable intelligence and prefers to exploit its opponents' weaknesses rather than rely on strength alone. It willingly sets ambushes, uses its environment to its advantage, and does not hesitate to retreat if the situation turns against it.",
+
+"SDP.Item.Trait.fearless.Name": "Fearless",
+"SDP.Item.Trait.fearless.Description": "Whether the creature is reckless, extremely stupid, or simply caught up in the heat of action, it fears nothing. It ignores the rules of Psychology.",
+
+"SDP.Item.Trait.darkVision.Name": "Dark Vision",
+"SDP.Item.Trait.darkVision.Description": "The creature can see perfectly in the deepest darkness.",
+
+"SDP.Item.Trait.magical.Name": "Magical",
+"SDP.Item.Trait.magical.Description": "The creature can use magic. Animals generally have powers unique to their species, while intelligent creatures may master one or more fields of magic, depending on their nature.\nThe Index indicates the bonus to apply when using magic.",
+
+"SDP.Item.Trait.undead.Name": "Undead",
+"SDP.Item.Trait.undead.Description": "The creature is animated by an artificial soul and is no longer considered a living being. It does not need to breathe, eat, drink, or sleep. This trait is mainly used to determine the effects of spells, abilities, or rules that specifically target the undead.",
+
+"SDP.Item.Trait.terrifying.Name": "Terrifying",
+"SDP.Item.Trait.terrifying.Description": "The mere presence of the creature inspires supernatural fear. Any creature that sees it for the first time must succeed on an Extended Calm Test whose SL equals its Fear Index.\nOn a success on the first test, the target resists this fear and ignores all its effects for the encounter. On a failure, it immediately gains the Frightened condition, whose rules apply normally.",
+
+"SDP.Item.Trait.ethereal.Name": "Ethereal",
+"SDP.Item.Trait.ethereal.Description": "The creature is made of spiritual energy and can become partially or fully immaterial. It can pass through most solid obstacles and is immune to non-magical attacks, except for certain materials such as concentrated iron, or objects and substances imbued with magic. Magical attacks and effects can, however, harm it normally.\nThe creature is bound to an object, place, or corpse that serves as its anchor. When it manifests in the material world, it can be wounded and destroyed normally.\nOutside these manifestations, it remains intangible and cannot be harmed except by destroying its anchor. It may dissipate willingly or vanish spontaneously through lack of stability before manifesting again, sometimes hours or even days later. If its anchor is threatened, it manifests almost instantly to defend it.",
+
+"SDP.Item.Trait.camouflage.Name": "Camouflage",
+"SDP.Item.Trait.camouflage.Description": "The creature can effectively conceal its presence by blending into its surroundings through natural adaptations or magical abilities. This advantage applies only when conditions favor its camouflage and may be ignored if the creature is outside its environment or if its means of concealment is unsuitable.\n• Camouflage I: While it remains motionless, the creature adds its Agility Bonus to all its Stealth Tests.\n• Camouflage II: While it remains motionless, all of the creature's Stealth Tests automatically succeed. When it moves, it instead adds its Agility Bonus to its Stealth Tests.",
+
+"SDP.Item.Trait.leap.Name": "Leap",
+"SDP.Item.Trait.leap.Description": "The creature can make exceptional leaps thanks to the power of its limbs, magic, or other natural adaptations. The jump distances it can cover are considerably greater than those of an ordinary creature. When it makes a Test related to a jump, it adds its Strength Bonus to the SL obtained. Its base jump distance equals its Walk value. Depending on the Test result, it may cover a greater or lesser distance than this value.",
+
+"SDP.Item.Trait.petrification.Name": "Petrification",
+"SDP.Item.Trait.petrification.Description": "The creature's eyes act as a catalyst for powerful petrification magic. When it unleashes this power, all creatures of its choice within its field of vision are affected at once. The creature makes an Opposed Test, adding its Index to the result. Each target opposes with a Resistance Test. A spellcaster may make an Intelligence Test instead of Resistance to counter the magic.\nFor every 2 SL by which the creature wins the opposed Test, the target gains 1 Stunned condition. If it wins by 6 SL or more, the target is immediately turned to stone.\nThe energy required for this ability is considerable, so the creature can only use it occasionally and must wait some time before releasing its petrifying gaze again.",
+
+"SDP.Item.Trait.combative.Name": "Combative",
+"SDP.Item.Trait.combative.Description": "The creature excels at melee combat. Once per turn, when it wins an Opposed Test while defending in melee combat, it may immediately make a riposte attack against its opponent.",
+
+"SDP.Item.Trait.winged.Name": "Winged",
+"SDP.Item.Trait.winged.Description": "The creature can fly. The Index indicates the maximum distance, in meters, it can travel in one round while flying. Taking off provokes the usual opportunity attacks.\n• Winged I: Taking off consumes half of its aerial Movement.\n• Winged II: Taking off without spending a specific Movement action.\nA flying creature may land or remain hovering without restriction.",
+
+"SDP.Item.Trait.vampire.Name": "Vampire",
+"SDP.Item.Trait.vampire.Description": "Vampirism is one of the most dreaded consequences of demonology. Those who seek immortality through this magic inevitably fall under a curse created by Nihil. Their body stops aging and gains exceptional strength and toughness, but they become entirely dependent on the blood of humanoids to survive.\nWhen feeding, the vampire also absorbs the magic contained in its victims' blood, which quickly regenerates its wounds. This thirst is hard to control, however, and drives most vampires to drain their prey completely. Each time it drinks the blood of a living creature, it recovers a number of Wound Points equal to the damage it inflicts.\nIn return, sunlight, created by Fotismos, slowly consumes the curse that animates them, burning their bodies and greatly weakening their abilities.\nThe more a vampire yields to its thirst for blood, the greater Nihil's influence over its mind becomes, until in the most extreme cases it can impose its will upon them.",
+
+"SDP.Item.Trait.aethyr.Name": "Aethyr",
+"SDP.Item.Trait.aethyr.Description": "Aethyr is a dreaded curse of necromancy. Necromancers seeking to free their soul from the limits of their body in order to gain absolute power risk being struck by it. Their body then gains the ability to shift into a parallel plane very close to the real world. In this ethereal form, they can observe the living unseen and pass through walls, doors, bars, and most light obstacles.\nAn Aethyr can also temporarily possess creatures whose soul or will is too weak to resist it.\nEach use of its ethereal form absorbs the spiritual magic of nearby living beings to sustain its existence between the two planes. Victims gradually weaken, and prolonged exposure eventually corrupts them slowly through the Void.\nIn return, moonlight is extremely harmful to it. It consumes the energy that keeps its soul between the two planes, forces it back into material form, and over time gradually destroys its soul. Moonlight is thus its greatest enemy.",
+
+"SDP.Item.Trait.hibernation.Name": "Hibernation",
+"SDP.Item.Trait.hibernation.Description": "The creature can enter a deep state of lethargy for a long period in order to conserve energy. During this state, it is extremely vulnerable and only awakens in the presence of danger, a food source, or another stimulus specific to its species.",
+
+"SDP.Item.Trait.aura.Name": "Aura",
+"SDP.Item.Trait.aura.Description": "The creature permanently emits a magical phenomenon that affects its surroundings. The exact effects of this aura are specified in the creature's description.",
+
+"SDP.Item.Trait.infectious.Name": "Infectious",
+"SDP.Item.Trait.infectious.Description": "The creature carries a parasite, disease, or infectious agent that it transmits naturally. The nature of this disease and the conditions of contamination are specified in the creature's description.",
+
+"SDP.TraitActive": "Active",
+"SDP.TraitInactive": "Inactive",
 
 "SDP.RollTableCareerHuman": "Career Human",
 "SDP.RollTableCareerElf": "Career Elf",

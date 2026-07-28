@@ -1,5 +1,9 @@
 import { SimpleDialog } from "../apps/simple-dialog.js";
 import { SdpConditionEngine } from "../system/condition-engine.js";
+import {
+  isToggleableTrait,
+  traitExhaustsOnDeactivate
+} from "../system/creature-trait-utils.js";
 import { registerArmorRows, registerTalentRows, registerConditionDetails} from "./actor-sheet-utils.js";
 
 export function registerUIListeners(sheet, root) {
@@ -320,6 +324,8 @@ export function registerItemListeners(sheet, root) {
 
   registerBooleanToggles(sheet, root);
 
+  registerTraitActiveToggle(sheet, root);
+
 }
 
 function registerEditItem(sheet, root) {
@@ -627,6 +633,47 @@ function registerBooleanToggles(sheet, root) {
         path,
         value: checked
       });
+
+    });
+
+  });
+
+}
+
+function registerTraitActiveToggle(sheet, root) {
+
+  root.querySelectorAll('[data-action="toggleTraitActive"]').forEach(el => {
+
+    el.addEventListener("click", async (event) => {
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      const item = sheet.document.items.get(
+        event.currentTarget.dataset.itemId
+      );
+
+      if (!item || !isToggleableTrait(item)) return;
+
+      const wasActive = Boolean(item.system?.active);
+      const nextActive = !wasActive;
+
+      await item.update({
+        "system.active": nextActive
+      });
+
+      // Instinct primal : à la désactivation → 1 Exténué
+      if (
+        wasActive
+        && !nextActive
+        && traitExhaustsOnDeactivate(item)
+      ) {
+        await SdpConditionEngine.add(
+          sheet.document,
+          "exhausted",
+          1
+        );
+      }
 
     });
 

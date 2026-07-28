@@ -507,6 +507,7 @@ ${bleedingLine}
         data-target="${card.classList.contains("sdp-spell") ? "" : targetId}"
         data-damage="${damageAfterArmor ?? finalDamage}"
         data-location="${location}"
+        data-damagetype="${damageType || ""}"
         data-critical="${critical}"
         data-bleeding="${bleedingStacks}">
         ${game.i18n.localize(
@@ -530,6 +531,7 @@ ${bleedingLine}
         const damage = Number(button.dataset.damage);
     const location = button.dataset.location;
         let targetId = button.dataset.target;
+    const damageType = button.dataset.damagetype || null;
     const attacker = resolveAttackerFromButton(button);
     const severitySteps = getAttackerInjurySeverityBonus(attacker);
 
@@ -668,7 +670,8 @@ const result = await SdpDamage.applyFullDamage({
   actor: token.actor,
   damage,
   location,
-  severitySteps
+  severitySteps,
+  damageType
 });
 
 const { finalDamage, armor, newHealth, current, severity } = result;
@@ -836,7 +839,8 @@ if (hasTaille && targetId) {
   actor,
   damage,
   location,
-  severitySteps
+  severitySteps,
+  damageType
 });
 
 const {
@@ -1186,7 +1190,8 @@ html.on("click", ".validate-damage", async ev => {
   const finalDamage = targets.length
     ? SdpDamage.resolveIncomingDamage(
       damageAfterArmor,
-      targets[0].actor
+      targets[0].actor,
+      damageType
     )
     : damageAfterArmor;
 
@@ -1283,6 +1288,7 @@ ${bleedingLine}
   data-target="${targetId || ""}"
   data-damage="${damageAfterArmor}"
   data-location="${location}"
+  data-damagetype="${damageType || ""}"
   data-bleeding="${bleeding.stacks}">
 
   ${game.i18n.localize(

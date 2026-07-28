@@ -11,6 +11,7 @@ const SDP_ITEM_INDEX_FIELDS = [
   "name",
   "type",
   "system.key",
+  "system.index",
   "flags.sdp.key"
 ];
 
@@ -85,18 +86,26 @@ function applySdpIndexEntryLocalization(entry) {
       : "";
 
   const itemKey = systemKey || flagKey;
+  const traitIndex =
+    entry.type === "trait"
+      ? String(entry.system?.index ?? "").trim()
+      : "";
 
-  if (!itemKey) return;
+  if (!itemKey && !traitIndex) return;
 
   if (!entry._sdpSourceName) {
     entry._sdpSourceName = entry.name;
   }
 
-  entry.name = getLocalizedItemName(
-    entry.type,
-    itemKey,
-    entry._sdpSourceName
-  );
+  entry.name = getActorItemDisplayName({
+    type: entry.type,
+    name: entry._sdpSourceName,
+    system: {
+      key: systemKey,
+      index: entry.system?.index ?? ""
+    },
+    flags: entry.flags ?? {}
+  });
 
 }
 
@@ -135,6 +144,7 @@ export function registerSdpCompendiumIndexFields() {
   const merged = new Set([
     ...existing,
     "system.key",
+    "system.index",
     "flags.sdp.key"
   ]);
 
@@ -262,7 +272,18 @@ export function getLocalizedItemName(type, key, fallback = "") {
 }
 
 /**
+ * Indice libre du trait (chiffre, texte, "II, 12"…) — indépendant de la key.
+ */
+export function getTraitIndex(item) {
+  if (!item || item.type !== "trait") return "";
+  const raw = item.system?.index;
+  if (raw == null) return "";
+  return String(raw).trim();
+}
+
+/**
  * Nom affiché d'un item sur la fiche acteur (inventaire, combat, etc.).
+ * Pour les traits, ajoute " (indice)" si system.index est renseigné.
  */
 export function getActorItemDisplayName(item) {
 
@@ -283,6 +304,8 @@ export function getActorItemDisplayName(item) {
 
   const itemKey = systemKey || flagKey;
 
+  let name = "";
+
   if (itemKey && type) {
 
     const localized =
@@ -293,51 +316,58 @@ export function getActorItemDisplayName(item) {
       );
 
     if (localized) {
-      return localized;
+      name = localized;
     }
 
   }
 
-  const key =
-    normalizeItemRef(
-      itemKey
-      || item.name
-      || ""
-    );
+  if (!name) {
 
-  if (!key) {
-    return item.name ?? "";
-  }
-
-  if (type) {
-
-    const localized =
-      getLocalizedItemName(
-        type,
-        key,
-        ""
+    const key =
+      normalizeItemRef(
+        itemKey
+        || item.name
+        || ""
       );
 
-    if (localized) {
-      return localized;
+    if (!key) {
+      name = item.name ?? "";
+    } else if (type) {
+
+      const localized =
+        getLocalizedItemName(
+          type,
+          key,
+          ""
+        );
+
+      if (localized) {
+        name = localized;
+      } else {
+        const trappingName =
+          localizeTrappingRef(
+            key,
+            ""
+          );
+
+        name =
+          trappingName && trappingName !== key
+            ? trappingName
+            : (item.name ?? key);
+      }
+
+    } else {
+      name = item.name ?? key;
     }
 
   }
 
-  const trappingName =
-    localizeTrappingRef(
-      key,
-      ""
-    );
-
-  if (
-    trappingName &&
-    trappingName !== key
-  ) {
-    return trappingName;
+  if (type === "trait") {
+    const index = getTraitIndex(item);
+    if (index) return `${name} (${index})`;
   }
 
-  return item.name ?? key;
+  return name;
 
 }
 
@@ -925,22 +955,80 @@ export function localizeItemDirectory(element, resolver) {
   if (!element) return;
 
   const entries =
-    element.querySelectorAll(".directory-item");
+    element.querySelectorAll(
+      ".directory-item, li[data-document-id], li[data-entry-id], [data-document-id], [data-entry-id]"
+    );
 
   for (const entry of entries) {
+
+    if (
+      entry.classList.contains("folder")
+      || entry.classList.contains("directory-item-folder")
+    ) {
+      continue;
+    }
 
     const localized = resolver(entry);
 
     if (!localized) continue;
 
     const nameEl =
-      entry.querySelector(".entry-name, .document-name");
+      findFolderNameElement(entry)
+      ?? entry.querySelector(
+        ".entry-name, .document-name, .name, h4, a.entry-link, a"
+      );
 
-    if (nameEl) {
-      nameEl.textContent = localized;
+    if (!nameEl) continue;
+
+    const labeled =
+      nameEl.querySelector?.("[data-sdp-label]");
+
+    if (labeled) {
+      labeled.textContent = localized;
+      continue;
     }
 
+    // Nœud texte existant (structure Foundry classique).
+    const textNode = [...nameEl.childNodes].find(
+      n => n.nodeType === Node.TEXT_NODE && n.textContent.trim()
+    );
+
+    if (textNode) {
+      textNode.textContent = localized;
+      continue;
+    }
+
+    if (nameEl.childElementCount === 0) {
+      nameEl.textContent = localized;
+      continue;
+    }
+
+    // Icône + pas de texte : ajouter un label dédié.
+    const span = document.createElement("span");
+    span.dataset.sdpLabel = "1";
+    span.textContent = localized;
+    nameEl.appendChild(span);
+
   }
+
+}
+
+/**
+ * Affiche le nom d'une entrée d'index (monde ou compendium) avec indice trait.
+ */
+function getIndexedTraitDisplayName(entry) {
+
+  if (!entry) return "";
+
+  return getActorItemDisplayName({
+    type: entry.type,
+    name: entry._sdpSourceName ?? entry.name ?? "",
+    system: {
+      key: entry.system?.key ?? "",
+      index: entry.system?.index ?? ""
+    },
+    flags: entry.flags ?? {}
+  });
 
 }
 
@@ -948,7 +1036,11 @@ export function localizeSidebarItems(element) {
 
   localizeItemDirectory(element, (entry) => {
 
-    const id = entry.dataset.documentId;
+    const id =
+      entry.dataset.documentId
+      || entry.dataset.entryId
+      || entry.dataset.documentid
+      || entry.dataset.entryid;
 
     if (!id) return null;
 
@@ -956,11 +1048,7 @@ export function localizeSidebarItems(element) {
 
     if (!item) return null;
 
-    return getLocalizedItemName(
-      item.type,
-      item.system?.key,
-      item.name
-    );
+    return getActorItemDisplayName(item);
 
   });
 
@@ -973,7 +1061,11 @@ export function localizeCompendiumItems(element, pack) {
     if (entry.classList.contains("folder"))
       return null;
 
-    const entryId = entry.dataset.entryId;
+    const entryId =
+      entry.dataset.entryId
+      || entry.dataset.documentId
+      || entry.dataset.entryid
+      || entry.dataset.documentid;
 
     if (!entryId) return null;
 
@@ -981,13 +1073,7 @@ export function localizeCompendiumItems(element, pack) {
 
     if (!indexEntry) return null;
 
-    return getLocalizedItemName(
-      indexEntry.type,
-      indexEntry.system?.key
-        ?? indexEntry.flags?.sdp?.key,
-      indexEntry._sdpSourceName
-        ?? indexEntry.name
-    );
+    return getIndexedTraitDisplayName(indexEntry);
 
   });
 

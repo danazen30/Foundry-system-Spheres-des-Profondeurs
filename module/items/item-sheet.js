@@ -1,6 +1,9 @@
 import { ITEM_TRAITS, ARMOR_TRAITS} from "../system/config.js";
 import { formatPlainTextAsHtml } from "../system/text-format.js";
-import { getLocalizedItemDescription } from "../system/item-localization.js";
+import {
+  getLocalizedItemDescription,
+  getTraitIndex
+} from "../system/item-localization.js";
 import { restoreItemScroll, registerEditorToggles, setupRichTextEditors, setupTextareaResize} from "../actors/actor-sheet-ui.js";
 
 const { ItemSheetV2 } = foundry.applications.sheets;
@@ -48,16 +51,23 @@ get title() {
  const key =
   this.document.system.key?.trim?.() ?? "";
 
-  if (!key) {
-    return this.document.name;
+  let title = this.document.name;
+
+  if (key) {
+    const translationKey =
+      `SDP.Item.${itemType}.${key}.Name`;
+
+    title = game.i18n.has(translationKey)
+      ? game.i18n.localize(translationKey)
+      : this.document.name;
   }
 
-  const translationKey =
-    `SDP.Item.${itemType}.${key}.Name`;
+  if (this.document.type === "trait") {
+    const index = String(this.document.system?.index ?? "").trim();
+    if (index) title = `${title} (${index})`;
+  }
 
-  return game.i18n.has(translationKey)
-    ? game.i18n.localize(translationKey)
-    : this.document.name;
+  return title;
 
 }
 
@@ -205,6 +215,9 @@ const localizedName =
     ? game.i18n.localize(nameKey)
     : this.document.name;
 
+const traitIndex = getTraitIndex(this.document);
+const nameSuffix = traitIndex ? `(${traitIndex})` : "";
+
 const localizedDescription =
   itemKey
     ? formatPlainTextAsHtml(
@@ -270,7 +283,8 @@ const editors = {
   return {
   item: {
   ...this.document,
-  displayName: localizedName
+  displayName: localizedName,
+  nameSuffix
 },
   system: this.document.system,
   positiveItemTraits,
