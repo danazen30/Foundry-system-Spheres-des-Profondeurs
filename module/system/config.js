@@ -721,7 +721,7 @@ SDP.sizes = {
     order: 0,
     strength: -30,
     toughness: -30,
-    agility: 15,
+    agility: 0,
     damageMultiplier: 0.2
   },
 
@@ -730,7 +730,7 @@ SDP.sizes = {
     order: 1,
     strength: -20,
     toughness: -20,
-    agility: 10,
+    agility: 0,
     damageMultiplier: 0.5
   },
 
@@ -739,7 +739,7 @@ SDP.sizes = {
     order: 2,
     strength: -10,
     toughness: -10,
-    agility: 5,
+    agility: 0,
     damageMultiplier: 1
   },
 
@@ -757,7 +757,7 @@ SDP.sizes = {
     order: 4,
     strength: 10,
     toughness: 10,
-    agility: -5,
+    agility: 0,
     damageMultiplier: 1.5
   },
 
@@ -766,7 +766,7 @@ SDP.sizes = {
     order: 5,
     strength: 20,
     toughness: 20,
-    agility: -10,
+    agility: 0,
     damageMultiplier: 2
   },
 
@@ -775,7 +775,7 @@ SDP.sizes = {
     order: 6,
     strength: 30,
     toughness: 30,
-    agility: -15,
+    agility: 0,
     damageMultiplier: 3
   }
 

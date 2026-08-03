@@ -5,8 +5,9 @@
 
 export const CREATURE_TRAIT_KEYS = {
   superiorConstitution: "superiorConstitution",
+  particularAnatomy: "particularAnatomy",
   magicReserve: "magicReserve",
-  primalInstinct: "primalInstinct",
+  instinctive: "instinctive",
   voidCreature: "voidCreature",
   thickSkin: "thickSkin",
   scales: "scales",
@@ -37,7 +38,7 @@ export const DAMAGE_TYPE_TRAIT_MODIFIERS = {
  * Effets appliqués uniquement quand system.active === true.
  */
 export const TOGGLEABLE_TRAIT_EFFECTS = {
-  [CREATURE_TRAIT_KEYS.primalInstinct]: {
+  [CREATURE_TRAIT_KEYS.instinctive]: {
     attributeBonuses: {
       strength: 10
     },

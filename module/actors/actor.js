@@ -155,6 +155,12 @@ system.custom.manaBonus ??= 0;
         system.description = { value: system.description };
       }
       system.description.value ??= "";
+
+      system.naturalArmor ??= { value: 0 };
+      if (typeof system.naturalArmor === "number") {
+        system.naturalArmor = { value: system.naturalArmor };
+      }
+      system.naturalArmor.value = Number(system.naturalArmor.value || 0);
     }
 
 system.combat ??= {};
@@ -932,23 +938,20 @@ switch (healthSize) {
     baseHealth = TB + WPB;
     break;
 
-  case "small":
-    baseHealth = SB + TB + WPB;
-    break;
-
   case "large":
     baseHealth = ((SB + (TB * 2) + WPB) * 2);
     break;
 
   case "enormous":
-    baseHealth = ((SB + (TB * 2) + WPB) * 4);
+    baseHealth = ((SB + (TB * 2) + WPB) * 3);
     break;
 
   case "gigantic":
-    baseHealth = ((SB + (TB * 2) + WPB) * 8);
+    baseHealth = ((SB + (TB * 2) + WPB) * 5);
     break;
 
-  // average fallback
+  // average / small (same formula)
+  case "small":
   case "average":
   default:
     baseHealth = SB + (TB * 2) + WPB;
@@ -975,12 +978,18 @@ const superiorConstitutionIndex = getTraitIndexTotal(
 );
 const superiorConstitutionBonus = TB * superiorConstitutionIndex;
 
-system.health.max =
-  baseHealth +
-  levelBonus +
-  healthBonus +
-  toughnessHealthBonus +
-  superiorConstitutionBonus;
+const particularAnatomy = getTraitIndexTotal(
+  this,
+  CREATURE_TRAIT_KEYS.particularAnatomy
+);
+
+system.health.max = particularAnatomy > 0
+  ? particularAnatomy
+  : baseHealth +
+    levelBonus +
+    healthBonus +
+    toughnessHealthBonus +
+    superiorConstitutionBonus;
 
 const finalMax = system.health.max;
 
@@ -1264,11 +1273,38 @@ else {
     const baseWoundThreshold =
       Math.floor((resistance?.system.value || 0) / 10);
 
-    system.derived.woundThreshold.value = Math.max(
+    let woundThreshold = Math.max(
       0,
       baseWoundThreshold +
         (system.custom.woundThresholdModifier || 0)
     );
+
+    // Size: same HP multipliers for large+, half (floor) for small-
+    const woundSize =
+      system.details?.size?.value ||
+      system.size ||
+      "average";
+
+    switch (woundSize) {
+      case "large":
+        woundThreshold *= 2;
+        break;
+      case "enormous":
+        woundThreshold *= 3;
+        break;
+      case "gigantic":
+        woundThreshold *= 5;
+        break;
+      case "small":
+      case "verySmall":
+      case "tiny":
+        woundThreshold = Math.floor(woundThreshold / 2);
+        break;
+      default:
+        break;
+    }
+
+    system.derived.woundThreshold.value = Math.max(0, woundThreshold);
 
 // =====================
 // CONDITION MALUS (PARry / EVASION)

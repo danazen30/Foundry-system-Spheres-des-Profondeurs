@@ -525,6 +525,105 @@ export function getLocalizedItemDescription(
 
 }
 
+/**
+ * Clé technique d'un acteur (system.key ou flags.sdp.key).
+ */
+export function resolveActorKey(actor) {
+  if (!actor) return "";
+
+  const systemKey =
+    typeof actor.system?.key === "string"
+      ? actor.system.key.trim()
+      : "";
+  const flagKey =
+    typeof actor.flags?.sdp?.key === "string"
+      ? actor.flags.sdp.key.trim()
+      : "";
+
+  return systemKey || flagKey;
+}
+
+/**
+ * Nom localisé d'une créature : SDP.Actor.Creature.<key>.Name
+ */
+export function getLocalizedCreatureName(key, fallback = "") {
+  const normalizedKey =
+    typeof key === "string" ? key.trim() : "";
+
+  if (!normalizedKey) return fallback;
+
+  const translationKey =
+    `SDP.Actor.Creature.${normalizedKey}.Name`;
+
+  return game.i18n.has(translationKey)
+    ? game.i18n.localize(translationKey)
+    : fallback;
+}
+
+/**
+ * Description bestiaire d'une créature : SDP.Actor.Creature.<key>.Description
+ */
+export function getLocalizedCreatureDescription(key, fallback = "") {
+  const normalizedKey =
+    typeof key === "string" ? key.trim() : "";
+
+  if (!normalizedKey) return fallback;
+
+  const translationKey =
+    `SDP.Actor.Creature.${normalizedKey}.Description`;
+
+  return game.i18n.has(translationKey)
+    ? game.i18n.localize(translationKey)
+    : fallback;
+}
+
+/**
+ * Nom perso (apprivoisé, etc.) : ne pas écraser avec l'i18n.
+ */
+export function hasCreatureCustomName(actor) {
+  return Boolean(actor?.getFlag?.("sdp", "customName"));
+}
+
+/**
+ * Nom affiché : i18n si key + pas de nom perso, sinon actor.name.
+ */
+export function getCreatureDisplayName(actor, fallback = "") {
+  if (!actor) return fallback;
+
+  if (actor.type === "creature" && !hasCreatureCustomName(actor)) {
+    const localized = getLocalizedCreatureName(
+      resolveActorKey(actor),
+      ""
+    );
+    if (localized) return localized;
+  }
+
+  return actor.name || fallback;
+}
+
+/**
+ * Applique le nom traduit sur l'acteur (sauf nom perso).
+ * @returns {Promise<boolean>} true si un update a été fait
+ */
+export async function syncCreatureLocalizedName(actor, { force = false } = {}) {
+  if (!actor || actor.type !== "creature") return false;
+  if (!force && hasCreatureCustomName(actor)) return false;
+
+  const localized = getLocalizedCreatureName(
+    resolveActorKey(actor),
+    ""
+  );
+
+  if (!localized || localized === actor.name) return false;
+
+  await actor.update({
+    name: localized,
+    "flags.sdp.customName": false
+  });
+
+  return true;
+}
+
 export function normalizeItemRef(value = "") {
 
   return String(value || "").trim().toLowerCase();

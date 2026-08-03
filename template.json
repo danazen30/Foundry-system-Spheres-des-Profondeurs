@@ -364,6 +364,16 @@
         "type": "string",
         "label": "Description",
         "value": ""
+      },
+      "key": {
+        "type": "string",
+        "label": "Key",
+        "value": ""
+      },
+      "naturalArmor": {
+        "type": "number",
+        "label": "Natural Armor",
+        "value": 0
       }
     },
     "vehicle": {

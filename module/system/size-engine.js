@@ -63,7 +63,8 @@ export class SdpSizeEngine {
 
 // =========================
 // MELEE ATTACK MODIFIER
-// smaller attacker gains bonus
+// +10 per size if target larger
+// -10 per size if target smaller
 // =========================
 
 static getAttackModifier(attackerSize, defenderSize) {
@@ -71,18 +72,7 @@ static getAttackModifier(attackerSize, defenderSize) {
   const attackerOrder = this.getSizeOrder(attackerSize);
   const defenderOrder = this.getSizeOrder(defenderSize);
 
-  // cible plus grande que l'attaquant
-  if (defenderOrder > attackerOrder) {
-
-    const difference =
-      defenderOrder - attackerOrder;
-
-    return difference * 10;
-
-  }
-
-  // aucun malus contre plus petit
-  return 0;
+  return (defenderOrder - attackerOrder) * 10;
 
 }
 

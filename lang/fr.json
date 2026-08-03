@@ -287,6 +287,9 @@
 "SDP.CurrencyPlatinum": "Platine",
 
 "SDP.Edit": "Modifier",
+"SDP.Copy": "Copier",
+"SDP.Copied": "Texte copié",
+"SDP.CopyFailed": "Impossible de copier le texte",
 "SDP.PlayerNotes": "Notes Joueur",
 "SDP.GMNotes": "Notes MJ",
 
@@ -947,7 +950,7 @@
 "SDP.Item.Trait.fluxVision.Description": "La créature est capable de percevoir la magie qui l'entoure. Elle distingue les êtres, les objets, les lieux et les phénomènes imprégnés de magie, en perçoit l'intensité et peut identifier l'origine des flux magiques. Elle est également capable de repérer un lanceur de sorts en train de canaliser ou d'utiliser de la magie.",
 
 "SDP.Item.Trait.instinctive.Name": "Instinctif",
-"SDP.Item.Trait.instinctive.Description": "La créature est dépourvue de toute pensée complexe et de langage. Elle agit principalement selon son instinct, craint naturellement le feu et cherche généralement à le fuir. En combat, elle ne peut utiliser que la compétence Esquive pour se défendre.\nSi elle perd plus de la moitié de ses Blessures, elle tente de prendre la fuite, sauf si elle protège sa progéniture, défend son territoire ou se retrouve acculée. Dans ces cas, elle se bat jusqu'à la mort.\nCertaines espèces peuvent toutefois ignorer ou modifier une partie des effets de ce trait, lorsque leur description le précise.",
+"SDP.Item.Trait.instinctive.Description": "La créature est dépourvue de toute pensée complexe et de langage. Son comportement est principalement guidé par ses instincts. Elle craint naturellement le feu et cherche généralement à le fuir. En combat, elle ne peut utiliser que la compétence Esquive pour se défendre.\nSi elle perd plus de la moitié de ses Blessures, elle tente de prendre la fuite, sauf si l'un de ses instincts prend le dessus (progéniture, partenaire, territoire, nid, etc.). Dans ce cas, elle bénéficie d'un bonus de +1 au toucher et de +10 en Force, et se bat jusqu'à la disparition de la menace, jusqu'à être neutralisée (par exemple en étant Sonnée ou Inconsciente) ou jusqu'à ce qu'un effet parvienne à apaiser son instinct. À la fin de cet état, elle gagne 1 état Épuisé.\nCertaines espèces peuvent ignorer ou modifier une partie des effets de ce trait lorsque leur description le précise.",
 
 "SDP.Item.Trait.constriction.Name": "Étreinte",
 "SDP.Item.Trait.constriction.Description": "La créature peut utiliser son corps comme une arme naturelle pour entraver une cible. Si son attaque réussit, la cible gagne immédiatement l'état Entravé.\nTant que la constriction est maintenue, la cible subit automatiquement, au début de chacun des tours de la créature, des dégâts bruts égaux au bonus de Force de cette dernière.\nL'Indice représente le DR bonus que reçoit la créature pour maintenir sa prise lors des tests opposés visant à empêcher sa proie de se libérer.",
@@ -976,11 +979,14 @@
 "SDP.Item.Trait.superiorConstitution.Name": "Constitution supérieure",
 "SDP.Item.Trait.superiorConstitution.Description": "La créature possède une constitution exceptionnellement résistante. Son nombre maximal de Points de santé est augmenté d'un montant égal à son bonus d'Endurance × Indice.",
 
+"SDP.Item.Trait.particularAnatomy.Name": "Anatomie particulière",
+"SDP.Item.Trait.particularAnatomy.Description": "La vitalité de la créature est déterminée de façon particulière (organe indépendant, fragment de corps, construction magique, etc.) et ne suit pas les règles normales.\nL'Indice indique son maximum de Points de vie.",
+
 "SDP.Item.Trait.magicReserve.Name": "Réserve magique",
 "SDP.Item.Trait.magicReserve.Description": "La créature dispose d'une réserve de magie supérieure à la normale. Son nombre maximal de Points de Mana est augmenté d'un montant égal à son bonus de Force Mentale × Indice.",
 
 "SDP.Item.Trait.primalInstinct.Name": "Instinct primal",
-"SDP.Item.Trait.primalInstinct.Description": "Lorsqu'un élément indiqué par l'Indice (progéniture, partenaire, territoire, nid, ancre, etc.) est directement menacé, la créature agit sous l'effet de son instinct le plus primaire. Tant que cette menace subsiste, elle combat jusqu'à la mort et ne cherche plus à fuir ni à préserver sa propre vie.\nPendant cet état, elle bénéficie d'un bonus de +1 au toucher et de +10 en Force.\nL'effet prend fin lorsque la créature est apaisée, que la menace disparaît, qu'elle est neutralisée (par exemple en étant Sonnée ou Inconsciente) ou par tout autre effet capable de calmer son instinct. À la fin de cet état, elle gagne 1 état Exténué.",
+"SDP.Item.Trait.primalInstinct.Description": "La créature possède un instinct particulièrement puissant ou inhabituel qui s'ajoute à ceux décrits par le trait Instinctif. L'Indice précise la nature de cet instinct (ancre, source de mana, famine, perchoir, etc.).\nLorsque la situation correspondante survient, cet instinct prend le dessus et les effets du trait Instinctif s'appliquent normalement.",
 
 "SDP.Item.Trait.colony.Name": "Colonie",
 "SDP.Item.Trait.colony.Description": "La créature est constituée d'une multitude de petits individus agissant comme une seule entité. Les attaques capables d'affecter une zone ou un grand nombre d'individus sont résolues normalement.\n• Colonie I : Les attaques ne possédant pas la qualité Zone ou un effet similaire n'infligent qu'1 Point de Blessure, quel que soit le nombre de dégâts infligés.\n• Colonie II : Les attaques ne possédant pas la qualité Zone ou un effet similaire sont sans effet.",
@@ -989,7 +995,13 @@
 "SDP.Item.Trait.regeneration.Description": "La créature est capable de recourir à une puissante magie régénératrice afin de refermer rapidement ses blessures.\nCe trait permet l'utilisation du sort Régénération. L'Indice indique le bonus pour lancer le sort.",
 
 "SDP.Item.Trait.projection.Name": "Projection",
-"SDP.Item.Trait.projection.Description": "La créature est capable de projeter une puissante décharge d'énergie, de matière ou de magie. Selon son espèce, il peut s'agir de flammes, de glace, de venin, d'acide, de foudre ou de tout autre élément similaire.\nCe trait permet d'utiliser le sort Projection. La nature de la projection est précisée dans la description de la créature.",
+"SDP.Item.Trait.projection.Description": "La créature est capable de projeter une décharge d'énergie, de matière ou de magie propre à son espèce. Cette capacité est instinctive et ne nécessite aucun Test d'utilisation.\nL'Indice indique la capacité ou le sort utilisé par cette projection. Les créatures affectées résolvent normalement les Tests ou les effets prévus par cette capacité. Certaines projections ne permettent toutefois aucun Test et leurs effets s'appliquent directement.",
+
+"SDP.Item.Trait.drain.Name": "Drain",
+"SDP.Item.Trait.drain.Description": "La créature est capable d'absorber une énergie, une substance ou une essence propre à son espèce. Cette capacité est instinctive et ne nécessite aucun Test d'utilisation. L'Indice indique la capacité ou le sort utilisé par ce drain. Les créatures affectées résolvent normalement les Tests ou les effets prévus par cette capacité. Certaines formes de drain ne permettent toutefois aucun Test et leurs effets s'appliquent directement.",
+
+"SDP.Item.Trait.tongue.Name": "Langue",
+"SDP.Item.Trait.tongue.Description": "La créature possède une langue exceptionnellement longue et préhensile qu'elle peut utiliser comme arme naturelle à distance. L'Indice indique le bonus accordé aux Tests pour toucher avec cette attaque ainsi que, si nécessaire, les dégâts qu'elle inflige.",
 
 "SDP.Item.Trait.magicResistance.Name": "Résistance magique",
 "SDP.Item.Trait.magicResistance.Description": "Le corps, l'esprit ou l'âme de la créature opposent une résistance naturelle aux énergies magiques, lui permettant d'en atténuer les effets les plus néfastes.\n• Réduisez de 1 par niveau de l'Indice tous les dégâts infligés directement par des sorts.\n• La créature bénéficie d'un bonus de +10 par Indice à tous les Tests visant à résister aux effets d'un sort.\n• Lorsqu'un sort applique un effet normalement irrésistible, la créature peut effectuer un Test de Résistance ou de Calme (selon la nature de l'effet) afin de l'annuler, même si le sort ne prévoit normalement aucun Test. Le MJ détermine la compétence la plus appropriée en fonction de l'effet du sort.",
@@ -1012,6 +1024,9 @@
 "SDP.Item.Trait.carapace.Name": "Carapace",
 "SDP.Item.Trait.carapace.Description": "La créature est protégée par une épaisse carapace rigide recouvrant une grande partie de son corps et lui offrant une protection exceptionnelle contre les armes.\nLes dégâts tranchants et perforants qu'elle subit sont réduits de 50 %. En revanche, les dégâts contondants qu'elle subit sont augmentés de 50 %.",
 
+"SDP.Item.Trait.naturalArmor.Name": "Armure naturelle",
+"SDP.Item.Trait.naturalArmor.Description": "La créature possède une protection naturelle particulièrement efficace, qu'il s'agisse d'une peau épaisse, d'une épaisse couche de graisse, d'écailles, d'une carapace, de plaques osseuses ou de toute autre adaptation similaire. Cette protection absorbe une partie des dégâts infligés avant qu'ils n'atteignent les parties vitales.\nL'Indice indique la valeur d'Armure naturelle de la créature.",
+
 "SDP.Item.Trait.climber.Name": "Grimpeur",
 "SDP.Item.Trait.climber.Description": "La créature est capable d'escalader avec aisance les surfaces verticales et peut même se déplacer au plafond. Elle se déplace sur ces surfaces à sa valeur de Marche et réussit automatiquement tous les tests d'Escalade.",
 
@@ -1028,7 +1043,7 @@
 "SDP.Item.Trait.darkVision.Description": "La créature est capable de voir parfaitement dans l'obscurité la plus totale.",
 
 "SDP.Item.Trait.magical.Name": "Magique",
-"SDP.Item.Trait.magical.Description": "La créature est capable d'utiliser la magie. Les animaux disposent généralement de pouvoirs propres à leur espèce, tandis que les créatures intelligentes peuvent maîtriser un ou plusieurs domaines de magie, selon leur nature.\nL'Indice indique le bonus à donner pour l'utilisation de la magie.",
+"SDP.Item.Trait.magical.Description": "La créature maîtrise un ou plusieurs domaines de magie et peut lancer des sorts en suivant les règles normales de magie. Contrairement aux capacités innées, l'utilisation de cette magie nécessite de canaliser le mana et respecte les règles habituelles des lanceurs de sorts.\nL'Indice indique le bonus accordé à tous les Tests liés à l'utilisation de la magie.",
 
 "SDP.Item.Trait.undead.Name": "Mort-vivant",
 "SDP.Item.Trait.undead.Description": "La créature est animée par une âme artificielle et n'est plus considérée comme un être vivant. Elle n'a pas besoin de respirer, de manger, de boire ou de dormir. Ce trait est principalement utilisé pour déterminer les effets des sorts, capacités ou règles qui ciblent spécifiquement les morts-vivants.",

@@ -121,39 +121,52 @@
 
       </div>
 
-      <!-- MOVEMENT -->
-      <div class="movement-header-box">
+      <div class="creature-move-armor-row">
+        <!-- MOVEMENT -->
+        <div class="movement-header-box">
 
-        <div class="movement-grid">
+          <div class="movement-grid">
 
-          <div class="movement-header">
-            {{localize "SDP.Move"}}
-          </div>
+            <div class="movement-header">
+              {{localize "SDP.Move"}}
+            </div>
 
-          <div class="movement-header">
-            {{localize "SDP.Walk"}}
-          </div>
+            <div class="movement-header">
+              {{localize "SDP.Walk"}}
+            </div>
 
-          <div class="movement-header">
-            {{localize "SDP.Run"}}
-          </div>
+            <div class="movement-header">
+              {{localize "SDP.Run"}}
+            </div>
 
-          <input
-            type="number"
-            class="movement-value"
-            name="system.resources.movement.current"
-            value="{{system.resources.movement.current}}">
+            <input
+              type="number"
+              class="movement-value"
+              name="system.resources.movement.current"
+              value="{{system.resources.movement.current}}">
 
-          <div class="movement-value">
-            {{system.resources.movement.walk}}
-          </div>
+            <div class="movement-value">
+              {{system.resources.movement.walk}}
+            </div>
 
-          <div class="movement-value">
-            {{system.resources.movement.run}}
+            <div class="movement-value">
+              {{system.resources.movement.run}}
+            </div>
+
           </div>
 
         </div>
 
+        <div class="creature-natural-armor-box">
+          <div class="creature-natural-armor-label">
+            {{localize "SDP.Armor"}}
+          </div>
+          <input
+            type="number"
+            name="system.naturalArmor.value"
+            value="{{system.naturalArmor.value}}"
+            min="0">
+        </div>
       </div>
 
     </div>

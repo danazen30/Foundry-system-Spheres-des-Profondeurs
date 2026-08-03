@@ -3,6 +3,26 @@
   <!-- LEFT -->
   <div class="creature-info-left">
 
+    {{#if user.isGM}}
+    <!-- KEY -->
+    <div class="creature-info-card">
+
+      <div class="creature-info-title">
+        {{localize "SDP.Key"}}
+      </div>
+
+      <div class="creature-size-value">
+        <input
+          type="text"
+          name="system.key"
+          value="{{system.key}}"
+          placeholder="morak"
+        >
+      </div>
+
+    </div>
+    {{/if}}
+
     <!-- SIZE -->
     <div class="creature-info-card">
 
@@ -25,6 +45,53 @@
             </option>
 
           {{/each}}
+
+        </select>
+
+      </div>
+
+    </div>
+
+    <!-- DEFENSE MODE -->
+    <div class="creature-info-card">
+
+      <div class="creature-info-title">
+        🛡️ {{localize "SDP.Defense"}}
+      </div>
+
+      <div class="creature-size-value">
+
+        <select name="system.combat.defenseMode">
+
+          <option
+            value="auto"
+            {{#if (eq system.combat.defenseMode "auto")}}
+              selected
+            {{/if}}>
+
+            {{localize "SDP.Auto"}}
+
+          </option>
+
+          <option
+            value="evasion"
+            {{#if (eq system.combat.defenseMode "evasion")}}
+              selected
+            {{/if}}>
+
+            {{localize "SDP.EvasionOnly"}}
+
+          </option>
+
+          <option
+            value="parry"
+            {{#if (eq system.combat.defenseMode "parry")}}
+              selected
+            {{/if}}>
+
+            {{localize "SDP.ParryOnly"}}
+
+          </option>
 
         </select>
 
@@ -86,53 +153,6 @@
           </div>
 
         {{/if}}
-
-      </div>
-
-    </div>
-
-    <!-- DEFENSE MODE -->
-    <div class="creature-info-card">
-
-      <div class="creature-info-title">
-        🛡️ {{localize "SDP.Defense"}}
-      </div>
-
-      <div class="creature-size-value">
-
-        <select name="system.combat.defenseMode">
-
-          <option
-            value="auto"
-            {{#if (eq system.combat.defenseMode "auto")}}
-              selected
-            {{/if}}>
-
-            {{localize "SDP.Auto"}}
-
-          </option>
-
-          <option
-            value="evasion"
-            {{#if (eq system.combat.defenseMode "evasion")}}
-              selected
-            {{/if}}>
-
-            {{localize "SDP.EvasionOnly"}}
-
-          </option>
-
-          <option
-            value="parry"
-            {{#if (eq system.combat.defenseMode "parry")}}
-              selected
-            {{/if}}>
-
-            {{localize "SDP.ParryOnly"}}
-
-          </option>
-
-        </select>
 
       </div>
 
@@ -238,7 +258,7 @@
     </div>
 
     {{#if user.isGM}}
-    <!-- GM NOTES -->
+    <!-- GM NOTES / BESTIAIRE -->
     <div class="creature-info-card">
 
       <div class="note-header">
@@ -257,7 +277,13 @@
 
       </div>
 
-      <!-- DISPLAY -->
+      {{#if hasCreatureBestiary}}
+      <div
+        class="creature-bestiary-text"
+        data-creature-bestiary>{{creatureBestiaryText}}</div>
+      {{/if}}
+
+      <!-- DISPLAY (notes perso MJ) -->
       <div
         class="creature-note-display"
         data-display="creatureGMNotes">

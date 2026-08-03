@@ -877,6 +877,13 @@ static getArmorValue(actor, location, damageType = null, defenseType = null){
 
   let armor = 0;
 
+  if (actor?.type === "creature") {
+    armor += Math.max(
+      0,
+      Number(actor.system?.naturalArmor?.value ?? 0) || 0
+    );
+  }
+
   const armors = actor.items.filter(
     i => i.type === "armor" && i.system.worn.value
   );

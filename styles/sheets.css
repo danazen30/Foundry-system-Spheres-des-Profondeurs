@@ -33,7 +33,7 @@
 .header-right {
   display: flex;
   justify-content: flex-end; /* 🔥 PUSH GLOBAL */
-  align-items: flex-start;
+  align-items: stretch;
 
   width: 100%;
 }
@@ -3306,6 +3306,45 @@ text-align:center;
   width: 100%;
 }
 
+.creature-move-armor-row {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.creature-move-armor-row .movement-header-box {
+  flex: 1;
+  align-self: auto;
+}
+
+.creature-natural-armor-box {
+  align-self: auto;
+  width: 56px;
+  flex: 0 0 56px;
+  border: 1px solid #444;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 4px;
+  gap: 4px;
+}
+
+.creature-natural-armor-label {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.creature-natural-armor-box input {
+  width: 100%;
+  height: 20px;
+  padding: 0;
+  text-align: center;
+}
+
 /* =========================
    CREATURE INFO TAB
 ========================= */
@@ -3425,6 +3464,28 @@ text-align:center;
 /* =========================
    CREATURE NOTES
 ========================= */
+
+.creature-bestiary-text {
+  white-space: pre-wrap;
+  user-select: text;
+  -webkit-user-select: text;
+  cursor: text;
+
+  min-height: 120px;
+  max-height: 320px;
+  overflow-y: auto;
+
+  margin-bottom: 10px;
+  padding: 8px 10px;
+
+  border: 1px solid #555;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.25);
+
+  color: #ddd;
+  font-size: 13px;
+  line-height: 1.45;
+}
 
 .creature-note-display,
 .creature-note-editor {
@@ -3860,3 +3921,4 @@ text-align:center;
 .application.sdp.sheet.actor.vehicle .sdp-tabs {
   justify-content: center;
 }
+

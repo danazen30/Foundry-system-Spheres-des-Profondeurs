@@ -288,6 +288,9 @@
 "SDP.CurrencyPlatinum": "Platinum",
 
 "SDP.Edit": "Edit",
+"SDP.Copy": "Copy",
+"SDP.Copied": "Text copied",
+"SDP.CopyFailed": "Could not copy text",
 "SDP.PlayerNotes": "Player Notes",
 "SDP.GMNotes": "GM Notes",
 
@@ -931,7 +934,7 @@
 "SDP.Item.Trait.fluxVision.Description": "The creature can perceive the magic around it. It distinguishes beings, objects, places, and phenomena imbued with magic, senses their intensity, and can identify the origin of magical flows. It can also spot a spellcaster who is channeling or using magic.",
 
 "SDP.Item.Trait.instinctive.Name": "Instinctive",
-"SDP.Item.Trait.instinctive.Description": "The creature lacks complex thought and language. It acts mainly on instinct, naturally fears fire, and generally seeks to flee from it. In combat, it may only use the Dodge skill to defend itself.\nIf it loses more than half its Wounds, it tries to flee, unless it is protecting its young, defending its territory, or cornered. In those cases, it fights to the death.\nSome species may ignore or modify part of this trait's effects when their description says so.",
+"SDP.Item.Trait.instinctive.Description": "The creature lacks complex thought and language. Its behavior is guided mainly by its instincts. It naturally fears fire and generally seeks to flee from it. In combat, it may only use the Dodge skill to defend itself.\nIf it loses more than half its Wounds, it tries to flee, unless one of its instincts takes over (offspring, mate, territory, nest, etc.). In that case, it gains a +1 bonus to hit and +10 Strength, and fights until the threat disappears, until it is neutralized (for example Stunned or Unconscious), or until an effect manages to soothe its instinct. When this state ends, it gains 1 Exhausted condition.\nSome species may ignore or modify part of this trait's effects when their description says so.",
 
 "SDP.Item.Trait.constriction.Name": "Constriction",
 "SDP.Item.Trait.constriction.Description": "The creature can use its body as a natural weapon to restrain a target. If its attack succeeds, the target immediately gains the Entangled condition.\nWhile the constriction is maintained, at the start of each of the creature's turns the target automatically suffers raw damage equal to the creature's Strength Bonus.\nThe Index is the SL bonus the creature receives to maintain its grip on opposed Tests to prevent the prey from escaping.",
@@ -960,11 +963,14 @@
 "SDP.Item.Trait.superiorConstitution.Name": "Superior Constitution",
 "SDP.Item.Trait.superiorConstitution.Description": "The creature has an exceptionally resilient constitution. Its maximum Health Points are increased by an amount equal to its Toughness Bonus × Index.",
 
+"SDP.Item.Trait.particularAnatomy.Name": "Particular Anatomy",
+"SDP.Item.Trait.particularAnatomy.Description": "The creature's vitality is determined in a particular way (independent organ, body fragment, magical construct, etc.) and does not follow the normal rules.\nThe Index indicates its maximum Wounds.",
+
 "SDP.Item.Trait.magicReserve.Name": "Magic Reserve",
 "SDP.Item.Trait.magicReserve.Description": "The creature has a greater than normal magic reserve. Its maximum Mana Points are increased by an amount equal to its Willpower Bonus × Index.",
 
 "SDP.Item.Trait.primalInstinct.Name": "Primal Instinct",
-"SDP.Item.Trait.primalInstinct.Description": "When something indicated by the Index (offspring, mate, territory, nest, anchor, etc.) is directly threatened, the creature acts under its most primal instinct. While this threat lasts, it fights to the death and no longer tries to flee or preserve its own life.\nDuring this state, it gains a +1 bonus to hit and +10 Strength.\nThe effect ends when the creature is calmed, the threat disappears, it is neutralized (for example Stunned or Unconscious), or by any other effect that can soothe its instinct. When this state ends, it gains 1 Exhausted condition.",
+"SDP.Item.Trait.primalInstinct.Description": "The creature has a particularly powerful or unusual instinct that adds to those described by the Instinctive trait. The Index specifies the nature of this instinct (anchor, mana source, famine, perch, etc.).\nWhen the corresponding situation arises, this instinct takes over and the effects of the Instinctive trait apply as normal.",
 
 "SDP.Item.Trait.colony.Name": "Colony",
 "SDP.Item.Trait.colony.Description": "The creature is made up of a multitude of small individuals acting as a single entity. Attacks able to affect an area or a large number of individuals are resolved normally.\n• Colony I: Attacks without the Area quality or a similar effect inflict only 1 Wound, regardless of the damage dealt.\n• Colony II: Attacks without the Area quality or a similar effect have no effect.",
@@ -973,7 +979,13 @@
 "SDP.Item.Trait.regeneration.Description": "The creature can call upon powerful regenerative magic to quickly close its wounds.\nThis trait allows the use of the Regeneration spell. The Index indicates the bonus to cast the spell.",
 
 "SDP.Item.Trait.projection.Name": "Projection",
-"SDP.Item.Trait.projection.Description": "The creature can project a powerful discharge of energy, matter, or magic. Depending on its species, this may take the form of flames, ice, venom, acid, lightning, or any similar element.\nThis trait allows the use of the Projection spell. The nature of the projection is specified in the creature's description.",
+"SDP.Item.Trait.projection.Description": "The creature can project a discharge of energy, matter, or magic specific to its species. This ability is instinctive and requires no Test to use.\nThe Index indicates the ability or spell used by this projection. Affected creatures resolve any Tests or effects from that ability as normal. Some projections, however, allow no Test and their effects apply directly.",
+
+"SDP.Item.Trait.drain.Name": "Drain",
+"SDP.Item.Trait.drain.Description": "The creature can absorb an energy, substance, or essence specific to its species. This ability is instinctive and requires no Test to use. The Index indicates the ability or spell used by this drain. Affected creatures resolve any Tests or effects from that ability as normal. Some forms of drain, however, allow no Test and their effects apply directly.",
+
+"SDP.Item.Trait.tongue.Name": "Tongue",
+"SDP.Item.Trait.tongue.Description": "The creature has an exceptionally long, prehensile tongue that it can use as a ranged natural weapon. The Index indicates the bonus granted to Tests to hit with this attack as well as, if needed, the damage it deals.",
 
 "SDP.Item.Trait.magicResistance.Name": "Magic Resistance",
 "SDP.Item.Trait.magicResistance.Description": "The creature's body, mind, or soul offers natural resistance to magical energies, allowing it to lessen their most harmful effects.\n• Reduce by 1 per Index level all damage inflicted directly by spells.\n• The creature gains a +10 bonus per Index to all Tests made to resist a spell's effects.\n• When a spell applies an effect that is normally irresistible, the creature may make a Resistance or Calm Test (depending on the nature of the effect) to cancel it, even if the spell normally provides no Test. The GM determines the most appropriate skill based on the spell's effect.",
@@ -996,6 +1008,9 @@
 "SDP.Item.Trait.carapace.Name": "Carapace",
 "SDP.Item.Trait.carapace.Description": "The creature is protected by a thick rigid carapace covering a large part of its body and offering exceptional protection against weapons.\nSlashing and piercing damage it suffers is reduced by 50%. However, bludgeoning damage it suffers is increased by 50%.",
 
+"SDP.Item.Trait.naturalArmor.Name": "Natural Armor",
+"SDP.Item.Trait.naturalArmor.Description": "The creature has particularly effective natural protection, whether thick skin, a heavy fat layer, scales, a carapace, bony plates, or any other similar adaptation. This protection absorbs part of incoming damage before it reaches vital areas.\nThe Index indicates the creature's Natural Armor value.",
+
 "SDP.Item.Trait.climber.Name": "Climber",
 "SDP.Item.Trait.climber.Description": "The creature can easily climb vertical surfaces and even move across ceilings. It moves on these surfaces at its Walk value and automatically succeeds on all Climb Tests.",
 
@@ -1012,7 +1027,7 @@
 "SDP.Item.Trait.darkVision.Description": "The creature can see perfectly in the deepest darkness.",
 
 "SDP.Item.Trait.magical.Name": "Magical",
-"SDP.Item.Trait.magical.Description": "The creature can use magic. Animals generally have powers unique to their species, while intelligent creatures may master one or more fields of magic, depending on their nature.\nThe Index indicates the bonus to apply when using magic.",
+"SDP.Item.Trait.magical.Description": "The creature masters one or more schools of magic and can cast spells following the normal magic rules. Unlike innate abilities, using this magic requires channeling mana and follows the usual rules for spellcasters.\nThe Index indicates the bonus granted to all Tests related to the use of magic.",
 
 "SDP.Item.Trait.undead.Name": "Undead",
 "SDP.Item.Trait.undead.Description": "The creature is animated by an artificial soul and is no longer considered a living being. It does not need to breathe, eat, drink, or sleep. This trait is mainly used to determine the effects of spells, abilities, or rules that specifically target the undead.",

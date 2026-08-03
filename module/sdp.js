@@ -50,7 +50,10 @@ import {
   refreshSdpUiLocalization,
   registerSdpCompendiumIndexFields,
   requestSdpCompendiumResort,
-  resetSdpCompendiumResortFlag
+  resetSdpCompendiumResortFlag,
+  getLocalizedCreatureName,
+  resolveActorKey,
+  syncCreatureLocalizedName
 } from "./system/item-localization.js";
 import {
   applySdpRollTableFlags,
@@ -308,6 +311,10 @@ Handlebars.registerHelper("includes", function(value, key) {
 });
 
   Hooks.on("createActor", async (actor) => {
+
+  if (actor.type === "creature") {
+    await syncCreatureLocalizedName(actor);
+  }
 
   if(actor.system.conditions) return;
 
@@ -800,6 +807,13 @@ await rebuildAllCareerJournalCaches();
 
 await refreshAllSdpJournalDisplayNames();
 
+if (game.user.isGM) {
+  for (const actor of game.actors) {
+    if (actor.type !== "creature") continue;
+    await syncCreatureLocalizedName(actor);
+  }
+}
+
 Hooks.callAll(
   "sdpRefreshLocalization"
 );
@@ -905,11 +919,60 @@ Hooks.on("deleteItem", async (item) => {
 
 });
 
+Hooks.on("preCreateActor", (document, data) => {
+
+  const type = data.type || document.type;
+  if (type !== "creature") return;
+
+  if (foundry.utils.getProperty(data, "flags.sdp.customName")) {
+    return;
+  }
+
+  const key =
+    (typeof data.system?.key === "string" && data.system.key.trim())
+    || (typeof data.flags?.sdp?.key === "string" && data.flags.sdp.key.trim())
+    || "";
+
+  const localized = getLocalizedCreatureName(key, "");
+  if (localized) {
+    data.name = localized;
+  }
+
+});
+
 Hooks.on("preUpdateActor", (document, update) => {
 
   if (document.documentName !== "Actor") return;
 
   SdpActor.normalizeInitialUpdate(document, update);
+
+  if (document.type === "creature") {
+    const nameChanged =
+      Object.prototype.hasOwnProperty.call(update, "name");
+
+    if (nameChanged) {
+      const nextKey =
+        typeof update.system?.key === "string"
+          ? update.system.key.trim()
+          : resolveActorKey(document);
+
+      const localized = getLocalizedCreatureName(nextKey, "");
+
+      if (localized && update.name === localized) {
+        foundry.utils.setProperty(
+          update,
+          "flags.sdp.customName",
+          false
+        );
+      } else if (update.name !== document.name) {
+        foundry.utils.setProperty(
+          update,
+          "flags.sdp.customName",
+          true
+        );
+      }
+    }
+  }
 
   if (game.user.isGM || document.type !== "character") return;
 
@@ -943,6 +1006,16 @@ Hooks.on("preUpdateActor", (document, update) => {
 });
 
 Hooks.on("updateActor", async (actor, changes) => {
+
+  if (actor.type === "creature") {
+    const keyChanged =
+      changes.system?.key !== undefined
+      || changes.flags?.sdp?.key !== undefined;
+
+    if (keyChanged) {
+      await syncCreatureLocalizedName(actor);
+    }
+  }
 
   const cond = changes.system?.conditions;
   if (!cond) return;
