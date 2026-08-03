@@ -1142,8 +1142,8 @@
 
       "damage": {
         "base": {
-          "type": "number",
-          "value": 0
+          "type": "string",
+          "value": "0"
         },
         "dice": {
           "type": "string",
@@ -1173,6 +1173,63 @@
       "overcastSpecialEffects": {
         "type": "array",
         "value": []
+      }
+    },
+    "ability": {
+      "templates": [
+        "description",
+        "gmNotes",
+        "playerNotes",
+        "key"
+      ],
+
+      "power": {
+        "type": "number",
+        "label": "Power",
+        "value": 0
+      },
+
+      "range": {
+        "type": "number",
+        "label": "Range",
+        "value": 0
+      },
+
+      "duration": {
+        "value": "",
+        "type": "round"
+      },
+
+      "target": {
+        "type": "number",
+        "label": "Targets",
+        "value": 1
+      },
+
+      "aoe": {
+        "type": "boolean",
+        "value": false
+      },
+
+      "radius": {
+        "type": "number",
+        "value": 0
+      },
+
+      "damage": {
+        "base": {
+          "type": "string",
+          "value": "0"
+        },
+        "dice": {
+          "type": "string",
+          "value": ""
+        }
+      },
+
+      "concentration": {
+        "type": "boolean",
+        "value": false
       }
     },
     "possession": {

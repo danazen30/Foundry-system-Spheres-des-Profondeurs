@@ -583,6 +583,8 @@ return {
   spellsMinor,
   spellsAdvanced,
   spellsSuperior,
+  abilities:
+    this.document.items.filter(i => i.type === "ability"),
   meleeWeapons,
   rangedWeapons,
   possessions,

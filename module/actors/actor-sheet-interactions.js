@@ -1,5 +1,6 @@
 import { SdpRoll } from "../rolls/roll.js";
 import { SdpSpell } from "../combat/spell.js";
+import { SdpAbility } from "../combat/ability.js";
 import { SdpWorkEngine } from "../system/work-engine.js";
 import { SimpleDialog } from "../apps/simple-dialog.js";
 
@@ -39,6 +40,8 @@ export function registerInteractionListeners(sheet, root) {
   registerWork(sheet, root);
 
   registerSpellCasting(sheet, root);
+
+  registerAbilityUse(sheet, root);
 
   registerTraitDialogs(root);
 
@@ -644,6 +647,53 @@ function registerSpellCasting(sheet, root) {
         }
 
       });
+
+    });
+
+  });
+
+}
+
+function registerAbilityUse(sheet, root) {
+
+  root.querySelectorAll('[data-action="useAbility"]').forEach(el => {
+
+    el.addEventListener("click", async (event) => {
+
+      event.preventDefault();
+
+      const ability =
+        sheet.document.items.get(
+          event.currentTarget.dataset.itemId
+        );
+
+      if (!ability) return;
+
+      await SdpAbility.use(
+        sheet.actor,
+        ability
+      );
+
+    });
+
+    el.addEventListener("contextmenu", (event) => {
+
+      event.preventDefault();
+
+      const itemId =
+        event.currentTarget.dataset.itemId;
+
+      const details = root.querySelector(
+        `.spell-details[data-details="${itemId}"]`
+      );
+
+      if (!details) return;
+
+      const isHidden =
+        details.style.display === "none";
+
+      details.style.display =
+        isHidden ? "table-row" : "none";
 
     });
 

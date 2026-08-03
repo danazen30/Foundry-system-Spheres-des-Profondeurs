@@ -265,7 +265,7 @@ const baseDamage = system.damage?.base?.value ?? system.damage ?? 0;
 const diceDamage = system.damage?.dice?.value ?? system.damageDice ?? "";
 
 const hasDamage =
-  (Number(baseDamage) > 0) ||
+  (String(baseDamage ?? "").trim() !== "" && String(baseDamage).trim() !== "0") ||
   (typeof diceDamage === "string" && diceDamage.trim() !== "");
 
   const concentration = system.concentration?.value === true;

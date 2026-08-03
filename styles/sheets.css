@@ -1483,6 +1483,19 @@ input.movement-value {
   transform: translateX(3px);
 }
 
+.roll-ability-name {
+  cursor: pointer;
+  font-weight: bold;
+  text-align: left;
+
+  transition: all 0.2s ease;
+}
+
+.roll-ability-name:hover {
+  color: #5dade2;
+  transform: translateX(3px);
+}
+
 /* =========================
    CHECKBOX CENTER
 ========================= */

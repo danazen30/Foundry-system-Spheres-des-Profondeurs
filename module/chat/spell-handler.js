@@ -372,7 +372,7 @@ html.find(".place-aoe").click(async ev => {
   const btn = ev.currentTarget;
 
   // 🔥 VALEUR DYNAMIQUE (overcast inclus)
-  const parent = btn.closest(".spell-radius");
+  const parent = btn.closest(".spell-radius, .ability-radius");
   const radius = Number(parent?.dataset.value || btn.dataset.radius || 0);
 
   if (!canvas.scene) return;

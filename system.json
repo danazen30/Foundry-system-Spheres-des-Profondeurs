@@ -205,6 +205,9 @@
   "spell": {
     "label": "TYPES.Item.spell"
   },
+  "ability": {
+    "label": "TYPES.Item.ability"
+  },
   "injury": {
     "label": "TYPES.Item.injury"
   },

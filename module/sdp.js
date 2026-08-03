@@ -18,6 +18,7 @@ import { SdpSpecieSheet } from "./items/specie-sheet.js";
 import { SdpSignSheet } from "./items/sign-sheet.js";
 import { SdpItem } from "./items/item.js";
 import { SdpSpellSheet } from "./items/spell-sheet.js";
+import { SdpAbilitySheet } from "./items/ability-sheet.js";
 import { SdpAmmunitionSheet } from "./items/ammunition-sheet.js";
 import { SdpPossessionSheet } from "./items/possession-sheet.js";
 import { SdpDiseaseSheet } from "./items/disease-sheet.js";
@@ -265,6 +266,8 @@ foundry.documents.collections.Items.registerSheet("sdp", SdpCareerSheet, { types
 foundry.documents.collections.Items.registerSheet("sdp", SdpSignSheet, { types: ["sign"], makeDefault: true });
 
 foundry.documents.collections.Items.registerSheet("sdp", SdpSpellSheet, { types: ["spell"], makeDefault: true });
+
+foundry.documents.collections.Items.registerSheet("sdp", SdpAbilitySheet, { types: ["ability"], makeDefault: true });
 
 foundry.documents.collections.Items.registerSheet("sdp", SdpAmmunitionSheet, { types: ["ammunition"], makeDefault: true });
 

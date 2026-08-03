@@ -20,7 +20,8 @@ function resolveAttackerFromButton(button) {
   const card =
     button.closest(".damage-card")
     || button.closest(".sdp-attack")
-    || button.closest(".sdp-spell");
+    || button.closest(".sdp-spell")
+    || button.closest(".sdp-ability");
 
   return resolveActorFromIds(
     button.dataset.attacker
@@ -58,9 +59,9 @@ export function registerDamageHandlers(html, message) {
   // DAMAGE ROLL
   // ===================
 
- html.find(".sdp-attack .roll-damage, .sdp-spell .roll-damage").click(async ev => {
+ html.find(".sdp-attack .roll-damage, .sdp-spell .roll-damage, .sdp-ability .roll-damage").click(async ev => {
 
-const card = ev.currentTarget.closest(".sdp-attack, .sdp-spell");
+const card = ev.currentTarget.closest(".sdp-attack, .sdp-spell, .sdp-ability");
 const button = ev.currentTarget;
 const dataset = button.dataset;
 
@@ -412,9 +413,9 @@ ${getHitLocationLabel(
 
 let targets = [];
 
-if (card.classList.contains("sdp-spell")) {
+if (card.classList.contains("sdp-spell") || card.classList.contains("sdp-ability")) {
 
-  // 🔥 SPELL = MULTI TARGET
+  // 🔥 SPELL / ABILITY = MULTI TARGET
   targets = Array.from(game.user.targets);
 
   if (!targets.length) {
@@ -504,7 +505,7 @@ ${getHitLocationLabel(
 ${bleedingLine}
       <button class="apply-damage"
         data-attacker="${actorId}"
-        data-target="${card.classList.contains("sdp-spell") ? "" : targetId}"
+        data-target="${(card.classList.contains("sdp-spell") || card.classList.contains("sdp-ability")) ? "" : targetId}"
         data-damage="${damageAfterArmor ?? finalDamage}"
         data-location="${location}"
         data-damagetype="${damageType || ""}"

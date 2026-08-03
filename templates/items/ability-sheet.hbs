@@ -56,7 +56,7 @@
 <div class="weapon-card">
 
   <div class="weapon-card-title">
-    {{localize "TYPES.Item.spell"}}
+    {{localize "TYPES.Item.ability"}}
   </div>
 
   <div class="weapon-grid">
@@ -76,63 +76,12 @@
 
     <div class="form-group">
 
-      <label>{{localize "SDP.MagicType"}}</label>
-
-      <select name="system.magicType.value">
-
-        <option
-          value="minor"
-          {{#if (eq system.magicType.value "minor")}}
-            selected
-          {{/if}}>
-
-          {{localize "SDP.MagicMinor"}}
-
-        </option>
-
-        <option
-          value="advanced"
-          {{#if (eq system.magicType.value "advanced")}}
-            selected
-          {{/if}}>
-
-          {{localize "SDP.MagicAdvanced"}}
-
-        </option>
-
-        <option
-          value="superior"
-          {{#if (eq system.magicType.value "superior")}}
-            selected
-          {{/if}}>
-
-          {{localize "SDP.MagicSuperior"}}
-
-        </option>
-
-      </select>
-
-    </div>
-
-    <div class="form-group">
-
       <label>{{localize "SDP.Power"}}</label>
 
       <input
         type="number"
         name="system.power.value"
         value="{{system.power.value}}">
-
-    </div>
-
-    <div class="form-group full-width">
-
-      <label>{{localize "SDP.Magic"}}</label>
-
-      <input
-        type="text"
-        name="system.magic.value"
-        value="{{system.magic.value}}">
 
     </div>
 
@@ -194,17 +143,6 @@
           selected=system.duration.type}}
 
       </select>
-
-    </div>
-
-    <div class="compact-checkbox">
-
-      <input
-        type="checkbox"
-        name="system.duration.extendable"
-        {{checked system.duration.extendable}}>
-
-      <label>{{localize "SDP.Extendable"}}</label>
 
     </div>
 
@@ -296,86 +234,6 @@
         value="{{system.damage.dice.value}}">
 
     </div>
-
-  </div>
-
-</div>
-
-<div class="weapon-card overcast-card">
-
-  <div class="weapon-card-title overcast-header">
-
-    <span>{{localize "SDP.Overcast"}}</span>
-
-    <button
-      type="button"
-      class="effect-create-button add-overcast-special">
-
-      ✚ {{localize "SDP.AddEffect"}}
-
-    </button>
-
-  </div>
-
-  <div class="overcast-special-list">
-
-    {{#if system.overcastSpecialEffects.value.length}}
-
-      {{#each system.overcastSpecialEffects.value as |effect i|}}
-
-      <div
-        class="overcast-special-item"
-        data-index="{{i}}">
-
-        <div class="overcast-fields">
-
-          <div class="form-group">
-
-            <label>{{localize "SDP.Effect"}}</label>
-
-            <input
-              type="text"
-              name="system.overcastSpecialEffects.value.{{@index}}.label"
-              value="{{this.label}}"
-              placeholder="{{localize 'SDP.OvercastEffectPlaceholder'}}">
-
-          </div>
-
-          <div class="form-group">
-
-            <label>{{localize "SDP.Formula"}}</label>
-
-            <input
-              type="text"
-              name="system.overcastSpecialEffects.value.{{@index}}.value"
-              value="{{this.value}}"
-              placeholder="WPB">
-
-          </div>
-
-        </div>
-
-        <button
-          type="button"
-          class="remove-overcast-special">
-
-          ✖
-
-        </button>
-
-      </div>
-
-      {{/each}}
-
-    {{else}}
-
-      <div class="empty-overcast">
-
-        {{localize "SDP.NoOvercastEffects"}}
-
-      </div>
-
-    {{/if}}
 
   </div>
 

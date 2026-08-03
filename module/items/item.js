@@ -17,6 +17,9 @@ const DEFAULT_ITEM_IMAGES = {
   spell:
     "systems/sdp/assets/icons/items/spells.png",
 
+  ability:
+    "systems/sdp/assets/icons/items/spells.png",
+
   injury:
     "systems/sdp/assets/icons/items/injury.png",
 

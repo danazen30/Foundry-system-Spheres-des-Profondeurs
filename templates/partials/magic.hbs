@@ -1,4 +1,90 @@
-<div class="tab-magic">
+﻿<div class="tab-magic">
+
+  {{#if (eq actor.type "creature")}}
+  <!-- ABILITIES -->
+  <h3>{{localize "SDP.Abilities"}}</h3>
+
+  <table class="spells-table abilities-table">
+    <thead>
+      <tr>
+        <th></th>
+        <th>{{localize "SDP.Name"}}</th>
+        <th>{{localize "SDP.Mana"}}</th>
+        <th>{{localize "SDP.Actions"}}</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {{#each abilities as |ability|}}
+<tr class="spell-row ability-row" data-item-id="{{ability.id}}">
+
+  <td class="spell-img-cell">
+  <img src="{{ability.img}}" title="{{ability.name}}">
+</td>
+
+  <td
+    class="spell-name roll-ability-name"
+    data-action="useAbility"
+    data-item-id="{{ability.id}}"
+  >
+    {{ability.name}}
+  </td>
+
+  <td>
+    {{ability.system.power.value}}
+  </td>
+
+  <td class="item-actions">
+    <button data-action="editItem" data-item-id="{{ability.id}}">✏️</button>
+    <button data-action="deleteItem" data-item-id="{{ability.id}}">🗑️</button>
+  </td>
+
+</tr>
+
+<tr class="spell-details" data-details="{{ability.id}}" style="display:none;">
+  <td colspan="4">
+
+    <div class="spell-detail-box">
+
+  <p><strong>{{localize "SDP.Range"}}:</strong> {{ability.system.range.value}}</p>
+
+  <p>
+  <strong>{{localize "SDP.Duration"}}:</strong>
+  {{#if ability.system.concentration.value}}
+    {{localize "SDP.Concentration"}}
+  {{else}}
+    {{ability.system.duration.value}}
+    {{ability.system.duration.type}}
+  {{/if}}
+</p>
+
+  <p>
+  <strong>{{localize "SDP.Target"}}:</strong>
+  {{#if ability.system.aoe.value}}
+    {{localize "SDP.AreaOfEffect"}} ({{localize "SDP.Radius"}}: {{ability.system.radius.value}})
+  {{else}}
+    {{ability.system.target.value}} {{localize "SDP.Targets"}}
+  {{/if}}
+</p>
+
+  <p>
+  <strong>{{localize "SDP.Damage"}}:</strong>
+    {{ability.system.damage.base.value}}
+    {{ability.system.damage.dice.value}}
+  </p>
+
+  <p class="spell-description">
+  {{ability.system.description}}
+</p>
+</div>
+
+  </td>
+</tr>
+
+  {{/each}}
+</tbody>
+  </table>
+  {{/if}}
 
   <!-- MINOR SPELLS -->
   <h3>{{localize "SDP.MinorSpells"}}</h3>
