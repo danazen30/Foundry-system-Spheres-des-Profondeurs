@@ -1,7 +1,56 @@
 import {
   getInjuryFromPack,
-  prepareAppliedInjuryData
+  prepareAppliedInjuryData,
+  buildInjuryKey,
+  normalizeInjuryLocation
 } from "../system/injury-utils.js";
+import {
+  getActorItemDisplayName,
+  getLocalizedItemDescription,
+  getLocalizedItemName
+} from "../system/item-localization.js";
+
+function getInjuryPreviewHtml(injury, {
+  location = "",
+  severity = "",
+  consequence = false
+} = {}) {
+
+  if (!injury) return "";
+
+  const key =
+    (typeof injury.system?.key === "string"
+      ? injury.system.key.trim()
+      : "")
+    || buildInjuryKey(
+      severity || injury.system?.severity,
+      normalizeInjuryLocation(
+        location || injury.system?.location
+      ),
+      consequence || injury.system?.consequence
+    );
+
+  const name =
+    getLocalizedItemName("injury", key, "")
+    || getActorItemDisplayName(injury)
+    || injury.name
+    || "";
+
+  const description =
+    getLocalizedItemDescription(
+      "injury",
+      key,
+      injury.system?.description || ""
+    );
+
+  return `
+      <div class="injury-preview">
+        <p><strong>${name}</strong></p>
+        <p>${description}</p>
+      </div>
+  `;
+
+}
 
 export function registerInjuryHandlers(html, message) {
 
@@ -108,12 +157,11 @@ if (!success) {
       ${game.i18n.localize("SDP.ApplyConsequence")}
     </button>
 
-    ${consequence ? `
-      <div class="injury-preview">
-        <p><strong>${consequence.name}</strong></p>
-        <p>${consequence.system.description || ""}</p>
-      </div>
-    ` : `<p>${game.i18n.localize("SDP.NoConsequenceFound")}</p>`}
+    ${consequence ? getInjuryPreviewHtml(consequence, {
+      location,
+      severity,
+      consequence: true
+    }) : `<p>${game.i18n.localize("SDP.NoConsequenceFound")}</p>`}
 
   </div>
   `

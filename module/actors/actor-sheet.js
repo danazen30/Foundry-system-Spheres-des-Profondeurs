@@ -280,7 +280,11 @@ const {
 const {
   weapons,
   meleeWeapons,
-  rangedWeapons
+  rangedWeapons,
+  naturalMeleeWeapons,
+  regularMeleeWeapons,
+  naturalRangedWeapons,
+  regularRangedWeapons
 } = prepareWeapons(this.document);
 
 const armors =
@@ -585,8 +589,20 @@ return {
   spellsSuperior,
   abilities:
     this.document.items.filter(i => i.type === "ability"),
+  passiveAbilities:
+    this.document.items.filter(
+      i => i.type === "ability" && !!i.system.passive
+    ),
+  activeAbilities:
+    this.document.items.filter(
+      i => i.type === "ability" && !i.system.passive
+    ),
   meleeWeapons,
   rangedWeapons,
+  naturalMeleeWeapons,
+  regularMeleeWeapons,
+  naturalRangedWeapons,
+  regularRangedWeapons,
   possessions,
   ammunition,
   traits,

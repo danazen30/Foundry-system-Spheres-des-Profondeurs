@@ -15,6 +15,13 @@ export class SdpAbility {
 
     if (!actor || !ability) return;
 
+    if (ability.system?.passive) {
+      ui.notifications.warn(
+        game.i18n.localize("SDP.Notifications.PassiveAbilityCannotUse")
+      );
+      return;
+    }
+
     const system = ability.system ?? {};
 
     const power = Number(system.power?.value ?? 0) || 0;

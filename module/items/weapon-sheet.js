@@ -57,6 +57,13 @@ export class SdpWeaponSheet extends SdpItemSheet {
       game.i18n.localize(
         "SDP.DamageTypeBludgeoning"
       )
+  },
+  {
+    value: "ethereal",
+    label:
+      game.i18n.localize(
+        "SDP.DamageTypeEthereal"
+      )
   }
 ],
 
@@ -193,6 +200,11 @@ data.system.forceReload = !!data.system.forceReload;
 data.system.equipped = !!data.system.equipped;
 data.system.offhand = !!data.system.offhand;
 data.system.isDefenseWeapon = !!data.system.isDefenseWeapon;
+data.system.natural = !!data.system.natural;
+
+if (data.system.natural) {
+  data.system.equipped = true;
+}
 
 // =========================
 // ITEM TRAITS (🔥 AJOUT)

@@ -1,17 +1,68 @@
 import { SdpDamage } from "../combat/damage.js";
 import { getHitLocationLabel } from "../combat/hit-location.js";
-import { getInjuryFromPack } from "../system/injury-utils.js";
+import {
+  getInjuryFromPack,
+  buildInjuryKey,
+  normalizeInjuryLocation
+} from "../system/injury-utils.js";
 import { SdpConditionEngine } from "../system/condition-engine.js";
 import {
   resolveActorFromIds,
   resolveActorItem
 } from "../system/actor-utils.js";
+import {
+  getActorItemDisplayName,
+  getLocalizedItemDescription,
+  getLocalizedItemName
+} from "../system/item-localization.js";
 
 function formatWoundSeverityKey(severity) {
 
   if (!severity) return "";
 
   return `SDP.Wound.${severity.charAt(0).toUpperCase() + severity.slice(1)}`;
+
+}
+
+function getInjuryPreviewHtml(injury, {
+  location = "",
+  severity = "",
+  consequence = false
+} = {}) {
+
+  if (!injury) return "";
+
+  const key =
+    (typeof injury.system?.key === "string"
+      ? injury.system.key.trim()
+      : "")
+    || buildInjuryKey(
+      severity || injury.system?.severity,
+      normalizeInjuryLocation(
+        location || injury.system?.location
+      ),
+      consequence || injury.system?.consequence
+    );
+
+  const name =
+    getLocalizedItemName("injury", key, "")
+    || getActorItemDisplayName(injury)
+    || injury.name
+    || "";
+
+  const description =
+    getLocalizedItemDescription(
+      "injury",
+      key,
+      injury.system?.description || ""
+    );
+
+  return `
+        <div class="injury-preview">
+          <p><strong>${name}</strong></p>
+          <p>${description}</p>
+        </div>
+    `;
 
 }
 
@@ -162,7 +213,7 @@ const result = await SdpDamage.rollDamage({
   defenseType
 });
 
-  const { roll, damage, damageAfterArmor, finalDamage, armor, armorBase, armorMultiplierReason, formula, devastating, weaponDetail, baseWeapon, SB, bleedingStacks = 0, bleedingThreshold = 0, rolledDiceFormula = "" } = result;
+  const { roll, damage, damageAfterArmor, finalDamage, armor, armorBase, armorMultiplierReason, formula, devastating, weaponDetail, baseWeapon, SB, bleedingStacks = 0, bleedingThreshold = 0, rolledDiceFormula = "", damageMultipliers = [] } = result;
 
    if (!brutal) {
 
@@ -208,6 +259,7 @@ await roll.toMessage({
        }))
      )}'
      data-total="${roll.total}"
+     data-multipliers='${JSON.stringify(damageMultipliers)}'
      data-attacker="${actorId}"
      data-target="${targetId}"
      data-location="${location}"
@@ -963,12 +1015,7 @@ ${getHitLocationLabel(
   ${game.i18n.localize(severityKey)}
 </p>
 
-      ${injury ? `
-        <div class="injury-preview">
-          <p><strong>${injury.name}</strong></p>
-          <p>${injury.system.description || ""}</p>
-        </div>
-      ` : `
+      ${injury ? getInjuryPreviewHtml(injury, { location, severity }) : `
 <p>
   ${game.i18n.localize(
     "SDP.NoInjuryFound"
@@ -1104,11 +1151,21 @@ const originalDiceTotal = originalDice.reduce((a, d) => {
   return a + d.results.reduce((s, r) => s + r, 0);
 }, 0);
 
-// base = tout ce qui n'est PAS les dés
+// base = tout ce qui n'est PAS les dés (avant multiplicateurs taille / tête / etc.)
 const base = originalTotal - originalDiceTotal;
 
-// nouveau total
-const newTotal = base + diceTotal;
+// nouveau total brut, puis réapplication des multiplicateurs (ex. Énorme ×2)
+let multipliers = [];
+try {
+  multipliers = JSON.parse(card.dataset.multipliers || "[]");
+} catch (e) {
+  console.error("Invalid multipliers JSON", card.dataset.multipliers);
+}
+
+const newTotal = SdpDamage.applyAdditiveDamageMultipliers(
+  base + diceTotal,
+  multipliers
+);
 
   // =========================
   // UPDATE UI

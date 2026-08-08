@@ -16,11 +16,157 @@
 
 
   <!-- ======================================== -->
+  <!-- CURRENCY -->
+  <!-- ======================================== -->
+
+{{#if currency.length}}
+
+<table class="currency-table">
+
+<thead>
+<tr>
+  {{#each currency as |item|}}
+    <th>{{item.displayName}}</th>
+  {{/each}}
+</tr>
+</thead>
+
+<tbody>
+<tr>
+
+  {{#each currency as |item|}}
+
+  <td class="currency-cell" data-item-id="{{item.id}}">
+
+    <div class="currency-inner">
+
+      <img src="{{item.img}}" class="currency-img">
+
+      <div
+        class="currency-qty qty-clickable"
+        data-item-id="{{item.id}}"
+      >
+        {{item.system.quantity.value}}
+      </div>
+
+      <div class="currency-actions">
+        <button data-action="editItem" data-item-id="{{item.id}}">✏️</button>
+        <button data-action="deleteItem" data-item-id="{{item.id}}">🗑️</button>
+      </div>
+
+    </div>
+
+  </td>
+
+  {{/each}}
+
+</tr>
+</tbody>
+
+</table>
+{{/if}}
+
+
+  <!-- ======================================== -->
   <!-- COMBAT EQUIPMENT -->
   <!-- ======================================== -->
 
-  {{#if meleeWeapons.length}}
-  <h2>{{localize "SDP.Inventory"}}</h2>
+  {{#if naturalMeleeWeapons.length}}
+
+  <table class="weapons-table melee-table natural-weapons-table">
+    <thead>
+      <tr>
+        <th></th>
+        <th>{{localize "SDP.Name"}}</th>
+        <th>{{localize "SDP.Defense"}}</th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+    {{#each naturalMeleeWeapons as |item|}}
+
+    <tr class="weapon-row weapon-clickable" data-item-id="{{item.id}}">
+
+      <td>
+        <img src="{{item.img}}" class="item-img">
+      </td>
+
+      <td class="weapon-toggle weapon-name-cell" data-item-id="{{item.id}}">
+        <span class="weapon-name">{{item.displayName}}</span>
+      </td>
+
+      <td>
+        <input
+          type="checkbox"
+          class="toggle-defense-weapon"
+          data-item-id="{{item.id}}"
+          {{checked item.system.isDefenseWeapon}}
+        >
+      </td>
+
+      <td class="item-actions">
+        <button data-action="editItem" data-item-id="{{item.id}}">✏️</button>
+        <button data-action="deleteItem" data-item-id="{{item.id}}">🗑️</button>
+      </td>
+
+    </tr>
+
+    <tr class="weapon-details" data-details="{{item.id}}" style="display:none;">
+
+      <td colspan="100%">
+
+        <div class="weapon-details-content">
+
+          <div class="weapon-line main-line">
+
+            <div>
+              <strong>{{localize "SDP.Damage"}}:</strong>
+              {{item.system.damage}}
+
+              {{#if item.system.damageDice}}
+                + {{item.system.damageDice}}
+              {{/if}}
+            </div>
+
+            <div class="traits-inline">
+
+              <strong>{{localize "SDP.Traits"}}:</strong>
+
+              {{#each item.displayTraits}}
+              <span
+                class="trait-tag {{this.type}} {{#if this.disabled}}trait-disabled{{/if}} trait-clickable"
+                data-trait="{{this.label}}"
+                data-description="{{this.description}}"
+              >
+                {{this.label}}
+              </span>
+              {{/each}}
+
+            </div>
+
+          </div>
+
+          {{#if item.system.description}}
+          <div class="weapon-desc">
+            {{item.system.description}}
+          </div>
+          {{/if}}
+
+        </div>
+
+      </td>
+
+    </tr>
+
+    {{/each}}
+
+    </tbody>
+  </table>
+  {{/if}}
+
+  {{#if regularMeleeWeapons.length}}
 
   <table class="weapons-table melee-table">
     <thead>
@@ -38,7 +184,7 @@
 
     <tbody>
 
-    {{#each meleeWeapons as |item|}}
+    {{#each regularMeleeWeapons as |item|}}
 
     <tr class="weapon-row weapon-clickable" data-item-id="{{item.id}}">
 
@@ -153,7 +299,105 @@
   <!-- RANGED -->
   <!-- ======================================== -->
 
-  {{#if rangedWeapons.length}}
+  {{#if naturalRangedWeapons.length}}
+
+  <table class="weapons-table ranged-table natural-weapons-table">
+
+    <thead>
+      <tr>
+        <th></th>
+        <th>{{localize "SDP.Name"}}</th>
+        <th>{{localize "SDP.Defense"}}</th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+    {{#each naturalRangedWeapons as |item|}}
+
+    <tr class="weapon-row weapon-clickable" data-item-id="{{item.id}}">
+
+      <td>
+        <img src="{{item.img}}" class="item-img">
+      </td>
+
+      <td class="weapon-toggle weapon-name-cell" data-item-id="{{item.id}}">
+        <span class="weapon-name">{{item.displayName}}</span>
+      </td>
+
+      <td>
+        <input
+          type="checkbox"
+          class="toggle-defense-weapon"
+          data-item-id="{{item.id}}"
+          {{checked item.system.isDefenseWeapon}}
+        >
+      </td>
+
+      <td class="item-actions">
+        <button data-action="editItem" data-item-id="{{item.id}}">✏️</button>
+        <button data-action="deleteItem" data-item-id="{{item.id}}">🗑️</button>
+      </td>
+
+    </tr>
+
+    <tr class="weapon-details" data-details="{{item.id}}" style="display:none;">
+
+      <td colspan="100%">
+
+        <div class="weapon-details-content">
+
+          <div class="weapon-line main-line">
+
+            <div>
+              <strong>{{localize "SDP.Range"}}:</strong>
+              {{#if item.displayRange}}{{item.displayRange}}{{else}}{{item.system.range}}{{/if}}
+            </div>
+
+            <div>
+              <strong>{{localize "SDP.Damage"}}:</strong>
+              {{item.system.damage}}
+            </div>
+
+            <div class="traits-inline">
+
+              <strong>{{localize "SDP.Traits"}}:</strong>
+
+              {{#each item.displayTraits}}
+              <span
+                class="trait-tag {{this.type}} {{#if this.disabled}}trait-disabled{{/if}} trait-clickable"
+                data-trait="{{this.label}}"
+                data-description="{{this.description}}"
+              >
+                {{this.label}}
+              </span>
+              {{/each}}
+
+            </div>
+
+          </div>
+
+          {{#if item.system.description}}
+          <div class="weapon-desc">
+            {{item.system.description}}
+          </div>
+          {{/if}}
+
+        </div>
+
+      </td>
+
+    </tr>
+
+    {{/each}}
+
+    </tbody>
+
+  </table>
+  {{/if}}
+
+  {{#if regularRangedWeapons.length}}
 
   <table class="weapons-table ranged-table">
 
@@ -172,7 +416,7 @@
 
     <tbody>
 
-    {{#each rangedWeapons as |item|}}
+    {{#each regularRangedWeapons as |item|}}
 
     <tr class="weapon-row weapon-clickable" data-item-id="{{item.id}}">
 
@@ -530,57 +774,6 @@
 
   </table>
   {{/if}}
-
-    <!-- ======================================== -->
-  <!-- CURRENCY -->
-  <!-- ======================================== -->
-
-{{#if currency.length}}
-
-<table class="currency-table">
-
-<thead>
-<tr>
-  {{#each currency as |item|}}
-    <th>{{item.displayName}}</th>
-  {{/each}}
-</tr>
-</thead>
-
-<tbody>
-<tr>
-
-  {{#each currency as |item|}}
-
-  <td class="currency-cell" data-item-id="{{item.id}}">
-
-    <div class="currency-inner">
-
-      <img src="{{item.img}}" class="currency-img">
-
-      <div
-        class="currency-qty qty-clickable"
-        data-item-id="{{item.id}}"
-      >
-        {{item.system.quantity.value}}
-      </div>
-
-      <div class="currency-actions">
-        <button data-action="editItem" data-item-id="{{item.id}}">✏️</button>
-        <button data-action="deleteItem" data-item-id="{{item.id}}">🗑️</button>
-      </div>
-
-    </div>
-
-  </td>
-
-  {{/each}}
-
-</tr>
-</tbody>
-
-</table>
-{{/if}}
 
   <!-- ======================================== -->
   <!-- CLOTHING -->

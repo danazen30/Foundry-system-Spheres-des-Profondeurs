@@ -42,7 +42,7 @@ registerWeaponToggle(
       // EQUIPPED CHECK
       // =========================
 
-      if (!weapon.system.equipped) {
+      if (!weapon.system.equipped && !weapon.system.natural) {
         ui.notifications.warn(
   game.i18n.format(
     "SDP.Notifications.WeaponNotEquipped",
@@ -681,7 +681,7 @@ function registerWeaponToggle(sheet, root, actor) {
       // EQUIPPED CHECK
       // =========================
 
-      if (!weapon.system.equipped) {
+      if (!weapon.system.equipped && !weapon.system.natural) {
 
         ui.notifications.warn(
   game.i18n.format(

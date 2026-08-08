@@ -18,7 +18,7 @@ const DEFAULT_ITEM_IMAGES = {
     "systems/sdp/assets/icons/items/spells.png",
 
   ability:
-    "systems/sdp/assets/icons/items/spells.png",
+    "systems/sdp/assets/icons/items/abilities.png",
 
   injury:
     "systems/sdp/assets/icons/items/injury.png",
@@ -103,6 +103,7 @@ _prepareWeaponSystem(system) {
   this._preparePhysicalFields(system);
 
   system.category ??= "melee";
+  system.natural ??= false;
   system.skill ??= "melee";
   system.weaponGroup ??= "basic";
   system.handedness ??= "one";
@@ -382,6 +383,10 @@ prepareDerivedData(){
 
   if (this.type === "weapon") {
     this._prepareWeaponSystem(system);
+  }
+  else if (this.type === "ability") {
+    system.passive ??= false;
+    system.passive = !!system.passive;
   }
   else if (this.type === "ammunition") {
     this._preparePhysicalFields(system);

@@ -23,6 +23,22 @@ export function prepareWeapons(actor) {
     w => w.system.category === "ranged"
   );
 
+  const naturalMeleeWeapons = meleeWeapons.filter(
+    w => !!w.system.natural
+  );
+
+  const regularMeleeWeapons = meleeWeapons.filter(
+    w => !w.system.natural
+  );
+
+  const naturalRangedWeapons = rangedWeapons.filter(
+    w => !!w.system.natural
+  );
+
+  const regularRangedWeapons = rangedWeapons.filter(
+    w => !w.system.natural
+  );
+
   const allAmmo = actor.items.filter(
     i => i.type === "ammunition"
   );
@@ -149,7 +165,11 @@ export function prepareWeapons(actor) {
   return {
     weapons,
     meleeWeapons,
-    rangedWeapons
+    rangedWeapons,
+    naturalMeleeWeapons,
+    regularMeleeWeapons,
+    naturalRangedWeapons,
+    regularRangedWeapons
   };
 
 }

@@ -1,8 +1,91 @@
-﻿<div class="tab-magic">
+<div class="tab-magic">
 
   {{#if (eq actor.type "creature")}}
-  <!-- ABILITIES -->
-  <h3>{{localize "SDP.Abilities"}}</h3>
+
+  {{#if passiveAbilities.length}}
+  <!-- PASSIVE ABILITIES -->
+  <h3>{{localize "SDP.PassiveAbilities"}}</h3>
+
+  <table class="spells-table abilities-table passive-abilities-table">
+    <thead>
+      <tr>
+        <th></th>
+        <th>{{localize "SDP.Name"}}</th>
+        <th>{{localize "SDP.Actions"}}</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {{#each passiveAbilities as |ability|}}
+<tr class="spell-row ability-row" data-item-id="{{ability.id}}">
+
+  <td class="spell-img-cell">
+  <img src="{{ability.img}}" title="{{ability.displayName}}">
+</td>
+
+  <td
+    class="spell-name ability-toggle"
+    data-action="toggleAbilityDetails"
+    data-item-id="{{ability.id}}"
+  >
+    {{ability.displayName}}
+  </td>
+
+  <td class="item-actions">
+    <button data-action="editItem" data-item-id="{{ability.id}}">✏️</button>
+    <button data-action="deleteItem" data-item-id="{{ability.id}}">🗑️</button>
+  </td>
+
+</tr>
+
+<tr class="spell-details" data-details="{{ability.id}}" style="display:none;">
+  <td colspan="3">
+
+    <div class="spell-detail-box">
+
+  <p><strong>{{localize "SDP.Range"}}:</strong> {{ability.system.range.value}}</p>
+
+  <p>
+  <strong>{{localize "SDP.Duration"}}:</strong>
+  {{#if ability.system.concentration.value}}
+    {{localize "SDP.Concentration"}}
+  {{else}}
+    {{ability.system.duration.value}}
+    {{ability.system.duration.type}}
+  {{/if}}
+</p>
+
+  <p>
+  <strong>{{localize "SDP.Target"}}:</strong>
+  {{#if ability.system.aoe.value}}
+    {{localize "SDP.AreaOfEffect"}} ({{localize "SDP.Radius"}}: {{ability.system.radius.value}})
+  {{else}}
+    {{ability.system.target.value}} {{localize "SDP.Targets"}}
+  {{/if}}
+</p>
+
+  <p>
+  <strong>{{localize "SDP.Damage"}}:</strong>
+    {{ability.system.damage.base.value}}
+    {{ability.system.damage.dice.value}}
+  </p>
+
+  <p class="spell-description">
+  {{ability.system.description}}
+</p>
+</div>
+
+  </td>
+</tr>
+
+  {{/each}}
+</tbody>
+  </table>
+  {{/if}}
+
+  {{#if activeAbilities.length}}
+  <!-- ACTIVE ABILITIES -->
+  <h3>{{localize "SDP.ActiveAbilities"}}</h3>
 
   <table class="spells-table abilities-table">
     <thead>
@@ -15,11 +98,11 @@
     </thead>
 
     <tbody>
-      {{#each abilities as |ability|}}
+      {{#each activeAbilities as |ability|}}
 <tr class="spell-row ability-row" data-item-id="{{ability.id}}">
 
   <td class="spell-img-cell">
-  <img src="{{ability.img}}" title="{{ability.name}}">
+  <img src="{{ability.img}}" title="{{ability.displayName}}">
 </td>
 
   <td
@@ -27,7 +110,7 @@
     data-action="useAbility"
     data-item-id="{{ability.id}}"
   >
-    {{ability.name}}
+    {{ability.displayName}}
   </td>
 
   <td>
@@ -84,6 +167,8 @@
   {{/each}}
 </tbody>
   </table>
+  {{/if}}
+
   {{/if}}
 
   <!-- MINOR SPELLS -->

@@ -520,15 +520,6 @@ await roll.evaluate();
 
 let damage = roll.total;
 
-// =========================
-// SIZE DAMAGE MULTIPLIER
-// =========================
-
-const sizeMultiplier =
-  CONFIG.SDP.sizes?.[this.resolveActorSize(actor)]?.damageMultiplier || 1;
-
-damage = Math.floor(damage * sizeMultiplier);
-
 const talentDamageBonus = SdpRoll.getAttackDamageBonus(
   actor,
   dialogMods.talents || []
@@ -543,25 +534,22 @@ if (talentDamageBonus) {
   });
 }
 
-// =========================
-// MOUNTED CHARGE (+50%) / COUNTER-CHARGE ANTI-LARGE (×2)
-// =========================
-
-if (mountedCharge) {
-  damage = Math.floor(damage * 1.5);
-  console.log("SDP | MOUNTED CHARGE DAMAGE ×1.5", { damage });
-}
-
 const hasAntiLarge = traits.some((t) => {
   if (!t) return false;
   const key = this.normalizeTraitKey(t);
   return key === "anti-large" || key === "antilarge";
 });
 
-if (dialogMods.counterCharge && hasAntiLarge) {
-  damage = Math.floor(damage * 2);
-  console.log("SDP | COUNTER-CHARGE ANTI-LARGE ×2", { damage });
-}
+const damageMultipliers = this.collectDamageMultipliers({
+  actor,
+  target,
+  location,
+  mountedCharge,
+  counterCharge: dialogMods.counterCharge,
+  hasAntiLarge
+});
+
+damage = this.applyAdditiveDamageMultipliers(damage, damageMultipliers);
 
 if (
   dialogMods.counterCharge &&
@@ -619,14 +607,7 @@ weaponDetail.push(
   // =========================
 
   damage = weaponMax + signTotal + baseWeapon + statBonus + talentDamageBonus;
-
-  if (mountedCharge) {
-    damage = Math.floor(damage * 1.5);
-  }
-
-  if (dialogMods.counterCharge && hasAntiLarge) {
-    damage = Math.floor(damage * 2);
-  }
+  damage = this.applyAdditiveDamageMultipliers(damage, damageMultipliers);
 
   const damageAfterArmor = Math.max(damage - armor, 0);
 
@@ -647,6 +628,7 @@ weaponDetail.push(
   armorMultiplierReason,
   formula,
   devastating,
+  damageMultipliers,
   weaponDetail: weaponDetail.join(" + "),
   baseWeapon,
   SB: statBonus,
@@ -654,13 +636,6 @@ weaponDetail.push(
   bleedingThreshold: bleeding.threshold
 };
 }
-
-  // =========================
-  // LOCATION MULT
-  // =========================
-  if (location === "head" && target?.type !== "vehicle") {
-    damage = Math.floor(damage * 1.5);
-  }
 
   const damageAfterArmor = Math.max(damage - armor, 0);
 
@@ -683,6 +658,7 @@ weaponDetail.push(
   armorMultiplierReason,
   formula,
   devastating,
+  damageMultipliers,
   rolledDiceFormula,
   bleedingStacks: bleeding.stacks,
   bleedingThreshold: bleeding.threshold
@@ -808,6 +784,59 @@ static normalizeDamageType(damageType) {
     return damageType.value || damageType.type || null;
   }
   return null;
+}
+
+/**
+ * Collecte les multiplicateurs de dégâts situationnels (taille, charge, tête, etc.).
+ * Ils sont ensuite cumulés de façon additive via applyAdditiveDamageMultipliers.
+ */
+static collectDamageMultipliers({
+  actor,
+  target,
+  location,
+  mountedCharge = false,
+  counterCharge = false,
+  hasAntiLarge = false
+} = {}) {
+
+  const multipliers = [];
+
+  const sizeMultiplier =
+    CONFIG.SDP.sizes?.[this.resolveActorSize(actor)]?.damageMultiplier || 1;
+  multipliers.push(sizeMultiplier);
+
+  if (mountedCharge) {
+    multipliers.push(1.5);
+  }
+
+  if (counterCharge && hasAntiLarge) {
+    multipliers.push(2);
+  }
+
+  if (location === "head" && target?.type !== "vehicle") {
+    multipliers.push(1.5);
+  }
+
+  return multipliers;
+}
+
+/**
+ * Cumul additif des bonus/malus en % :
+ * deux ×1.5 → +50% +50% = ×2 (et non 1.5×1.5 = ×2.25).
+ * Formule : floor(damage × (1 + Σ(mult − 1))).
+ */
+static applyAdditiveDamageMultipliers(damage, multipliers = []) {
+
+  let bonus = 0;
+
+  for (const mult of multipliers) {
+    const m = Number(mult);
+    if (!Number.isFinite(m) || m === 1) continue;
+    bonus += (m - 1);
+  }
+
+  const totalMult = 1 + bonus;
+  return Math.max(0, Math.floor(Number(damage) * totalMult));
 }
 
 static resolveActorSize(actor) {

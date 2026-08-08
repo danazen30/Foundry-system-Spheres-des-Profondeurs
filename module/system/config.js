@@ -82,7 +82,8 @@ SDP.ATTRIBUTE_LABELS = {
 export const DAMAGE_TYPES = {
   slashing: "SDP.DamageTypeSlashing",
   piercing: "SDP.DamageTypePiercing",
-  bludgeoning: "SDP.DamageTypeBludgeoning"
+  bludgeoning: "SDP.DamageTypeBludgeoning",
+  ethereal: "SDP.DamageTypeEthereal"
 };
 
 CONFIG.SDP.hitLocations = {

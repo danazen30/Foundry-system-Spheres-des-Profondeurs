@@ -1496,6 +1496,18 @@ input.movement-value {
   transform: translateX(3px);
 }
 
+.ability-toggle {
+  cursor: pointer;
+  font-weight: bold;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.ability-toggle:hover {
+  color: #e67e22;
+  transform: translateX(3px);
+}
+
 /* =========================
    CHECKBOX CENTER
 ========================= */
@@ -3581,7 +3593,7 @@ text-align:center;
 }
 
 .creature-combat-tab .skills-wrapper {
-  min-height: 250px;
+  min-height: 180px;
 }
 
 .creature-combat-tab
@@ -3589,9 +3601,18 @@ text-align:center;
   .skills-block:first-child
   .skills-table-wrapper {
 
-  max-height: 200px;
+  max-height: 150px;
   overflow-y: auto;
 
+}
+
+.creature-combat-tab .skills-table tr {
+  height: 22px;
+}
+
+.creature-combat-tab .skills-table th,
+.creature-combat-tab .skills-table td {
+  padding: 2px 6px;
 }
 
 /* =========================================
@@ -3636,13 +3657,14 @@ text-align:center;
   margin-bottom: 0px !important;
 }
 
-/* lignes ultra compactes */
+/* lignes — hauteur adaptée aux icônes */
 .creature-combat-tab .weapons-table tr,
 .creature-combat-tab .ammo-table tr,
 .creature-combat-tab .armors-table tr,
 .creature-combat-tab .inventory-table tr,
 .creature-combat-tab .container-table tr {
-  height: 18px;
+  height: auto;
+  min-height: 40px;
 }
 
 /* cellules */
@@ -3651,8 +3673,9 @@ text-align:center;
 .creature-combat-tab .armors-table td,
 .creature-combat-tab .inventory-table td,
 .creature-combat-tab .container-table td {
-  padding-top: 0px;
-  padding-bottom: 0px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  vertical-align: middle;
 }
 
 /* headers */
@@ -3668,13 +3691,58 @@ text-align:center;
   font-size: 10px;
 }
 
-/* images inventaire */
-.creature-combat-tab .item-img {
-  width: 18px;
-  height: 18px;
+/* colonne image unifiée */
+.creature-combat-tab .weapons-table td:first-child,
+.creature-combat-tab .ammo-table td:first-child,
+.creature-combat-tab .armors-table td:first-child,
+.creature-combat-tab .inventory-table td:first-child,
+.creature-combat-tab .container-table td:first-child {
+  width: 40px;
+  max-width: 40px;
+  min-width: 40px;
+  height: 40px;
+  padding: 2px;
+  vertical-align: middle;
+  overflow: hidden;
+}
 
-  min-width: 18px;
-  min-height: 18px;
+/* même taille d’icône pour tous les items (armes naturelles incluses) */
+.creature-combat-tab .item-img {
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  min-height: 40px !important;
+  max-width: 40px !important;
+  max-height: 40px !important;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
+
+/* armes naturelles : image / Nom / Défense / actions */
+.creature-combat-tab .natural-weapons-table th:nth-child(1),
+.creature-combat-tab .natural-weapons-table td:nth-child(1) {
+  width: 40px;
+  max-width: 40px;
+  padding: 4px;
+  vertical-align: middle;
+}
+
+.creature-combat-tab .natural-weapons-table th:nth-child(2),
+.creature-combat-tab .natural-weapons-table td:nth-child(2) {
+  width: auto;
+  text-align: left;
+  padding-left: 6px;
+}
+
+.creature-combat-tab .natural-weapons-table th:nth-child(3),
+.creature-combat-tab .natural-weapons-table td:nth-child(3) {
+  width: 55px;
+}
+
+.creature-combat-tab .natural-weapons-table th:nth-child(4),
+.creature-combat-tab .natural-weapons-table td:nth-child(4) {
+  width: 48px;
 }
 
 /* détails dépliants */

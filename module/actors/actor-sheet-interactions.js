@@ -656,6 +656,35 @@ function registerSpellCasting(sheet, root) {
 
 function registerAbilityUse(sheet, root) {
 
+  const toggleAbilityDetails = (itemId) => {
+
+    const details = root.querySelector(
+      `.spell-details[data-details="${itemId}"]`
+    );
+
+    if (!details) return;
+
+    const isHidden =
+      details.style.display === "none";
+
+    details.style.display =
+      isHidden ? "table-row" : "none";
+
+  };
+
+  root.querySelectorAll('[data-action="toggleAbilityDetails"]').forEach(el => {
+
+    el.addEventListener("click", (event) => {
+
+      event.preventDefault();
+      toggleAbilityDetails(
+        event.currentTarget.dataset.itemId
+      );
+
+    });
+
+  });
+
   root.querySelectorAll('[data-action="useAbility"]').forEach(el => {
 
     el.addEventListener("click", async (event) => {
@@ -669,6 +698,11 @@ function registerAbilityUse(sheet, root) {
 
       if (!ability) return;
 
+      if (ability.system?.passive) {
+        toggleAbilityDetails(ability.id);
+        return;
+      }
+
       await SdpAbility.use(
         sheet.actor,
         ability
@@ -680,20 +714,9 @@ function registerAbilityUse(sheet, root) {
 
       event.preventDefault();
 
-      const itemId =
-        event.currentTarget.dataset.itemId;
-
-      const details = root.querySelector(
-        `.spell-details[data-details="${itemId}"]`
+      toggleAbilityDetails(
+        event.currentTarget.dataset.itemId
       );
-
-      if (!details) return;
-
-      const isHidden =
-        details.style.display === "none";
-
-      details.style.display =
-        isHidden ? "table-row" : "none";
 
     });
 

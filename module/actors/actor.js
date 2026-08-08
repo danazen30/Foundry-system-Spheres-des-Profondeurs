@@ -1103,7 +1103,7 @@ const extraMod =
 
     const equippedWeapons = this.items.filter(
   i => i.type === "weapon" &&
-       i.system.equipped &&
+       (i.system.equipped || i.system.natural) &&
        i.system.category === "melee"
 );
 

@@ -587,6 +587,12 @@
         "value": "melee"
       },
 
+      "natural": {
+        "type": "boolean",
+        "label": "Natural Weapon",
+        "value": false
+      },
+
       "skill": {
         "type": "string",
         "label": "Skill",
@@ -1229,6 +1235,12 @@
 
       "concentration": {
         "type": "boolean",
+        "value": false
+      },
+
+      "passive": {
+        "type": "Boolean",
+        "label": "Passive",
         "value": false
       }
     },

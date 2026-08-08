@@ -101,6 +101,15 @@ export function parseWeaponDamageFormula(value, actor, { useFinesse = false } = 
   const WPB = attrs.willpower?.bonus ?? 0;
   const halfWPB = Math.floor(WPB / 2);
 
+  // Multiplications (WPB x 2, SB * 3, etc.) : résoudre toute la formule
+  if (/[x×*]/.test(str)) {
+    const total = resolveSdpFormula(str, actor, { overrides: { SB } });
+    if (hasWeaponDamageStatBonus(str)) {
+      return { statBonus: total, flatBase: 0 };
+    }
+    return { statBonus: 0, flatBase: total };
+  }
+
   let statBonus = 0;
 
   const wpbHalfRegex = /\bWPB\s*\/\s*2\b/gi;
