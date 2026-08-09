@@ -387,6 +387,8 @@ prepareDerivedData(){
   else if (this.type === "ability") {
     system.passive ??= false;
     system.passive = !!system.passive;
+    system.ignoreArmor ??= false;
+    system.ignoreArmor = !!system.ignoreArmor;
   }
   else if (this.type === "ammunition") {
     this._preparePhysicalFields(system);

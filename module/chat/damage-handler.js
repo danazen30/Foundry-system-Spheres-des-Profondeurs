@@ -201,6 +201,12 @@ if (!targetId) {
 
     const ammoId = card.dataset.ammo || dataset.ammo;
 
+    const ignoreArmor =
+      card.dataset.ignoreArmor === "true"
+      || button.dataset.ignoreArmor === "true"
+      || weapon?.system?.ignoreArmor === true
+      || weapon?.system?.ignoreArmor?.value === true;
+
 const result = await SdpDamage.rollDamage({
   actor,
   weapon,
@@ -210,7 +216,8 @@ const result = await SdpDamage.rollDamage({
   brutal,
   ammoId,
   damageType,
-  defenseType
+  defenseType,
+  ignoreArmor
 });
 
   const { roll, damage, damageAfterArmor, finalDamage, armor, armorBase, armorMultiplierReason, formula, devastating, weaponDetail, baseWeapon, SB, bleedingStacks = 0, bleedingThreshold = 0, rolledDiceFormula = "", damageMultipliers = [] } = result;
@@ -260,6 +267,7 @@ await roll.toMessage({
      )}'
      data-total="${roll.total}"
      data-multipliers='${JSON.stringify(damageMultipliers)}'
+     data-ignore-armor="${ignoreArmor}"
      data-attacker="${actorId}"
      data-target="${targetId}"
      data-location="${location}"
@@ -1234,8 +1242,9 @@ html.on("click", ".validate-damage", async ev => {
 
   let armor = 0;
   const damageType = card.dataset.damagetype || null;
+  const ignoreArmor = card.dataset.ignoreArmor === "true";
 
-  if (targets.length) {
+  if (targets.length && !ignoreArmor) {
     armor = SdpDamage.getArmorValue(
       targets[0].actor,
       location,

@@ -223,7 +223,7 @@ static countBleedingStacks(traits, dieResults) {
   return { stacks, threshold };
 }
 
-static async rollDamage({ actor, weapon, target, location, critical, brutal, ammoId, damageType = null, defenseType }) {
+static async rollDamage({ actor, weapon, target, location, critical, brutal, ammoId, damageType = null, defenseType, ignoreArmor = null }) {
 
   const dialogMods = game.sdp?.dialogModifiers || {};
 const useFinesse = dialogMods.finesse;
@@ -248,7 +248,12 @@ if (ammoId) {
     damageType ?? weapon?.system?.damageType
   );
 
-if (target) {
+  const shouldIgnoreArmor =
+    ignoreArmor === true
+    || weapon?.system?.ignoreArmor === true
+    || weapon?.system?.ignoreArmor?.value === true;
+
+if (target && !shouldIgnoreArmor) {
 armorBase = this.getArmorValue(
   target,
   location,

@@ -85,6 +85,8 @@ export class SdpAbility {
 
     const tokenId = getTokenIdForActor(actor);
 
+    const ignoreArmor = !!system.ignoreArmor;
+
     let damageButton = "";
 
     if (hasDamage) {
@@ -93,6 +95,7 @@ export class SdpAbility {
       data-actor="${actor.id}"
       data-token="${tokenId}"
       data-weapon="${ability.id}"
+      data-ignore-armor="${ignoreArmor}"
       data-target="${Array.from(game.user.targets)[0]?.id || ""}">
       ${game.i18n.localize("SDP.RollDamage")}
     </button>
@@ -110,6 +113,7 @@ export class SdpAbility {
      data-actor="${actor.id}"
      data-token="${tokenId}"
      data-weapon="${ability.id}"
+     data-ignore-armor="${ignoreArmor}"
      data-location="${hitLocation.location}"
      data-location-profile="${hitProfileKey}"
      data-critical="false">

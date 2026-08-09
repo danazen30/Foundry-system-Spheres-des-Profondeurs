@@ -25,6 +25,9 @@ export class SdpAbilitySheet extends SdpItemSheet {
     context.system.passive =
       !!context.system.passive;
 
+    context.system.ignoreArmor =
+      !!context.system.ignoreArmor;
+
     context.durationOptions = [
       {
         value: "round",
@@ -71,6 +74,7 @@ export class SdpAbilitySheet extends SdpItemSheet {
 
     // Checkboxes absents du FormData quand décochés
     data.system.passive = !!data.system.passive;
+    data.system.ignoreArmor = !!data.system.ignoreArmor;
 
     data.system.aoe ??= {};
     data.system.aoe.value = !!data.system.aoe?.value;

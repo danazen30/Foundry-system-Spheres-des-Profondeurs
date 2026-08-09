@@ -1242,6 +1242,12 @@
         "type": "Boolean",
         "label": "Passive",
         "value": false
+      },
+
+      "ignoreArmor": {
+        "type": "Boolean",
+        "label": "Ignore Armor",
+        "value": false
       }
     },
     "possession": {
@@ -1259,7 +1265,8 @@
       "templates": [
         "description",
         "gmNotes",
-        "playerNotes"
+        "playerNotes",
+        "key"
       ]
     },
 
