@@ -423,6 +423,9 @@ async _onCreate(data, options, userId) {
     userId
   );
 
+  // Only the creating user may write defaults / sync effects
+  if (userId !== game.user.id) return;
+
   const updates = {
     ...this._getItemDefaultUpdates()
   };

@@ -17,6 +17,7 @@ import { SdpCareerSheet } from "./items/career-sheet.js";
 import { SdpSpecieSheet } from "./items/specie-sheet.js";
 import { SdpSignSheet } from "./items/sign-sheet.js";
 import { SdpItem } from "./items/item.js";
+import { registerItemPermissions } from "./items/item-permissions.js";
 import { SdpSpellSheet } from "./items/spell-sheet.js";
 import { SdpAbilitySheet } from "./items/ability-sheet.js";
 import { SdpAmmunitionSheet } from "./items/ammunition-sheet.js";
@@ -233,6 +234,7 @@ game.sdp.level = SdpLevelService;
 
 
   registerActorHandlers();
+  registerItemPermissions();
 
 // ACTORS
 foundry.documents.collections.Actors.unregisterSheet("core", foundry.applications.sheets.ActorSheetV2);
@@ -313,7 +315,9 @@ Handlebars.registerHelper("includes", function(value, key) {
   return false;
 });
 
-  Hooks.on("createActor", async (actor) => {
+  Hooks.on("createActor", async (actor, _options, userId) => {
+
+  if (userId !== game.user.id) return;
 
   if (actor.type === "creature") {
     await syncCreatureLocalizedName(actor);
@@ -773,6 +777,8 @@ game.sdp.applyRollTableFlags = async () => {
 };
 
 sdpSocket = socketlib.registerSystem("sdp");
+game.sdp = game.sdp || {};
+game.sdp.socket = sdpSocket;
 
 sdpSocket.register(
   "observerUpdate",
@@ -788,6 +794,33 @@ sdpSocket.register(
     console.log(
       "GM UPDATE APPLIED"
     );
+
+  }
+);
+
+sdpSocket.register(
+  "createGeneratedActor",
+  async (data, ownerUserId) => {
+
+    if (!game.user.isGM) return null;
+
+    const ownership = {
+      ...(data?.ownership || {}),
+      [ownerUserId]:
+        CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER
+    };
+
+    const actor = await Actor.create(
+      {
+        ...data,
+        ownership
+      },
+      {
+        sdpGenerated: true
+      }
+    );
+
+    return actor?.id ?? null;
 
   }
 );
@@ -858,7 +891,9 @@ Hooks.on("updateCombat", async (combat, changed) => {
   }
 
 });
-Hooks.on("createItem", async (item) => {
+Hooks.on("createItem", async (item, _options, userId) => {
+
+  if (userId !== game.user.id) return;
 
   const actor = item.parent;
   if (!actor) return;
@@ -890,7 +925,9 @@ Hooks.on("createItem", async (item) => {
 
 });
 
-Hooks.on("deleteItem", async (item) => {
+Hooks.on("deleteItem", async (item, _options, userId) => {
+
+  if (userId !== game.user.id) return;
 
   if (item.type !== "injury") return;
 

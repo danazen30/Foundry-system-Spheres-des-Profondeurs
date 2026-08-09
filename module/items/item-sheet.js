@@ -5,6 +5,7 @@ import {
   getTraitIndex
 } from "../system/item-localization.js";
 import { restoreItemScroll, registerEditorToggles, setupRichTextEditors, setupTextareaResize} from "../actors/actor-sheet-ui.js";
+import { isPlayerEditableItemField } from "./item-permissions.js";
 
 const { ItemSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -106,6 +107,13 @@ get isCompendiumViewer() {
       CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER
     )
   );
+
+}
+
+/** Non-GM owners: sheet stays open, but most fields are locked. */
+get needsPlayerFieldLocks() {
+
+  return !game.user.isGM && !this.isCompendiumViewer;
 
 }
 
@@ -295,7 +303,8 @@ negativeArmorTraits,
   editors,
   effects: this.document.effects,
   isGM: game.user.isGM,
-  isCompendiumViewer: this.isCompendiumViewer
+  isCompendiumViewer: this.isCompendiumViewer,
+  needsPlayerFieldLocks: this.needsPlayerFieldLocks
 };
 
 }
@@ -336,7 +345,7 @@ if (scrollEl && !scrollEl.dataset.scrollRegistered) {
   const img =
     root.querySelector(".item-header-image img");
 
-  if (img && !this.isCompendiumViewer) {
+  if (img && !this.isCompendiumViewer && !this.needsPlayerFieldLocks) {
 
     img.addEventListener("click", () => {
 
@@ -365,6 +374,12 @@ if (scrollEl && !scrollEl.dataset.scrollRegistered) {
   if (this.isCompendiumViewer) {
     this._applyCompendiumViewerMode(root);
   }
+  else if (this.needsPlayerFieldLocks) {
+    this._applyPlayerFieldLocks(root);
+    registerEditorToggles(root);
+    setupRichTextEditors(root);
+    setupTextareaResize(root);
+  }
   else {
 
     registerEditorToggles(root);
@@ -385,6 +400,13 @@ if (scrollEl && !scrollEl.dataset.scrollRegistered) {
 
     const action =
       el.dataset.action;
+
+    if (
+      this.needsPlayerFieldLocks
+      && ["create-effect", "edit-effect", "delete-effect"].includes(action)
+    ) {
+      return;
+    }
 
     switch (action) {
 
@@ -469,6 +491,46 @@ _applyCompendiumViewerMode(root) {
 
 }
 
+_applyPlayerFieldLocks(root) {
+
+  const sheet =
+    root.querySelector(".sdp-item-sheet")
+    || root;
+
+  sheet.classList.add("sdp-item-sheet--player-locked");
+
+  const itemType = this.document.type;
+
+  sheet.querySelectorAll(
+    "input, select, textarea, prose-mirror"
+  ).forEach(el => {
+
+    const name = el.getAttribute("name");
+
+    if (isPlayerEditableItemField(itemType, name)) {
+      return;
+    }
+
+    el.disabled = true;
+
+    if (
+      el.tagName === "INPUT" ||
+      el.tagName === "TEXTAREA"
+    ) {
+      el.readOnly = true;
+    }
+
+  });
+
+  // Description: visible, not editable. Player notes stay editable.
+  sheet.querySelectorAll(
+    '.note-edit-btn[data-target="description"]'
+  ).forEach(btn => {
+    btn.style.display = "none";
+  });
+
+}
+
 async _createEffect() {
 
   await this.document.createEmbeddedDocuments(
@@ -524,6 +586,20 @@ async _onChangeForm(formConfig, event) {
     return;
   }
 
+  if (this.needsPlayerFieldLocks) {
+
+    const target = event?.target;
+    const name = target?.getAttribute?.("name");
+
+    if (
+      name
+      && !isPlayerEditableItemField(this.document.type, name)
+    ) {
+      return;
+    }
+
+  }
+
   await super._onChangeForm(
     formConfig,
     event
@@ -542,6 +618,13 @@ async _onChangeForm(formConfig, event) {
       editor.getAttribute("name");
 
     if (!name) return;
+
+    if (
+      this.needsPlayerFieldLocks
+      && !isPlayerEditableItemField(this.document.type, name)
+    ) {
+      return;
+    }
 
     updates[name] =
       editor.value || "";

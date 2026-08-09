@@ -290,7 +290,7 @@ export function prepareInventory(actor) {
     i.type === "container"
   );
 
-  applyFinalWeight(possessions, "weight");
+  applyFinalWeight(possessions);
   applyFinalWeight(ammunition);
   applyFinalWeight(containers);
   applyFinalWeight(clothing);

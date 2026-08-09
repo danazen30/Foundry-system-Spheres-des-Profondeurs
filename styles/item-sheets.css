@@ -1174,3 +1174,25 @@
 .sdp-item-sheet--compendium-viewer .effect-control {
   display: none !important;
 }
+
+/* =========================
+   PLAYER FIELD LOCKS
+========================= */
+
+.sdp-item-sheet--player-locked input:disabled,
+.sdp-item-sheet--player-locked select:disabled,
+.sdp-item-sheet--player-locked textarea:disabled,
+.sdp-item-sheet--player-locked input[readonly],
+.sdp-item-sheet--player-locked textarea[readonly] {
+  pointer-events: none;
+  opacity: 0.92;
+}
+
+.sdp-item-sheet--player-locked .item-header-image img {
+  cursor: default;
+}
+
+.sdp-item-sheet--player-locked .effect-create-button,
+.sdp-item-sheet--player-locked .effect-control {
+  display: none !important;
+}

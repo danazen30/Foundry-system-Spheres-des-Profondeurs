@@ -1207,7 +1207,9 @@ if (game.dice3d) {
 
 }
 
-Hooks.on("createItem", async (item, options) => {
+Hooks.on("createItem", async (item, options, userId) => {
+
+  if (userId !== game.user.id) return;
 
   if (item.type !== "specie") return;
 

@@ -76,7 +76,15 @@ export async function ensureDefaultCurrencies(actor) {
 
 export function registerActorHandlers() {
 
-Hooks.on("createActor", async (actor) => {
+Hooks.on("createActor", async (actor, _options, userId) => {
+
+  // =========================
+  // ONLY CREATING USER
+  // =========================
+
+  if (userId !== game.user.id) {
+    return;
+  }
 
   // =========================
   // VEHICLE → currencies only (like character inventory money)
