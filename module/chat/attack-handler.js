@@ -5,6 +5,60 @@ import {
   resolveActorFromIds,
   resolveActorItem
 } from "../system/actor-utils.js";
+import {
+  createCombatMessage,
+  getCurrentRollMode,
+  vis
+} from "./combat-visibility.js";
+
+function buildDefenseResolutionHtml({
+  targetName,
+  parry,
+  evasion,
+  selected,
+  result,
+  locationLabel = ""
+}) {
+
+  const hitLabel = game.i18n.localize(
+    result === "HIT" ? "SDP.Hit" : "SDP.Miss"
+  );
+
+  return `
+<div class="sdp-defense-resolution">
+  <h3>${game.i18n.localize("SDP.DefenseResolution")}</h3>
+
+  <p ${vis("attacker", "defender", "gm")}>
+    ${game.i18n.localize("SDP.Target")}: ${targetName}
+  </p>
+
+  ${locationLabel ? `
+  <p ${vis("attacker", "defender", "gm")}>
+    ${game.i18n.localize("SDP.HitLocation")}: ${locationLabel}
+  </p>` : ""}
+
+  <p ${vis("gm")}>
+    ${game.i18n.localize("SDP.Parry")}: ${parry}
+  </p>
+
+  <p ${vis("gm")}>
+    ${game.i18n.localize("SDP.Evasion")}: ${evasion}
+  </p>
+
+  <p ${vis("attacker", "defender", "gm")}>
+    ${game.i18n.localize("SDP.DefenseUsed")}:
+    ${game.i18n.localize(
+      selected === "parry" ? "SDP.Parry" : "SDP.Evasion"
+    )}
+  </p>
+
+  <p ${vis("attacker", "defender", "gm")}>
+    <strong>${hitLabel}</strong>
+  </p>
+</div>
+`;
+
+}
 
 export function registerAttackHandlers(html, message) {
 
@@ -222,7 +276,7 @@ console.log("SDP | Defense decision (FINAL)", {
     // ===== CHOICE CARD =====
     if (canChoose) {
 
-      await ChatMessage.create({
+      await createCombatMessage({
         content: `
         <div class="sdp-defense-choice"
              data-attack="${attackScore}"
@@ -242,19 +296,20 @@ console.log("SDP | Defense decision (FINAL)", {
   )}
 </h3>
 
-<p>
+<p ${vis("gm")}>
   ${game.i18n.localize("SDP.Parry")}
   : ${parry}
 </p>
 
-<p>
+<p ${vis("gm")}>
   ${game.i18n.localize("SDP.Evasion")}
   : ${evasion}
 </p>
 
 <button
   class="choose-defense"
-  data-defense="parry">
+  data-defense="parry"
+  ${vis("attacker", "gm")}>
 
   ${game.i18n.localize(
     "SDP.Parry"
@@ -264,7 +319,8 @@ console.log("SDP | Defense decision (FINAL)", {
 
 <button
   class="choose-defense"
-  data-defense="evasion">
+  data-defense="evasion"
+  ${vis("attacker", "gm")}>
 
   ${game.i18n.localize(
     "SDP.Evasion"
@@ -273,7 +329,12 @@ console.log("SDP | Defense decision (FINAL)", {
 </button>
 
         </div>
-        `
+        `,
+        attackerActor: resolveActorFromIds(actorId, tokenId),
+        defenderActor: target,
+        rollMode: message?.flags?.sdp?.combat?.rollMode ?? getCurrentRollMode(),
+        stage: "defense-choice",
+        audience: "attacker"
       });
 
       return;
@@ -289,45 +350,23 @@ const result = isCriticalSuccess || attackScore > defense ? "HIT" : "MISS";
 // CREATE DEFENSE CARD
 // ======================
 
-await ChatMessage.create({
-  content: `
-    <h3>
-  ${game.i18n.localize(
-    "SDP.DefenseResolution"
-  )}
-</h3>
-
-<p>
-  ${game.i18n.localize(
-    "SDP.Target"
-  )}: ${target.name}
-</p>
-
-<p>
-  ${game.i18n.localize(
-    "SDP.Parry"
-  )}: ${parry}
-</p>
-
-<p>
-  ${game.i18n.localize(
-    "SDP.Evasion"
-  )}: ${evasion}
-</p>
-
-<p>
-  ${game.i18n.localize(
-    "SDP.DefenseUsed"
-  )}:
-  ${game.i18n.localize(
-    selected === "parry"
-      ? "SDP.Parry"
-      : "SDP.Evasion"
-  )}
-</p>
-
-<p><strong>${result}</strong></p>
-  `
+await createCombatMessage({
+  content: buildDefenseResolutionHtml({
+    targetName: target.name,
+    parry,
+    evasion,
+    selected,
+    result,
+    locationLabel: getHitLocationLabel(
+      card.dataset.locationProfile || "humanoid",
+      location
+    )
+  }),
+  attackerActor: resolveActorFromIds(actorId, tokenId),
+  defenderActor: target,
+  rollMode: message?.flags?.sdp?.combat?.rollMode ?? getCurrentRollMode(),
+  stage: "defense-resolution",
+  audience: "defender"
 });
 
 // ======================
@@ -341,7 +380,9 @@ await updateAttackCard(msg.id, {
   actorId,
   tokenId,
   weaponId,
-  targetId
+  targetId,
+  defenderActorId: target.id,
+  rollMode: message?.flags?.sdp?.combat?.rollMode ?? getCurrentRollMode()
 });
 
   });
@@ -450,55 +491,41 @@ const result = isCriticalSuccess || attackScore > defense ? "HIT" : "MISS";
 
     console.log("SDP | Defense selected", { selected, defense });
 
-    // ===== UPDATE DEFENSE CARD =====
+    // Choice card stays on attacker view: short ack only (no scores)
     await msg.update({
-  content: `
-    <h3>
-  ${game.i18n.localize(
-    "SDP.DefenseResolution"
-  )}
-</h3>
-
-<p>
-  ${game.i18n.localize(
-    "SDP.Target"
-  )}: ${target.name}
-</p>
-
-<p>
-  ${game.i18n.localize(
-    "SDP.Parry"
-  )}: ${parry}
-</p>
-
-<p>
-  ${game.i18n.localize(
-    "SDP.Evasion"
-  )}: ${evasion}
-</p>
-
-<p>
-  ${game.i18n.localize(
-    "SDP.DefenseUsed"
-  )}:
-  ${game.i18n.localize(
-    selected === "parry"
-      ? "SDP.Parry"
-      : "SDP.Evasion"
-  )}
-</p>
-
-<p>
-  <strong>
+      content: `
+<div class="sdp-defense-choice-done">
+  <p>
+    ${game.i18n.localize("SDP.DefenseUsed")}:
     ${game.i18n.localize(
-      result === "HIT"
-        ? "SDP.Hit"
-        : "SDP.Miss"
+      selected === "parry" ? "SDP.Parry" : "SDP.Evasion"
     )}
-  </strong>
-</p>
-  `
-});
+  </p>
+</div>
+`
+    });
+
+    // Full resolution (scores, etc.) → GM + defender only
+    await createCombatMessage({
+      content: buildDefenseResolutionHtml({
+        targetName: target.name,
+        parry,
+        evasion,
+        selected,
+        result,
+        locationLabel: getHitLocationLabel(
+          card.dataset.locationProfile || "humanoid",
+          card.dataset.location
+        )
+      }),
+      attackerActor: resolveActorFromIds(actorId, tokenId),
+      defenderActor: target,
+      rollMode: msg?.flags?.sdp?.combat?.rollMode
+        ?? game.messages.get(attackMessageId)?.flags?.sdp?.combat?.rollMode
+        ?? getCurrentRollMode(),
+      stage: "defense-resolution",
+      audience: "defender"
+    });
 
     // ===== UPDATE ATTACK CARD =====
     await updateAttackCard(attackMessageId, {
@@ -508,7 +535,11 @@ const result = isCriticalSuccess || attackScore > defense ? "HIT" : "MISS";
       actorId,
       tokenId,
       weaponId,
-      targetId
+      targetId,
+      defenderActorId: target.id,
+      rollMode: msg?.flags?.sdp?.combat?.rollMode
+        ?? game.messages.get(attackMessageId)?.flags?.sdp?.combat?.rollMode
+        ?? getCurrentRollMode()
     });
 
   });
@@ -646,7 +677,17 @@ html.on("click", ".roll-reload-critical", async ev => {
 // UPDATE ATTACK CARD (PATCH STYLE)
 //===================
 
-async function updateAttackCard(messageId, { defense, result, selected, actorId, tokenId, weaponId, targetId }) {
+async function updateAttackCard(messageId, {
+  defense,
+  result,
+  selected,
+  actorId,
+  tokenId,
+  weaponId,
+  targetId,
+  defenderActorId = null,
+  rollMode = null
+}) {
 
   const actor = resolveActorFromIds(actorId, tokenId);
 const weapon = resolveActorItem(actor, weaponId);
@@ -755,6 +796,7 @@ if (hasTaille && selected === "parry" && targetId) {
 
   // add result
   const resultBlock = document.createElement("div");
+  resultBlock.setAttribute("data-sdp-vis", "attacker,defender,gm");
   resultBlock.innerHTML = `
 
   <p>
@@ -792,6 +834,7 @@ if (hasTaille && selected === "parry" && targetId) {
   if (result === "HIT") {
     const btn = document.createElement("button");
     btn.classList.add("roll-damage");
+    btn.setAttribute("data-sdp-vis", "attacker,gm");
     btn.dataset.actor = actorId;
     btn.dataset.token = tokenId || card.dataset.token || "";
     btn.dataset.weapon = weaponId;
@@ -806,7 +849,41 @@ if (hasTaille && selected === "parry" && targetId) {
     card.appendChild(btn);
   }
 
-  await attackMessage.update({
+  const updateData = {
     content: card.outerHTML
-  });
+  };
+
+  const effectiveRollMode =
+    rollMode
+    || attackMessage.flags?.sdp?.combat?.rollMode
+    || getCurrentRollMode();
+
+  const attackerActor = resolveActorFromIds(actorId, tokenId);
+  const defenderActor = defenderActorId
+    ? game.actors.get(defenderActorId)
+    : (targetId ? canvas.tokens?.get(targetId)?.actor : null);
+
+  updateData.flags = {
+    sdp: {
+      combat: {
+        ...(attackMessage.flags?.sdp?.combat || {}),
+        attackerActorId:
+          attackerActor?.id
+          || attackMessage.flags?.sdp?.combat?.attackerActorId
+          || actorId
+          || null,
+        defenderActorId:
+          defenderActor?.id
+          || defenderActorId
+          || attackMessage.flags?.sdp?.combat?.defenderActorId
+          || null,
+        rollMode: effectiveRollMode,
+        stage: "attack-resolved"
+      }
+    }
+  };
+
+  // Keep attack card on attacker+GM only (never expand whisper to defender:
+  // Foundry would reveal the attack dice total).
+  await attackMessage.update(updateData);
 }

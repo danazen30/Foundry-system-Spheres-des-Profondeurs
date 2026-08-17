@@ -10,6 +10,10 @@ import {
 import {
   getBestActorSkillForWeapon
 } from "../system/weapon-skill-utils.js";
+import {
+  clearOpposedReference,
+  createOpposedResultMessage
+} from "../chat/opposed.js";
 
 const { ApplicationV2 } = foundry.applications.api;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -972,53 +976,30 @@ ${SdpRoll.formatSL(SL, success)} (${game.sdp.Roll.getSLLabel(SL, success)})</p>
     <button class="sdp-opposed">
   ${game.i18n.localize("SDP.Oppose")}
 </button>
-    <button class="sdp-stop-opposed">
-  ${game.i18n.localize("SDP.StopOppose")}
-</button>
 
   </div>
   `
+}, {
+  rollMode: game.settings.get("core", "rollMode")
 });
 
 // =========================
-// AUTO OPPOSE
+// AUTO OPPOSE (one-shot)
 // =========================
 
 if (game.sdp?.opposed) {
 
   const base = game.sdp.opposed;
+  clearOpposedReference();
 
-  let resultText;
-  let finalSL = Math.abs(SL - base.SL);
-
-  if (SL > base.SL) {
-    resultText =
-  `${this.actor.name} ${game.i18n.localize("SDP.Wins")}`;
-  } else if (SL < base.SL) {
-    resultText =
-  `${base.actor} ${game.i18n.localize("SDP.Wins")}`;
-  } else {
-    resultText =
-  game.i18n.localize("SDP.Draw");
-    finalSL = 0;
-  }
-
-  await ChatMessage.create({
-    content: `
-      <h3>${game.i18n.localize("SDP.OpposedTest")}</h3>
-
-      <p>${base.actor} SL: ${base.SL}</p>
-      <p>${this.actor.name} SL: ${SL}</p>
-
-      <p>
-<strong>
-${game.i18n.localize("SDP.FinalSL")}:
-${finalSL}
-</strong>
-</p>
-
-      <strong>${resultText}</strong>
-    `
+  await createOpposedResultMessage({
+    baseActor: base.actor,
+    baseSL: base.SL,
+    baseTarget: base.target ?? 0,
+    challengerActor: this.actor.name,
+    challengerSL: SL,
+    challengerTarget: target,
+    speaker: ChatMessage.getSpeaker({ actor: this.actor })
   });
 
 }

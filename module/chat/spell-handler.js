@@ -251,7 +251,7 @@ const type = el.dataset.type;
   const el = ev.currentTarget;
 
   const base = Number(el.dataset.base || 0);
-  let current = Number(el.dataset.value || base);
+  let current = Number(el.dataset.value || el.dataset.start || 0);
 
   const newValue = current + base;
 
@@ -424,16 +424,18 @@ html.find(".reset-overcast").click(async ev => {
     ".overcast-click"
   ).forEach(el => {
 
-    const base =
-      Number(el.dataset.base || 0);
+    const resetTo =
+      el.dataset.start !== undefined && el.dataset.start !== ""
+        ? Number(el.dataset.start)
+        : Number(el.dataset.base || 0);
 
-    el.dataset.value = base;
+    el.dataset.value = resetTo;
 
     const valueEl =
       el.querySelector(".value");
 
     if (valueEl) {
-      valueEl.innerHTML = base;
+      valueEl.innerHTML = resetTo;
     }
 
   });

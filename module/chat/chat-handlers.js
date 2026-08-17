@@ -5,6 +5,12 @@ import { registerInjuryHandlers } from "./injury-handler.js";
 import { registerEditHandlers } from "./edit-handler.js";
 import { registerSpellHandlers } from "./spell-handler.js";
 import { registerOvercastHandlers } from "./spell-handler.js";
+import { applyCombatCardVisibility } from "./combat-visibility.js";
+import {
+  clearOpposedReference,
+  createOpposedResultMessage,
+  setOpposedReference
+} from "./opposed.js";
 
 export function registerChatHandlers() {
 
@@ -13,6 +19,8 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
 
   // 🔥 compat jQuery TEMPORAIRE
   html = $(html);
+
+  applyCombatCardVisibility(message, html);
 
   registerDamageHandlers(html, message);
   registerConditionHandlers(html, message);
@@ -31,145 +39,67 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
 
   });
 
-html.find(".sdp-opposed").click(ev => {
+html.find(".sdp-opposed").click(async ev => {
 
   const card = ev.currentTarget.closest(".sdp-roll");
+  if (!card) return;
 
   const sl = Number(card.dataset.sl);
+  const target = Number(card.dataset.target) || 0;
   const actorId = card.dataset.actor;
-const actorObj = game.actors.get(actorId);
-const actorName =
-  actorObj?.name ||
-  game.i18n.localize(
-    "SDP.Unknown"
-  );
-
-  game.sdp = game.sdp || {};
+  const actorObj = game.actors.get(actorId);
+  const actorName =
+    actorObj?.name
+    || game.i18n.localize("SDP.Unknown");
 
   // =========================
-  // SET REFERENCE
+  // SET REFERENCE (one-shot)
   // =========================
 
-  if(!game.sdp.opposed){
+  if (!game.sdp?.opposed) {
 
-    game.sdp.opposed = {
+    setOpposedReference({
       SL: sl,
       actor: actorName,
-actorId: actorId,
+      actorId,
+      target,
       messageId: message.id
-    };
+    });
 
     ui.notifications.info(
-
-  game.i18n.format(
-    "SDP.OpposedReferenceSet",
-    {
-      actor: actorName
-    }
-  )
-
-);
+      game.i18n.format("SDP.OpposedReferenceSet", {
+        actor: actorName
+      })
+    );
     return;
 
   }
 
   // =========================
-  // RESOLVE OPPOSED
+  // RESOLVE + CLEAR
   // =========================
 
   const base = game.sdp.opposed;
 
-  let resultText;
-let finalSL = Math.abs(sl - base.SL);
-
-if (sl > base.SL) {
-
-  resultText =
-    game.i18n.format(
-      "SDP.ActorWins",
-      {
-        actor: actorName
-      }
+  // Same card again = cancel pending oppose
+  if (base.messageId === message.id) {
+    clearOpposedReference();
+    ui.notifications.info(
+      game.i18n.localize("SDP.OppositionCleared")
     );
-
-}
-
-else if (sl < base.SL) {
-
-  resultText =
-    game.i18n.format(
-      "SDP.ActorWins",
-      {
-        actor: base.actor
-      }
-    );
-
-}
-
-else {
-
-  resultText =
-    game.i18n.localize(
-      "SDP.Draw"
-    );
-
-  finalSL = 0;
-
-}
-
-  ChatMessage.create({
-    whisper: ChatMessage.getWhisperRecipients("GM"),
-    content: `
-    
-    <h3>
-  ${game.i18n.localize(
-    "SDP.OpposedTest"
-  )}
-</h3>
-
-    <p>${base.actor} SL: ${base.SL}</p>
-    <p>${actorName} SL: ${sl}</p>
-
-    <p>
-
-  <strong>
-
-    ${game.i18n.localize(
-      "SDP.FinalSL"
-    )}: ${finalSL}
-
-  </strong>
-
-</p>
-
-    <strong>${resultText}</strong>
-    `
-  });
-
-});
-
-html.find(".sdp-stop-opposed").click(ev => {
-
-  if(!game.sdp?.opposed){
-    ui.notifications.warn(
-
-  game.i18n.localize(
-    "SDP.NoOppositionActive"
-  )
-
-);
     return;
   }
 
-  game.sdp.opposed = null;
+  clearOpposedReference();
 
- ui.notifications.info(
-
-  game.i18n.localize(
-    "SDP.OppositionCleared"
-  )
-
-);
+  await createOpposedResultMessage({
+    baseActor: base.actor,
+    baseSL: base.SL,
+    baseTarget: base.target ?? 0,
+    challengerActor: actorName,
+    challengerSL: sl,
+    challengerTarget: target
+  });
 
 });
 

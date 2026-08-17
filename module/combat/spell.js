@@ -91,7 +91,7 @@ let skillName =
 
 if (bestSkill){
   skillValue = bestSkill.system.value;
-  skillName = bestSkill.name;
+  skillName = getActorItemDisplayName(bestSkill) || bestSkill.name;
 }
 
 let locationMod = 0;
@@ -242,24 +242,8 @@ const talentsHTML =
 SL = SdpRoll.applyTalentSLModifiers(SL, actor, selectedTalents);
 
   // ======================
-  // LOCATION
+  // DAMAGE CHECK (before location — skip location if no damage)
   // ======================
-
-  let hitLocation;
-
-  if (dialogMods.location) {
-    hitLocation = {
-      location: dialogMods.location,
-      roll: { total: "manual" }
-    };
-  } else {
-    hitLocation =
-  await rollHitLocation(hitProfileKey);
-  }
-
-  // ======================
-// DAMAGE CHECK
-// ======================
 
 const baseDamage = system.damage?.base?.value ?? system.damage ?? 0;
 const diceDamage = system.damage?.dice?.value ?? system.damageDice ?? "";
@@ -267,6 +251,24 @@ const diceDamage = system.damage?.dice?.value ?? system.damageDice ?? "";
 const hasDamage =
   (String(baseDamage ?? "").trim() !== "" && String(baseDamage).trim() !== "0") ||
   (typeof diceDamage === "string" && diceDamage.trim() !== "");
+
+  // ======================
+  // LOCATION
+  // ======================
+
+  let hitLocation = null;
+
+  if (hasDamage) {
+    if (dialogMods.location) {
+      hitLocation = {
+        location: dialogMods.location,
+        roll: { total: "manual" }
+      };
+    } else {
+      hitLocation =
+        await rollHitLocation(hitProfileKey);
+    }
+  }
 
   const concentration = system.concentration?.value === true;
   const hasSpecialOvercast = system.overcast?.value === true;
@@ -278,6 +280,7 @@ const duration = SdpSpell.resolveFormula(durationRaw, actor);
 const durationType = system.duration?.type ?? "";
 
 const targets = system.target?.value ?? 0;
+const lockTargets = system.lockTargets?.value === true;
 const rangeRaw = system.range?.value ?? 0;
 const radiusRaw = system.radius?.value ?? 0;
 
@@ -365,7 +368,7 @@ await actor.update({
      data-critical="${crit.success}"
      data-hasskill="${hasSkill}"
      data-weapon="${spell.id}"
-     data-location="${hitLocation.location}"
+     data-location="${hitLocation?.location || ""}"
      data-location-profile="${hitProfileKey}"
      data-talents='${JSON.stringify(selectedTalents)}'
      data-overcast="${overcast}"
@@ -379,7 +382,9 @@ await actor.update({
 
   <button class="edit-attack">${game.i18n.localize("SDP.Edit")}</button>
 
-  <p><strong>${game.i18n.localize("SDP.MagicType")}:</strong> ${magicType}</p>
+  <p><strong>${game.i18n.localize("SDP.MagicType")}:</strong> ${game.i18n.localize(
+  CONFIG.SDP.magicTypes?.[magicType] || "SDP.MagicMinor"
+)}</p>
   <p><strong>${game.i18n.localize("SDP.Used")}:</strong> ${bestSkill ? skillName : game.i18n.localize("SDP.Intelligence")} (${bestSkill ? skillValue : INT})</p>
 
   <p class="spell-target"><strong>${game.i18n.localize("SDP.Target")}:</strong> ${targetValue}</p>
@@ -403,6 +408,7 @@ ${talentsHTML}
 
 <p><strong>${game.i18n.localize("SDP.ManaCost")}:</strong> ${manaCost}</p>
 
+${hasDamage && hitLocation ? `
 <p>
 <strong>${game.i18n.localize("SDP.HitLocation")}:</strong>
 ${game.i18n.localize(
@@ -410,6 +416,7 @@ ${game.i18n.localize(
 ) || hitLocation.location}
 (${hitLocation.roll.total})
 </p>
+` : ""}
 
 ${concentration ? `<p><strong>${game.i18n.localize("SDP.Concentration")}</strong></p>` : ""}
 
@@ -427,17 +434,19 @@ ${overcast > 0 ? `
 
   ${specialEffects.map((e, i) => {
 
-  const base = SdpSpell.resolveFormula(e.value, actor);
+  const start = SdpSpell.resolveFormula(e.start ?? 0, actor);
+  const increment = SdpSpell.resolveFormula(e.value, actor);
 
   return `
     <p class="spell-special overcast-click"
        data-type="special"
        data-index="${i}"
-       data-base="${base}"
-       data-value="${base}">
+       data-start="${start}"
+       data-base="${increment}"
+       data-value="${start}">
        
       <strong>${e.label}:</strong>
-      <span class="value">${base}</span>
+      <span class="value">${start}</span>
       
     </p>
   `;
@@ -482,11 +491,12 @@ ${!concentration ? `
 <button class="place-aoe">📍</button>
 </p>` : "")
   : (targets > 0 ? `
-    <p class="spell-target-count overcast-click" data-type="target"
+    <p class="spell-target-count${lockTargets ? "" : " overcast-click"}"
+       ${lockTargets ? "" : `data-type="target"`}
        data-base="${targets}"
        data-value="${targets}">
        <strong>${game.i18n.localize("SDP.Targets")}:</strong>
-<span class="value">${targets}</span>
+<span class="value">${targets}</span>${lockTargets ? ` <em>(${game.i18n.localize("SDP.Fixed")})</em>` : ""}
     </p>` : "")
 }
 

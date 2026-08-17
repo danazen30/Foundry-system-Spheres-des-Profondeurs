@@ -646,6 +646,78 @@ _getCarryingCapacityModifier() {
 
 }
 
+/**
+ * Malus des défauts d'armure portées (worn).
+ * Lourde : −10 Agilité × valeur du trait.
+ */
+_getWornArmorTraitPenalties() {
+
+  const penalties = {
+    move: 0,
+    agility: 0,
+    dexterity: 0,
+    discretion: 0,
+    perception: 0
+  };
+
+  for (const item of this.items) {
+
+    if (item.type !== "armor") continue;
+    if (!item.system?.worn?.value) continue;
+
+    const traits = Array.isArray(item.system.armorTraits)
+      ? item.system.armorTraits
+      : [];
+
+    for (const t of traits) {
+
+      const key = typeof t === "string" ? t : t?.key;
+      if (!key) continue;
+
+      const rawValue = Number(typeof t === "object" ? t.value : NaN);
+      const stacks =
+        Number.isFinite(rawValue) && rawValue > 0
+          ? Math.floor(rawValue)
+          : 1;
+
+      switch (key) {
+
+        case "encumbering":
+          penalties.move -= 1;
+          break;
+
+        case "heavy":
+          penalties.agility -= 10 * stacks;
+          break;
+
+        case "restrictive":
+          penalties.dexterity -= 10;
+          break;
+
+        case "conspicuous":
+          penalties.discretion -= 10;
+          break;
+
+        case "limitedVision":
+          penalties.perception -= 10;
+          break;
+
+        default:
+          break;
+
+      }
+
+    }
+
+  }
+
+  // Voyante : s'additionne par pièce, plafonné à -30
+  penalties.discretion = Math.max(penalties.discretion, -30);
+
+  return penalties;
+
+}
+
 
   // =====================
   // DERIVED DATA
@@ -818,6 +890,101 @@ for (const key in system.conditions) {
 
 
 // =====================
+// SIZE MODIFIERS
+// =====================
+
+const actorSize =
+  system.details?.size?.value ||
+  system.size ||
+  "average";
+
+const sizeModifiers =
+  SdpSizeEngine.getAttributeModifiers(actorSize);
+
+const armorTraitPenalties = this._getWornArmorTraitPenalties();
+system.custom.armorTraitPenalties = armorTraitPenalties;
+
+    // =====================
+    // ATTRIBUTES
+    // =====================
+
+    for (let [key, attr] of Object.entries(system.attributes)) {
+
+      const storedInitial = this._getStoredAttributeInitial(key);
+      const initialBonus = this._getInitialFieldModifiers(key);
+      const itemMod = this._getItemModifiers(key) ?? 0;
+      const manualMod = Number(attr.modifier || 0);
+
+      attr.initial = storedInitial + initialBonus;
+      attr.initialBonus = initialBonus;
+      attr.itemModifier = itemMod + initialBonus;
+
+let sizeMod = 0;
+
+if (key === "strength") {
+  sizeMod = sizeModifiers.strength;
+}
+
+if (key === "toughness") {
+  sizeMod = sizeModifiers.toughness;
+}
+
+if (key === "agility") {
+  sizeMod = sizeModifiers.agility;
+}
+
+// Encumbrance applied after carrying capacity is known
+attr.encumbranceModifier = 0;
+attr.sizeModifier = sizeMod;
+
+let armorTraitMod = 0;
+if (key === "agility") armorTraitMod = armorTraitPenalties.agility;
+if (key === "dexterity") armorTraitMod = armorTraitPenalties.dexterity;
+attr.armorTraitModifier = armorTraitMod;
+
+const traitMod = getActiveTraitAttributeBonus(this, key);
+attr.traitModifier = traitMod;
+
+attr.totalModifier = manualMod + itemMod + sizeMod + traitMod + armorTraitMod;
+
+let baseValue =
+  attr.initial +
+  Number(attr.advances || 0) +
+  attr.totalModifier +
+  Number(attr.levelBonus || 0);
+
+attr.value = baseValue;
+attr.bonus = Math.floor(attr.value / 10);
+    }
+
+// =========================
+// CARRYING CAPACITY + ENCUMBRANCE (before malus)
+// =========================
+
+const STR = system.attributes.strength.value;
+const TGH = system.attributes.toughness.value;
+const TB = Math.max(0, system.attributes.toughness.bonus);
+const SB = Math.max(0, system.attributes.strength.bonus);
+
+const baseCapacity = Math.floor((STR + TGH) / 2);
+const encumbranceTalentBonus =
+  (system.custom.encumbranceStatMultiplier || 0) * (SB + TB);
+
+system.custom.carryingCapacityModifier =
+  this._getCarryingCapacityModifier();
+
+system.derived.carryingCapacity = {
+  value: Math.max(
+    0,
+    baseCapacity +
+      encumbranceTalentBonus +
+      (system.custom.carryingCapacityModifier || 0)
+  )
+};
+
+SdpActorInventory.applyEncumbrance(this);
+
+// =====================
 // ENCUMBRANCE MALUS
 // =====================
 
@@ -839,78 +1006,17 @@ else if (enc >= 3) {
   movePenalty = -10;
 }
 
-// =====================
-// SIZE MODIFIERS
-// =====================
-
-const actorSize =
-  system.details?.size?.value ||
-  system.size ||
-  "average";
-
-const sizeModifiers =
-  SdpSizeEngine.getAttributeModifiers(actorSize);
-
-    // =====================
-    // ATTRIBUTES
-    // =====================
-
-    for (let [key, attr] of Object.entries(system.attributes)) {
-
-      const storedInitial = this._getStoredAttributeInitial(key);
-      const initialBonus = this._getInitialFieldModifiers(key);
-      const itemMod = this._getItemModifiers(key) ?? 0;
-      const manualMod = Number(attr.modifier || 0);
-
-      attr.initial = storedInitial + initialBonus;
-      attr.initialBonus = initialBonus;
-      attr.itemModifier = itemMod + initialBonus;
-      // 👉 ENCUMBRANCE MODIFIER
-let encMod = 0;
-
-let sizeMod = 0;
-
-if (key === "strength") {
-  sizeMod = sizeModifiers.strength;
+if (agiPenalty !== 0) {
+  const agi = system.attributes.agility;
+  agi.encumbranceModifier = agiPenalty;
+  agi.totalModifier += agiPenalty;
+  agi.value += agiPenalty;
+  agi.bonus = Math.floor(agi.value / 10);
 }
-
-if (key === "toughness") {
-  sizeMod = sizeModifiers.toughness;
-}
-
-if (key === "agility") {
-  sizeMod = sizeModifiers.agility;
-}
-
-if (key === "agility") {
-  encMod = agiPenalty;
-}
-
-attr.encumbranceModifier = encMod; // 🔥 DEBUG / UI POSSIBLE
-attr.sizeModifier = sizeMod;
-
-const traitMod = getActiveTraitAttributeBonus(this, key);
-attr.traitModifier = traitMod;
-
-attr.totalModifier = manualMod + itemMod + encMod + sizeMod + traitMod;
-
-let baseValue =
-  attr.initial +
-  Number(attr.advances || 0) +
-  attr.totalModifier +
-  Number(attr.levelBonus || 0);
-
-attr.value = baseValue;
-attr.bonus = Math.floor(attr.value / 10);
-    }
 
     // =====================
 // HEALTH
 // =====================
-
-const TB = Math.max( 0, system.attributes.toughness.bonus);
-
-const SB = Math.max( 0, system.attributes.strength.bonus);
 
 const WPB = Math.max( 0, system.attributes.willpower.bonus);
 
@@ -1052,7 +1158,34 @@ if (
   }
 }
 
-    const skills = this.items.filter(i => i.type === "skill");
+const armorSkillPenalties = system.custom.armorTraitPenalties || {};
+const skills = this.items.filter(i => i.type === "skill");
+
+for (const skill of skills) {
+  const skillKey = (skill.system.key || "").toLowerCase().trim();
+  if (!skillKey) continue;
+
+  if (
+    armorSkillPenalties.discretion &&
+    (skillKey === "stealth" ||
+      skillKey === "discretion" ||
+      skillKey.startsWith("discretion"))
+  ) {
+    system.skillModifiers[skillKey] =
+      (system.skillModifiers[skillKey] || 0) +
+      armorSkillPenalties.discretion;
+  }
+
+  if (
+    armorSkillPenalties.perception &&
+    (skillKey === "perception" ||
+      skillKey.startsWith("perception"))
+  ) {
+    system.skillModifiers[skillKey] =
+      (system.skillModifiers[skillKey] || 0) +
+      armorSkillPenalties.perception;
+  }
+}
 
     const getSkill = (key) => skills.find(s => s.system.key === key);
 
@@ -1279,7 +1412,8 @@ else {
         (system.custom.woundThresholdModifier || 0)
     );
 
-    // Size: same HP multipliers for large+, half (floor) for small-
+    // Size: same HP multipliers for large+; half (floor) only for verySmall/tiny.
+    // Small matches average (For/End size malus already covers fragility).
     const woundSize =
       system.details?.size?.value ||
       system.size ||
@@ -1295,7 +1429,6 @@ else {
       case "gigantic":
         woundThreshold *= 5;
         break;
-      case "small":
       case "verySmall":
       case "tiny":
         woundThreshold = Math.floor(woundThreshold / 2);
@@ -1304,7 +1437,7 @@ else {
         break;
     }
 
-    system.derived.woundThreshold.value = Math.max(0, woundThreshold);
+    system.derived.woundThreshold.value = Math.max(1, woundThreshold);
 
 // =====================
 // CONDITION MALUS (PARry / EVASION)
@@ -1376,8 +1509,9 @@ const slowed = system.conditionTotals?.slowed ?? 0;
 
 let currentMove = baseMove - slowed;
 
-// 👉 ENCUMBRANCE
+// 👉 ENCUMBRANCE + défauts d'armure (Encombrante)
 currentMove += movePenalty;
+currentMove += system.custom.armorTraitPenalties?.move || 0;
 
 // clamp
 currentMove = Math.max(currentMove, 0);
@@ -1457,31 +1591,6 @@ if (mana) {
   }
 
 }
-
-// =========================
-// CARRYING CAPACITY (ENCUMBRANCE)
-// =========================
-
-const STR = system.attributes.strength.value;
-const TGH = system.attributes.toughness.value;
-
-const baseCapacity = Math.floor((STR + TGH) / 2);
-const encumbranceTalentBonus =
-  (system.custom.encumbranceStatMultiplier || 0) * (SB + TB);
-
-system.custom.carryingCapacityModifier =
-  this._getCarryingCapacityModifier();
-
-system.derived.carryingCapacity = {
-  value: Math.max(
-    0,
-    baseCapacity +
-      encumbranceTalentBonus +
-      (system.custom.carryingCapacityModifier || 0)
-  )
-};
-
-SdpActorInventory.applyEncumbrance(this);
 
   }
 

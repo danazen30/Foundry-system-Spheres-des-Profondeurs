@@ -112,6 +112,7 @@ _prepareWeaponSystem(system) {
   system.consumesAmmo ??= true;
   system.forceReload ??= false;
   system.isDefenseWeapon ??= false;
+  system.reach ??= 0;
   system.traits ??= [];
   system.itemTraits ??= [];
 
@@ -285,6 +286,7 @@ _getWeaponDefaultUpdates() {
   ensure("system.consumesAmmo", true);
   ensure("system.forceReload", false);
   ensure("system.isDefenseWeapon", false);
+  ensure("system.reach", 0);
   ensure("system.traits", []);
   ensure("system.itemTraits", []);
 
@@ -389,6 +391,32 @@ prepareDerivedData(){
     system.passive = !!system.passive;
     system.ignoreArmor ??= false;
     system.ignoreArmor = !!system.ignoreArmor;
+  }
+  else if (this.type === "spell") {
+    const raw = system.overcastSpecialEffects?.value;
+    system.overcastSpecialEffects ??= {};
+    if (!Array.isArray(raw)) {
+      if (raw && typeof raw === "object") {
+        system.overcastSpecialEffects.value = Object.keys(raw)
+          .sort((a, b) => Number(a) - Number(b))
+          .map((key) => raw[key])
+          .filter((entry) => entry && typeof entry === "object");
+      } else {
+        system.overcastSpecialEffects.value = [];
+      }
+    }
+    system.overcastSpecialEffects.value =
+      system.overcastSpecialEffects.value.map((entry) => ({
+        label: entry?.label ?? "",
+        start:
+          entry?.start !== undefined && entry?.start !== null && entry?.start !== ""
+            ? String(entry.start)
+            : "0",
+        value:
+          entry?.value !== undefined && entry?.value !== null
+            ? String(entry.value)
+            : "1"
+      }));
   }
   else if (this.type === "ammunition") {
     this._preparePhysicalFields(system);

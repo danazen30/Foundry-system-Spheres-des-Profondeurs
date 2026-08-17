@@ -350,10 +350,17 @@
 
           <div class="weapon-line main-line">
 
+            {{#if (eq item.system.category "ranged")}}
             <div>
               <strong>{{localize "SDP.Range"}}:</strong>
               {{#if item.displayRange}}{{item.displayRange}}{{else}}{{item.system.range}}{{/if}}
             </div>
+            {{else if (and (eq item.system.category "melee") item.system.reach)}}
+            <div>
+              <strong>{{localize "SDP.Reach"}}:</strong>
+              {{item.system.reach}}
+            </div>
+            {{/if}}
 
             <div>
               <strong>{{localize "SDP.Damage"}}:</strong>
@@ -497,10 +504,17 @@
 
           <div class="weapon-line main-line">
 
+            {{#if (eq item.system.category "ranged")}}
             <div>
               <strong>{{localize "SDP.Range"}}:</strong>
               {{#if item.displayRange}}{{item.displayRange}}{{else}}{{item.system.range}}{{/if}}
             </div>
+            {{else if (and (eq item.system.category "melee") item.system.reach)}}
+            <div>
+              <strong>{{localize "SDP.Reach"}}:</strong>
+              {{item.system.reach}}
+            </div>
+            {{/if}}
 
             <div>
               <strong>Skill:</strong>

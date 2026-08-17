@@ -14,6 +14,11 @@ import { getActorItemDisplayName } from "../system/item-localization.js";
 import { SdpMount } from "../system/mount-utils.js";
 import { getTokenIdForActor } from "../system/actor-utils.js";
 import { getActiveTraitAttackBonus } from "../system/creature-trait-utils.js";
+import {
+  combatRollMessageData,
+  getCurrentRollMode,
+  vis
+} from "../chat/combat-visibility.js";
 
 export class SdpAttack {
 
@@ -707,10 +712,10 @@ if (finalTraits.some(t => t.key === "reload")) {
   })}
 </h3>
 
-  <button class="edit-attack">${game.i18n.localize("SDP.Edit")}</button>
+  <button class="edit-attack" ${vis("attacker", "gm")}>${game.i18n.localize("SDP.Edit")}</button>
 
 ${displayTraits.length ? `
-<div class="weapon-traits">
+<div class="weapon-traits" ${vis("attacker", "gm")}>
 
   ${displayTraits.some(t => t.type === "positive") ? `
     <div><strong>${game.i18n.localize("SDP.Advantages")}:</strong>
@@ -733,46 +738,55 @@ ${displayTraits.length ? `
 </div>
 ` : ""}
 
-  <p>${game.i18n.localize("SDP.Test")}: ${source}</p>
-  <p>${game.i18n.localize("SDP.Target")}: ${targetValue}</p>
-  <p>
+  <p ${vis("attacker", "gm")}>${game.i18n.localize("SDP.Test")}: ${source}</p>
+  <p ${vis("attacker", "gm")}>${game.i18n.localize("SDP.Target")}: ${targetValue}</p>
+  <p ${vis("attacker", "gm")}>
   ${game.i18n.localize("SDP.Range")}:
   ${game.i18n.localize(rangeLabel)}
   (${Math.round(measuredDistance)}m)
 </p>
-  <p>${game.i18n.localize("SDP.Roll")}: ${result}</p>
-  ${inspiration > 0 ? `<p>${game.i18n.localize("SDP.Inspiration")}: +${inspiration}</p>` : ""}
-  <p>
+  <p ${vis("attacker", "gm")}>${game.i18n.localize("SDP.Roll")}: ${result}</p>
+  ${inspiration > 0 ? `<p ${vis("attacker", "gm")}>${game.i18n.localize("SDP.Inspiration")}: +${inspiration}</p>` : ""}
+  <p ${vis("attacker", "gm")}>
   ${game.i18n.localize("SDP.SuccessLevel")}:
   ${SdpRoll.formatSL(SL, success)}
   (${SdpRoll.getSLLabel(SL, success)})
 </p>
   
+  <div ${vis("attacker", "gm")}>
   ${critText}
   ${breakText}
+  </div>
 
-  <p>
+  <p ${vis("attacker", "defender", "gm")}>
 ${game.i18n.localize("SDP.HitLocation")}:
 ${game.i18n.localize(
   hitProfile.locations?.[hitLocation.location]?.label
     || hitLocation.location
 )}
-(${hitLocation.roll.total})
+<span ${vis("attacker", "gm")}>(${hitLocation.roll.total})</span>
 </p>
-${talentsHTML}
-  <p><strong>${success
+<div ${vis("attacker", "gm")}>${talentsHTML}</div>
+  <p ${vis("attacker", "defender", "gm")}><strong>${success
   ? game.i18n.localize("SDP.Hit")
   : game.i18n.localize("SDP.Miss")}</strong></p>
 
-  ${damageButton}
+  <div ${vis("attacker", "gm")}>${damageButton}</div>
 
 </div>
 `;
 
-    roll.toMessage({
-  speaker: ChatMessage.getSpeaker({actor}),
-  content: html
-});
+    const defenderActor = targets[0]?.actor ?? null;
+
+    roll.toMessage(combatRollMessageData({
+      speaker: ChatMessage.getSpeaker({actor}),
+      content: html,
+      attackerActor: actor,
+      defenderActor,
+      rollMode: getCurrentRollMode(),
+      stage: "attack-ranged",
+      audience: "attacker"
+    }));
 
     return;
 
@@ -1058,12 +1072,12 @@ const talentsHTML =
   })}
 </h3>
 
-  <button class="edit-attack">
+  <button class="edit-attack" ${vis("attacker", "gm")}>
   ${game.i18n.localize("SDP.Edit")}
 </button>
 
   ${traitsData.length ? `
-  <div class="weapon-traits">
+  <div class="weapon-traits" ${vis("attacker", "gm")}>
     <strong>${game.i18n.localize("SDP.Traits")}:</strong>
     ${traitsData.map(t => `
       <span class="trait-tag"
@@ -1075,41 +1089,50 @@ const talentsHTML =
   </div>
 ` : ""}
 
-  <p>${game.i18n.localize("SDP.Roll")}: ${result}</p>
-  <p>${game.i18n.localize("SDP.SuccessLevel")}: ${SL}</p>
-  ${inspiration > 0 ? `<p>${game.i18n.localize("SDP.Inspiration")}: +${inspiration}</p>` : ""}
-  <p>
+  <p ${vis("attacker", "gm")}>${game.i18n.localize("SDP.Roll")}: ${result}</p>
+  <p ${vis("attacker", "gm")}>${game.i18n.localize("SDP.SuccessLevel")}: ${SL}</p>
+  ${inspiration > 0 ? `<p ${vis("attacker", "gm")}>${game.i18n.localize("SDP.Inspiration")}: +${inspiration}</p>` : ""}
+  <p ${vis("attacker", "defender", "gm")}>
 ${game.i18n.localize("SDP.HitLocation")}:
 ${game.i18n.localize(
   hitProfile.locations?.[hitLocation.location]?.label
     || hitLocation.location
 )}
-(${hitLocation.roll.total})
+<span ${vis("attacker", "gm")}>(${hitLocation.roll.total})</span>
 </p>
+  <div ${vis("attacker", "gm")}>
   ${critText}
   ${breakText}
+  </div>
   ${dialogMods.charge
-  ? `<p>${game.i18n.localize(
+  ? `<p ${vis("attacker", "gm")}>${game.i18n.localize(
     dialogMods.mountedCharge || SdpMount.isMounted(actor)
       ? "SDP.ChargeMounted"
       : "SDP.Charge"
   )}</p>`
   : ""}
   ${dialogMods.counterCharge
-  ? `<p>${game.i18n.localize("SDP.CounterCharge")}</p>`
+  ? `<p ${vis("attacker", "gm")}>${game.i18n.localize("SDP.CounterCharge")}</p>`
   : ""}
-  ${talentsHTML}
-  <p>${game.i18n.localize("SDP.AttackScore")}: ${attackScore}</p>
+  <div ${vis("attacker", "gm")}>${talentsHTML}</div>
+  <p ${vis("attacker", "gm")}>${game.i18n.localize("SDP.AttackScore")}: ${attackScore}</p>
 
- <button class="apply-defense">${game.i18n.localize("SDP.ApplyDefense")}</button>
+ <button class="apply-defense" ${vis("attacker", "gm")}>${game.i18n.localize("SDP.ApplyDefense")}</button>
 
 </div>
 `;
 
-  roll.toMessage({
-  speaker: ChatMessage.getSpeaker({actor}),
-  content: html
-});
+  const defenderActor = targets[0]?.actor ?? null;
+
+  roll.toMessage(combatRollMessageData({
+    speaker: ChatMessage.getSpeaker({actor}),
+    content: html,
+    attackerActor: actor,
+    defenderActor,
+    rollMode: getCurrentRollMode(),
+    stage: "attack-melee",
+    audience: "attacker"
+  }));
 
 }
 

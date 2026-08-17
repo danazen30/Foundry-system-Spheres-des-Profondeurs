@@ -9,6 +9,10 @@ import {
   getLocalizedItemDescription,
   getLocalizedItemName
 } from "../system/item-localization.js";
+import {
+  createCombatMessage,
+  getCurrentRollMode
+} from "./combat-visibility.js";
 
 function getInjuryPreviewHtml(injury, {
   location = "",
@@ -137,13 +141,9 @@ if (!success) {
 
   const consequence = await getInjuryFromPack(location, severity, true);
 
-  ChatMessage.create({
-
-  speaker: ChatMessage.getSpeaker({actor}),
-
-  whisper: ChatMessage.getWhisperRecipients("GM"),
-
-  content: `
+  await createCombatMessage({
+    speaker: ChatMessage.getSpeaker({actor}),
+    content: `
   <div class="sdp-consequence-card"
        data-actor="${actor.id}"
        data-location="${location}"
@@ -164,8 +164,12 @@ if (!success) {
     }) : `<p>${game.i18n.localize("SDP.NoConsequenceFound")}</p>`}
 
   </div>
-  `
-});
+  `,
+    defenderActor: actor,
+    rollMode: getCurrentRollMode(),
+    stage: "consequence",
+    audience: "defender"
+  });
 
 }
 

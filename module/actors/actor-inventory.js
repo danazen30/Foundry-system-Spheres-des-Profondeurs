@@ -85,28 +85,19 @@ let encumbranceState = {
 if (ratio > 3) {
   encumbranceState = {
     level: 3,
-    label:
-  game.i18n.localize(
-    "SDP.Encumbrance.Immobile"
-  )
+    label: "SDP.EncumbranceState.Immobile"
   };
 }
 else if (ratio > 2) {
   encumbranceState = {
     level: 2,
-    label:
-  game.i18n.localize(
-    "SDP.Encumbrance.Heavy"
-  )
+    label: "SDP.EncumbranceState.Heavy"
   };
 }
 else if (ratio > 1) {
   encumbranceState = {
     level: 1,
-    label:
-  game.i18n.localize(
-    "SDP.Encumbrance.Light"
-  )
+    label: "SDP.EncumbranceState.Light"
   };
 }
 

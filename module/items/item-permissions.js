@@ -58,6 +58,7 @@ const PLAYER_FORBIDDEN_PREFIXES = [
   "system.skill",
   "system.weaponGroup",
   "system.range",
+  "system.reach",
   "system.consumesAmmo",
   "system.forceReload",
   "system.handedness",

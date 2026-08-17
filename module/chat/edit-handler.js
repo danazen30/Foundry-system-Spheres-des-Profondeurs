@@ -122,9 +122,6 @@ ${critText}
   <button class="sdp-opposed">
   ${game.i18n.localize("SDP.Oppose")}
 </button>
-  <button class="sdp-stop-opposed">
-  ${game.i18n.localize("SDP.StopOppose")}
-</button>
 
 </div>
 `;

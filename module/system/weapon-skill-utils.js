@@ -17,11 +17,13 @@ const MELEE_WEAPON_GROUP_SKILL_KEYS = {
   hammer: "meleehammer",
   shield: "meleeshield",
   flail: "meleeflail",
-  parry: "meleeparry"
+  parry: "meleeparry",
+  entangle: "meleeentangle"
 };
 
 const LEGACY_WEAPON_SKILL_ALIASES = {
-  cac8: "meleehammer"
+  cac8: "meleehammer",
+  projectileentangle: "meleeentangle"
 };
 
 const WEAPON_KEY_SKILL_DEFAULTS = {
@@ -168,6 +170,13 @@ export function expandWeaponSkillRef(ref) {
 
   if (mappedSkill) {
     refs.push(mappedSkill);
+  }
+
+  // Also match legacy keys that point to a modern skill.
+  for (const [legacy, modern] of Object.entries(LEGACY_WEAPON_SKILL_ALIASES)) {
+    if (refs.includes(modern)) {
+      refs.push(legacy);
+    }
   }
 
   return [...new Set(refs)];

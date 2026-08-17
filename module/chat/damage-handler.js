@@ -15,12 +15,156 @@ import {
   getLocalizedItemDescription,
   getLocalizedItemName
 } from "../system/item-localization.js";
+import {
+  combatRollMessageData,
+  createCombatMessage,
+  getCurrentRollMode,
+  vis
+} from "./combat-visibility.js";
+import { SdpMount } from "../system/mount-utils.js";
 
 function formatWoundSeverityKey(severity) {
 
   if (!severity) return "";
 
   return `SDP.Wound.${severity.charAt(0).toUpperCase() + severity.slice(1)}`;
+
+}
+
+/**
+ * Human-readable lines for situational damage multipliers (size, head, charge…).
+ */
+function buildDamageModifierLines({
+  actor,
+  target = null,
+  location = "",
+  damageMultipliers = [],
+  mountedCharge = false,
+  counterCharge = false
+} = {}) {
+
+  const lines = [];
+
+  const sizeKey = SdpDamage.resolveActorSize(actor);
+  const sizeMult = Number(
+    CONFIG.SDP.sizes?.[sizeKey]?.damageMultiplier || 1
+  );
+
+  if (sizeMult !== 1) {
+    const sizeLabel = game.i18n.has(`SDP.Size${sizeKey.charAt(0).toUpperCase()}${sizeKey.slice(1)}`)
+      ? game.i18n.localize(
+          `SDP.Size${sizeKey.charAt(0).toUpperCase()}${sizeKey.slice(1)}`
+        )
+      : game.i18n.localize("SDP.Size");
+    const pct = Math.round((sizeMult - 1) * 100);
+    lines.push(
+      `${sizeLabel}: ${pct >= 0 ? "+" : ""}${pct}%`
+    );
+  }
+
+  if (location === "head" && target?.type !== "vehicle") {
+    lines.push(
+      `${game.i18n.localize("SDP.HitLocationHead")}: +50%`
+    );
+  }
+
+  if (mountedCharge) {
+    lines.push(
+      `${game.i18n.localize("SDP.ChargeMounted")}: +50%`
+    );
+  }
+
+  if (counterCharge) {
+    lines.push(
+      `${game.i18n.localize("SDP.CounterCharge")}: +100%`
+    );
+  }
+
+  // Fallback if we have multipliers but no labeled line matched
+  if (!lines.length && damageMultipliers?.some(m => Number(m) !== 1)) {
+    let bonus = 0;
+    for (const m of damageMultipliers) {
+      const n = Number(m);
+      if (Number.isFinite(n) && n !== 1) bonus += (n - 1);
+    }
+    if (bonus) {
+      lines.push(
+        `${game.i18n.localize("SDP.Modifiers")}: ${bonus >= 0 ? "+" : ""}${Math.round(bonus * 100)}%`
+      );
+    }
+  }
+
+  return lines;
+
+}
+
+/**
+ * Shared summary under a damage roll (localized weapon + location + pre-armor damage).
+ */
+function buildDamageRollSummaryHtml({
+  actor,
+  weapon,
+  target = null,
+  location = "",
+  locationProfile = "humanoid",
+  damage,
+  damageMultipliers = [],
+  devastating = false,
+  includeTotal = true
+} = {}) {
+
+  const dialogMods = game.sdp?.dialogModifiers || {};
+  const weaponName = getActorItemDisplayName(weapon) || weapon?.name || "";
+  const mountedCharge =
+    !!dialogMods.mountedCharge
+    || !!(dialogMods.charge && actor && SdpMount.isMounted(actor));
+  const modifierLines = buildDamageModifierLines({
+    actor,
+    target,
+    location,
+    damageMultipliers,
+    mountedCharge,
+    counterCharge: !!dialogMods.counterCharge
+  });
+
+  const locationHtml = location
+    ? `<p>
+  ${game.i18n.localize("SDP.Location")}:
+  ${getHitLocationLabel(locationProfile, location)}
+</p>`
+    : "";
+
+  const modifiersHtml = modifierLines.length
+    ? `<p class="sdp-damage-modifiers">
+  <strong>${game.i18n.localize("SDP.Modifiers")}:</strong>
+  ${modifierLines.join(" · ")}
+</p>`
+    : "";
+
+  const devastatingHtml = devastating
+    ? `<p><strong>${game.i18n.localize("SDP.WeaponTraitDevastating")}</strong></p>`
+    : "";
+
+  const totalHtml = includeTotal
+    ? `<p class="damage-total">
+  <strong>
+    ${game.i18n.format("SDP.RawDamageLabel", { damage })}
+  </strong>
+</p>`
+    : "";
+
+  return `
+<p>
+  ${game.i18n.localize("SDP.Attacker")}: ${actor?.name || ""}
+</p>
+<p>
+  ${game.i18n.localize("SDP.Weapon")}: ${weaponName}
+</p>
+${locationHtml}
+${devastatingHtml}
+${modifiersHtml}
+${totalHtml}
+`;
 
 }
 
@@ -252,6 +396,7 @@ const diceHTML = dice.map((d, i) => `
 `).join("");
 
 const traitsJson = JSON.stringify(weapon?.system?.traits || traits || []);
+const targetActor = targetId ? canvas.tokens.get(targetId)?.actor : null;
 
 await roll.toMessage({
   speaker: ChatMessage.getSpeaker({actor}),
@@ -271,6 +416,7 @@ await roll.toMessage({
      data-attacker="${actorId}"
      data-target="${targetId}"
      data-location="${location}"
+     data-location-profile="${card.dataset.locationProfile || "humanoid"}"
      data-damagetype="${damageType || ""}"
      data-weapon-dice="${rolledDiceFormula || ""}"
      data-traits='${traitsJson}'>
@@ -281,32 +427,26 @@ await roll.toMessage({
   )}
 </h3>
 
-<p>
-  ${game.i18n.localize(
-    "SDP.Attacker"
-  )}: ${actor.name}
-</p>
-
-<p>
-  ${game.i18n.localize(
-    "SDP.Weapon"
-  )}: ${weapon.name}
-</p>
+${buildDamageRollSummaryHtml({
+  actor,
+  weapon,
+  target: targetActor,
+  location,
+  locationProfile: card.dataset.locationProfile || "humanoid",
+  damage,
+  damageMultipliers,
+  devastating: true,
+  includeTotal: false
+})}
 
       <div class="dice-container">
         ${diceHTML}
       </div>
 
       <p class="damage-total">
-
   <strong>
-
-    ${game.i18n.localize(
-      "SDP.Total"
-    )}: ${damage}
-
+    ${game.i18n.format("SDP.RawDamageLabel", { damage })}
   </strong>
-
 </p>
 
 <button class="validate-damage">
@@ -328,36 +468,42 @@ await roll.toMessage({
   // NORMAL FLOW
   // =========================
 
-  roll.toMessage({
+  const defenderTokenNormal = targetId ? canvas.tokens?.get(targetId) : null;
+  const defenderActorNormal = defenderTokenNormal?.actor
+    ?? (targetId ? game.actors.get(targetId) : null);
+
+  const damageRollMsg = combatRollMessageData({
     speaker: ChatMessage.getSpeaker({actor}),
+    content: "",
+    attackerActor: actor,
+    defenderActor: defenderActorNormal,
+    rollMode: getCurrentRollMode(),
+    stage: "damage-roll",
+    audience: "attacker"
+  });
+  delete damageRollMsg.content;
+
+  roll.toMessage({
+    ...damageRollMsg,
     flavor: `
+    <div class="sdp-damage-roll-summary">
     <h3>
   ${game.i18n.localize(
     "SDP.DamageRoll"
   )}
 </h3>
 
-<p>
-  ${game.i18n.localize(
-    "SDP.Attacker"
-  )}: ${actor.name}
-</p>
-
-<p>
-  ${game.i18n.localize(
-    "SDP.Weapon"
-  )}: ${weapon.name}
-</p>
-
-<p>
-  ${game.i18n.localize(
-    "SDP.Location"
-  )}:
-${getHitLocationLabel(
-  card.dataset.locationProfile || "humanoid",
-  location
-)}
-</p>
+${buildDamageRollSummaryHtml({
+  actor,
+  weapon,
+  target: defenderActorNormal,
+  location,
+  locationProfile: card.dataset.locationProfile || "humanoid",
+  damage,
+  damageMultipliers,
+  devastating
+})}
+    </div>
     `
   });
 
@@ -366,6 +512,8 @@ ${getHitLocationLabel(
     else {
 
   if (roll) {
+
+  const brutalTarget = targetId ? canvas.tokens.get(targetId)?.actor : null;
 
   await roll.toMessage({
     speaker: ChatMessage.getSpeaker({actor}),
@@ -380,14 +528,12 @@ ${getHitLocationLabel(
   <strong>
 
     ${game.i18n.localize(
-      "SDP.Weapon"
+      "SDP.WeaponDice"
     )}:
 
   </strong>
 
   ${game.i18n.localize(
-  "SDP.WeaponDice"
-)}: ${game.i18n.localize(
   "SDP.Max"
 )}
 </p>
@@ -411,12 +557,25 @@ ${getHitLocationLabel(
 )})` : ""}
 
 </p>
+
+${buildDamageRollSummaryHtml({
+  actor,
+  weapon,
+  target: brutalTarget,
+  location,
+  locationProfile: card.dataset.locationProfile || "humanoid",
+  damage,
+  damageMultipliers,
+  devastating
+})}
     `
   });
 
 } else {
 
   // cas sans sign → pas de roll du tout
+  const brutalTargetNoSign = targetId ? canvas.tokens.get(targetId)?.actor : null;
+
   ChatMessage.create({
     speaker: ChatMessage.getSpeaker({actor}),
     content: `
@@ -426,17 +585,6 @@ ${getHitLocationLabel(
   )}
 </h3>
 
-<p>
-  ${game.i18n.localize(
-    "SDP.Attacker"
-  )}: ${actor.name}
-</p>
-
-<p>
-  ${game.i18n.localize(
-    "SDP.Weapon"
-  )}: ${weapon.name}
-</p>
       <p>
 
   <strong>
@@ -449,17 +597,16 @@ ${getHitLocationLabel(
 
 </p>
 
-<p>
-
-  <strong>
-
-    ${game.i18n.localize(
-      "SDP.TotalDamage"
-    )}: ${damage}
-
-  </strong>
-
-</p>
+${buildDamageRollSummaryHtml({
+  actor,
+  weapon,
+  target: brutalTargetNoSign,
+  location,
+  locationProfile: card.dataset.locationProfile || "humanoid",
+  damage,
+  damageMultipliers,
+  devastating
+})}
     `
   });
 
@@ -519,13 +666,19 @@ if (card.classList.contains("sdp-spell") || card.classList.contains("sdp-ability
       : `${armor}`;
 
     const bleedingLine = bleedingStacks > 0
-      ? `<p><strong>${game.i18n.format("SDP.BleedingPending", {
+      ? `<p ${vis("defender", "gm")}><strong>${game.i18n.format("SDP.BleedingPending", {
           stacks: bleedingStacks,
           threshold: bleedingThreshold
         })}</strong></p>`
       : "";
 
-    ChatMessage.create({
+    const attackerActor = resolveActorFromIds(actorId, null);
+    const defenderToken = targetId ? canvas.tokens?.get(targetId) : null;
+    const defenderActor = defenderToken?.actor
+      ?? (targetId ? game.actors.get(targetId) : null);
+    const rollMode = getCurrentRollMode();
+
+    await createCombatMessage({
       content: `
             <div class="damage-card"
             data-attacker="${actorId}"
@@ -536,7 +689,7 @@ if (card.classList.contains("sdp-spell") || card.classList.contains("sdp-ability
     "SDP.DamageResolution"
   )}
 </h3>
-<p>
+<p ${vis("attacker", "defender", "gm")}>
   ${game.i18n.localize(
     "SDP.Location"
   )}:
@@ -545,25 +698,26 @@ ${getHitLocationLabel(
   location
 )}
 </p>
-      <p>
+      <p ${vis("attacker", "gm")}>
   ${game.i18n.localize(
     "SDP.RawDamage"
   )}: ${damage}
 </p>
 
-<p>
+<p ${vis("gm")}>
   ${game.i18n.localize(
     "SDP.Armor"
   )}: ${armorLabel}
 </p>
 
-<p>
+<p ${vis("defender", "gm")}>
   ${game.i18n.localize(
     "SDP.FinalDamage"
   )}: ${finalDamage}
 </p>
 ${bleedingLine}
       <button class="apply-damage"
+        ${vis("attacker", "gm")}
         data-attacker="${actorId}"
         data-target="${(card.classList.contains("sdp-spell") || card.classList.contains("sdp-ability")) ? "" : targetId}"
         data-damage="${damageAfterArmor ?? finalDamage}"
@@ -577,7 +731,11 @@ ${bleedingLine}
       </button>
       </div>
       `,
-      whisper: ChatMessage.getWhisperRecipients("GM")
+      attackerActor,
+      defenderActor,
+      rollMode,
+      stage: "damage-resolution",
+      audience: "defender"
     });
 
   });
@@ -658,91 +816,97 @@ if (!targetId) {
   }
 
   // ⚠️ pour l’instant : 1 par 1
-for (let token of targets) {
+  for (let token of targets) {
 
-  // =========================
-// TRAIT TAILLE (ARMOR DAMAGE)
-// =========================
+    // =========================
+    // TRAIT TAILLE (ARMOR DAMAGE)
+    // =========================
 
-const attackCard = button.closest(".sdp-attack");
-const traits = JSON.parse(attackCard?.dataset?.traits || "[]");
-
-const hasTaille = traits.some(t => t?.key === "size");
-
-if (hasTaille) {
-
-  const armorLogs = [];
-  const actorTarget = token?.actor;
-
-  if (actorTarget) {
-
-    const armors = actorTarget.items.filter(i =>
-      i.type === "armor" &&
-      i.system.worn?.value &&
-      (i.system.AP?.[location] ?? 0) > 0
-    );
-
-    for (const armor of armors) {
-
-      const currentAP = armor.system.AP?.[location] ?? 0;
-      const newAP = Math.max(currentAP - 1, 0);
-
-      await armor.update({
-        [`system.AP.${location}`]: newAP
-      });
-
-      armorLogs.push({
-        name: armor.name,
-        before: currentAP,
-        after: newAP
-      });
-
-      console.log("SDP | TAILLE ARMOR DAMAGE", {
-        armor: armor.name,
-        before: currentAP,
-        after: newAP
-      });
+    const damageCard = button.closest(".damage-card");
+    let loopTraits = [];
+    try {
+      loopTraits = JSON.parse(
+        button.dataset.traits
+        || damageCard?.dataset?.traits
+        || "[]"
+      );
+    } catch (e) {
+      loopTraits = [];
     }
+    const hasTailleLoop = loopTraits.some(t => t?.key === "size");
 
-    if (armorLogs.length) {
+    if (hasTailleLoop) {
 
-      ChatMessage.create({
-        content: `
-          <div class="sdp-armor-damage">
-            <h4>
+      const armorLogs = [];
+      const actorTarget = token?.actor;
+
+      if (actorTarget) {
+
+        const armors = actorTarget.items.filter(i =>
+          i.type === "armor" &&
+          i.system.worn?.value &&
+          (i.system.AP?.[location] ?? 0) > 0
+        );
+
+        for (const armor of armors) {
+
+          const currentAP = armor.system.AP?.[location] ?? 0;
+          const newAP = Math.max(currentAP - 1, 0);
+
+          await armor.update({
+            [`system.AP.${location}`]: newAP
+          });
+
+          armorLogs.push({
+            name: armor.name,
+            before: currentAP,
+            after: newAP
+          });
+
+        }
+
+        if (armorLogs.length) {
+
+          ChatMessage.create({
+            content: `
+              <div class="sdp-armor-damage">
+                <h4>
   ${game.i18n.localize(
     "SDP.ArmorDamaged"
   )}
 </h4>
-            ${armorLogs.map(a => `
-              <p>${a.name} : ${a.before} → ${a.after}</p>
-            `).join("")}
-          </div>
-        `
-      });
+                ${armorLogs.map(a => `
+                  <p>${a.name} : ${a.before} → ${a.after}</p>
+                `).join("")}
+              </div>
+            `
+          });
+
+        }
+
+      }
 
     }
 
-  }
+    const result = await SdpDamage.applyFullDamage({
+      actor: token.actor,
+      damage,
+      location,
+      severitySteps,
+      damageType
+    });
 
-}
+    const { finalDamage, armor, newHealth, current, severity } = result;
+    const bleedingStacks = await applyBleedingFromDamageCard(token.actor, button);
 
-const result = await SdpDamage.applyFullDamage({
-  actor: token.actor,
-  damage,
-  location,
-  severitySteps,
-  damageType
-});
+    const attackerActor = resolveActorFromIds(button.dataset.attacker, null);
+    const rollMode = getCurrentRollMode();
 
-const { finalDamage, armor, newHealth, current, severity } = result;
-const bleedingStacks = await applyBleedingFromDamageCard(token.actor, button);
-
-  ChatMessage.create({
-    content: `
+    await createCombatMessage({
+      content: `
     <div class="sdp-damage-result">
-      <h4>${token.actor.name}</h4>
-      <p>
+      <h4 ${vis("defender", "gm")}>${token.actor.name}</h4>
+      <p ${vis("attacker", "defender", "gm")}>
   ${game.i18n.localize(
     "SDP.Location"
   )}:
@@ -751,21 +915,21 @@ ${getHitLocationLabel(
   location
 )}
 </p>
-      <p>
+      <p ${vis("attacker", "gm")}>
   ${game.i18n.localize(
     "SDP.Damage"
   )}: ${damage}
 </p>
 
 ${armor
-  ? `<p>
+  ? `<p ${vis("gm")}>
   ${game.i18n.localize(
     "SDP.Armor"
   )}: ${armor}
 </p>`
   : ""}
 
-<p>
+<p ${vis("defender", "gm")}>
 
   <strong>
 
@@ -777,20 +941,20 @@ ${armor
 
 </p>
 
-<p>
+<p ${vis("defender", "gm")}>
   ${game.i18n.localize(
     "SDP.HP"
   )}: ${current} → ${newHealth}
 </p>
 ${bleedingStacks > 0
-  ? `<p><strong>${game.i18n.format("SDP.BleedingApplied", {
+  ? `<p ${vis("defender", "gm")}><strong>${game.i18n.format("SDP.BleedingApplied", {
       stacks: bleedingStacks
     })}</strong></p>`
   : ""}
       ${
   severity
     ? `
-<p>
+<p ${vis("defender", "gm")}>
 
   <strong>
 
@@ -808,10 +972,15 @@ ${game.i18n.localize(
     : ""
 }
     </div>
-    `
-  });
+    `,
+      attackerActor,
+      defenderActor: token.actor,
+      rollMode,
+      stage: "damage-applied",
+      audience: "defender"
+    });
 
-}
+  }
 
   return;
 }
@@ -990,11 +1159,10 @@ if (actor.type === "vehicle") {
       severity
     );
 
-  ChatMessage.create({
+  const attackerActor = resolveActorFromIds(button.dataset.attacker, null);
 
+  await createCombatMessage({
     speaker: ChatMessage.getSpeaker({actor}),
-    whisper: ChatMessage.getWhisperRecipients("GM"),
-
     content: `
     <div class="sdp-injury-card"
          data-actor="${actor.id}"
@@ -1039,7 +1207,12 @@ ${getHitLocationLabel(
 )}</button>
 
     </div>
-    `
+    `,
+    attackerActor,
+    defenderActor: actor,
+    rollMode: getCurrentRollMode(),
+    stage: "injury",
+    audience: "defender"
   });
 
 }
@@ -1050,13 +1223,14 @@ ${getHitLocationLabel(
 
     await message.update({
   content: `
+  <div class="damage-card">
   <h3>
   ${game.i18n.localize(
     "SDP.DamageResolution"
   )}
 </h3>
 
-<p>
+<p ${vis("attacker", "defender", "gm")}>
   ${game.i18n.localize(
     "SDP.Target"
   )}: ${actor.name}
@@ -1064,7 +1238,7 @@ ${getHitLocationLabel(
   ${
     severity
       ? `
-<p>
+<p ${vis("defender", "gm")}>
 
   <strong>
 
@@ -1081,14 +1255,16 @@ ${game.i18n.localize(
 `
       : ""
   }
-  <p><strong>${current} → ${newHealth}</strong></p>
+  <p ${vis("defender", "gm")}><strong>${current} → ${newHealth}</strong></p>
   ${
     bleedingStacks > 0
-      ? `<p><strong>${game.i18n.format("SDP.BleedingApplied", {
+      ? `<p ${vis("defender", "gm")}><strong>${game.i18n.format("SDP.BleedingApplied", {
           stacks: bleedingStacks
         })}</strong></p>`
       : ""
   }
+  <p ${vis("attacker", "gm")}><em>${game.i18n.localize("SDP.DamageApplied")}</em></p>
+  </div>
   `
 });
 
@@ -1195,9 +1371,10 @@ card.querySelector(".damage-total").innerHTML =
   `
 <strong>
 
-  ${game.i18n.localize(
-    "SDP.Total"
-  )}: ${newTotal}
+  ${game.i18n.format(
+    "SDP.RawDamageLabel",
+    { damage: newTotal }
+  )}
 
 </strong>
 `;
@@ -1309,19 +1486,23 @@ html.on("click", ".validate-damage", async ev => {
       })}</strong></p>`
     : "";
 
-  // =========================
-  // NORMAL DAMAGE RESOLUTION CARD
-  // =========================
+  const attackerActor = resolveActorFromIds(card.dataset.attacker, null);
+  const defenderToken = targetId ? canvas.tokens?.get(targetId) : null;
+  const defenderActor = defenderToken?.actor
+    ?? (targetId ? game.actors.get(targetId) : null);
 
-  await ChatMessage.create({
+  await createCombatMessage({
     content: `
+      <div class="damage-card"
+        data-attacker="${card.dataset.attacker || ""}"
+        data-location-profile="${card.dataset.locationProfile || "humanoid"}">
       <h3>
   ${game.i18n.localize(
     "SDP.DamageResolution"
   )}
 </h3>
 
-<p>
+<p ${vis("attacker", "defender", "gm")}>
   ${game.i18n.localize(
     "SDP.Location"
   )}:
@@ -1331,26 +1512,32 @@ ${getHitLocationLabel(
 )}
 </p>
 
-<p>
+<p ${vis("attacker", "gm")}>
   ${game.i18n.localize(
     "SDP.RawDamage"
   )}: ${damage}
 </p>
 
-<p>
+<p ${vis("gm")}>
   ${game.i18n.localize(
     "SDP.Armor"
   )}: ${armor}
 </p>
 
-<p>
+<p ${vis("defender", "gm")}>
   ${game.i18n.localize(
     "SDP.FinalDamage"
   )}: ${finalDamage}
 </p>
-${bleedingLine}
+${bleeding.stacks > 0
+  ? `<p ${vis("defender", "gm")}><strong>${game.i18n.format("SDP.BleedingPending", {
+      stacks: bleeding.stacks,
+      threshold: bleeding.threshold
+    })}</strong></p>`
+  : ""}
 
 <button class="apply-damage"
+  ${vis("attacker", "gm")}
   data-attacker="${card.dataset.attacker || ""}"
   data-target="${targetId || ""}"
   data-damage="${damageAfterArmor}"
@@ -1363,8 +1550,13 @@ ${bleedingLine}
   )}
 
 </button>
+</div>
     `,
-    whisper: ChatMessage.getWhisperRecipients("GM")
+    attackerActor,
+    defenderActor,
+    rollMode: getCurrentRollMode(),
+    stage: "damage-resolution",
+    audience: "defender"
   });
 
 });

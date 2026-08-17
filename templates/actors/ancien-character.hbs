@@ -180,7 +180,7 @@ readonly>
   <!-- 🔥 TEXTE SUR LA MEME LIGNE -->
   {{#if system.resources.encumbrance.state.label}}
     <span class="encumbrance-warning">
-      {{system.resources.encumbrance.state.label}}
+      {{localize system.resources.encumbrance.state.label}}
     </span>
   {{/if}}
 
@@ -1087,11 +1087,7 @@ readonly>
 <td>{{spell.name}}</td>
 
 <td>
-  {{#if spell.system.memorized.value}}
-    {{spell.system.power.value}}
-  {{else}}
-    {{multiply spell.system.power.value 2}}
-  {{/if}}
+  {{spell.system.power.value}}
 </td>
 
 <td>
@@ -1131,11 +1127,7 @@ readonly>
 <td>{{spell.name}}</td>
 
 <td>
-  {{#if spell.system.memorized.value}}
-    {{spell.system.power.value}}
-  {{else}}
-    {{multiply spell.system.power.value 2}}
-  {{/if}}
+  {{spell.system.power.value}}
 </td>
 
 <td>
@@ -1175,11 +1167,7 @@ readonly>
 <td>{{spell.name}}</td>
 
 <td>
-  {{#if spell.system.memorized.value}}
-    {{spell.system.power.value}}
-  {{else}}
-    {{multiply spell.system.power.value 2}}
-  {{/if}}
+  {{spell.system.power.value}}
 </td>
 
 <td>

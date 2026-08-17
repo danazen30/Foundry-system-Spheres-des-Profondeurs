@@ -641,6 +641,12 @@
         "value": ""
       },
 
+      "reach": {
+        "type": "Number",
+        "label": "Reach",
+        "value": 0
+      },
+
       "ammunitionGroup": {
         "type": "string",
         "label": "Ammunition Group",
@@ -1134,6 +1140,11 @@
         "type": "number",
         "label": "Targets",
         "value": 1
+      },
+
+      "lockTargets": {
+        "type": "boolean",
+        "value": false
       },
 
       "aoe": {

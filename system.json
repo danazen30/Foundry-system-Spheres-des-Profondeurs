@@ -119,15 +119,6 @@
   },
 
   {
-    "name": "possession",
-    "label": "SDP.Pack.Possessions",
-    "system": "sdp",
-    "path": "packs/possession",
-    "type": "Item",
-    "banner": "systems/sdp/assets/icons/default-banner.png"
-  },
-
-  {
     "name": "rolltables",
     "label": "SDP Roll Tables",
     "path": "packs/rolltables",

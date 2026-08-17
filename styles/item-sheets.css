@@ -793,8 +793,25 @@
 
 .overcast-fields {
   display: grid;
-  grid-template-columns: 1fr 140px;
-  gap: 10px;
+  grid-template-columns: 1fr 48px 56px;
+  gap: 6px;
+  align-items: end;
+  padding-right: 28px;
+}
+
+.overcast-fields .form-group {
+  margin: 0;
+}
+
+.overcast-fields .form-group input {
+  width: 100%;
+  min-width: 0;
+}
+
+.overcast-fields .form-group:nth-child(2) input,
+.overcast-fields .form-group:nth-child(3) input {
+  text-align: center;
+  padding-inline: 2px;
 }
 
 .remove-overcast-special {
@@ -1192,7 +1209,7 @@
   cursor: default;
 }
 
-.sdp-item-sheet--player-locked .effect-create-button,
-.sdp-item-sheet--player-locked .effect-control {
+/* Combat visibility: hide role-filtered blocks */
+[data-sdp-vis][hidden] {
   display: none !important;
 }
