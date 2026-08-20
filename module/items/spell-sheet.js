@@ -88,6 +88,9 @@ export class SdpSpellSheet extends SdpItemSheet {
         this.document.system.overcastSpecialEffects?.value
       );
 
+    context.system.ignoreArmor =
+      !!this.document.system.ignoreArmor;
+
     return context;
 
   }
@@ -115,6 +118,12 @@ export class SdpSpellSheet extends SdpItemSheet {
     data.system.concentration.value =
       !!data.system.concentration?.value;
 
+    data.system.movable ??= {};
+    data.system.movable.value =
+      data.system.movable?.value != null
+        ? String(data.system.movable.value)
+        : "";
+
     data.system.aoe ??= {};
     data.system.aoe.value =
       !!data.system.aoe?.value;
@@ -122,6 +131,9 @@ export class SdpSpellSheet extends SdpItemSheet {
     data.system.lockTargets ??= {};
     data.system.lockTargets.value =
       !!data.system.lockTargets?.value;
+
+    data.system.ignoreArmor =
+      !!data.system.ignoreArmor;
 
     data.system.overcast ??= {};
     data.system.overcast.value =

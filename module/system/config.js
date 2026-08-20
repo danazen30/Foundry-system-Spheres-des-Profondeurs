@@ -218,7 +218,9 @@ SDP.conditions = {
   entangled: "SDP.ConditionEntangled",
   unconscious: "SDP.ConditionUnconscious",
   dying: "SDP.ConditionDying",
-  surprised: "SDP.ConditionSurprised"
+  surprised: "SDP.ConditionSurprised",
+  slowed: "SDP.ConditionSlowed",
+  numbed: "SDP.ConditionNumbed"
 
 };
 
@@ -230,11 +232,12 @@ SDP.turnConditions = {
 
 };
 
-CONFIG.SDP.magicTypes = {
+SDP.magicTypes = {
   minor: "SDP.MagicMinor",
   advanced: "SDP.MagicAdvanced",
   superior: "SDP.MagicSuperior"
 };
+CONFIG.SDP.magicTypes = SDP.magicTypes;
 
 SDP.rollTables = {
 
@@ -345,6 +348,22 @@ SDP.conditionConfig = {
     type: "stack",
     movementPenalty: 1,
     description: "SDP.ConditionSlowedDescription"
+  },
+
+  numbed: {
+    label: "SDP.ConditionNumbed",
+    type: "stack",
+    modifier: -10,
+    modifierOnce: true,
+    movementPenalty: 1,
+    attributes: [
+      "meleeAbility",
+      "rangedAbility",
+      "agility",
+      "dexterity"
+    ],
+    collapseAtToughnessBonus: true,
+    description: "SDP.ConditionNumbedDescription"
   },
 
   entangled: {

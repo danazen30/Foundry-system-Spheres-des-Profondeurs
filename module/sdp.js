@@ -214,6 +214,8 @@ const templateJson = await templateResponse.json();
 
   registerCareerJournalHooks();
 
+  // Keep CONFIG-only keys from config.js (magicTypes, hitLocations, etc.)
+  foundry.utils.mergeObject(SDP, CONFIG.SDP || {});
   CONFIG.SDP = SDP;
 
   game.sdp = game.sdp || {};
@@ -334,6 +336,7 @@ Handlebars.registerHelper("includes", function(value, key) {
       exhausted:0,
       deafened: 0,
       slowed: 0,
+      numbed: 0,
       entangled:0,
       staggered:0,
       shaken:0,
@@ -1071,6 +1074,13 @@ Hooks.on("updateActor", async (actor, changes) => {
     await actor.update({
       "system.conditions.prone": true
     });
+  }
+
+  if (cond.numbed !== undefined) {
+    await SdpConditionEngine.checkNumbedCollapse(
+      actor,
+      Number(actor.system.conditions?.numbed || 0)
+    );
   }
 
 });

@@ -343,12 +343,14 @@ await actor.update({
   let damageButton = "";
 
   if (success && hasDamage) {
+    const ignoreArmor = !!system.ignoreArmor;
     damageButton = `
     <button class="roll-damage"
       data-actor="${actor.id}"
       data-token="${tokenId}"
       data-weapon="${spell.id}"
-      data-target="${Array.from(game.user.targets)[0]?.id || ""}">
+      data-target="${Array.from(game.user.targets)[0]?.id || ""}"
+      data-ignore-armor="${ignoreArmor}">
       ${game.i18n.localize("SDP.RollDamage")}
     </button>
     `;

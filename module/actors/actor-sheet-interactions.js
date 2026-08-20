@@ -110,9 +110,11 @@ function registerMovement(sheet, root) {
 
       const slowed =
         actor.system.conditionTotals?.slowed ?? 0;
+      const numbed =
+        actor.system.conditionTotals?.numbed ?? 0;
 
       const newBase =
-        newDisplayed + slowed;
+        newDisplayed + slowed + numbed;
 
       await actor.update({
   "system.resources.movement.value":

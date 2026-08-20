@@ -69,6 +69,7 @@
   "SDP.ConditionDying": "Agonisant",
   "SDP.ConditionSurprised": "Surpris",
   "SDP.ConditionSlowed": "Ralenti",
+  "SDP.ConditionNumbed": "Engourdi",
 
   "SDP.MagicMinor": "Mineure",
   "SDP.MagicAdvanced": "Avancée",
@@ -193,6 +194,7 @@
 "SDP.ConditionShakenDescription": "Le personnage subit une pénalité de -1 aux jets d’attaque, ainsi qu’une pénalité de -10 aux Tests de compétence et de caractéristique.\n\nÊtre Secoué représente un état de peur moins important qu’Être Effrayé ou Pris de Panique.\n\nSecoué dure jusqu’à ce que la source de la peur ne représente plus une menace ; à ce moment-là, le personnage gagne une Condition Épuisé.\n\nCet effet est retiré si la Condition Effrayé est appliquée.",
 "SDP.ConditionFrightenedDescription": "Un personnage Effrayé fuit la source de sa peur aussi rapidement qu’il le peut. Si aucune issue ne s’ouvre à lui, il peut combattre. Il reçoit un malus de -3 aux jets d’attaques ainsi qu’aux tests de compétence et de caractéristique. Il peut user de ses pouvoirs et ses sorts pour s’enfuir et le fait inévitablement si aucune autre solution ne s’offre à lui.\n\nVous ne pouvez effectuer aucun Test pour récupérer de cet État si vous êtes Engagé avec un ennemi. Si vous n’êtes pas Engagé, à la fin de chaque round, vous pouvez tenter un Test de Calme pour vous débarrasser de l’état Effrayé. La difficulté variera en fonction de la situation et de la menace. Il est plus facile de vous reprendre pour recouvrer vos esprits si vous vous cachez derrière un tonneau au fond d’une impasse située loin du danger (Accessible +20) plutôt que lorsque vous vous trouvez à trois enjambées d’un démon salivant qui réclame votre sang (Très Difficile -30).\n\nCet état s’apparente au fait d’être Secoué, sauf que le personnage fait tout pour s’enfuir. Si Effrayé se dissipe, alors Secoué s’active.",
 "SDP.ConditionSlowedDescription": "Vous êtes ralenti.\n\nLa source de votre ralentissement réduit votre Mouvement de 1 par charge.\n\nSi votre Mouvement est réduit à 0, vous gagnez la Condition Entravé.",
+"SDP.ConditionNumbedDescription": "Le froid a engourdi vos muscles et vos doigts ; chaque geste demande un effort.\n\nVous subissez un malus de −10 aux Tests de Capacité de Combat, Capacité de Tir, Agilité et Dextérité. Chaque charge d'Engourdi réduit également votre Mouvement de 1.\n\nSi le nombre de charges d'Engourdi atteint votre Bonus d'Endurance, vous vous effondrez : vous gagnez les Conditions À terre et Inconscient, ainsi que 1 Condition Épuisé.\n\nTant que vous restez exposé au froid qui cause cet état (tempête, blizzard, etc.), vous ne pouvez pas tenter de le retirer. Dès que vous êtes à l'abri, à la fin de chaque round vous pouvez tenter un Test de Résistance (+0) : en cas de réussite, retirez 1 Condition Engourdi.",
 "SDP.ConditionEntangledDescription": "Vous êtes gêné par quelque chose qui restreint vos mouvements ; cela peut être des cordes, une toile ou même les biceps imposants d’un adversaire.\n\nDurant votre tour, vous ne pouvez pas utiliser votre Mouvement.\n\nVous pouvez utiliser votre Action pour retirer la Condition Entravé en réussissant un Test opposé de Force contre la source de l’entrave.\n\nLa difficulté varie selon la situation.\n\nSi cette Condition a été causée par Ralenti, une réussite retire la Condition Entravé et chaque SL (Niveau de Réussite) réduit une partie des charges de Ralenti.",
 "SDP.ConditionUnconsciousDescription": "Vous êtes assommé, inconscient ou autrement incapable d’agir.\n\nVous ne pouvez absolument rien faire durant votre tour et n’avez aucune conscience de ce qui vous entoure.\n\nUn attaquant vous ciblant bénéficie de la règle « Je Ne Vais Pas Échouer ! » sans avoir besoin de dépenser un Point de Résilience.\n\nAlternativement, à la discrétion du MJ, une attaque au corps à corps peut automatiquement vous tuer.\n\nToute attaque à distance est également une réussite automatique et inflige des dégâts comme si l’attaquant était à bout portant.\n\nLa Condition Inconscient ne se cumule pas — vous êtes soit Inconscient, soit vous ne l’êtes pas.\n\nRécupérer de cette Condition dépendra souvent des circonstances qui l’ont causée.\n\nSi vous dépensez un Point de Détermination pour retirer la Condition Inconscient alors que sa cause est toujours présente, vous gagnez une nouvelle Condition Inconscient à la fin du round.\n\nLorsque vous retirez la Condition Inconscient, vous gagnez les Conditions À Terre et Épuisé.",
 "SDP.ConditionDyingDescription": "Le personnage est inconscient et mourant.\n\nUne créature ayant un nombre négatif de Blessures et n’étant pas stabilisée est considérée comme mourante.\n\nUne créature mourante ne peut effectuer aucune action.\n\nAu début de chacun de ses tours, à chaque round, jusqu’à ce qu’elle soit stabilisée ou qu’elle meure, le personnage doit effectuer un Test de Résistance.\n\nUn personnage stabilisé n’a pas besoin d’effectuer ce test.\n\nEn cas d’échec, le personnage perd 1 Blessure supplémentaire.\n\nUne créature mourante meurt lorsque son total de Blessures négatives atteint son SB (Seuil de Blessure).\n\nPour stabiliser le personnage, un Test de Soin réussi ou un sort de guérison est nécessaire.",
@@ -568,25 +570,76 @@
 "SDP.Item.Spell.regeneratingarmor.Description": "Surincantation : +1 PA ou +1 soin bonus par point.\nTu fais surgir du sol une carapace de terre et de minéraux qui enveloppe la cible. Tant que le sort dure, elle bénéficie de 1 point d'Armure sur tout le corps et récupère, au début de chacun de ses tours, un nombre de points de Santé égal au bonus de Force Mentale du lanceur.",
 
 "SDP.Item.Spell.stalagmite.Name": "Stalagmite",
-"SDP.Item.Spell.stalagmite.Description": "Surincantation : +1 dégât par point.\nTu fais jaillir un champ de stalagmites de glace dans une zone. Chaque créature prise dedans subit les dégâts.",
+"SDP.Item.Spell.stalagmite.Description": "Surincantation : +Bonus de Force Mentale dégâts par point.\nTu fais jaillir un champ de stalagmites de glace dans une zone. Chaque créature prise dedans subit les dégâts.",
 
 "SDP.Item.Spell.iceweapon.Name": "Arme de glace",
-"SDP.Item.Spell.iceweapon.Description": "Surincantation : +1 dégât supplémentaire par point.\nTu conjures une arme de glace magique dans la main de la cible. Elle compte comme une arme de mêlée magique tant que le sort dure. Ses dégâts valent le bonus de Force du porteur + le bonus de Force Mentale du lanceur. À la fin, elle fond sans laisser de trace.",
+"SDP.Item.Spell.iceweapon.Description": "Surincantation : +1 dégât supplémentaire par point.\nTu conjures une arme de glace magique dans la main de la cible. Elle compte comme une arme de mêlée magique tant que le sort dure. Ses dégâts valent le bonus de Force du porteur + le bonus de Force Mentale du lanceur. Une créature touchée doit réussir un Test de Résistance (+0) ou gagner 1 Condition Engourdi. À la fin, l'arme fond sans laisser de trace.",
 
 "SDP.Item.Spell.icearmor.Name": "Armure de glace",
-"SDP.Item.Spell.icearmor.Description": "Surincantation : +1 PA par point.\nUne carapace de givre enveloppe la cible : elle gagne +1 PA sur tout le corps.",
+"SDP.Item.Spell.icearmor.Description": "Surincantation : −10 au Test de Résistance de la cible par point.\nTu enveloppes la cible d'un givre mordant. Elle doit réussir un Test de Résistance (+0). En cas d'échec, elle gagne 1 Condition Engourdi.",
 
 "SDP.Item.Spell.icerink.Name": "Patinoire",
 "SDP.Item.Spell.icerink.Description": "Tu transformes le sol en une plaque de glace. Toute créature qui se déplace dans la zone doit réussir un Test d'Athlétisme (−20). En cas d'échec, elle tombe À terre.",
 
 "SDP.Item.Spell.iceshard.Name": "Éclat de glace",
-"SDP.Item.Spell.iceshard.Description": "Surincantation : +1 dégât supplémentaire par point.\nTu projettes un éclat de glace acéré. La cible subit les dégâts de froid et de perforation.",
+"SDP.Item.Spell.iceshard.Description": "Surincantation : +Bonus de Force Mentale dégâts par point.\nTu projettes un éclat de glace acéré. La cible subit les dégâts de froid et de perforation.",
 
 "SDP.Item.Spell.icewall.Name": "Mur de glace",
 "SDP.Item.Spell.icewall.Description": "Tu ériges un mur de glace opaque. Il bloque le mouvement et la ligne de vue, offrant une couverture. 3 m large × 2 m haut × 0,5 m d'épaisseur.",
 
 "SDP.Item.Spell.frostbite.Name": "Morsure du froid",
-"SDP.Item.Spell.frostbite.Description": "Tu portes la main (ou le givre) sur la cible au corps à corps. Elle subit les dégâts, puis doit réussir un Test de Résistance (−20). En cas d'échec, elle gagne 1 Condition Ralenti.",
+"SDP.Item.Spell.frostbite.Description": "Surincantation : +Bonus de Force Mentale dégâts par point.\nTu portes la main (ou le givre) sur la cible au corps à corps. Elle subit les dégâts, puis doit réussir un Test de Résistance (+0). En cas d'échec, elle gagne 1 Condition Engourdi.",
+
+"SDP.Item.Spell.icemirage.Name": "Mirage de glace",
+"SDP.Item.Spell.icemirage.Description": "Tu mêles illusion et réalité en diffusant un froid réel et des mirages de glace. Toute créature qui se déplace dans la zone doit réussir un Test d'Athlétisme (+0) ou tomber À terre. Au début de chacun de ses tours dans la zone, elle doit réussir un Test de Résistance (+0) ou gagner 1 Condition Engourdi, puis un Test de Réflexion (−30) pour discerner le vrai du faux. Tant qu'elle échoue à ce Test de Réflexion, elle perd son tour. À chaque tour passé dans la zone, elle gagne +10 à ce Test de Réflexion.",
+
+"SDP.Item.Spell.steamcloud.Name": "Nuage de vapeur",
+"SDP.Item.Spell.steamcloud.Description": "Surincantation : +Bonus de Force Mentale dégâts par point.\nTu confrontes feu et glace pour former un nuage de vapeur brûlant. Les créatures situées dans le nuage sont Aveuglées tant qu'elles y restent. Toute créature qui entre dans le nuage ou y commence son tour subit les dégâts. Le nuage bloque la ligne de vue au-delà de 3 m.",
+
+"SDP.Item.Spell.cuttingblizzard.Name": "Blizzard tranchant",
+"SDP.Item.Spell.cuttingblizzard.Description": "Surincantation : +Bonus de Force Mentale dégâts par point.\nTu déclenches une tempête de lames de glace portée par le vent. Chaque créature dans la zone subit les dégâts, puis doit réussir un Test de Résistance (−20). En cas d'échec, elle gagne 1 Condition Engourdi.",
+
+"SDP.Item.Spell.iceenchantment.Name": "Enchantement de glace",
+"SDP.Item.Spell.iceenchantment.Description": "Surincantation : +1 dégât supplémentaire ou +1 PA par point.\nTu imprègnes un objet existant de magie glaciale : tu augmentes les dégâts d'une arme ou la résistance d'une armure. Lorsqu'une attaque avec l'arme enchantée touche, ou lorsqu'un adversaire touche au contact une armure enchantée, la cible doit réussir un Test de Résistance (+0) ou gagner 1 Condition Engourdi.",
+
+"SDP.Item.Spell.ardentbolt.Name": "Trait ardent",
+"SDP.Item.Spell.ardentbolt.Description": "Surincantation : +Bonus de Force Mentale dégâts par point.\nTu projettes un trait de flammes. La cible subit les dégâts de feu.",
+
+"SDP.Item.Spell.immolate.Name": "Immolation",
+"SDP.Item.Spell.immolate.Description": "Surincantation : +Bonus de Force Mentale dégâts par point.\nTu portes le feu au contact. La cible subit les dégâts, puis doit réussir un Test de Réflexes (+0) pour écarter aussitôt les flammes éphémères. En cas d'échec, elle subit 1d6 dégâts de feu supplémentaires.",
+
+"SDP.Item.Spell.fireball.Name": "Boule de feu",
+"SDP.Item.Spell.fireball.Description": "Surincantation : +Bonus de Force Mentale dégâts par point.\nTu fais exploser une sphère de flammes dans une zone. Chaque créature prise dedans subit les dégâts.",
+
+"SDP.Item.Spell.walloffire.Name": "Mur de feu",
+"SDP.Item.Spell.walloffire.Description": "Surincantation : +1 m de largeur par point.\nTu ériges un mur de flammes opaques. Il bloque le mouvement et la ligne de vue. 3 m large × 2 m haut × 0,5 m d'épaisseur. Toute créature qui le traverse ou y commence son tour subit des dégâts de feu égaux au bonus de Force Mentale du lanceur.",
+
+"SDP.Item.Spell.flameweapon.Name": "Arme de flammes",
+"SDP.Item.Spell.flameweapon.Description": "Surincantation : +1 dégât supplémentaire par point.\nTu conjures une arme de flammes magique dans la main de la cible. Elle compte comme une arme de mêlée magique tant que le sort dure. Ses dégâts valent le bonus de Force du porteur + le bonus de Force Mentale du lanceur. Une créature touchée doit réussir un Test de Réflexes (+0) pour chasser la flamme avant qu'elle ne la brûle vraiment ; en cas d'échec, elle subit 1d6 dégâts de feu supplémentaires. À la fin, l'arme se consume sans laisser de trace.",
+
+"SDP.Item.Spell.cindershroud.Name": "Voile de braises",
+"SDP.Item.Spell.cindershroud.Description": "Surincantation : −10 au Test de Réflexes de la cible par point.\nUn voile de braises enveloppe la cible comme une armure vivante. Chaque fois qu'elle est touchée au corps à corps, le voile réagit à l'agressivité de l'attaquant et projette des braises : l'attaquant doit réussir un Test de Réflexes (+0) ou subir 1d6 dégâts de feu.",
+
+"SDP.Item.Spell.smokescreen.Name": "Écran de fumée",
+"SDP.Item.Spell.smokescreen.Description": "Tu dégages un épais nuage de fumée. Dans la zone, la vision est limitée à 3 m et les créatures y sont Aveuglées tant qu'elles y restent.",
+
+"SDP.Item.Spell.emberarc.Name": "Arc de braises",
+"SDP.Item.Spell.emberarc.Description": "Surincantation : +Bonus de Force Mentale dégâts par point.\nTu tends un arc de foudre rougeoyant qui frappe une cible puis saute à une autre à proximité. Chaque créature touchée subit les dégâts, puis doit réussir un Test de Résistance (+0). En cas d'échec, elle gagne 1 Condition Étourdi et échoue automatiquement au Test de Réflexes : elle subit 1d6 dégâts de feu supplémentaires. En cas de réussite, elle tente un Test de Réflexes (+0) ; en cas d'échec, elle subit 1d6 dégâts de feu supplémentaires.",
+
+"SDP.Item.Spell.heatpressure.Name": "Pression de chaleur",
+"SDP.Item.Spell.heatpressure.Description": "Surincantation : +Bonus de Force Mentale dégâts par point.\nTu formes une zone où l'air se contracte et enferme la chaleur comme sous une cloche. L'air comprime le feu autour de quiconque y pénètre. Toute créature qui entre dans la zone ou y commence son tour subit les dégâts (ignorent l'armure), puis doit réussir un Test de Résistance (−20). En cas d'échec, elle gagne 1 Condition Épuisé.",
+
+"SDP.Item.Spell.flameenchantment.Name": "Enchantement de flammes",
+"SDP.Item.Spell.flameenchantment.Description": "Surincantation : +1 dégât supplémentaire ou +1 PA par point.\nTu imprègnes un objet existant de magie ardente : tu augmentes les dégâts d'une arme ou la résistance d'une armure. Une créature touchée par l'arme enchantée, ou qui touche au contact une armure enchantée, doit réussir un Test de Réflexes (+0) ou subir 1d6 dégâts de feu supplémentaires.",
+
+"SDP.Item.Spell.soulburn.Name": "Brûlure d'âme",
+"SDP.Item.Spell.soulburn.Description": "Surincantation : +Bonus de Force Mentale dégâts par point.\nTu projettes une flamme noire qui traverse l'armure et s'enfonce dans l'âme de la cible. Elle subit les dégâts (ignorent l'armure). Son maximum de Santé diminue ensuite d'un montant égal au bonus de Force Mentale du lanceur, jusqu'à un repos prolongé ou une purification. Tu dois alors réussir un Test de Calme (+0) ou gagner 1 point de Corruption.",
+
+"SDP.Item.Spell.phoenixmantle.Name": "Manteau du phénix",
+"SDP.Item.Spell.phoenixmantle.Description": "Surincantation : soin supplémentaire par point.\nUn manteau de flammes vivantes enveloppe la cible. Chaque fois qu'elle est touchée au corps à corps, l'attaquant doit réussir un Test de Réflexes (+0) ou subir 1d6 dégâts de feu. Une fois par round, lorsqu'elle subit des dégâts, elle récupère un nombre de points de Santé égal au bonus de Force Mentale du lanceur, sans récupérer plus que les dégâts du coup porté. La première fois qu'elle devrait passer à 0 Santé ou moins, ou devenir Agonisante, le manteau se brise : elle est stabilisée à 1 point de Santé et le sort se termine.",
+
+"SDP.Item.Spell.fireelemental.Name": "Élémentaire de feu",
+"SDP.Item.Spell.fireelemental.Description": "Surincantation : +1 round de maintien, +1 dégât, ou +1 PA à l'élémentaire, par point.\nTu invoques un élémentaire de feu (Grande taille) à portée. Il agit à ton tour selon tes ordres. S'il quitte la portée du sort ou si tu perds la concentration, il se dissipe en un souffle de cendres.\nChaque fois qu'il attaque ou qu'il est touché au contact, des flammes fusent : la cible ou l'attaquant doit réussir un Test de Réflexes (+0) ou subir 1d6 dégâts de feu.",
 
 "SDP.MagicType": "Type de magie",
 "SDP.Used": "Utilisé",
@@ -595,7 +648,8 @@
 "SDP.Success": "RÉUSSITE",
 "SDP.Failure": "ÉCHEC",
 "SDP.ManaCost": "Coût en mana",
-"SDP.Concentration": "Concentration",
+  "SDP.Concentration": "Concentration",
+  "SDP.Movable": "Déplaçable",
 "SDP.Overcast": "Surincantation",
 "SDP.ResetOvercast": "Réinitialiser la surincantation",
 "SDP.Duration": "Durée",
@@ -2978,5 +3032,6 @@
   "SDP.Folder.curative.Name": "Curatif",
   "SDP.Folder.superior.Name": "Supérieur",
   "SDP.Folder.water.Name": "Eau",
-  "SDP.Folder.minor.Name": "Mineur"
+  "SDP.Folder.minor.Name": "Mineur",
+  "SDP.Folder.fire.Name": "Feu"
 }

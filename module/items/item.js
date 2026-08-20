@@ -393,6 +393,11 @@ prepareDerivedData(){
     system.ignoreArmor = !!system.ignoreArmor;
   }
   else if (this.type === "spell") {
+    system.ignoreArmor ??= false;
+    system.ignoreArmor = !!system.ignoreArmor;
+    system.movable ??= {};
+    system.movable.value ??= "";
+    system.movable.value = String(system.movable.value ?? "");
     const raw = system.overcastSpecialEffects?.value;
     system.overcastSpecialEffects ??= {};
     if (!Array.isArray(raw)) {

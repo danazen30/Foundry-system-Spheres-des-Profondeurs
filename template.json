@@ -257,6 +257,7 @@
         "frightened": false,
         "exhausted": 0,
         "slowed": 0,
+        "numbed": 0,
         "entangled": false,
         "surprised": false,
         "prone": false,
@@ -1168,9 +1169,20 @@
         }
       },
 
+      "ignoreArmor": {
+        "type": "Boolean",
+        "label": "Ignore Armor",
+        "value": false
+      },
+
       "concentration": {
         "type": "boolean",
         "value": false
+      },
+
+      "movable": {
+        "type": "string",
+        "value": ""
       },
 
       "overcast": {

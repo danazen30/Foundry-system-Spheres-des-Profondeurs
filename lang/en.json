@@ -69,6 +69,7 @@
   "SDP.ConditionDying": "Dying",
   "SDP.ConditionSurprised": "Surprised",
   "SDP.ConditionSlowed": "Slowed",
+  "SDP.ConditionNumbed": "Numbed",
 
   "SDP.MagicMinor": "Minor",
   "SDP.MagicAdvanced": "Advanced",
@@ -194,6 +195,7 @@
   "SDP.ConditionShakenDescription": "The character suffers a -1 penalty to attack rolls, as well as a -10 penalty to skill and characteristic Tests.\n\nBeing Shaken represents a lesser state of fear than being Frightened or Panicked.\n\nShaken lasts until the source of the fear is no longer a threat, at which point it grants an Exhausted Condition.\n\nThis effect is removed if the Frightened Condition is applied.",
   "SDP.ConditionFrightenedDescription": "A Frightened character flees from the source of their fear as quickly as they can. If no escape is available, they may fight. They suffer a -3 penalty to attack rolls as well as to skill and characteristic Tests. They may use their powers and spells to flee, and will inevitably do so if no other option is available.\n\nYou cannot make any Tests to recover from this Condition while you are Engaged with an enemy. If you are not Engaged, at the end of each round you may attempt a Calm Test to remove the Frightened condition. The difficulty varies depending on the situation and the threat. It is easier to regain your composure if you are hiding behind a barrel at the end of a dead-end alley far from danger (Easy +20) than if you are just a few strides away from a drooling demon demanding your blood (Very Hard -30).\n\nThis Condition is similar to being Shaken, except that the character does everything possible to flee. When Frightened ends, Shaken is applied.",
   "SDP.ConditionSlowedDescription": "You are slowed.\n\nThe source of your slowing reduces your Movement by 1 per stack.\n\nIf your Movement is reduced to 0, you gain the Entangled Condition.",
+  "SDP.ConditionNumbedDescription": "Cold has numbed your muscles and fingers; every movement takes effort.\n\nYou suffer a −10 penalty to Weapon Skill, Ballistic Skill, Agility, and Dexterity Tests. Each Numbed Condition also reduces your Movement by 1.\n\nIf your Numbed Conditions reach your Toughness Bonus, you collapse: you gain the Prone and Unconscious Conditions, as well as 1 Exhausted Condition.\n\nWhile you remain exposed to the cold causing this Condition (storm, blizzard, and so on), you cannot attempt to remove it. Once you are sheltered, at the end of each round you may attempt a Toughness Test (+0): on a success, remove 1 Numbed Condition.",
   "SDP.ConditionEntangledDescription": "You are hindered by something that restricts your movement; this could be ropes, a web, or even an opponent's bulging biceps.\n\nDuring your turn, you cannot use your Movement.\n\nYou may use your Action to remove the Entangled Condition by succeeding on an opposed Strength Test against the source of the entanglement.\n\nThe difficulty varies depending on the situation.\n\nIf this Condition was caused by Slowed, a success removes the Entangled Condition, and each SL (Success Level) reduces some of the Slowed stacks.",
   "SDP.ConditionUnconsciousDescription": "You are knocked out, unconscious, or otherwise incapacitated.\n\nYou can do absolutely nothing on your turn and have no awareness of your surroundings.\n\nAn attacker targeting you gains the benefit of the “I Will Not Fail!” rule without needing to spend a Resilience Point.\n\nAlternatively, at the GM's discretion, a melee attack automatically kills you.\n\nAny ranged attack is also an automatic success and deals damage as if the attacker were at point-blank range.\n\nThe Unconscious Condition does not stack — you are either Unconscious or you are not.\n\nRecovering from this Condition will often depend on the circumstances that caused it.\n\nIf you spend a Resolve Point to remove the Unconscious Condition but are still subject to its cause, you gain a new Unconscious Condition at the end of the round.\n\nWhen you remove the Unconscious Condition, you gain the Prone and Exhausted Conditions.",
   "SDP.ConditionDyingDescription": "The character is unconscious and dying.\n\nA creature with a negative number of Wounds that is not stabilized is considered to be dying.\n\nA dying creature cannot take any actions.\n\nAt the start of each of its turns, every round, until it becomes stabilized or dies, the character must make a Resistance Test.\n\nA stabilized character does not need to make this test.\n\nIf the test is failed, the character loses 1 additional Wound.\n\nA dying creature dies when its negative Wounds total equals its WT (Wound Threshold).\n\nTo stabilize the character, a successful Heal Test or a healing spell is required.",
@@ -569,25 +571,76 @@
 "SDP.Item.Spell.regeneratingarmor.Description": "Overcast: +1 Armor point or +1 bonus healing per point.\nYou raise from the ground a shell of earth and minerals that envelops the target. While the spell lasts, they gain 1 Armor point over the whole body and, at the start of each of their turns, recover a number of Health points equal to the caster's Willpower Bonus.",
 
 "SDP.Item.Spell.stalagmite.Name": "Stalagmite",
-"SDP.Item.Spell.stalagmite.Description": "Overcast: +1 damage per point.\nYou cause a field of ice stalagmites to erupt across an area. Every creature caught within suffers the damage.",
+"SDP.Item.Spell.stalagmite.Description": "Overcast: +Willpower Bonus damage per point.\nYou cause a field of ice stalagmites to erupt across an area. Every creature caught within suffers the damage.",
 
 "SDP.Item.Spell.iceweapon.Name": "Ice weapon",
-"SDP.Item.Spell.iceweapon.Description": "Overcast: +1 additional damage per point.\nYou conjure a magical ice weapon into the target's hand. It counts as a magical melee weapon for as long as the spell lasts. Its damage equals the wielder's Strength Bonus + the caster's Willpower Bonus. When it ends, the weapon melts away without a trace.",
+"SDP.Item.Spell.iceweapon.Description": "Overcast: +1 additional damage per point.\nYou conjure a magical ice weapon into the target's hand. It counts as a magical melee weapon for as long as the spell lasts. Its damage equals the wielder's Strength Bonus + the caster's Willpower Bonus. A creature hit must pass a Toughness Test (+0) or gain 1 Numbed Condition. When it ends, the weapon melts away without a trace.",
 
 "SDP.Item.Spell.icearmor.Name": "Ice armor",
-"SDP.Item.Spell.icearmor.Description": "Overcast: +1 Armor point per point.\nA shell of frost envelops the target: they gain +1 Armor point over the whole body.",
+"SDP.Item.Spell.icearmor.Description": "Overcast: −10 to the target's Toughness Test per point.\nYou wrap the target in biting frost. They must pass a Toughness Test (+0). On a failure, they gain 1 Numbed Condition.",
 
 "SDP.Item.Spell.icerink.Name": "Ice rink",
 "SDP.Item.Spell.icerink.Description": "You turn the ground into a sheet of ice. Any creature that moves through the area must pass an Athletics Test (−20). On a failure, they fall Prone.",
 
 "SDP.Item.Spell.iceshard.Name": "Ice shard",
-"SDP.Item.Spell.iceshard.Description": "Overcast: +1 additional damage per point.\nYou hurl a sharp shard of ice. The target takes cold and piercing damage.",
+"SDP.Item.Spell.iceshard.Description": "Overcast: +Willpower Bonus damage per point.\nYou hurl a sharp shard of ice. The target takes cold and piercing damage.",
 
 "SDP.Item.Spell.icewall.Name": "Ice wall",
 "SDP.Item.Spell.icewall.Description": "You raise an opaque wall of ice. It blocks movement and line of sight, providing cover. 3 m wide × 2 m high × 0.5 m thick.",
 
 "SDP.Item.Spell.frostbite.Name": "Frostbite",
-"SDP.Item.Spell.frostbite.Description": "You lay your hand (or frost) on the target in melee. They take the damage, then must pass a Toughness Test (−20). On a failure, they gain 1 Slowed Condition.",
+"SDP.Item.Spell.frostbite.Description": "Overcast: +Willpower Bonus damage per point.\nYou lay your hand (or frost) on the target in melee. They take the damage, then must pass a Toughness Test (+0). On a failure, they gain 1 Numbed Condition.",
+
+"SDP.Item.Spell.icemirage.Name": "Ice mirage",
+"SDP.Item.Spell.icemirage.Description": "You blend illusion and reality by spreading real cold and ice mirages. Any creature that moves within the area must pass an Athletics Test (+0) or fall Prone. At the start of each of their turns in the area, they must pass a Toughness Test (+0) or gain 1 Numbed Condition, then a Perception Test (−30) to tell truth from falsehood. Until they succeed on that Perception Test, they lose their turn. For each turn spent in the area, they gain +10 to that Perception Test.",
+
+"SDP.Item.Spell.steamcloud.Name": "Steam cloud",
+"SDP.Item.Spell.steamcloud.Description": "Overcast: +Willpower Bonus damage per point.\nYou clash fire and ice to form a scalding cloud of steam. Creatures in the cloud are Blinded for as long as they remain there. Any creature that enters the cloud or starts its turn there takes the damage. The cloud blocks line of sight beyond 3 m.",
+
+"SDP.Item.Spell.cuttingblizzard.Name": "Cutting blizzard",
+"SDP.Item.Spell.cuttingblizzard.Description": "Overcast: +Willpower Bonus damage per point.\nYou unleash a storm of ice blades carried by the wind. Every creature in the area takes the damage, then must pass a Toughness Test (−20). On a failure, they gain 1 Numbed Condition.",
+
+"SDP.Item.Spell.iceenchantment.Name": "Ice enchantment",
+"SDP.Item.Spell.iceenchantment.Description": "Overcast: +1 additional damage or +1 Armor point per point.\nYou imbue an existing object with glacial magic: you increase a weapon's damage or an armor's protection. When an attack with the enchanted weapon hits, or when an opponent hits in melee against enchanted armor, the target must pass a Toughness Test (+0) or gain 1 Numbed Condition.",
+
+"SDP.Item.Spell.ardentbolt.Name": "Ardent bolt",
+"SDP.Item.Spell.ardentbolt.Description": "Overcast: +Willpower Bonus damage per point.\nYou project a bolt of flame. The target takes fire damage.",
+
+"SDP.Item.Spell.immolate.Name": "Immolation",
+"SDP.Item.Spell.immolate.Description": "Overcast: +Willpower Bonus damage per point.\nYou bring fire into contact with the target. They take the damage, then must pass a Reflexes Test (+0) to immediately brush aside the ephemeral flames. On a failure, they take an additional 1d6 fire damage.",
+
+"SDP.Item.Spell.fireball.Name": "Fireball",
+"SDP.Item.Spell.fireball.Description": "Overcast: +Willpower Bonus damage per point.\nYou detonate a sphere of flames in an area. Every creature caught within takes the damage.",
+
+"SDP.Item.Spell.walloffire.Name": "Wall of fire",
+"SDP.Item.Spell.walloffire.Description": "Overcast: +1 m of width per point.\nYou raise an opaque wall of flames. It blocks movement and line of sight. 3 m wide × 2 m high × 0.5 m thick. Any creature that crosses it or starts its turn there takes fire damage equal to the caster's Willpower Bonus.",
+
+"SDP.Item.Spell.flameweapon.Name": "Flame weapon",
+"SDP.Item.Spell.flameweapon.Description": "Overcast: +1 additional damage per point.\nYou conjure a magical flame weapon into the target's hand. It counts as a magical melee weapon for as long as the spell lasts. Its damage equals the wielder's Strength Bonus + the caster's Willpower Bonus. A creature hit must pass a Reflexes Test (+0) to shake off the flame before it truly burns them; on a failure, they take an additional 1d6 fire damage. When it ends, the weapon burns away without a trace.",
+
+"SDP.Item.Spell.cindershroud.Name": "Cinder shroud",
+"SDP.Item.Spell.cindershroud.Description": "Overcast: −10 to the target's Reflexes Test per point.\nA shroud of cinders envelops the target like living armor. Each time they are hit in melee, the shroud reacts to the attacker's aggression and sprays embers: the attacker must pass a Reflexes Test (+0) or take 1d6 fire damage.",
+
+"SDP.Item.Spell.smokescreen.Name": "Smoke screen",
+"SDP.Item.Spell.smokescreen.Description": "You release a thick cloud of smoke. Within the area, vision is limited to 3 m and creatures there are Blinded for as long as they remain.",
+
+"SDP.Item.Spell.emberarc.Name": "Ember arc",
+"SDP.Item.Spell.emberarc.Description": "Overcast: +Willpower Bonus damage per point.\nYou stretch a glowing arc of lightning that strikes one target then leaps to another nearby. Each creature hit takes the damage, then must pass a Toughness Test (+0). On a failure, they gain 1 Stunned Condition and automatically fail the following Reflexes Test: they take an additional 1d6 fire damage. On a success, they attempt a Reflexes Test (+0); on a failure, they take an additional 1d6 fire damage.",
+
+"SDP.Item.Spell.heatpressure.Name": "Heat pressure",
+"SDP.Item.Spell.heatpressure.Description": "Overcast: +Willpower Bonus damage per point.\nYou form an area where the air contracts and traps heat as under a bell jar. The air compresses the fire around anyone who enters. Any creature that enters the area or starts its turn there takes the damage (ignoring armor), then must pass a Toughness Test (−20). On a failure, they gain 1 Exhausted Condition.",
+
+"SDP.Item.Spell.flameenchantment.Name": "Flame enchantment",
+"SDP.Item.Spell.flameenchantment.Description": "Overcast: +1 additional damage or +1 Armor point per point.\nYou imbue an existing object with fiery magic: you increase a weapon's damage or an armor's protection. A creature hit by the enchanted weapon, or that hits enchanted armor in melee, must pass a Reflexes Test (+0) or take an additional 1d6 fire damage.",
+
+"SDP.Item.Spell.soulburn.Name": "Soul burn",
+"SDP.Item.Spell.soulburn.Description": "Overcast: +Willpower Bonus damage per point.\nYou hurl a black flame that passes through armor and sinks into the target's soul. They take the damage (ignoring armor). Their maximum Health then decreases by an amount equal to the caster's Willpower Bonus, until a prolonged rest or a purification. You must then pass a Cool Test (+0) or gain 1 Corruption point.",
+
+"SDP.Item.Spell.phoenixmantle.Name": "Phoenix mantle",
+"SDP.Item.Spell.phoenixmantle.Description": "Overcast: additional healing per point.\nA mantle of living flames envelops the target. Each time they are hit in melee, the attacker must pass a Reflexes Test (+0) or take 1d6 fire damage. Once per round, when they take damage, they recover a number of Health points equal to the caster's Willpower Bonus, without recovering more than the damage of the blow taken. The first time they would fall to 0 Health or below, or become Dying, the mantle shatters: they are stabilized at 1 Health point and the spell ends.",
+
+"SDP.Item.Spell.fireelemental.Name": "Fire elemental",
+"SDP.Item.Spell.fireelemental.Description": "Overcast: +1 round of maintenance, +1 damage, or +1 Armor point on the elemental, per point.\nYou summon a fire elemental (Large size) within range. It acts on your turn according to your orders. If it leaves the spell's range or you lose concentration, it dissipates in a puff of ash.\nEach time it attacks or is hit in melee, flames spray out: the target or attacker must pass a Reflexes Test (+0) or take 1d6 fire damage.",
 
 "SDP.MagicType": "Magic Type",
 "SDP.Used": "Used",
@@ -596,7 +649,8 @@
 "SDP.Success": "SUCCESS",
 "SDP.Failure": "FAILURE",
 "SDP.ManaCost": "Mana Cost",
-"SDP.Concentration": "Concentration",
+  "SDP.Concentration": "Concentration",
+  "SDP.Movable": "Movable",
 "SDP.Overcast": "Overcast",
 "SDP.ResetOvercast": "Reset Overcast",
 "SDP.Duration": "Duration",
@@ -2974,6 +3028,7 @@
   "SDP.Folder.curative.Name": "Curative",
   "SDP.Folder.superior.Name": "Superior",
   "SDP.Folder.water.Name": "Water",
-  "SDP.Folder.minor.Name": "Minor"
+  "SDP.Folder.minor.Name": "Minor",
+  "SDP.Folder.fire.Name": "Fire"
 
 }

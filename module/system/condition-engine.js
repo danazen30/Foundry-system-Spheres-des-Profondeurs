@@ -13,6 +13,41 @@ export class SdpConditionEngine {
     return actor.system.conditions?.[key] ?? 0;
   }
 
+  static getToughnessBonus(actor) {
+    const bonus = actor.system.attributes?.toughness?.bonus;
+    if (bonus !== undefined && bonus !== null) {
+      return Math.max(0, Number(bonus) || 0);
+    }
+    const value = Number(actor.system.attributes?.toughness?.value) || 0;
+    return Math.max(0, Math.floor(value / 10));
+  }
+
+  /**
+   * Engourdi ≥ Bonus d'Endurance → À terre, Inconscient, +1 Épuisé.
+   */
+  static async checkNumbedCollapse(actor, stackValue) {
+
+    const tb = this.getToughnessBonus(actor);
+    if (tb <= 0 || stackValue < tb) return;
+
+    const alreadyUnconscious =
+      actor.system.conditions?.unconscious === true;
+
+    const updates = {
+      "system.conditions.unconscious": true,
+      "system.conditions.prone": true
+    };
+
+    // Only grant Exhausted once when crossing into unconscious from numbed
+    if (!alreadyUnconscious) {
+      const exhausted = Number(actor.system.conditions?.exhausted || 0);
+      updates["system.conditions.exhausted"] = exhausted + 1;
+    }
+
+    await actor.update(updates);
+
+  }
+
   /**
    * +1 Épuisé si une pile stunned/poisoned/bleeding vient de tomber à 0.
    */

@@ -878,6 +878,9 @@ if (change.key === "system.custom.encumbranceStatMultiplier") {
     // CONDITIONS
     // =====================
 
+system.conditions ??= {};
+system.conditions.numbed ??= 0;
+
 system.conditionTotals = {};
 
 for (const key in system.conditions) {
@@ -1452,6 +1455,7 @@ conditionPenalty -= Number(cond.poisoned || 0);
 conditionPenalty -= Number(cond.exhausted || 0);
 conditionPenalty -= Number(cond.stunned || 0);
 conditionPenalty -= Number(cond.deafened || 0);
+if (Number(cond.numbed || 0) > 0) conditionPenalty -= 1;
 
 if (cond.prone) conditionPenalty -= 2;
 if (cond.surprised) conditionPenalty -= 3;
@@ -1506,8 +1510,9 @@ system.derived.evasion.value = Math.max(
 
     const baseMove = system.resources.movement.value ?? 0;
 const slowed = system.conditionTotals?.slowed ?? 0;
+const numbed = system.conditionTotals?.numbed ?? 0;
 
-let currentMove = baseMove - slowed;
+let currentMove = baseMove - slowed - numbed;
 
 // 👉 ENCUMBRANCE + défauts d'armure (Encombrante)
 currentMove += movePenalty;
@@ -1525,7 +1530,7 @@ system.resources.movement.current = currentMove;
 system.resources.movement.walk = currentMove * 2;
 system.resources.movement.run = currentMove * 4;
 
-if (currentMove === 0 && (slowed > 0 || enc >= 3)) {
+if (currentMove === 0 && (slowed > 0 || numbed > 0 || enc >= 3)) {
   system.conditions.entangled = true;
 }
 

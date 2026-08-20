@@ -16,7 +16,8 @@ export function registerAttributeListeners(sheet) {
         actor: sheet.document,
         type: "attribute",
         label: attrData.name || attrData.label,
-        target: attrData.value
+        target: attrData.value,
+        attribute: attr
       });
 
     });

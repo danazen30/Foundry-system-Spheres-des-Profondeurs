@@ -14,13 +14,14 @@ import {
   clearOpposedReference,
   createOpposedResultMessage
 } from "../chat/opposed.js";
+import { getConditionTestModifier } from "../system/condition-modifier-utils.js";
 
 const { ApplicationV2 } = foundry.applications.api;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 
 export class SdpRollApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
-  constructor({ actor, type, label, target, weapon, spellData = null, item = null }) {
+  constructor({ actor, type, label, target, weapon, spellData = null, item = null, attribute = null }) {
     super();
 
     this.actor = actor;
@@ -29,6 +30,8 @@ export class SdpRollApp extends HandlebarsApplicationMixin(ApplicationV2) {
     this.target = target;
     this.weapon = weapon;
     this.spellData = spellData;
+    this.item = item;
+    this.attribute = attribute;
 
     this.inspirationResult = 0;
 
@@ -94,31 +97,16 @@ async _prepareContext() {
 
   let conditionMod = 0;
   let conditionDetails = [];
-  const conditions = this.actor.system.conditionTotals;
 
-  // =========================
-  // CONDITIONS (FIX)
-  // =========================
-
-  for (const key in conditions) {
-
-    const value = conditions[key];
-    if (!value) continue;
-
-    if (key === "deafened") continue;
-
-    const stack = value === true ? 1 : value;
-    const config = CONFIG.SDP.conditionConfig?.[key];
-    if (!config?.modifier) continue;
-
-    const mod = config.modifier * stack;
-
-    conditionMod += mod;
-
-    conditionDetails.push({
-      name: key,
-      value: mod
+  {
+    const conditionResult = getConditionTestModifier(this.actor, {
+      type: this.type,
+      weapon: this.weapon,
+      item: this.item,
+      attribute: this.attribute
     });
+    conditionMod = conditionResult.total;
+    conditionDetails = conditionResult.details;
   }
 
   // =========================
@@ -787,15 +775,13 @@ game.sdp.dialogModifiers = {
   totalMod: modValue + diffValue,
   hitLocationProfile,
 
-  conditionMod: this.actor.system.conditionTotals
-    ? Object.entries(this.actor.system.conditionTotals).reduce((acc, [key, value]) => {
-        const config = CONFIG.SDP.conditionConfig?.[key];
-        if (!config?.modifier) return acc;
-
-        const stack = value === true ? 1 : value;
-        return acc + (config.modifier * stack);
-      }, 0)
-    : 0,
+  conditionMod: getConditionTestModifier(this.actor, {
+    type: this.type,
+    weapon: this.weapon,
+    item: this.item,
+    attribute: this.attribute,
+    attributeOverride
+  }).total,
 
   location,
   brutal,
