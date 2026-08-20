@@ -1,5 +1,5 @@
 import { SdpDamage } from "../combat/damage.js";
-import { getHitLocationLabel } from "../combat/hit-location.js";
+import { getHitLocationLabel, resolveSpellHitLocation } from "../combat/hit-location.js";
 import {
   getInjuryFromPack,
   buildInjuryKey,
@@ -287,21 +287,33 @@ if (!card) {
     const tokenId = button.dataset.token || card.dataset.token;
     const defenseType = button.dataset.defenseType;
     const weaponId = card.dataset.weapon;
+    const isSpellCard = card.classList.contains("sdp-spell");
     let targetId = card.dataset.target;
 
-// 🔥 NOUVEAU : inject target si absent
-if (!targetId) {
+    const liveTargets = Array.from(game.user.targets);
 
-  const targets = Array.from(game.user.targets);
+    if (isSpellCard) {
+      if (liveTargets.length === 1) {
+        targetId = liveTargets[0].id;
+      } else if (liveTargets.length > 1) {
+        ui.notifications.warn(
+          game.i18n.localize("SDP.Warning.SelectTarget")
+        );
+        return;
+      } else {
+        ui.notifications.warn(
+          game.i18n.localize("SDP.Warning.SelectTargetBeforeDamage")
+        );
+        return;
+      }
+      card.dataset.target = targetId;
+    } else if (!targetId) {
+      if (liveTargets.length === 1) {
+        targetId = liveTargets[0].id;
+        card.dataset.target = targetId;
+      }
+    }
 
-  if (targets.length === 1) {
-    targetId = targets[0].id;
-
-    // 🔥 IMPORTANT → on injecte dans la card pour la suite
-    card.dataset.target = targetId;
-  }
-}
-    const location = card.dataset.location;
     const damageType = card.dataset.damagetype || "slashing";
     const critical = String(card.dataset.critical) === "true";
 
@@ -320,6 +332,42 @@ if (!targetId) {
         game.i18n.localize("SDP.Warning.UnlinkedActorWeapon")
       );
       return;
+    }
+
+    let location = card.dataset.location;
+    let locationProfile =
+      card.dataset.locationProfile || "humanoid";
+
+    if (isSpellCard) {
+      const defenderActor =
+        canvas.tokens.get(targetId)?.actor
+        ?? game.actors.get(targetId)
+        ?? null;
+
+      locationProfile =
+        defenderActor?.system?.hitLocationProfile
+        || card.dataset.locationProfile
+        || "humanoid";
+
+      const mode =
+        card.dataset.hitLocationMode
+        || weapon.system?.hitLocationMode?.value
+        || "random";
+
+      const fixedLocation =
+        card.dataset.fixedHitLocation
+        || weapon.system?.fixedHitLocation?.value
+        || "body";
+
+      const hit = await resolveSpellHitLocation({
+        mode,
+        fixedLocation,
+        profileKey: locationProfile
+      });
+
+      location = hit.location;
+      card.dataset.location = location;
+      card.dataset.locationProfile = locationProfile;
     }
 
     if (brutal && weapon) {

@@ -70,3 +70,50 @@ export function getHitLocationLabel(profileKey, location) {
     return game.i18n.localize(label);
 
 }
+
+/**
+ * Spell damage hit location: random table roll, or a fixed zone (e.g. blasts → body).
+ * Fixed "arm" / "leg" pick left or right at random (1/2).
+ * @param {{ mode?: string, fixedLocation?: string, profileKey?: string }} [options]
+ */
+export async function resolveSpellHitLocation({
+  mode = "random",
+  fixedLocation = "body",
+  profileKey = "humanoid"
+} = {}) {
+
+  if (mode === "fixed") {
+    const profile = getHitLocationProfile(profileKey);
+    let location = fixedLocation || "body";
+    let sideRoll = null;
+
+    if (location === "arm" || location === "leg") {
+      sideRoll = await (new Roll("1d2")).roll();
+      const useRight = sideRoll.total === 2;
+      if (location === "arm") {
+        location = useRight ? "rightArm" : "leftArm";
+      } else {
+        location = useRight ? "rightLeg" : "leftLeg";
+      }
+    }
+
+    if (!profile.locations?.[location]) {
+      location = profile.locations?.body
+        ? "body"
+        : (Object.keys(profile.locations || {})[0] || "body");
+    }
+
+    return {
+      location,
+      roll: { total: sideRoll?.total ?? "fixed" },
+      fixed: true
+    };
+  }
+
+  const result = await rollHitLocation(profileKey);
+  return {
+    ...result,
+    fixed: false
+  };
+
+}

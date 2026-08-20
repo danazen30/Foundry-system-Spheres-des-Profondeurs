@@ -220,7 +220,8 @@ SDP.conditions = {
   dying: "SDP.ConditionDying",
   surprised: "SDP.ConditionSurprised",
   slowed: "SDP.ConditionSlowed",
-  numbed: "SDP.ConditionNumbed"
+  numbed: "SDP.ConditionNumbed",
+  dazzled: "SDP.ConditionDazzled"
 
 };
 
@@ -238,6 +239,12 @@ SDP.magicTypes = {
   superior: "SDP.MagicSuperior"
 };
 CONFIG.SDP.magicTypes = SDP.magicTypes;
+
+SDP.spellHitLocationModes = {
+  random: "SDP.SpellHitLocationRandom",
+  fixed: "SDP.SpellHitLocationFixed"
+};
+CONFIG.SDP.spellHitLocationModes = SDP.spellHitLocationModes;
 
 SDP.rollTables = {
 
@@ -366,11 +373,25 @@ SDP.conditionConfig = {
     description: "SDP.ConditionNumbedDescription"
   },
 
+  dazzled: {
+    label: "SDP.ConditionDazzled",
+    type: "stack",
+    modifier: -10,
+    modifierOnce: true,
+    applyToAttack: true,
+    skillKeys: ["perception"],
+    defensePenalty: 1,
+    trigger: "endTurn",
+    removePerTurn: 1,
+    description: "SDP.ConditionDazzledDescription"
+  },
+
   entangled: {
     label: "SDP.ConditionEntangled",
     type: "state",
     trigger: "startTurn",
     test: "strength",
+    defensePenalty: 2,
     description: "SDP.ConditionEntangledDescription"
   },
 

@@ -70,6 +70,7 @@
   "SDP.ConditionSurprised": "Surpris",
   "SDP.ConditionSlowed": "Ralenti",
   "SDP.ConditionNumbed": "Engourdi",
+  "SDP.ConditionDazzled": "Ébloui",
 
   "SDP.MagicMinor": "Mineure",
   "SDP.MagicAdvanced": "Avancée",
@@ -195,7 +196,8 @@
 "SDP.ConditionFrightenedDescription": "Un personnage Effrayé fuit la source de sa peur aussi rapidement qu’il le peut. Si aucune issue ne s’ouvre à lui, il peut combattre. Il reçoit un malus de -3 aux jets d’attaques ainsi qu’aux tests de compétence et de caractéristique. Il peut user de ses pouvoirs et ses sorts pour s’enfuir et le fait inévitablement si aucune autre solution ne s’offre à lui.\n\nVous ne pouvez effectuer aucun Test pour récupérer de cet État si vous êtes Engagé avec un ennemi. Si vous n’êtes pas Engagé, à la fin de chaque round, vous pouvez tenter un Test de Calme pour vous débarrasser de l’état Effrayé. La difficulté variera en fonction de la situation et de la menace. Il est plus facile de vous reprendre pour recouvrer vos esprits si vous vous cachez derrière un tonneau au fond d’une impasse située loin du danger (Accessible +20) plutôt que lorsque vous vous trouvez à trois enjambées d’un démon salivant qui réclame votre sang (Très Difficile -30).\n\nCet état s’apparente au fait d’être Secoué, sauf que le personnage fait tout pour s’enfuir. Si Effrayé se dissipe, alors Secoué s’active.",
 "SDP.ConditionSlowedDescription": "Vous êtes ralenti.\n\nLa source de votre ralentissement réduit votre Mouvement de 1 par charge.\n\nSi votre Mouvement est réduit à 0, vous gagnez la Condition Entravé.",
 "SDP.ConditionNumbedDescription": "Le froid a engourdi vos muscles et vos doigts ; chaque geste demande un effort.\n\nVous subissez un malus de −10 aux Tests de Capacité de Combat, Capacité de Tir, Agilité et Dextérité. Chaque charge d'Engourdi réduit également votre Mouvement de 1.\n\nSi le nombre de charges d'Engourdi atteint votre Bonus d'Endurance, vous vous effondrez : vous gagnez les Conditions À terre et Inconscient, ainsi que 1 Condition Épuisé.\n\nTant que vous restez exposé au froid qui cause cet état (tempête, blizzard, etc.), vous ne pouvez pas tenter de le retirer. Dès que vous êtes à l'abri, à la fin de chaque round vous pouvez tenter un Test de Résistance (+0) : en cas de réussite, retirez 1 Condition Engourdi.",
-"SDP.ConditionEntangledDescription": "Vous êtes gêné par quelque chose qui restreint vos mouvements ; cela peut être des cordes, une toile ou même les biceps imposants d’un adversaire.\n\nDurant votre tour, vous ne pouvez pas utiliser votre Mouvement.\n\nVous pouvez utiliser votre Action pour retirer la Condition Entravé en réussissant un Test opposé de Force contre la source de l’entrave.\n\nLa difficulté varie selon la situation.\n\nSi cette Condition a été causée par Ralenti, une réussite retire la Condition Entravé et chaque SL (Niveau de Réussite) réduit une partie des charges de Ralenti.",
+"SDP.ConditionDazzledDescription": "Vous êtes ébloui par une lumière trop vive ou un contraste brutal.\n\nVous subissez un malus de −10 aux Tests d'attaque et de Perception, ainsi qu'un malus de −1 à la Parade et à l'Esquive. Ces malus s'appliquent une seule fois tant que vous avez au moins 1 Condition Ébloui (ils ne se multiplient pas avec les charges).\n\nChaque charge d'Ébloui représente environ un tour d'éblouissement. À la fin de chacun de vos tours, retirez 1 Condition Ébloui.",
+"SDP.ConditionEntangledDescription": "Vous êtes gêné par quelque chose qui restreint vos mouvements ; cela peut être des cordes, une toile ou même les biceps imposants d’un adversaire.\n\nDurant votre tour, vous ne pouvez pas utiliser votre Mouvement.\n\nVous subissez un malus de −2 à la Parade et à l’Esquive.\n\nVous pouvez utiliser votre Action pour retirer la Condition Entravé en réussissant un Test opposé de Force contre la source de l’entrave.\n\nLa difficulté varie selon la situation.\n\nSi cette Condition a été causée par Ralenti, une réussite retire la Condition Entravé et chaque SL (Niveau de Réussite) réduit une partie des charges de Ralenti.",
 "SDP.ConditionUnconsciousDescription": "Vous êtes assommé, inconscient ou autrement incapable d’agir.\n\nVous ne pouvez absolument rien faire durant votre tour et n’avez aucune conscience de ce qui vous entoure.\n\nUn attaquant vous ciblant bénéficie de la règle « Je Ne Vais Pas Échouer ! » sans avoir besoin de dépenser un Point de Résilience.\n\nAlternativement, à la discrétion du MJ, une attaque au corps à corps peut automatiquement vous tuer.\n\nToute attaque à distance est également une réussite automatique et inflige des dégâts comme si l’attaquant était à bout portant.\n\nLa Condition Inconscient ne se cumule pas — vous êtes soit Inconscient, soit vous ne l’êtes pas.\n\nRécupérer de cette Condition dépendra souvent des circonstances qui l’ont causée.\n\nSi vous dépensez un Point de Détermination pour retirer la Condition Inconscient alors que sa cause est toujours présente, vous gagnez une nouvelle Condition Inconscient à la fin du round.\n\nLorsque vous retirez la Condition Inconscient, vous gagnez les Conditions À Terre et Épuisé.",
 "SDP.ConditionDyingDescription": "Le personnage est inconscient et mourant.\n\nUne créature ayant un nombre négatif de Blessures et n’étant pas stabilisée est considérée comme mourante.\n\nUne créature mourante ne peut effectuer aucune action.\n\nAu début de chacun de ses tours, à chaque round, jusqu’à ce qu’elle soit stabilisée ou qu’elle meure, le personnage doit effectuer un Test de Résistance.\n\nUn personnage stabilisé n’a pas besoin d’effectuer ce test.\n\nEn cas d’échec, le personnage perd 1 Blessure supplémentaire.\n\nUne créature mourante meurt lorsque son total de Blessures négatives atteint son SB (Seuil de Blessure).\n\nPour stabiliser le personnage, un Test de Soin réussi ou un sort de guérison est nécessaire.",
 "SDP.ConditionSurprisedDescription": "Vous êtes pris au dépourvu et incapable d’agir durant votre tour.\n\nLes attaques de mêlée contre vous gagnent un bonus de +3 pour toucher.\n\nCette Condition est retirée à la fin de votre round ou après la première fois où vous êtes ciblé par une attaque.",
@@ -481,6 +483,10 @@
 "SDP.ActiveAbilities": "Capacités actives",
 "SDP.PassiveAbility": "Passif",
 "SDP.IgnoreArmor": "Ignorer l'armure",
+"SDP.SpellHitLocationMode": "Localisation",
+"SDP.SpellHitLocationRandom": "Aléatoire (au jet de dégâts)",
+"SDP.SpellHitLocationFixed": "Forcée",
+"SDP.SpellFixedHitLocation": "Localisation forcée",
 "SDP.Notifications.PassiveAbilityCannotUse": "Cette capacité est passive et ne peut pas être lancée.",
 "SDP.AbilitiesAndMagic": "Capacités & Magie",
 "SDP.Item.Ability.web.Name": "Toile",
@@ -640,6 +646,42 @@
 
 "SDP.Item.Spell.fireelemental.Name": "Élémentaire de feu",
 "SDP.Item.Spell.fireelemental.Description": "Surincantation : +1 round de maintien, +1 dégât, ou +1 PA à l'élémentaire, par point.\nTu invoques un élémentaire de feu (Grande taille) à portée. Il agit à ton tour selon tes ordres. S'il quitte la portée du sort ou si tu perds la concentration, il se dissipe en un souffle de cendres.\nChaque fois qu'il attaque ou qu'il est touché au contact, des flammes fusent : la cible ou l'attaquant doit réussir un Test de Réflexes (+0) ou subir 1d6 dégâts de feu.",
+
+"SDP.Item.Spell.rockshard.Name": "Éclat de roche",
+"SDP.Item.Spell.rockshard.Description": "Surincantation : +Bonus de Force Mentale dégâts par point.\nTu crées un éclat de roche et le projettes. La cible subit les dégâts.",
+
+"SDP.Item.Spell.stonewall.Name": "Mur de pierre",
+"SDP.Item.Spell.stonewall.Description": "Surincantation : +1 à la valeur du mur par point.\nTu ériges un mur de pierre opaque. Il bloque le mouvement et la ligne de vue, offrant une couverture. 3 m large × 2 m haut × 0,5 m d'épaisseur.\nLa valeur du mur est égale au Bonus de Force Mentale du lanceur (solidité / PA si l'on cherche à le briser).",
+
+"SDP.Item.Spell.tremor.Name": "Secousse",
+"SDP.Item.Spell.tremor.Description": "Surincantation : +Bonus de Force Mentale dégâts par point.\nTu fractures le sol dans la zone : fissures, soulèvements et projections de pierre. Chaque créature prise dedans subit les dégâts, puis doit réussir un Test d'Athlétisme (+0). En cas d'échec, elle tombe À terre.",
+
+"SDP.Item.Spell.earthfist.Name": "Poing de pierre",
+"SDP.Item.Spell.earthfist.Description": "Surincantation : +Bonus de Force Mentale dégâts par point.\nTu fais surgir un poing de pierre massif qui frappe la cible à bout portant. Elle subit les dégâts, puis doit réussir un Test de Résistance (+0). En cas d'échec, elle tombe À terre.",
+
+"SDP.Item.Spell.earthblade.Name": "Arme tellurique",
+"SDP.Item.Spell.earthblade.Description": "Surincantation : +1 dégât supplémentaire par point.\nTu conjures une arme de mêlée magique de pierre et de métal tellurique dans la main de la cible. Elle compte comme une arme magique tant que le sort dure. Ses dégâts valent le Bonus de Force du porteur + le Bonus de Force Mentale du lanceur. L'arme possède le trait Fracassante : lorsqu'elle touche, elle inflige aussi 1 point de dégâts à la pièce d'armure ou au bouclier touché. À la fin, l'arme se désagrège en poussière.",
+
+"SDP.Item.Spell.stoneskin.Name": "Peau de pierre",
+"SDP.Item.Spell.stoneskin.Description": "Surincantation : +1 PA par point.\nTu enveloppes la cible d'une carapace de pierre. Tant que le sort dure, elle bénéficie de +1 PA sur tout le corps. À la fin, la pierre se fissure et tombe.",
+
+"SDP.Item.Spell.quicksand.Name": "Sables mouvants",
+"SDP.Item.Spell.quicksand.Description": "Tu transformes le sol en sables mouvants. Toute créature qui entre dans la zone ou y commence son tour doit réussir un Test d'Athlétisme (−20). En cas d'échec, elle gagne 1 Condition Ralenti, plus 1 Condition Ralenti supplémentaire par tranche de 2 DR d'échec.\nLorsque le sort prend fin, le sol reprend sa consistance. Une créature encore enfoncée au moment où le sort se termine gagne la Condition À terre.",
+
+"SDP.Item.Spell.telluriccage.Name": "Cage tellurique",
+"SDP.Item.Spell.telluriccage.Description": "Surincantation : +Bonus de Force Mentale dégâts par point.\nTu charges le sol et dresses une cage d'électricité qui en épouse les contours. Toute créature qui cherche à entrer dans la cage ou à en sortir subit les dégâts (ignorent l'armure) et doit réussir un Test de Résistance (−20) pour traverser. En cas d'échec, elle gagne 1 Condition Étourdi et reste du côté d'où elle tentait de passer.",
+
+"SDP.Item.Spell.radiantstele.Name": "Stèle éclatante",
+"SDP.Item.Spell.radiantstele.Description": "Surincantation : +1 Condition Ébloui par point.\nTu fais surgir une stèle de pierre imprégnée de lumière. Tant que tu maintiens la concentration, une fois par tour tu peux, en action bonus, faire flasher la stèle vers une cible qui la voit : elle doit réussir un Test de Réflexes (+0) ou gagner 1 Condition Ébloui.",
+
+"SDP.Item.Spell.lavaspit.Name": "Crachat de lave",
+"SDP.Item.Spell.lavaspit.Description": "Surincantation : +Bonus de Force Mentale dégâts par point.\nTu projettes un jet de lave dans la zone. Chaque créature prise dedans subit les dégâts, puis doit réussir un Test de Réflexes (−20). En cas d'échec, elle subit 2d4 dégâts de feu supplémentaires.",
+
+"SDP.Item.Spell.bloodcrystals.Name": "Cristaux de sang",
+"SDP.Item.Spell.bloodcrystals.Description": "Surincantation : +Bonus de Force Mentale dégâts par point, ou −10 au Calme de la cible par point.\nTu saisis le sang de la cible et forces les minéraux qu'il contient à se cristalliser. Effectue un Test opposé de Canalisation contre le Calme de la cible. En cas de réussite, tant que tu maintiens la concentration la cible est totalement immobilisée et sans défense (elle ne peut ni se déplacer, ni Parer, ni Esquiver). Au lancement, puis à la fin de chacun de ses tours, elle subit les dégâts (ignorent l'armure).\nAu début de chacun de ses tours, le Test opposé est relancé. Le premier Test (au lancement) se fait sans bonus ; chaque Test suivant accorde à la cible un bonus cumulatif de +10 au Calme (+10 au 2ᵉ Test, +20 au 3ᵉ, et ainsi de suite). Les créatures sans sang sont immunisées.",
+
+"SDP.Item.Spell.graveltornado.Name": "Tornade de gravier",
+"SDP.Item.Spell.graveltornado.Description": "Surincantation : +Bonus de Force Mentale dégâts par point, ou −10 au Test de Résistance par point.\nTu soulèves une tornade chargée de gravier et d'éclats de pierre. Sa hauteur est égale au Bonus de Force Mentale du lanceur (en mètres).\nToute créature qui entre dans la zone ou y commence son tour subit les dégâts du gravier, puis doit réussir un Test de Résistance (+0). En cas d'échec, elle est aspirée jusqu'au sommet de la tornade puis lâchée : elle subit une chute d'une hauteur égale à celle de la tornade (aucun dégât sur les 2 premiers mètres ; ensuite 3 + 1d4 dégâts par mètre de chute) et tombe À terre.",
 
 "SDP.MagicType": "Type de magie",
 "SDP.Used": "Utilisé",
@@ -1488,7 +1530,7 @@
 "SDP.Item.Skill.performanceantics.Name": "Représentation (Pitreries)",
 "SDP.Item.Skill.performanceprestidigitation.Name": "Représentation (Prestidigitation)",
 "SDP.Item.Skill.channel.Name": "Canalisation (au choix)",
-"SDP.Item.Skill.channel.Description": "Vous avez reçu une formation approfondie dans cette branche de la magie et savez mieux maîtriser les risques liés à son utilisation.\n\nLorsque vous lancez un sort de ce type, les échecs critiques ne surviennent plus que sur un résultat de 96 à 100 au lieu de 86 à 100.\n\nCette compétence est également nécessaire pour apprendre et utiliser les formes les plus puissantes de cette spécialisation magique (magie supérieure).\n\nSpécialisations : Curative, Élémentaire (Feu, Eau, Foudre, Terre, Air, Végétal, Clair-Obscur), Invocation, Soutien, Modulation, Transformation, Clairvoyance, Nécromancie, Démonologie.",
+"SDP.Item.Skill.channel.Description": "Vous avez reçu une formation approfondie dans cette branche de la magie et savez mieux maîtriser les risques liés à son utilisation.\n\nLorsque vous lancez un sort de ce type, les échecs critiques ne surviennent plus que sur un résultat de 96 à 100 au lieu de 86 à 100.\n\nCette compétence est également nécessaire pour apprendre et utiliser les formes les plus puissantes de cette spécialisation magique (magie supérieure).\n\nSpécialisations : Curative, Élémentaire (Feu, Eau, Foudre, Terre, Air, Végétal, Clair-Obscur), Invocation, Soutien, Modulation, Transformation, Clairvoyance, Nécromancie, Carnomancie.",
 "SDP.Item.Skill.channelcurative.Name": "Canalisation (Curative)",
 "SDP.Item.Skill.channelfire.Name": "Canalisation (Feu)",
 "SDP.Item.Skill.channelwater.Name": "Canalisation (Eau)",
@@ -1503,7 +1545,7 @@
 "SDP.Item.Skill.channeltransformation.Name": "Canalisation (Transformation)",
 "SDP.Item.Skill.channelclairvoyance.Name": "Canalisation (Clairvoyance)",
 "SDP.Item.Skill.channelnecromancy.Name": "Canalisation (Nécromancie)",
-"SDP.Item.Skill.channeldemonology.Name": "Canalisation (Démonologie)",
+"SDP.Item.Skill.channeldemonology.Name": "Canalisation (Carnomancie)",
 "SDP.Item.Skill.subornation.Name": "Subornation",
 "SDP.Item.Skill.subornation.Description": "La Subornation représente votre capacité à déterminer si une personne est disposée à accepter un pot-de-vin et à évaluer la manière la plus efficace de lui faire une proposition discrète et convaincante.\n\nUn Test de Subornation réussi vous permet de savoir si votre cible peut être corrompue. Si c'est le cas, le MJ détermine secrètement la somme nécessaire pour obtenir sa coopération. Ce montant dépend généralement de son niveau de vie, de son intégrité personnelle et des risques qu'elle encourt en acceptant votre offre.\n\nVous pouvez alors tenter d'estimer cette somme. Le MJ vous indiquera si votre estimation est trop basse, trop élevée ou proche du montant attendu. Chaque DR obtenu lors du Test vous permet d'affiner davantage cette estimation. Une fois les informations recueillies, il vous appartient de décider combien vous êtes prêt à offrir.",
 "SDP.Item.Skill.lore.Name": "Savoir (au choix)",
@@ -1618,7 +1660,7 @@
 "SDP.Item.Talent.snooper.Name": "Fouineur",
 "SDP.Item.Talent.snooper.Description": "Vous avez le regard pour repérer ce que d'autres laisseraient passer. Compartiments secrets, passages dissimulés, doubles fonds ou objets soigneusement cachés attirent naturellement votre attention.\n\nLorsque vous fouillez une pièce, un contenant, un véhicule ou tout autre environnement, ajoutez votre niveau dans ce Talent au résultat du jet.",
 "SDP.Item.Talent.arcanediscipline.Name": "Discipline arcanique (au choix)",
-"SDP.Item.Talent.arcanediscipline.Description": "Vous avez perfectionné votre compréhension et votre maîtrise de cette forme de magie. Votre expérience vous permet de mieux contrôler les erreurs et d'en limiter les conséquences.\n\nLorsque vous subissez une conséquence critique avec une magie avancée de cette spécialisation, celle-ci est considérée comme une conséquence mineure au lieu d'une conséquence majeure.\n\nCe talent est nécessaire pour apprendre et utiliser les formes supérieures de cette magie.\n\nSpécialisations : Curative, Élémentaire (Feu, Eau, Foudre, Terre, Air, Végétal, Clair-Obscur), Invocation, Soutien, Modulation, Transformation, Clairvoyance, Nécromancie, Démonologie.",
+"SDP.Item.Talent.arcanediscipline.Description": "Vous avez perfectionné votre compréhension et votre maîtrise de cette forme de magie. Votre expérience vous permet de mieux contrôler les erreurs et d'en limiter les conséquences.\n\nLorsque vous subissez une conséquence critique avec une magie avancée de cette spécialisation, celle-ci est considérée comme une conséquence mineure au lieu d'une conséquence majeure.\n\nCe talent est nécessaire pour apprendre et utiliser les formes supérieures de cette magie.\n\nSpécialisations : Curative, Élémentaire (Feu, Eau, Foudre, Terre, Air, Végétal, Clair-Obscur), Invocation, Soutien, Modulation, Transformation, Clairvoyance, Nécromancie, Carnomancie.",
 "SDP.Item.Talent.arcanedisciplinecurative.Name": "Discipline arcanique (Curative)",
 "SDP.Item.Talent.arcanedisciplinefire.Name": "Discipline arcanique (Feu)",
 "SDP.Item.Talent.arcanedisciplinewater.Name": "Discipline arcanique (Eau)",
@@ -1633,7 +1675,7 @@
 "SDP.Item.Talent.arcanedisciplinetransformation.Name": "Discipline arcanique (Transformation)",
 "SDP.Item.Talent.arcanedisciplineclairvoyance.Name": "Discipline arcanique (Clairvoyance)",
 "SDP.Item.Talent.arcanedisciplinenecromancy.Name": "Discipline arcanique (Nécromancie)",
-"SDP.Item.Talent.arcanedisciplinedemonology.Name": "Discipline arcanique (Démonologie)",
+"SDP.Item.Talent.arcanedisciplinedemonology.Name": "Discipline arcanique (Carnomancie)",
 "SDP.Item.Talent.arcanepioneer.Name": "Pionnier des arcanes",
 "SDP.Item.Talent.arcanepioneer.Description": "Vous êtes parmi les rares mages à repousser les frontières des connaissances magiques. Vos recherches vous permettent de mieux anticiper les difficultés liées aux théories encore inexplorées.\n\nLorsque vous créez, modifiez ou utilisez un sort expérimental, réduisez de 10 les malus liés à son caractère expérimental par niveau dans ce Talent.",
 "SDP.Item.Talent.network.Name": "Réseau (au choix)",
@@ -3033,5 +3075,6 @@
   "SDP.Folder.superior.Name": "Supérieur",
   "SDP.Folder.water.Name": "Eau",
   "SDP.Folder.minor.Name": "Mineur",
-  "SDP.Folder.fire.Name": "Feu"
+  "SDP.Folder.fire.Name": "Feu",
+  "SDP.Folder.earth.Name": "Terre"
 }

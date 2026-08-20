@@ -395,6 +395,14 @@ prepareDerivedData(){
   else if (this.type === "spell") {
     system.ignoreArmor ??= false;
     system.ignoreArmor = !!system.ignoreArmor;
+    system.hitLocationMode ??= {};
+    system.hitLocationMode.value =
+      system.hitLocationMode.value === "fixed" ? "fixed" : "random";
+    system.fixedHitLocation ??= {};
+    system.fixedHitLocation.value =
+      system.fixedHitLocation.value
+        ? String(system.fixedHitLocation.value)
+        : "body";
     system.movable ??= {};
     system.movable.value ??= "";
     system.movable.value = String(system.movable.value ?? "");

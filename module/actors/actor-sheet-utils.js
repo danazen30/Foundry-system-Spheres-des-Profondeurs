@@ -642,13 +642,41 @@ export function registerConditionDetails(root) {
       const key = el.dataset.key;
       const description = el.dataset.description;
 
+      const stackGrid = el.closest(".conditions-stack-grid");
+      if (stackGrid) {
+        const details = stackGrid.parentElement?.querySelector(
+          ".condition-stack-details"
+        );
+        if (!details) return;
+
+        const isOpen =
+          details.style.display !== "none"
+          && details.dataset.key === key;
+
+        if (isOpen) {
+          details.style.display = "none";
+          details.innerHTML = "";
+          delete details.dataset.key;
+          return;
+        }
+
+        const label = game.i18n.localize(
+          SDP.conditionConfig?.[key]?.label || key
+        );
+        details.innerHTML =
+          `<strong>${label}</strong><br>${description}`;
+        details.dataset.key = key;
+        details.style.display = "block";
+        return;
+      }
+
       const table = el.closest("table");
 
       const detailsRow =
-        table.querySelector(".condition-details-row");
+        table?.querySelector(".condition-details-row");
 
       const content =
-        table.querySelector(".condition-details-content");
+        table?.querySelector(".condition-details-content");
 
       if (!detailsRow || !content) return;
 

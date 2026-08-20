@@ -337,6 +337,7 @@ Handlebars.registerHelper("includes", function(value, key) {
       deafened: 0,
       slowed: 0,
       numbed: 0,
+      dazzled: 0,
       entangled:0,
       staggered:0,
       shaken:0,

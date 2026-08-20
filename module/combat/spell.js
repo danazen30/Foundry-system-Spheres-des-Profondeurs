@@ -1,5 +1,4 @@
 import { SdpRoll } from "../rolls/roll.js";
-import { rollHitLocation, getHitLocationProfile} from "./hit-location.js";
 import { resolveSdpFormula } from "../system/formula-utils.js";
 import { getActorItemDisplayName } from "../system/item-localization.js";
 import { getTokenIdForActor } from "../system/actor-utils.js";
@@ -68,9 +67,6 @@ static async cast(actor, spell, baseValue){
   actor.system.hitLocationProfile ||
   "humanoid";
 
-const hitProfile =
-  getHitLocationProfile(hitProfileKey);
-
   const selectedTalents = dialogMods.talents || [];
 
     const system = spell.system;
@@ -94,27 +90,9 @@ if (bestSkill){
   skillName = getActorItemDisplayName(bestSkill) || bestSkill.name;
 }
 
-let locationMod = 0;
-
-if (dialogMods.location) {
-
-  locationMod =
-    hitProfile.locations?.[dialogMods.location]?.modifier || 0;
-
-  locationMod = SdpRoll.applyLocationModifierReduction(
-    locationMod,
-    SdpRoll.getLocationPenaltyReduction(
-      actor,
-      selectedTalents
-    )
-  );
-
-}
-
 const targetValue =
   (skillValue || INT) +
   (dialogMods.totalMod || 0) +
-  locationMod +
   SdpRoll.getTargetBonus(
     actor,
     selectedTalents
@@ -252,23 +230,10 @@ const hasDamage =
   (String(baseDamage ?? "").trim() !== "" && String(baseDamage).trim() !== "0") ||
   (typeof diceDamage === "string" && diceDamage.trim() !== "");
 
-  // ======================
-  // LOCATION
-  // ======================
-
-  let hitLocation = null;
-
-  if (hasDamage) {
-    if (dialogMods.location) {
-      hitLocation = {
-        location: dialogMods.location,
-        roll: { total: "manual" }
-      };
-    } else {
-      hitLocation =
-        await rollHitLocation(hitProfileKey);
-    }
-  }
+  const hitLocationMode =
+    system.hitLocationMode?.value === "fixed" ? "fixed" : "random";
+  const fixedHitLocation =
+    system.fixedHitLocation?.value || "body";
 
   const concentration = system.concentration?.value === true;
   const hasSpecialOvercast = system.overcast?.value === true;
@@ -349,7 +314,6 @@ await actor.update({
       data-actor="${actor.id}"
       data-token="${tokenId}"
       data-weapon="${spell.id}"
-      data-target="${Array.from(game.user.targets)[0]?.id || ""}"
       data-ignore-armor="${ignoreArmor}">
       ${game.i18n.localize("SDP.RollDamage")}
     </button>
@@ -370,7 +334,9 @@ await actor.update({
      data-critical="${crit.success}"
      data-hasskill="${hasSkill}"
      data-weapon="${spell.id}"
-     data-location="${hitLocation?.location || ""}"
+     data-location=""
+     data-hit-location-mode="${hitLocationMode}"
+     data-fixed-hit-location="${fixedHitLocation}"
      data-location-profile="${hitProfileKey}"
      data-talents='${JSON.stringify(selectedTalents)}'
      data-overcast="${overcast}"
@@ -409,16 +375,6 @@ ${talentsHTML}
   : game.i18n.localize("SDP.Failure")}</strong></p>
 
 <p><strong>${game.i18n.localize("SDP.ManaCost")}:</strong> ${manaCost}</p>
-
-${hasDamage && hitLocation ? `
-<p>
-<strong>${game.i18n.localize("SDP.HitLocation")}:</strong>
-${game.i18n.localize(
-  hitProfile.locations?.[hitLocation.location]?.label
-) || hitLocation.location}
-(${hitLocation.roll.total})
-</p>
-` : ""}
 
 ${concentration ? `<p><strong>${game.i18n.localize("SDP.Concentration")}</strong></p>` : ""}
 

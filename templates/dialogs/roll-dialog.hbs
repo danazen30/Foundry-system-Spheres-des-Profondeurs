@@ -179,6 +179,8 @@
       </select>
     </div>
 
+    {{#if isAttack}}
+    {{#unless isSpell}}
     <div class="sdp-roll-field">
       <label>{{localize "SDP.Target"}}</label>
       <select name="location">
@@ -194,6 +196,8 @@
         {{/each}}
       </select>
     </div>
+    {{/unless}}
+    {{/if}}
   </div>
 
   <div class="sdp-roll-checklist sdp-roll-checklist--compact">

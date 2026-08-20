@@ -880,6 +880,7 @@ if (change.key === "system.custom.encumbranceStatMultiplier") {
 
 system.conditions ??= {};
 system.conditions.numbed ??= 0;
+system.conditions.dazzled ??= 0;
 
 system.conditionTotals = {};
 
@@ -1456,8 +1457,10 @@ conditionPenalty -= Number(cond.exhausted || 0);
 conditionPenalty -= Number(cond.stunned || 0);
 conditionPenalty -= Number(cond.deafened || 0);
 if (Number(cond.numbed || 0) > 0) conditionPenalty -= 1;
+if (Number(cond.dazzled || 0) > 0) conditionPenalty -= 1;
 
 if (cond.prone) conditionPenalty -= 2;
+if (cond.entangled) conditionPenalty -= 2;
 if (cond.surprised) conditionPenalty -= 3;
 if (cond.shaken) conditionPenalty -= 1;
 if (cond.frightened) conditionPenalty -= 3;

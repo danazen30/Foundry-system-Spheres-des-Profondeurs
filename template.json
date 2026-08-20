@@ -258,6 +258,7 @@
         "exhausted": 0,
         "slowed": 0,
         "numbed": 0,
+        "dazzled": 0,
         "entangled": false,
         "surprised": false,
         "prone": false,
@@ -1173,6 +1174,18 @@
         "type": "Boolean",
         "label": "Ignore Armor",
         "value": false
+      },
+
+      "hitLocationMode": {
+        "type": "string",
+        "label": "Hit Location Mode",
+        "value": "random"
+      },
+
+      "fixedHitLocation": {
+        "type": "string",
+        "label": "Fixed Hit Location",
+        "value": "body"
       },
 
       "concentration": {

@@ -91,6 +91,43 @@ export class SdpSpellSheet extends SdpItemSheet {
     context.system.ignoreArmor =
       !!this.document.system.ignoreArmor;
 
+    const mode =
+      this.document.system.hitLocationMode?.value || "random";
+    context.system.hitLocationMode = { value: mode };
+
+    const fixed =
+      this.document.system.fixedHitLocation?.value || "body";
+    context.system.fixedHitLocation = { value: fixed };
+
+    const humanoid =
+      CONFIG.SDP.hitLocationProfiles?.humanoid?.locations || {};
+
+    const logicalZones = [
+      { value: "arm", label: "SDP.InjuryLocationArm" },
+      { value: "leg", label: "SDP.InjuryLocationLeg" }
+    ];
+
+    const precise = Object.entries(humanoid).map(
+      ([value, data]) => ({
+        value,
+        label: data.label || value
+      })
+    );
+
+    // head, body, then arm/leg (50/50 side), then precise L/R if wanted
+    const headBody = precise.filter(o =>
+      o.value === "head" || o.value === "body"
+    );
+    const limbs = precise.filter(o =>
+      o.value !== "head" && o.value !== "body"
+    );
+
+    context.hitLocationOptions = [
+      ...headBody,
+      ...logicalZones,
+      ...limbs
+    ];
+
     return context;
 
   }
@@ -135,6 +172,18 @@ export class SdpSpellSheet extends SdpItemSheet {
     data.system.ignoreArmor =
       !!data.system.ignoreArmor;
 
+    data.system.hitLocationMode ??= {};
+    data.system.hitLocationMode.value =
+      data.system.hitLocationMode?.value === "fixed"
+        ? "fixed"
+        : "random";
+
+    data.system.fixedHitLocation ??= {};
+    data.system.fixedHitLocation.value =
+      data.system.fixedHitLocation?.value
+        ? String(data.system.fixedHitLocation.value)
+        : "body";
+
     data.system.overcast ??= {};
     data.system.overcast.value =
       !!data.system.overcast?.value;
@@ -160,6 +209,17 @@ export class SdpSpellSheet extends SdpItemSheet {
 
     const root =
       this.getRoot();
+
+    const modeSelect =
+      root.querySelector("[data-spell-hit-location-mode]");
+    const fixedGroup =
+      root.querySelector(".spell-fixed-hit-location");
+
+    modeSelect?.addEventListener("change", () => {
+      if (!fixedGroup) return;
+      fixedGroup.style.display =
+        modeSelect.value === "fixed" ? "" : "none";
+    });
 
     // =========================
     // ADD OVERCAST

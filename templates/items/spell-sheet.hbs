@@ -334,6 +334,46 @@
 
     </div>
 
+    <div class="form-group">
+
+      <label>{{localize "SDP.SpellHitLocationMode"}}</label>
+
+      <select name="system.hitLocationMode.value" data-spell-hit-location-mode>
+
+        <option
+          value="random"
+          {{#if (eq system.hitLocationMode.value "random")}}selected{{/if}}>
+          {{localize "SDP.SpellHitLocationRandom"}}
+        </option>
+
+        <option
+          value="fixed"
+          {{#if (eq system.hitLocationMode.value "fixed")}}selected{{/if}}>
+          {{localize "SDP.SpellHitLocationFixed"}}
+        </option>
+
+      </select>
+
+    </div>
+
+    <div class="form-group spell-fixed-hit-location" style="{{#unless (eq system.hitLocationMode.value "fixed")}}display:none;{{/unless}}">
+
+      <label>{{localize "SDP.SpellFixedHitLocation"}}</label>
+
+      <select name="system.fixedHitLocation.value">
+
+        {{#each hitLocationOptions}}
+          <option
+            value="{{this.value}}"
+            {{#if (eq ../system.fixedHitLocation.value this.value)}}selected{{/if}}>
+            {{localize this.label}}
+          </option>
+        {{/each}}
+
+      </select>
+
+    </div>
+
   </div>
 
 </div>

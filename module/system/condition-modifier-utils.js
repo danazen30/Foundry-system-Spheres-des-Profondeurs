@@ -30,6 +30,52 @@ export function resolveRollCharacteristic({
 
 }
 
+function conditionAppliesToRoll(config, context, characteristic) {
+
+  const {
+    type = null,
+    weapon = null,
+    item = null
+  } = context;
+
+  const restricted = Array.isArray(config.attributes)
+    ? config.attributes
+    : null;
+
+  const skillKeys = Array.isArray(config.skillKeys)
+    ? config.skillKeys.map(k => String(k).toLowerCase())
+    : [];
+
+  const hasTargeting =
+    (restricted?.length > 0)
+    || config.applyToAttack
+    || skillKeys.length > 0;
+
+  if (!hasTargeting) return true;
+
+  if (restricted?.length && characteristic && restricted.includes(characteristic)) {
+    return true;
+  }
+
+  if (config.applyToAttack) {
+    if (type === "attack" && weapon?.type !== "spell") return true;
+    if (characteristic === "meleeAbility" || characteristic === "rangedAbility") {
+      return true;
+    }
+  }
+
+  if (skillKeys.length && item?.type === "skill") {
+    const key = String(item.system?.key || "").toLowerCase().trim();
+    const name = String(item.name || "").toLowerCase().trim();
+    if (skillKeys.includes(key) || skillKeys.some(k => name.includes(k))) {
+      return true;
+    }
+  }
+
+  return false;
+
+}
+
 /**
  * @param {Actor} actor
  * @param {object} [context]
@@ -57,14 +103,8 @@ export function getConditionTestModifier(actor, context = {}) {
     const config = CONFIG.SDP.conditionConfig?.[key];
     if (!config?.modifier) continue;
 
-    const restricted = Array.isArray(config.attributes)
-      ? config.attributes
-      : null;
-
-    if (restricted?.length) {
-      if (!characteristic || !restricted.includes(characteristic)) {
-        continue;
-      }
+    if (!conditionAppliesToRoll(config, context, characteristic)) {
+      continue;
     }
 
     const stack = value === true ? 1 : Number(value) || 0;

@@ -2,52 +2,30 @@
 
 <h3>{{localize "SDP.Conditions"}}</h3>
 
-<!-- 🔢 NUMERIC CONDITIONS -->
-<table class="conditions-table numeric">
-  <thead>
-    <tr>
-      {{#each system.conditions as |value key|}}
-        {{#unless (eq (lookup (lookup ../config.conditionConfig key) "type") "state")}}
-          <th 
-  class="condition-header"
-  data-key="{{key}}"
-  data-description="{{localize (lookup (lookup ../config.conditionConfig key) 'description')}}"
->
-  {{localize (lookup (lookup ../config.conditionConfig key) "label")}}
-</th>
-        {{/unless}}
-      {{/each}}
-    </tr>
-  </thead>
-
-<tbody>
-
-  <!-- LIGNE VALEURS -->
-  <tr>
-    {{#each system.conditions as |value key|}}
-      {{#unless (eq (lookup (lookup ../config.conditionConfig key) "type") "state")}}
-        <td 
-          class="condition-cell"
+<!-- 🔢 NUMERIC / STACK CONDITIONS (3 columns) -->
+<div class="conditions-stack-grid">
+  {{#each system.conditions as |value key|}}
+    {{#unless (eq (lookup (lookup ../config.conditionConfig key) "type") "state")}}
+      <div class="condition-stack-cell" data-key="{{key}}">
+        <div
+          class="condition-header"
           data-key="{{key}}"
+          data-description="{{localize (lookup (lookup ../config.conditionConfig key) 'description')}}"
         >
-          <input type="number"
-            class="condition-clickable"
-            data-key="{{key}}"
-            value="{{lookup ../system.conditionTotals key}}"
-            min="0">
-        </td>
-      {{/unless}}
-    {{/each}}
-  </tr>
-
-  <!-- 🔥 DÉPLIANT GLOBAL -->
-  <tr class="condition-details-row" style="display:none;">
-    <td colspan="100%" class="condition-details-content"></td>
-  </tr>
-
-</tbody>
-</table>
-
+          {{localize (lookup (lookup ../config.conditionConfig key) "label")}}
+        </div>
+        <input
+          type="number"
+          class="condition-clickable"
+          data-key="{{key}}"
+          value="{{lookup ../system.conditionTotals key}}"
+          min="0"
+        >
+      </div>
+    {{/unless}}
+  {{/each}}
+</div>
+<div class="condition-stack-details" style="display:none;"></div>
 
 <!-- ✅ BOOLEAN CONDITIONS -->
 <table class="conditions-table boolean">
@@ -55,48 +33,42 @@
     <tr>
       {{#each system.conditions as |value key|}}
         {{#if (eq (lookup (lookup ../config.conditionConfig key) "type") "state")}}
-          <th 
-  class="condition-header"
-  data-key="{{key}}"
-  data-description="{{localize (lookup (lookup ../config.conditionConfig key) 'description')}}"
->
-  {{localize (lookup (lookup ../config.conditionConfig key) "label")}}
-</th>
+          <th
+            class="condition-header"
+            data-key="{{key}}"
+            data-description="{{localize (lookup (lookup ../config.conditionConfig key) 'description')}}"
+          >
+            {{localize (lookup (lookup ../config.conditionConfig key) "label")}}
+          </th>
         {{/if}}
       {{/each}}
     </tr>
   </thead>
 
-<tbody>
+  <tbody>
+    <tr>
+      {{#each system.conditions as |value key|}}
+        {{#if (eq (lookup (lookup ../config.conditionConfig key) "type") "state")}}
+          <td class="condition-cell" data-key="{{key}}">
+            <input
+              type="checkbox"
+              name="system.conditions.{{key}}"
+              data-action="updateConditionState"
+              data-key="{{key}}"
+              {{checked value}}
+            >
+          </td>
+        {{/if}}
+      {{/each}}
+    </tr>
 
-  <!-- CHECKBOXES -->
-  <tr>
-    {{#each system.conditions as |value key|}}
-      {{#if (eq (lookup (lookup ../config.conditionConfig key) "type") "state")}}
-        <td 
-          class="condition-cell"
-          data-key="{{key}}"
-        >
-          <input type="checkbox"
-            name="system.conditions.{{key}}"
-            data-action="updateConditionState"
-            data-key="{{key}}"
-            {{checked value}}>
-        </td>
-      {{/if}}
-    {{/each}}
-  </tr>
-
-  <!-- 🔥 DÉPLIANT -->
-  <tr class="condition-details-row" style="display:none;">
-    <td colspan="100%" class="condition-details-content"></td>
-  </tr>
-
-</tbody>
+    <tr class="condition-details-row" style="display:none;">
+      <td colspan="100%" class="condition-details-content"></td>
+    </tr>
+  </tbody>
 </table>
 
-  <!-- INJURIES -->
-  {{#if injuries.length}}
+{{#if injuries.length}}
 <h3>{{localize "SDP.Injuries"}}</h3>
 
 <table class="effects-table">
@@ -104,39 +76,33 @@
     <tr>
       <th></th>
       <th>{{localize "SDP.Name"}}</th>
-<th>{{localize "SDP.Severity"}}</th>
-<th>{{localize "SDP.Location"}}</th>
-<th>{{localize "SDP.Duration"}}</th>
+      <th>{{localize "SDP.Severity"}}</th>
+      <th>{{localize "SDP.Location"}}</th>
+      <th>{{localize "SDP.Duration"}}</th>
       <th></th>
     </tr>
   </thead>
 
   <tbody>
     {{#each injuries as |injury|}}
-
     <tr>
-      <!-- IMAGE -->
       <td class="effect-img-cell">
         <img src="{{injury.img}}" class="effect-img">
       </td>
-
       <td>{{injury.displayName}}</td>
       <td>{{injury.severityLabel}}</td>
       <td>{{injury.locationLabel}}</td>
       <td>{{injury.duration}}</td>
-
       <td class="item-actions">
         <button data-action="editItem" data-item-id="{{injury.id}}">✏️</button>
         <button data-action="deleteItem" data-item-id="{{injury.id}}">🗑️</button>
       </td>
     </tr>
-
     {{/each}}
   </tbody>
 </table>
 {{/if}}
 
-<!-- TRAITS -->
 {{#if traits.length}}
 <h3>{{localize "SDP.Traits"}}</h3>
 
@@ -152,26 +118,20 @@
   <tbody>
     {{#each traits}}
     <tr>
-
       <td class="effect-img-cell">
         <img src="{{this.img}}" class="effect-img">
       </td>
-
       <td>{{this.displayName}}</td>
-
       <td class="item-actions">
         <button data-action="editItem" data-item-id="{{this.id}}">✏️</button>
         <button data-action="deleteItem" data-item-id="{{this.id}}">🗑️</button>
       </td>
-
     </tr>
     {{/each}}
   </tbody>
 </table>
 {{/if}}
 
-
-<!-- DISEASES -->
 {{#if diseases.length}}
 <h3>{{localize "SDP.Diseases"}}</h3>
 
@@ -187,18 +147,14 @@
   <tbody>
     {{#each diseases}}
     <tr>
-
       <td class="effect-img-cell">
         <img src="{{this.img}}" class="effect-img">
       </td>
-
       <td>{{this.displayName}}</td>
-
       <td class="item-actions">
         <button data-action="editItem" data-item-id="{{this.id}}">✏️</button>
         <button data-action="deleteItem" data-item-id="{{this.id}}">🗑️</button>
       </td>
-
     </tr>
     {{/each}}
   </tbody>

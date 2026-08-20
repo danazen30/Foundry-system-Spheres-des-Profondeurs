@@ -70,6 +70,7 @@
   "SDP.ConditionSurprised": "Surprised",
   "SDP.ConditionSlowed": "Slowed",
   "SDP.ConditionNumbed": "Numbed",
+  "SDP.ConditionDazzled": "Dazzled",
 
   "SDP.MagicMinor": "Minor",
   "SDP.MagicAdvanced": "Advanced",
@@ -196,7 +197,8 @@
   "SDP.ConditionFrightenedDescription": "A Frightened character flees from the source of their fear as quickly as they can. If no escape is available, they may fight. They suffer a -3 penalty to attack rolls as well as to skill and characteristic Tests. They may use their powers and spells to flee, and will inevitably do so if no other option is available.\n\nYou cannot make any Tests to recover from this Condition while you are Engaged with an enemy. If you are not Engaged, at the end of each round you may attempt a Calm Test to remove the Frightened condition. The difficulty varies depending on the situation and the threat. It is easier to regain your composure if you are hiding behind a barrel at the end of a dead-end alley far from danger (Easy +20) than if you are just a few strides away from a drooling demon demanding your blood (Very Hard -30).\n\nThis Condition is similar to being Shaken, except that the character does everything possible to flee. When Frightened ends, Shaken is applied.",
   "SDP.ConditionSlowedDescription": "You are slowed.\n\nThe source of your slowing reduces your Movement by 1 per stack.\n\nIf your Movement is reduced to 0, you gain the Entangled Condition.",
   "SDP.ConditionNumbedDescription": "Cold has numbed your muscles and fingers; every movement takes effort.\n\nYou suffer a −10 penalty to Weapon Skill, Ballistic Skill, Agility, and Dexterity Tests. Each Numbed Condition also reduces your Movement by 1.\n\nIf your Numbed Conditions reach your Toughness Bonus, you collapse: you gain the Prone and Unconscious Conditions, as well as 1 Exhausted Condition.\n\nWhile you remain exposed to the cold causing this Condition (storm, blizzard, and so on), you cannot attempt to remove it. Once you are sheltered, at the end of each round you may attempt a Toughness Test (+0): on a success, remove 1 Numbed Condition.",
-  "SDP.ConditionEntangledDescription": "You are hindered by something that restricts your movement; this could be ropes, a web, or even an opponent's bulging biceps.\n\nDuring your turn, you cannot use your Movement.\n\nYou may use your Action to remove the Entangled Condition by succeeding on an opposed Strength Test against the source of the entanglement.\n\nThe difficulty varies depending on the situation.\n\nIf this Condition was caused by Slowed, a success removes the Entangled Condition, and each SL (Success Level) reduces some of the Slowed stacks.",
+  "SDP.ConditionDazzledDescription": "You are dazzled by a light that is too bright or a harsh contrast.\n\nYou suffer a −10 penalty to attack Tests and Perception Tests, as well as a −1 penalty to Parry and Dodge. These penalties apply only once while you have at least 1 Dazzled Condition (they do not multiply with stacks).\n\nEach Dazzled Condition represents roughly one turn of being dazzled. At the end of each of your turns, remove 1 Dazzled Condition.",
+  "SDP.ConditionEntangledDescription": "You are hindered by something that restricts your movement; this could be ropes, a web, or even an opponent's bulging biceps.\n\nDuring your turn, you cannot use your Movement.\n\nYou suffer a −2 penalty to Parry and Dodge.\n\nYou may use your Action to remove the Entangled Condition by succeeding on an opposed Strength Test against the source of the entanglement.\n\nThe difficulty varies depending on the situation.\n\nIf this Condition was caused by Slowed, a success removes the Entangled Condition, and each SL (Success Level) reduces some of the Slowed stacks.",
   "SDP.ConditionUnconsciousDescription": "You are knocked out, unconscious, or otherwise incapacitated.\n\nYou can do absolutely nothing on your turn and have no awareness of your surroundings.\n\nAn attacker targeting you gains the benefit of the “I Will Not Fail!” rule without needing to spend a Resilience Point.\n\nAlternatively, at the GM's discretion, a melee attack automatically kills you.\n\nAny ranged attack is also an automatic success and deals damage as if the attacker were at point-blank range.\n\nThe Unconscious Condition does not stack — you are either Unconscious or you are not.\n\nRecovering from this Condition will often depend on the circumstances that caused it.\n\nIf you spend a Resolve Point to remove the Unconscious Condition but are still subject to its cause, you gain a new Unconscious Condition at the end of the round.\n\nWhen you remove the Unconscious Condition, you gain the Prone and Exhausted Conditions.",
   "SDP.ConditionDyingDescription": "The character is unconscious and dying.\n\nA creature with a negative number of Wounds that is not stabilized is considered to be dying.\n\nA dying creature cannot take any actions.\n\nAt the start of each of its turns, every round, until it becomes stabilized or dies, the character must make a Resistance Test.\n\nA stabilized character does not need to make this test.\n\nIf the test is failed, the character loses 1 additional Wound.\n\nA dying creature dies when its negative Wounds total equals its WT (Wound Threshold).\n\nTo stabilize the character, a successful Heal Test or a healing spell is required.",
   "SDP.ConditionSurprisedDescription": "You are caught off guard and cannot act during your turn.\n\nMelee attacks against you gain a +3 bonus to hit.\n\nThe Condition is removed at the end of your round or after the first time you are targeted by an attack.",
@@ -482,6 +484,10 @@
 "SDP.ActiveAbilities": "Active Abilities",
 "SDP.PassiveAbility": "Passive",
 "SDP.IgnoreArmor": "Ignore Armor",
+"SDP.SpellHitLocationMode": "Hit location",
+"SDP.SpellHitLocationRandom": "Random (on damage roll)",
+"SDP.SpellHitLocationFixed": "Fixed",
+"SDP.SpellFixedHitLocation": "Fixed hit location",
 "SDP.Notifications.PassiveAbilityCannotUse": "This ability is passive and cannot be used.",
 "SDP.AbilitiesAndMagic": "Abilities & Magic",
 "SDP.Item.Ability.web.Name": "Web",
@@ -641,6 +647,42 @@
 
 "SDP.Item.Spell.fireelemental.Name": "Fire elemental",
 "SDP.Item.Spell.fireelemental.Description": "Overcast: +1 round of maintenance, +1 damage, or +1 Armor point on the elemental, per point.\nYou summon a fire elemental (Large size) within range. It acts on your turn according to your orders. If it leaves the spell's range or you lose concentration, it dissipates in a puff of ash.\nEach time it attacks or is hit in melee, flames spray out: the target or attacker must pass a Reflexes Test (+0) or take 1d6 fire damage.",
+
+"SDP.Item.Spell.rockshard.Name": "Rock shard",
+"SDP.Item.Spell.rockshard.Description": "Overcast: +Willpower Bonus damage per point.\nYou create a shard of rock and hurl it. The target takes the damage.",
+
+"SDP.Item.Spell.stonewall.Name": "Stone wall",
+"SDP.Item.Spell.stonewall.Description": "Overcast: +1 to the wall's value per point.\nYou raise an opaque wall of stone. It blocks movement and line of sight, providing cover. 3 m wide × 2 m high × 0.5 m thick.\nThe wall's value equals the caster's Willpower Bonus (hardness / Armor points if someone tries to break it).",
+
+"SDP.Item.Spell.tremor.Name": "Tremor",
+"SDP.Item.Spell.tremor.Description": "Overcast: +Willpower Bonus damage per point.\nYou fracture the ground in the area: fissures, upheaval, and flying stone. Every creature caught within takes the damage, then must pass an Athletics Test (+0). On a failure, they fall Prone.",
+
+"SDP.Item.Spell.earthfist.Name": "Stone fist",
+"SDP.Item.Spell.earthfist.Description": "Overcast: +Willpower Bonus damage per point.\nYou cause a massive fist of stone to surge forth and strike the target at point-blank range. They take the damage, then must pass a Toughness Test (+0). On a failure, they fall Prone.",
+
+"SDP.Item.Spell.earthblade.Name": "Telluric weapon",
+"SDP.Item.Spell.earthblade.Description": "Overcast: +1 additional damage per point.\nYou conjure a magical melee weapon of stone and telluric metal into the target's hand. It counts as a magical weapon for as long as the spell lasts. Its damage equals the wielder's Strength Bonus + the caster's Willpower Bonus. The weapon has the Sundering trait: when it hits, it also deals 1 damage to the armor piece or shield struck. When it ends, the weapon crumbles to dust.",
+
+"SDP.Item.Spell.stoneskin.Name": "Stone skin",
+"SDP.Item.Spell.stoneskin.Description": "Overcast: +1 Armor point per point.\nYou envelop the target in a shell of stone. For as long as the spell lasts, they gain +1 Armor point on the whole body. When it ends, the stone cracks and falls away.",
+
+"SDP.Item.Spell.quicksand.Name": "Quicksand",
+"SDP.Item.Spell.quicksand.Description": "You turn the ground into quicksand. Any creature that enters the area or starts its turn there must pass an Athletics Test (−20). On a failure, they gain 1 Slowed Condition, plus 1 additional Slowed Condition for every 2 SL of failure.\nWhen the spell ends, the ground firms up again. A creature still sunk in when the spell ends gains the Prone Condition.",
+
+"SDP.Item.Spell.telluriccage.Name": "Telluric cage",
+"SDP.Item.Spell.telluriccage.Description": "Overcast: +Willpower Bonus damage per point.\nYou charge the ground and raise a cage of electricity along its edges. Any creature that tries to enter or leave the cage takes the damage (ignoring armor) and must pass a Toughness Test (−20) to cross. On a failure, they gain 1 Stunned Condition and remain on the side they tried to leave.",
+
+"SDP.Item.Spell.radiantstele.Name": "Radiant stele",
+"SDP.Item.Spell.radiantstele.Description": "Overcast: +1 Dazzled Condition per point.\nYou raise a stele of stone imbued with light. For as long as you maintain concentration, once per turn as a bonus action you may flash the stele at a target that can see it: they must pass a Reflexes Test (+0) or gain 1 Dazzled Condition.",
+
+"SDP.Item.Spell.lavaspit.Name": "Lava spit",
+"SDP.Item.Spell.lavaspit.Description": "Overcast: +Willpower Bonus damage per point.\nYou hurl a jet of lava into the area. Every creature caught within takes the damage, then must pass a Reflexes Test (−20). On a failure, they take an additional 2d4 fire damage.",
+
+"SDP.Item.Spell.bloodcrystals.Name": "Blood crystals",
+"SDP.Item.Spell.bloodcrystals.Description": "Overcast: +Willpower Bonus damage per point, or −10 to the target's Cool per point.\nYou seize the target's blood and force the minerals within it to crystallize. Make an opposed Channeling Test against the target's Cool. On a success, for as long as you maintain concentration the target is completely immobilized and defenseless (they cannot move, Parry, or Dodge). On casting, and at the end of each of their turns, they take the damage (ignoring armor).\nAt the start of each of their turns, the opposed Test is rolled again. The first Test (on casting) has no bonus; each subsequent Test grants the target a cumulative +10 bonus to Cool (+10 on the 2nd Test, +20 on the 3rd, and so on). Creatures without blood are immune.",
+
+"SDP.Item.Spell.graveltornado.Name": "Gravel tornado",
+"SDP.Item.Spell.graveltornado.Description": "Overcast: +Willpower Bonus damage per point, or −10 to the Toughness Test per point.\nYou raise a tornado laden with gravel and stone shards. Its height equals the caster's Willpower Bonus (in metres).\nAny creature that enters the area or starts its turn there takes the gravel damage, then must pass a Toughness Test (+0). On a failure, they are drawn to the top of the tornado and dropped: they take falling damage for a height equal to the tornado's (no damage for the first 2 metres; then 3 + 1d4 damage per metre of fall) and fall Prone.",
 
 "SDP.MagicType": "Magic Type",
 "SDP.Used": "Used",
@@ -1472,7 +1514,7 @@
 "SDP.Item.Skill.performanceantics.Name": "Performance (Antics)",
 "SDP.Item.Skill.performanceprestidigitation.Name": "Performance (Prestidigitation)",
 "SDP.Item.Skill.channel.Name": "Channel (choose)",
-"SDP.Item.Skill.channel.Description": "You have received thorough training in this branch of magic and know how to better manage the risks associated with its use.\n\nWhen you cast a spell of this type, critical failures only occur on a result of 96 to 100 instead of 86 to 100.\n\nThis Skill is also required to learn and use the most powerful forms of this magical specialization (advanced magic).\n\nSpecializations: Curative, Elemental (Fire, Water, Lightning, Earth, Air, Plant, Twilight), Invocation, Support, Modulation, Transformation, Clairvoyance, Necromancy, Demonology.",
+"SDP.Item.Skill.channel.Description": "You have received thorough training in this branch of magic and know how to better manage the risks associated with its use.\n\nWhen you cast a spell of this type, critical failures only occur on a result of 96 to 100 instead of 86 to 100.\n\nThis Skill is also required to learn and use the most powerful forms of this magical specialization (advanced magic).\n\nSpecializations: Curative, Elemental (Fire, Water, Lightning, Earth, Air, Plant, Twilight), Invocation, Support, Modulation, Transformation, Clairvoyance, Necromancy, Carnomancy.",
 "SDP.Item.Skill.channelcurative.Name": "Channel (Curative)",
 "SDP.Item.Skill.channelfire.Name": "Channel (Fire)",
 "SDP.Item.Skill.channelwater.Name": "Channel (Water)",
@@ -1487,7 +1529,7 @@
 "SDP.Item.Skill.channeltransformation.Name": "Channel (Transformation)",
 "SDP.Item.Skill.channelclairvoyance.Name": "Channel (Clairvoyance)",
 "SDP.Item.Skill.channelnecromancy.Name": "Channel (Necromancy)",
-"SDP.Item.Skill.channeldemonology.Name": "Channel (Demonology)",
+"SDP.Item.Skill.channeldemonology.Name": "Channel (Carnomancy)",
 "SDP.Item.Skill.subornation.Name": "Bribery",
 "SDP.Item.Skill.subornation.Description": "Bribery represents your ability to determine whether a person is willing to accept a bribe and to assess the most effective way to make a discreet and convincing offer.\n\nA successful Bribery Test allows you to learn whether your target can be corrupted. If so, the GM secretly determines the sum required to obtain their cooperation. This amount generally depends on their standard of living, personal integrity, and the risks they incur by accepting your offer.\n\nYou may then attempt to estimate this sum. The GM will tell you whether your estimate is too low, too high, or close to the expected amount. Each SL achieved on the Test allows you to refine this estimate further. Once the information has been gathered, it is up to you to decide how much you are willing to offer.",
 "SDP.Item.Skill.lore.Name": "Lore (choose)",
@@ -1602,7 +1644,7 @@
 "SDP.Item.Talent.snooper.Name": "Snooper",
 "SDP.Item.Talent.snooper.Description": "Max: Initiative Bonus. Bonus: SL.\n\nYou have an eye for spotting what others would overlook. Secret compartments, hidden passages, false bottoms, and carefully concealed objects naturally draw your attention.\n\nWhen you search a room, container, vehicle, or any other environment, add your level in this Talent to the roll result.",
 "SDP.Item.Talent.arcanediscipline.Name": "Arcane Discipline (choose)",
-"SDP.Item.Talent.arcanediscipline.Description": "Max: Intelligence Bonus. Bonus: Success.\n\nYou have perfected your understanding and mastery of this form of magic. Your experience allows you to better control errors and limit their consequences.\n\nWhen you suffer a critical consequence with advanced magic of this specialization, it is treated as a minor consequence instead of a major consequence.\n\nThis Talent is required to learn and use the superior forms of this magic.\n\nSpecializations: Curative, Elemental (Fire, Water, Lightning, Earth, Air, Plant, Twilight), Invocation, Support, Modulation, Transformation, Clairvoyance, Necromancy, Demonology.",
+"SDP.Item.Talent.arcanediscipline.Description": "Max: Intelligence Bonus. Bonus: Success.\n\nYou have perfected your understanding and mastery of this form of magic. Your experience allows you to better control errors and limit their consequences.\n\nWhen you suffer a critical consequence with advanced magic of this specialization, it is treated as a minor consequence instead of a major consequence.\n\nThis Talent is required to learn and use the superior forms of this magic.\n\nSpecializations: Curative, Elemental (Fire, Water, Lightning, Earth, Air, Plant, Twilight), Invocation, Support, Modulation, Transformation, Clairvoyance, Necromancy, Carnomancy.",
 "SDP.Item.Talent.arcanedisciplinecurative.Name": "Arcane Discipline (Curative)",
 "SDP.Item.Talent.arcanedisciplinefire.Name": "Arcane Discipline (Fire)",
 "SDP.Item.Talent.arcanedisciplinewater.Name": "Arcane Discipline (Water)",
@@ -1617,7 +1659,7 @@
 "SDP.Item.Talent.arcanedisciplinetransformation.Name": "Arcane Discipline (Transformation)",
 "SDP.Item.Talent.arcanedisciplineclairvoyance.Name": "Arcane Discipline (Clairvoyance)",
 "SDP.Item.Talent.arcanedisciplinenecromancy.Name": "Arcane Discipline (Necromancy)",
-"SDP.Item.Talent.arcanedisciplinedemonology.Name": "Arcane Discipline (Demonology)",
+"SDP.Item.Talent.arcanedisciplinedemonology.Name": "Arcane Discipline (Carnomancy)",
 "SDP.Item.Talent.arcanepioneer.Name": "Arcane Pioneer",
 "SDP.Item.Talent.arcanepioneer.Description": "You are among the rare mages who push the boundaries of magical knowledge. Your research allows you to better anticipate the difficulties linked to still unexplored theories.\n\nWhen you create, modify, or use an experimental spell, reduce the penalties related to its experimental nature by 10 per level in this Talent.",
 "SDP.Item.Talent.network.Name": "Network (choose)",
@@ -3029,6 +3071,7 @@
   "SDP.Folder.superior.Name": "Superior",
   "SDP.Folder.water.Name": "Water",
   "SDP.Folder.minor.Name": "Minor",
-  "SDP.Folder.fire.Name": "Fire"
+  "SDP.Folder.fire.Name": "Fire",
+  "SDP.Folder.earth.Name": "Earth"
 
 }
