@@ -246,6 +246,24 @@
 
     </div>
 
+    <div class="form-group">
+
+      <label>{{localize "SDP.AttackType"}}</label>
+
+      <select name="system.damageType">
+
+        {{#each damageTypeOptions}}
+          <option
+            value="{{this.value}}"
+            {{#if (eq ../system.damageType this.value)}}selected{{/if}}>
+            {{this.label}}
+          </option>
+        {{/each}}
+
+      </select>
+
+    </div>
+
     <div class="compact-checkbox">
 
       <input

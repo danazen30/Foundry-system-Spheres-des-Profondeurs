@@ -43,6 +43,7 @@
   "SDP.DamageTypePiercing": "Piercing",
   "SDP.DamageTypeBludgeoning": "Bludgeoning",
   "SDP.DamageTypeEthereal": "Ethereal",
+  "SDP.DamageTypeSpecial": "Special",
 
   "SDP.HitLocationHead": "Head",
   "SDP.HitLocationBody": "Body",

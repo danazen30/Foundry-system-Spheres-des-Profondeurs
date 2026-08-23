@@ -325,6 +325,11 @@ await actor.update({
   // CHAT CARD
   // ======================
 
+  const damageType =
+    (typeof system.damageType === "object"
+      ? system.damageType?.value
+      : system.damageType) || "special";
+
   const html = `
 <div class="sdp-spell" data-sdp-safe="true"
      data-type="spell"
@@ -335,6 +340,7 @@ await actor.update({
      data-critical="${crit.success}"
      data-hasskill="${hasSkill}"
      data-weapon="${spell.id}"
+     data-damagetype="${damageType}"
      data-location=""
      data-hit-location-mode="${hitLocationMode}"
      data-fixed-hit-location="${fixedHitLocation}"

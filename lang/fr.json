@@ -43,6 +43,7 @@
   "SDP.DamageTypePiercing": "Perforant",
   "SDP.DamageTypeBludgeoning": "Contondant",
   "SDP.DamageTypeEthereal": "Éthéré",
+  "SDP.DamageTypeSpecial": "Spécial",
 
   "SDP.HitLocationHead": "Tête",
   "SDP.HitLocationBody": "Corps",

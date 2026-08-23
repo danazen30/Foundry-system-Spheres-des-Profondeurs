@@ -59,7 +59,10 @@ export async function rollSpellDamageMacro({
   card.dataset.location = "";
   card.dataset.locationProfile = "humanoid";
   card.dataset.ignoreArmor = ignoreArmor ? "true" : "false";
-  card.dataset.damagetype = "";
+  card.dataset.damagetype =
+    (typeof spell.system?.damageType === "object"
+      ? spell.system.damageType?.value
+      : spell.system?.damageType) || "special";
   card.dataset.traits = "[]";
 
   const button = document.createElement("button");

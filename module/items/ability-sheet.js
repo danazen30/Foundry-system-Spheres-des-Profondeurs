@@ -28,6 +28,28 @@ export class SdpAbilitySheet extends SdpItemSheet {
     context.system.ignoreArmor =
       !!context.system.ignoreArmor;
 
+    const allowedDamageTypes = Object.keys(
+      CONFIG.SDP?.damageTypes || {
+        slashing: true,
+        piercing: true,
+        bludgeoning: true,
+        ethereal: true,
+        special: true
+      }
+    );
+    const currentDamageType =
+      context.system.damageType || "special";
+    context.system.damageType = allowedDamageTypes.includes(currentDamageType)
+      ? currentDamageType
+      : "special";
+
+    context.damageTypeOptions = allowedDamageTypes.map((value) => ({
+      value,
+      label: game.i18n.localize(
+        CONFIG.SDP?.damageTypes?.[value] || `SDP.DamageType${value}`
+      )
+    }));
+
     context.durationOptions = [
       {
         value: "round",
@@ -75,6 +97,17 @@ export class SdpAbilitySheet extends SdpItemSheet {
     // Checkboxes absents du FormData quand décochés
     data.system.passive = !!data.system.passive;
     data.system.ignoreArmor = !!data.system.ignoreArmor;
+
+    const allowedDamageTypes = Object.keys(
+      CONFIG.SDP?.damageTypes || {
+        special: true
+      }
+    );
+    data.system.damageType = allowedDamageTypes.includes(
+      data.system.damageType
+    )
+      ? data.system.damageType
+      : "special";
 
     data.system.aoe ??= {};
     data.system.aoe.value = !!data.system.aoe?.value;

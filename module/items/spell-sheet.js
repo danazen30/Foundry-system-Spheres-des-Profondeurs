@@ -91,6 +91,28 @@ export class SdpSpellSheet extends SdpItemSheet {
     context.system.ignoreArmor =
       !!this.document.system.ignoreArmor;
 
+    const allowedDamageTypes = Object.keys(
+      CONFIG.SDP?.damageTypes || {
+        slashing: true,
+        piercing: true,
+        bludgeoning: true,
+        ethereal: true,
+        special: true
+      }
+    );
+    const currentDamageType =
+      this.document.system.damageType || "special";
+    context.system.damageType = allowedDamageTypes.includes(currentDamageType)
+      ? currentDamageType
+      : "special";
+
+    context.damageTypeOptions = allowedDamageTypes.map((value) => ({
+      value,
+      label: game.i18n.localize(
+        CONFIG.SDP?.damageTypes?.[value] || `SDP.DamageType${value}`
+      )
+    }));
+
     const mode =
       this.document.system.hitLocationMode?.value || "random";
     context.system.hitLocationMode = { value: mode };
@@ -174,6 +196,17 @@ export class SdpSpellSheet extends SdpItemSheet {
 
     data.system.resolveMacro =
       !!data.system.resolveMacro;
+
+    const allowedDamageTypes = Object.keys(
+      CONFIG.SDP?.damageTypes || {
+        special: true
+      }
+    );
+    data.system.damageType = allowedDamageTypes.includes(
+      data.system.damageType
+    )
+      ? data.system.damageType
+      : "special";
 
     data.system.hitLocationMode ??= {};
     data.system.hitLocationMode.value =

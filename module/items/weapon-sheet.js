@@ -64,6 +64,13 @@ export class SdpWeaponSheet extends SdpItemSheet {
       game.i18n.localize(
         "SDP.DamageTypeEthereal"
       )
+  },
+  {
+    value: "special",
+    label:
+      game.i18n.localize(
+        "SDP.DamageTypeSpecial"
+      )
   }
 ],
 

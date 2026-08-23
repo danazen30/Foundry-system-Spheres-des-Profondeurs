@@ -13,6 +13,14 @@ export const SDP = {
     "charisma"
   ],
 
+  damageTypes: {
+    slashing: "SDP.DamageTypeSlashing",
+    piercing: "SDP.DamageTypePiercing",
+    bludgeoning: "SDP.DamageTypeBludgeoning",
+    ethereal: "SDP.DamageTypeEthereal",
+    special: "SDP.DamageTypeSpecial"
+  },
+
   rangeBands: {
 
     pointBlank: {

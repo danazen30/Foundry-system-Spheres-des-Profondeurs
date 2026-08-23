@@ -1176,6 +1176,12 @@
         "value": false
       },
 
+      "damageType": {
+        "type": "string",
+        "label": "Damage Type",
+        "value": "special"
+      },
+
       "resolveMacro": {
         "type": "Boolean",
         "label": "Resolve Macro",
@@ -1290,6 +1296,12 @@
         "type": "Boolean",
         "label": "Ignore Armor",
         "value": false
+      },
+
+      "damageType": {
+        "type": "string",
+        "label": "Damage Type",
+        "value": "special"
       }
     },
     "possession": {

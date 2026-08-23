@@ -86,6 +86,10 @@ export class SdpAbility {
     const tokenId = getTokenIdForActor(actor);
 
     const ignoreArmor = !!system.ignoreArmor;
+    const damageType =
+      (typeof system.damageType === "object"
+        ? system.damageType?.value
+        : system.damageType) || "special";
 
     let damageButton = "";
 
@@ -114,6 +118,7 @@ export class SdpAbility {
      data-token="${tokenId}"
      data-weapon="${ability.id}"
      data-ignore-armor="${ignoreArmor}"
+     data-damagetype="${damageType}"
      data-location="${hitLocation.location}"
      data-location-profile="${hitProfileKey}"
      data-critical="false">

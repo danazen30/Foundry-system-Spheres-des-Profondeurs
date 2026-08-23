@@ -391,12 +391,16 @@ prepareDerivedData(){
     system.passive = !!system.passive;
     system.ignoreArmor ??= false;
     system.ignoreArmor = !!system.ignoreArmor;
+    system.damageType ??= "special";
+    system.damageType = String(system.damageType || "special");
   }
   else if (this.type === "spell") {
     system.ignoreArmor ??= false;
     system.ignoreArmor = !!system.ignoreArmor;
     system.resolveMacro ??= false;
     system.resolveMacro = !!system.resolveMacro;
+    system.damageType ??= "special";
+    system.damageType = String(system.damageType || "special");
     system.hitLocationMode ??= {};
     system.hitLocationMode.value =
       system.hitLocationMode.value === "fixed" ? "fixed" : "random";
