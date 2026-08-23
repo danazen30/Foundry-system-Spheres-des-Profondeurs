@@ -483,6 +483,16 @@
 "SDP.ActiveAbilities": "Capacités actives",
 "SDP.PassiveAbility": "Passif",
 "SDP.IgnoreArmor": "Ignorer l'armure",
+"SDP.SpellResolveMacro": "Macro de résolution",
+"SDP.SpellResolveMacroName": "{spell} — {actor}",
+"SDP.SpellResolveMacroCreated": "Macro de résolution ajoutée (MJ) pour {spell}.",
+"SDP.SpellResolveMacroSentToGM": "Macro de résolution envoyée au MJ pour {spell}.",
+"SDP.Warning.SpellResolveMacroMissingData": "Macro de résolution invalide (données manquantes).",
+"SDP.Warning.SpellResolveMacroMissingActor": "Acteur introuvable pour la macro de résolution.",
+"SDP.Warning.SpellResolveMacroNotOwner": "Vous n'êtes pas propriétaire de cet acteur.",
+"SDP.Warning.SpellResolveMacroMissingSpell": "Sort introuvable pour la macro de résolution.",
+"SDP.Warning.SpellResolveMacroNoSocket": "Socket indisponible : impossible d'envoyer la macro au MJ.",
+"SDP.Warning.SpellResolveMacroNoGM": "Aucun MJ connecté pour recevoir la macro de résolution.",
 "SDP.SpellHitLocationMode": "Localisation",
 "SDP.SpellHitLocationRandom": "Aléatoire (au jet de dégâts)",
 "SDP.SpellHitLocationFixed": "Forcée",
@@ -682,6 +692,39 @@
 
 "SDP.Item.Spell.graveltornado.Name": "Tornade de gravier",
 "SDP.Item.Spell.graveltornado.Description": "Surincantation : +Bonus de Force Mentale dégâts par point, ou −10 au Test de Résistance par point.\nTu soulèves une tornade chargée de gravier et d'éclats de pierre. Sa hauteur est égale au Bonus de Force Mentale du lanceur (en mètres).\nToute créature qui entre dans la zone ou y commence son tour subit les dégâts du gravier, puis doit réussir un Test de Résistance (+0). En cas d'échec, elle est aspirée jusqu'au sommet de la tornade puis lâchée : elle subit une chute d'une hauteur égale à celle de la tornade (aucun dégât sur les 2 premiers mètres ; ensuite 3 + 1d4 dégâts par mètre de chute) et tombe À terre.",
+
+"SDP.Item.Spell.airgust.Name": "Rafale d'air",
+"SDP.Item.Spell.airgust.Description": "Surincantation : +BFM dégâts par point.\nTu tranches l'air et projettes une rafale tranchante. La cible subit les dégâts.",
+
+"SDP.Item.Spell.soundbarrier.Name": "Barrière sonore",
+"SDP.Item.Spell.soundbarrier.Description": "Surincantation : +1 à la valeur du mur par point.\nTu dresses une barrière de vent bruyant. Elle n'est pas opaque et n'offre pas de points d'Armure. 3 m large × 2 m haut × 0,5 m d'épaisseur.\nLa valeur du mur est égale au Bonus de Force Mentale du lanceur (solidité si l'on cherche à la disperser ou à la briser).\nLes projectiles qui tentent de la traverser exigent un Test de Tir (−60) : en cas d'échec, le projectile est dévié et rate.\nUne créature qui tente de traverser doit réussir un Test de Résistance (+0). En cas d'échec, elle est repoussée du côté d'où elle venait et gagne 1 Condition Assourdi.",
+
+"SDP.Item.Spell.tornado.Name": "Tornade",
+"SDP.Item.Spell.tornado.Description": "Surincantation : −10 au Test de Résistance par point, ou +1 m de hauteur par point.\nTu soulèves une tornade. Sa hauteur est égale au Bonus de Force Mentale du lanceur (en mètres).\nCe sort n'inflige pas de dégâts directs. Chaque créature prise dans la zone doit réussir un Test de Résistance (+0). En cas d'échec, elle est aspirée jusqu'au sommet de la tornade puis lâchée : elle subit une chute d'une hauteur égale à celle de la tornade (aucun dégât sur les 2 premiers mètres ; ensuite 3 + 1d4 dégâts par mètre de chute) et tombe À terre.",
+
+"SDP.Item.Spell.airfilament.Name": "Filament d'air",
+"SDP.Item.Spell.airfilament.Description": "Surincantation : +1 dégât supplémentaire par point.\nTu conjures une arme de mêlée magique formée d'air densifié dans la main de la cible. Elle compte comme une arme magique tant que le sort dure. Ses dégâts valent le Bonus de Force du porteur + le Bonus de Force Mentale du lanceur. Une créature touchée doit réussir un Test de Résistance (+0) ou gagner 1 Condition Assourdi. À la fin, l'arme se dissipe sans laisser de trace.",
+
+"SDP.Item.Spell.sonicveil.Name": "Voile sonore",
+"SDP.Item.Spell.sonicveil.Description": "Surincantation : −10 au Test par point.\nUn voile d'air vibrant enveloppe la cible. Chaque fois qu'elle est touchée au corps à corps, le voile réagit en un claquement assourdissant : l'attaquant doit réussir un Test de Résistance (+0) ou gagner 1 Condition Assourdi.",
+
+"SDP.Item.Spell.airsnap.Name": "Claquement d'air",
+"SDP.Item.Spell.airsnap.Description": "Surincantation : +BFM dégâts par point.\nÀ portée de mêlée, tu claques l'air autour de la cible en une détonation courte. Elle subit les dégâts, puis doit réussir un Test de Résistance (+0). En cas d'échec, elle gagne 1 Condition Assourdi.",
+
+"SDP.Item.Spell.updraft.Name": "Courant ascendant",
+"SDP.Item.Spell.updraft.Description": "Tu soulèves la cible sur un courant d'air. Pendant la durée du sort, elle lévite : son Mouvement (Marche et Course) reste le même.\nElle ne vole pas librement. Elle peut franchir un petit obstacle (muret, barrière, rebord…).\nTant que le sort dure, les dégâts de chute et de projection sont amortis : la cible ne subit pas ces dégâts et ne gagne pas la Condition À terre de ces seules sources.",
+
+"SDP.Item.Spell.stormtornado.Name": "Tornade électrique",
+"SDP.Item.Spell.stormtornado.Description": "Surincantation : +Bonus de Force Mentale dégâts par point, ou −10 au Test de Résistance par point.\nTu soulèves une tornade d'air chargée de foudre. Sa hauteur est égale au Bonus de Force Mentale du lanceur (en mètres). Tant que tu maintiens la concentration, tu peux la déplacer.\nToute créature qui entre dans la zone ou y commence son tour subit les dégâts (ignorent l'armure), puis doit réussir un Test de Résistance (+0). En cas d'échec, elle gagne 1 Condition Étourdi et est aspirée jusqu'au sommet de la tornade puis lâchée : elle subit une chute d'une hauteur égale à celle de la tornade (aucun dégât sur les 2 premiers mètres ; ensuite 3 + 1d4 dégâts par mètre de chute) et tombe À terre.",
+
+"SDP.Item.Spell.radiantgust.Name": "Rafale lumineuse",
+"SDP.Item.Spell.radiantgust.Description": "Surincantation : +BFM dégâts par point.\nTu projettes une rafale d'air saturée de lumière vive. La cible subit les dégâts, puis doit réussir un Test de Réflexes (+0) pour détourner le regard ou se protéger. En cas d'échec, elle gagne 1 Condition Ébloui.",
+
+"SDP.Item.Spell.bloodresonance.Name": "Vibration sanguine",
+"SDP.Item.Spell.bloodresonance.Description": "Surincantation : +BFM dégâts par point.\nTu pollues l'air autour de la cible d'une vibration carnomancienne qui fait résonner son sang. Elle subit les dégâts (ignorent l'armure), puis doit réussir un Test de Résistance (−20). En cas d'échec, elle gagne 1 Condition Saignement, plus 1 Condition Saignement supplémentaire par tranche de 2 DR d'échec.",
+
+"SDP.Item.Spell.telluricsuction.Name": "Aspiration tellurique",
+"SDP.Item.Spell.telluricsuction.Description": "Surincantation : +1 DR requis pour se libérer par point.\nTu crées une brève aspiration d'air qui plaque la cible au sol, puis la terre se referme sur elle. Elle doit réussir un Test de Résistance (+0). En cas d'échec, elle tombe À terre et gagne la Condition Entravé.\nTant que le sort dure, personne ne peut attaquer la cible. Au début de chacun de ses tours, elle peut tenter un Test de Maîtrise physique (−20) : les DR obtenus s'accumulent d'un tour à l'autre. Dès qu'elle a accumulé au moins 2 DR, elle se libère (Entravé est retiré). Tant qu'elle n'a pas atteint ce total, elle reste Entravé.\nLorsque le sort prend fin, Entravé dû à cet effet est retiré.",
 
 "SDP.MagicType": "Type de magie",
 "SDP.Used": "Utilisé",
@@ -3076,5 +3119,6 @@
   "SDP.Folder.water.Name": "Eau",
   "SDP.Folder.minor.Name": "Mineur",
   "SDP.Folder.fire.Name": "Feu",
-  "SDP.Folder.earth.Name": "Terre"
+  "SDP.Folder.earth.Name": "Terre",
+  "SDP.Folder.air.Name": "Air"
 }

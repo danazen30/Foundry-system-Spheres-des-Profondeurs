@@ -484,6 +484,16 @@
 "SDP.ActiveAbilities": "Active Abilities",
 "SDP.PassiveAbility": "Passive",
 "SDP.IgnoreArmor": "Ignore Armor",
+"SDP.SpellResolveMacro": "Resolve macro",
+"SDP.SpellResolveMacroName": "{spell} — {actor}",
+"SDP.SpellResolveMacroCreated": "Resolve macro added (GM) for {spell}.",
+"SDP.SpellResolveMacroSentToGM": "Resolve macro sent to the GM for {spell}.",
+"SDP.Warning.SpellResolveMacroMissingData": "Invalid resolve macro (missing data).",
+"SDP.Warning.SpellResolveMacroMissingActor": "Actor not found for resolve macro.",
+"SDP.Warning.SpellResolveMacroNotOwner": "You do not own this actor.",
+"SDP.Warning.SpellResolveMacroMissingSpell": "Spell not found for resolve macro.",
+"SDP.Warning.SpellResolveMacroNoSocket": "Socket unavailable: cannot send the resolve macro to the GM.",
+"SDP.Warning.SpellResolveMacroNoGM": "No GM connected to receive the resolve macro.",
 "SDP.SpellHitLocationMode": "Hit location",
 "SDP.SpellHitLocationRandom": "Random (on damage roll)",
 "SDP.SpellHitLocationFixed": "Fixed",
@@ -683,6 +693,39 @@
 
 "SDP.Item.Spell.graveltornado.Name": "Gravel tornado",
 "SDP.Item.Spell.graveltornado.Description": "Overcast: +Willpower Bonus damage per point, or −10 to the Toughness Test per point.\nYou raise a tornado laden with gravel and stone shards. Its height equals the caster's Willpower Bonus (in metres).\nAny creature that enters the area or starts its turn there takes the gravel damage, then must pass a Toughness Test (+0). On a failure, they are drawn to the top of the tornado and dropped: they take falling damage for a height equal to the tornado's (no damage for the first 2 metres; then 3 + 1d4 damage per metre of fall) and fall Prone.",
+
+"SDP.Item.Spell.airgust.Name": "Air gust",
+"SDP.Item.Spell.airgust.Description": "Overcast: +WPB damage per point.\nYou slash the air and hurl a cutting gust. The target takes the damage.",
+
+"SDP.Item.Spell.soundbarrier.Name": "Sound barrier",
+"SDP.Item.Spell.soundbarrier.Description": "Overcast: +1 to the wall's value per point.\nYou raise a noisy wind barrier. It is not opaque and grants no Armour Points. 3 m wide × 2 m high × 0.5 m thick.\nThe wall's value equals the caster's Willpower Bonus (hardness if someone tries to disperse or break it).\nProjectiles that attempt to pass through require a Ranged Test (−60): on a failure, the projectile is deflected and misses.\nA creature that attempts to cross must pass a Toughness Test (+0). On a failure, they are pushed back to the side they came from and gain 1 Deafened Condition.",
+
+"SDP.Item.Spell.tornado.Name": "Tornado",
+"SDP.Item.Spell.tornado.Description": "Overcast: −10 to the Toughness Test per point, or +1 metre of height per point.\nYou raise a tornado. Its height equals the caster's Willpower Bonus (in metres).\nThis spell deals no direct damage. Each creature caught in the area must pass a Toughness Test (+0). On a failure, they are drawn to the top of the tornado and dropped: they take falling damage for a height equal to the tornado's (no damage for the first 2 metres; then 3 + 1d4 damage per metre of fall) and fall Prone.",
+
+"SDP.Item.Spell.airfilament.Name": "Air filament",
+"SDP.Item.Spell.airfilament.Description": "Overcast: +1 extra damage per point.\nYou conjure a magical melee weapon of densified air in the target's hand. It counts as a magical weapon for the duration. Its damage equals the wielder's Strength Bonus + the caster's Willpower Bonus. A creature struck must pass a Toughness Test (+0) or gain 1 Deafened Condition. When the spell ends, the weapon dissipates without a trace.",
+
+"SDP.Item.Spell.sonicveil.Name": "Sonic veil",
+"SDP.Item.Spell.sonicveil.Description": "Overcast: −10 to the Test per point.\nA vibrating veil of air wraps the target. Each time they are hit in melee, the veil answers with a deafening snap: the attacker must pass a Toughness Test (+0) or gain 1 Deafened Condition.",
+
+"SDP.Item.Spell.airsnap.Name": "Air snap",
+"SDP.Item.Spell.airsnap.Description": "Overcast: +WPB damage per point.\nAt melee range, you snap the air around the target in a short blast. They take the damage, then must pass a Toughness Test (+0). On a failure, they gain 1 Deafened Condition.",
+
+"SDP.Item.Spell.updraft.Name": "Updraft",
+"SDP.Item.Spell.updraft.Description": "You lift the target on an updraft. For the duration, they levitate: their Movement (Walk and Run) remains the same.\nThey do not fly freely. They may cross a small obstacle (low wall, barrier, ledge…).\nWhile the spell lasts, falling and knockback damage are cushioned: the target takes none of that damage and does not gain the Prone Condition from those sources alone.",
+
+"SDP.Item.Spell.stormtornado.Name": "Electric tornado",
+"SDP.Item.Spell.stormtornado.Description": "Overcast: +Willpower Bonus damage per point, or −10 to the Toughness Test per point.\nYou raise a tornado of air charged with lightning. Its height equals the caster's Willpower Bonus (in metres). While you maintain concentration, you may move it.\nAny creature that enters the area or starts its turn there takes the damage (ignores armour), then must pass a Toughness Test (+0). On a failure, they gain 1 Stunned Condition and are drawn to the top of the tornado then dropped: they take falling damage for a height equal to the tornado's (no damage for the first 2 metres; then 3 + 1d4 damage per metre of fall) and fall Prone.",
+
+"SDP.Item.Spell.radiantgust.Name": "Radiant gust",
+"SDP.Item.Spell.radiantgust.Description": "Overcast: +WPB damage per point.\nYou hurl a gust of air saturated with bright light. The target takes the damage, then must pass a Reflexes Test (+0) to look away or shield themselves. On a failure, they gain 1 Dazzled Condition.",
+
+"SDP.Item.Spell.bloodresonance.Name": "Blood resonance",
+"SDP.Item.Spell.bloodresonance.Description": "Overcast: +WPB damage per point.\nYou pollute the air around the target with a carnomantic vibration that makes their blood resonate. They take the damage (ignores armour), then must pass a Toughness Test (−20). On a failure, they gain 1 Bleeding Condition, plus 1 additional Bleeding Condition per 2 SL of failure.",
+
+"SDP.Item.Spell.telluricsuction.Name": "Telluric suction",
+"SDP.Item.Spell.telluricsuction.Description": "Overcast: +1 SL required to break free per point.\nYou create a brief air suction that pins the target to the ground, then the earth closes over them. They must pass a Toughness Test (+0). On a failure, they fall Prone and gain the Entangled Condition.\nWhile the spell lasts, no one may attack the target. At the start of each of their turns, they may attempt a Physical Mastery Test (−20): SL gained accumulate from turn to turn. As soon as they have accumulated at least 2 SL, they break free (Entangled is removed). Until they reach that total, they remain Entangled.\nWhen the spell ends, Entangled from this effect is removed.",
 
 "SDP.MagicType": "Magic Type",
 "SDP.Used": "Used",
@@ -3072,6 +3115,7 @@
   "SDP.Folder.water.Name": "Water",
   "SDP.Folder.minor.Name": "Minor",
   "SDP.Folder.fire.Name": "Fire",
-  "SDP.Folder.earth.Name": "Earth"
+  "SDP.Folder.earth.Name": "Earth",
+  "SDP.Folder.air.Name": "Air"
 
 }

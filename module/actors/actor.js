@@ -879,14 +879,23 @@ if (change.key === "system.custom.encumbranceStatMultiplier") {
     // =====================
 
 system.conditions ??= {};
-system.conditions.numbed ??= 0;
-system.conditions.dazzled ??= 0;
+
+const conditionConfig = CONFIG.SDP?.conditionConfig || {};
+for (const key of Object.keys(conditionConfig)) {
+  if (system.conditions[key] !== undefined && system.conditions[key] !== null) {
+    continue;
+  }
+  system.conditions[key] =
+    conditionConfig[key]?.type === "state" ? false : 0;
+}
 
 system.conditionTotals = {};
 
-for (const key in system.conditions) {
+for (const key of Object.keys(conditionConfig)) {
 
-  const base = system.conditions[key] ?? 0;
+  const base = system.conditions[key] ?? (
+    conditionConfig[key]?.type === "state" ? false : 0
+  );
 
   system.conditionTotals[key] = base;
 

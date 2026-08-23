@@ -248,16 +248,13 @@ async function applyBleedingFromDamageCard(actor, button) {
   return stacks;
 }
 
-export function registerDamageHandlers(html, message) {
+export async function processRollDamageClick(card, button) {
 
-  // ===================
-  // DAMAGE ROLL
-  // ===================
+if (!card || !button) {
+  console.error("SDP | processRollDamageClick missing card/button");
+  return;
+}
 
- html.find(".sdp-attack .roll-damage, .sdp-spell .roll-damage, .sdp-ability .roll-damage").click(async ev => {
-
-const card = ev.currentTarget.closest(".sdp-attack, .sdp-spell, .sdp-ability");
-const button = ev.currentTarget;
 const dataset = button.dataset;
 
 // =========================
@@ -786,6 +783,18 @@ ${bleedingLine}
       audience: "defender"
     });
 
+}
+
+export function registerDamageHandlers(html, message) {
+
+  // ===================
+  // DAMAGE ROLL
+  // ===================
+
+  html.find(".sdp-attack .roll-damage, .sdp-spell .roll-damage, .sdp-ability .roll-damage").click(async ev => {
+    const card = ev.currentTarget.closest(".sdp-attack, .sdp-spell, .sdp-ability");
+    const button = ev.currentTarget;
+    await processRollDamageClick(card, button);
   });
 
   // =========================
@@ -944,11 +953,24 @@ if (!targetId) {
       damageType
     });
 
-    const { finalDamage, armor, newHealth, current, severity } = result;
+    const {
+      finalDamage,
+      armor,
+      newHealth,
+      current,
+      severity,
+      criticalWounds,
+      criticalWoundsMax,
+      addedCritical,
+      outOfService,
+      destroyed
+    } = result;
     const bleedingStacks = await applyBleedingFromDamageCard(token.actor, button);
 
     const attackerActor = resolveActorFromIds(button.dataset.attacker, null);
     const rollMode = getCurrentRollMode();
+    const locationProfile =
+      button.closest(".damage-card")?.dataset?.locationProfile || "humanoid";
 
     await createCombatMessage({
       content: `
@@ -959,7 +981,7 @@ if (!targetId) {
     "SDP.Location"
   )}:
 ${getHitLocationLabel(
-  "humanoid",
+  locationProfile,
   location
 )}
 </p>
@@ -1027,6 +1049,125 @@ ${game.i18n.localize(
       stage: "damage-applied",
       audience: "defender"
     });
+
+    const actor = token.actor;
+
+    if (actor.type === "vehicle") {
+
+      const severityKey = formatWoundSeverityKey(severity);
+      const crits = Number(
+        criticalWounds ?? actor.system.criticalWounds?.value ?? 0
+      );
+      const critMax = Number(
+        criticalWoundsMax ?? actor.system.criticalWounds?.max ?? 3
+      );
+
+      let vehicleExtra = "";
+
+      if (addedCritical) {
+        vehicleExtra += `
+      <p><strong>${game.i18n.format(
+        "SDP.VehicleCriticalWoundGained",
+        { current: crits, max: critMax }
+      )}</strong></p>
+    `;
+      }
+
+      if (destroyed) {
+        vehicleExtra += `
+      <p><strong>${game.i18n.localize(
+        "SDP.VehicleDestroyed"
+      )}</strong></p>
+    `;
+      } else if (outOfService) {
+        vehicleExtra += `
+      <p><strong>${game.i18n.localize(
+        "SDP.VehicleOutOfService"
+      )}</strong></p>
+    `;
+      }
+
+      ChatMessage.create({
+        speaker: ChatMessage.getSpeaker({ actor }),
+        whisper: ChatMessage.getWhisperRecipients("GM"),
+        content: `
+      <div class="sdp-injury-card" data-actor="${actor.id}">
+        <h3>${game.i18n.localize("SDP.VehicleDamage")}</h3>
+        <p>
+          ${game.i18n.localize("SDP.Severity")}:
+          ${severity
+            ? game.i18n.localize(severityKey)
+            : game.i18n.localize("SDP.None")}
+        </p>
+        <p>
+          ${game.i18n.localize("SDP.VehicleCriticalWounds")}:
+          ${crits} / ${critMax}
+        </p>
+        ${vehicleExtra}
+      </div>
+    `
+      });
+
+    } else if (severity) {
+
+      const severityKey = formatWoundSeverityKey(severity);
+      const injury = await getInjuryFromPack(location, severity);
+
+      await createCombatMessage({
+        speaker: ChatMessage.getSpeaker({ actor }),
+        content: `
+    <div class="sdp-injury-card"
+         data-actor="${actor.id}"
+         data-location="${location}"
+         data-severity="${severity}">
+
+      <h3>
+  ${game.i18n.localize(
+    "SDP.InjurySustained"
+  )}
+</h3>
+
+      <p>
+  ${game.i18n.localize(
+    "SDP.Location"
+  )}:
+${getHitLocationLabel(
+  locationProfile,
+  location
+)}
+</p>
+      <p>
+  ${game.i18n.localize(
+    "SDP.Severity"
+  )}:
+  ${game.i18n.localize(severityKey)}
+</p>
+
+      ${injury ? getInjuryPreviewHtml(injury, { location, severity }) : `
+<p>
+  ${game.i18n.localize(
+    "SDP.NoInjuryFound"
+  )}
+</p>
+`}
+
+      <button class="apply-injury">${game.i18n.localize(
+  "SDP.ApplyInjury"
+)}</button>
+      <button class="roll-resistance">${game.i18n.localize(
+  "SDP.RollResistance"
+)}</button>
+
+    </div>
+    `,
+        attackerActor,
+        defenderActor: actor,
+        rollMode,
+        stage: "injury",
+        audience: "defender"
+      });
+
+    }
 
   }
 

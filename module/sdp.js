@@ -30,6 +30,11 @@ import { SdpCurrencySheet } from "./items/currency-sheet.js";
 
 import { SdpRoll } from "./rolls/roll.js";
 import { SdpDamage } from "./combat/damage.js";
+import {
+  createSpellResolveMacro,
+  createSpellResolveMacroAsGM,
+  rollSpellDamageMacro
+} from "./combat/spell-resolve-macro.js";
 
 import { SdpLevelService } from "./services/level-service.js";
 
@@ -325,34 +330,26 @@ Handlebars.registerHelper("includes", function(value, key) {
     await syncCreatureLocalizedName(actor);
   }
 
-  if(actor.system.conditions) return;
+  const conditionConfig = CONFIG.SDP?.conditionConfig || {};
+  const updates = {};
 
-  await actor.update({
-    "system.conditions": {
-      stunned:0,
-      bleeding:0,
-      burning:0,
-      poisoned:0,
-      exhausted:0,
-      deafened: 0,
-      slowed: 0,
-      numbed: 0,
-      dazzled: 0,
-      entangled:0,
-      staggered:0,
-      shaken:0,
-      frightened:0,
-      prone:0,
-      unconscious:0,
-      dying:0,
-      surprised:0
-    },
-    "system.details.experience": {
+  for (const [key, cfg] of Object.entries(conditionConfig)) {
+    if (actor.system.conditions?.[key] !== undefined) continue;
+    updates[`system.conditions.${key}`] =
+      cfg?.type === "state" ? false : 0;
+  }
+
+  if (!actor.system.details?.experience) {
+    updates["system.details.experience"] = {
       total: 0,
       spent: 0,
       log: []
-    }
-  });
+    };
+  }
+
+  if (Object.keys(updates).length) {
+    await actor.update(updates);
+  }
 
 });
 
@@ -754,6 +751,10 @@ Hooks.once("ready", async () => {
   game.sdp = game.sdp || {};
   game.sdp.conditions = SdpConditionEngine;
   game.sdp.turn = SdpTurnEngine;
+  game.sdp.spells = {
+    rollDamageMacro: rollSpellDamageMacro,
+    createResolveMacro: createSpellResolveMacro
+  };
   game.sdp = {
   ...game.sdp,
   level: SdpLevelService
@@ -800,6 +801,11 @@ sdpSocket.register(
     );
 
   }
+);
+
+sdpSocket.register(
+  "createSpellResolveMacro",
+  createSpellResolveMacroAsGM
 );
 
 sdpSocket.register(

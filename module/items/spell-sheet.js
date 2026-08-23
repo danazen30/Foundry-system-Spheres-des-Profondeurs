@@ -172,6 +172,9 @@ export class SdpSpellSheet extends SdpItemSheet {
     data.system.ignoreArmor =
       !!data.system.ignoreArmor;
 
+    data.system.resolveMacro =
+      !!data.system.resolveMacro;
+
     data.system.hitLocationMode ??= {};
     data.system.hitLocationMode.value =
       data.system.hitLocationMode?.value === "fixed"

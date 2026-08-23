@@ -4,15 +4,15 @@
 
 <!-- 🔢 NUMERIC / STACK CONDITIONS (3 columns) -->
 <div class="conditions-stack-grid">
-  {{#each system.conditions as |value key|}}
-    {{#unless (eq (lookup (lookup ../config.conditionConfig key) "type") "state")}}
+  {{#each config.conditionConfig as |cfg key|}}
+    {{#unless (eq cfg.type "state")}}
       <div class="condition-stack-cell" data-key="{{key}}">
         <div
           class="condition-header"
           data-key="{{key}}"
-          data-description="{{localize (lookup (lookup ../config.conditionConfig key) 'description')}}"
+          data-description="{{localize cfg.description}}"
         >
-          {{localize (lookup (lookup ../config.conditionConfig key) "label")}}
+          {{localize cfg.label}}
         </div>
         <input
           type="number"
@@ -31,14 +31,14 @@
 <table class="conditions-table boolean">
   <thead>
     <tr>
-      {{#each system.conditions as |value key|}}
-        {{#if (eq (lookup (lookup ../config.conditionConfig key) "type") "state")}}
+      {{#each config.conditionConfig as |cfg key|}}
+        {{#if (eq cfg.type "state")}}
           <th
             class="condition-header"
             data-key="{{key}}"
-            data-description="{{localize (lookup (lookup ../config.conditionConfig key) 'description')}}"
+            data-description="{{localize cfg.description}}"
           >
-            {{localize (lookup (lookup ../config.conditionConfig key) "label")}}
+            {{localize cfg.label}}
           </th>
         {{/if}}
       {{/each}}
@@ -47,15 +47,15 @@
 
   <tbody>
     <tr>
-      {{#each system.conditions as |value key|}}
-        {{#if (eq (lookup (lookup ../config.conditionConfig key) "type") "state")}}
+      {{#each config.conditionConfig as |cfg key|}}
+        {{#if (eq cfg.type "state")}}
           <td class="condition-cell" data-key="{{key}}">
             <input
               type="checkbox"
               name="system.conditions.{{key}}"
               data-action="updateConditionState"
               data-key="{{key}}"
-              {{checked value}}
+              {{checked (lookup ../system.conditions key)}}
             >
           </td>
         {{/if}}

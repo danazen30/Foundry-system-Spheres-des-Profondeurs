@@ -2,6 +2,7 @@ import { SdpRoll } from "../rolls/roll.js";
 import { resolveSdpFormula } from "../system/formula-utils.js";
 import { getActorItemDisplayName } from "../system/item-localization.js";
 import { getTokenIdForActor } from "../system/actor-utils.js";
+import { createSpellResolveMacro } from "./spell-resolve-macro.js";
 
 export class SdpSpell {
 
@@ -476,6 +477,14 @@ ${hasSpecialOvercast ? `
     speaker: ChatMessage.getSpeaker({ actor }),
     content: html
   });
+
+  if (success && hasDamage && system.resolveMacro) {
+    await createSpellResolveMacro({
+      actor,
+      spell,
+      critical: !!crit.success
+    });
+  }
 
 }
 

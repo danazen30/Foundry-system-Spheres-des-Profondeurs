@@ -395,6 +395,8 @@ prepareDerivedData(){
   else if (this.type === "spell") {
     system.ignoreArmor ??= false;
     system.ignoreArmor = !!system.ignoreArmor;
+    system.resolveMacro ??= false;
+    system.resolveMacro = !!system.resolveMacro;
     system.hitLocationMode ??= {};
     system.hitLocationMode.value =
       system.hitLocationMode.value === "fixed" ? "fixed" : "random";
