@@ -762,3 +762,27 @@
   border-color: var(--sdp-currency-copper-border);
   color: var(--sdp-currency-copper);
 }
+
+/* Chat card damage modifiers (flat / %) */
+.sdp-damage-mods {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  align-items: center;
+  margin: 0.35rem 0 0.5rem;
+}
+
+.sdp-damage-mods .sdp-damage-mod {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0;
+  font-size: 0.9em;
+}
+
+.sdp-damage-mods .sdp-damage-flat,
+.sdp-damage-mods .sdp-damage-percent {
+  width: 3.5rem;
+  min-width: 3.5rem;
+  text-align: center;
+}

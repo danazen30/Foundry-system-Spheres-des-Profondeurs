@@ -10,6 +10,7 @@ import {
   getCurrentRollMode,
   vis
 } from "./combat-visibility.js";
+import { buildDamageModsControlsHtml } from "./damage-mods-ui.js";
 
 function buildDefenseResolutionHtml({
   targetName,
@@ -832,6 +833,14 @@ if (hasTaille && selected === "parry" && targetId) {
 
   // add damage button
   if (result === "HIT") {
+    const modsWrap = document.createElement("div");
+    modsWrap.innerHTML = buildDamageModsControlsHtml().trim();
+    const modsEl = modsWrap.firstElementChild;
+    if (modsEl) {
+      modsEl.setAttribute("data-sdp-vis", "attacker,gm");
+      card.appendChild(modsEl);
+    }
+
     const btn = document.createElement("button");
     btn.classList.add("roll-damage");
     btn.setAttribute("data-sdp-vis", "attacker,gm");

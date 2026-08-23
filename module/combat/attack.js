@@ -19,6 +19,7 @@ import {
   getCurrentRollMode,
   vis
 } from "../chat/combat-visibility.js";
+import { buildDamageModsControlsHtml } from "../chat/damage-mods-ui.js";
 
 export class SdpAttack {
 
@@ -660,7 +661,8 @@ if (crit.failure) {
  if(success){
 
       damageButton = `
-      <button type="button" type="button" class="roll-damage"
+      ${buildDamageModsControlsHtml()}
+      <button type="button" class="roll-damage"
         data-actor="${actor.id}"
         data-token="${tokenId}"
         data-weapon="${weapon.id}"

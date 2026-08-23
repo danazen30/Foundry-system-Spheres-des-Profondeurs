@@ -460,6 +460,8 @@
   "SDP.Hit": "TOUCHÉ",
   "SDP.Miss": "RATÉ",
   "SDP.RollDamage": "Lancer les Dégâts",
+  "SDP.ChatDamageFlat": "Dégâts bruts",
+  "SDP.ChatDamagePercent": "Dégâts %",
   "SDP.Traits": "Traits",
   "SDP.Location": "Localisation",
   "SDP.Charge": "Charge",
@@ -726,6 +728,27 @@
 
 "SDP.Item.Spell.telluricsuction.Name": "Aspiration tellurique",
 "SDP.Item.Spell.telluricsuction.Description": "Surincantation : +1 DR requis pour se libérer par point.\nTu crées une brève aspiration d'air qui plaque la cible au sol, puis la terre se referme sur elle. Elle doit réussir un Test de Résistance (+0). En cas d'échec, elle tombe À terre et gagne la Condition Entravé.\nTant que le sort dure, personne ne peut attaquer la cible. Au début de chacun de ses tours, elle peut tenter un Test de Maîtrise physique (−20) : les DR obtenus s'accumulent d'un tour à l'autre. Dès qu'elle a accumulé au moins 2 DR, elle se libère (Entravé est retiré). Tant qu'elle n'a pas atteint ce total, elle reste Entravé.\nLorsque le sort prend fin, Entravé dû à cet effet est retiré.",
+
+"SDP.Item.Spell.sparkbolt.Name": "Trait de foudre",
+"SDP.Item.Spell.sparkbolt.Description": "Surincantation : +BFM dégâts par point.\nTu projettes un trait de foudre. La cible subit les dégâts.",
+
+"SDP.Item.Spell.chainarc.Name": "Arc en chaîne",
+"SDP.Item.Spell.chainarc.Description": "Surincantation : +BFM dégâts par point.\nTu tends un arc de foudre qui frappe une cible puis saute à une autre dans le rayon de la cible. Chaque créature touchée subit les dégâts, puis doit réussir un Test de Résistance (+0). En cas d'échec, elle gagne 1 Condition Étourdi.",
+
+"SDP.Item.Spell.jolttouch.Name": "Toucher électrique",
+"SDP.Item.Spell.jolttouch.Description": "Surincantation : +BFM dégâts par point.\nTu portes la foudre au contact. La cible subit les dégâts, puis doit réussir un Test de Résistance (+0). En cas d'échec, elle gagne 1 Condition Étourdi.",
+
+"SDP.Item.Spell.staticveil.Name": "Voile statique",
+"SDP.Item.Spell.staticveil.Description": "Surincantation : −10 au Test par point.\nUn voile d'électricité statique enveloppe la cible. Chaque fois qu'elle est touchée au corps à corps, le voile décharge : l'attaquant doit réussir un Test de Résistance (+0) ou gagner 1 Condition Étourdi.",
+
+"SDP.Item.Spell.arcwall.Name": "Mur d'arcs",
+"SDP.Item.Spell.arcwall.Description": "Surincantation : valeur du mur ajoutable.\nTu dresses un mur d'arcs électriques. Il bloque le mouvement ; la ligne de vue reste possible à travers (il n'est pas opaque).\nToute créature qui le traverse ou y commence son tour subit les dégâts, puis doit réussir un Test de Résistance (−20). En cas d'échec, elle gagne 1 Condition Étourdi.\nLes projectiles qui tentent de le traverser exigent un Test de Tir (−40) : en cas d'échec, le projectile est dévié et rate.",
+
+"SDP.Item.Spell.thunderhost.Name": "Hôte du tonnerre",
+"SDP.Item.Spell.thunderhost.Description": "Surincantation : +BFM dégâts par point, ou −10 au Test de Résistance par point.\nTu appelles la foudre sur toi : elle te traverse sans te blesser et se décharge autour. Chaque autre créature à 3 m ou moins subit les dégâts, puis doit réussir un Test de Résistance (+0). En cas d'échec, elle gagne 1 Condition Étourdi.",
+
+"SDP.Item.Spell.voltlink.Name": "Lien voltaïque",
+"SDP.Item.Spell.voltlink.Description": "Surincantation : +1 dégât supplémentaire par point.\nTu conjures une arme de mêlée magique formée de foudre dans la main de la cible (forme libre : épée, marteau, masse…). Elle compte comme une arme magique tant que le sort dure. Ses dégâts valent le Bonus de Force du porteur + le Bonus de Force Mentale du lanceur. Une créature touchée doit réussir un Test de Résistance (+0) ou gagner 1 Condition Étourdi. À la fin, l'arme se dissipe sans laisser de trace.",
 
 "SDP.MagicType": "Type de magie",
 "SDP.Used": "Utilisé",
@@ -3121,5 +3144,6 @@
   "SDP.Folder.minor.Name": "Mineur",
   "SDP.Folder.fire.Name": "Feu",
   "SDP.Folder.earth.Name": "Terre",
-  "SDP.Folder.air.Name": "Air"
+  "SDP.Folder.air.Name": "Air",
+  "SDP.Folder.lightning.Name": "Foudre"
 }

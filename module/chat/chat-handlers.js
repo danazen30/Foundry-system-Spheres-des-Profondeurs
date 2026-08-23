@@ -39,6 +39,15 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
 
   });
 
+  html[0].querySelectorAll(".sdp-damage-mods input").forEach(input => {
+    input.addEventListener("click", (event) => {
+      event.stopPropagation();
+    });
+    input.addEventListener("keydown", (event) => {
+      event.stopPropagation();
+    });
+  });
+
 html.find(".sdp-opposed").click(async ev => {
 
   const card = ev.currentTarget.closest(".sdp-roll");

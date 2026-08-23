@@ -3,6 +3,7 @@ import { resolveSdpFormula } from "../system/formula-utils.js";
 import { getActorItemDisplayName } from "../system/item-localization.js";
 import { getTokenIdForActor } from "../system/actor-utils.js";
 import { createSpellResolveMacro } from "./spell-resolve-macro.js";
+import { buildDamageModsControlsHtml } from "../chat/damage-mods-ui.js";
 
 export class SdpSpell {
 
@@ -311,6 +312,7 @@ await actor.update({
   if (success && hasDamage) {
     const ignoreArmor = !!system.ignoreArmor;
     damageButton = `
+    ${buildDamageModsControlsHtml()}
     <button class="roll-damage"
       data-actor="${actor.id}"
       data-token="${tokenId}"

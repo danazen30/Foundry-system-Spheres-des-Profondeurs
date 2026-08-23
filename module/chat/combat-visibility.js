@@ -283,7 +283,7 @@ export async function createCombatMessage({
   stage = "",
   audience = "all",
   extraFlags = {},
-  type = CONST.CHAT_MESSAGE_TYPES?.OTHER
+  style = CONST.CHAT_MESSAGE_STYLES?.OTHER ?? 0
 } = {}) {
 
   const whisper = getCombatWhisperUserIds({
@@ -313,8 +313,8 @@ export async function createCombatMessage({
     data.whisper = whisper;
   }
 
-  if (type !== undefined) {
-    data.type = type;
+  if (style !== undefined) {
+    data.style = style;
   }
 
   return ChatMessage.create(data);

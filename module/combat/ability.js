@@ -1,6 +1,7 @@
 import { resolveSdpFormula } from "../system/formula-utils.js";
 import { rollHitLocation, getHitLocationProfile } from "./hit-location.js";
 import { getTokenIdForActor } from "../system/actor-utils.js";
+import { buildDamageModsControlsHtml } from "../chat/damage-mods-ui.js";
 
 export class SdpAbility {
 
@@ -95,6 +96,7 @@ export class SdpAbility {
 
     if (hasDamage) {
       damageButton = `
+    ${buildDamageModsControlsHtml()}
     <button class="roll-damage"
       data-actor="${actor.id}"
       data-token="${tokenId}"

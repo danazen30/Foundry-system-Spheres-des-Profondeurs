@@ -460,6 +460,8 @@
   "SDP.Hit": "HIT",
   "SDP.Miss": "MISS",
   "SDP.RollDamage": "Roll Damage",
+  "SDP.ChatDamageFlat": "Flat Damage",
+  "SDP.ChatDamagePercent": "Damage %",
   "SDP.Traits": "Traits",
   "SDP.Location": "Location",
   "SDP.Charge": "Charge",
@@ -727,6 +729,27 @@
 
 "SDP.Item.Spell.telluricsuction.Name": "Telluric suction",
 "SDP.Item.Spell.telluricsuction.Description": "Overcast: +1 SL required to break free per point.\nYou create a brief air suction that pins the target to the ground, then the earth closes over them. They must pass a Toughness Test (+0). On a failure, they fall Prone and gain the Entangled Condition.\nWhile the spell lasts, no one may attack the target. At the start of each of their turns, they may attempt a Physical Mastery Test (−20): SL gained accumulate from turn to turn. As soon as they have accumulated at least 2 SL, they break free (Entangled is removed). Until they reach that total, they remain Entangled.\nWhen the spell ends, Entangled from this effect is removed.",
+
+"SDP.Item.Spell.sparkbolt.Name": "Spark bolt",
+"SDP.Item.Spell.sparkbolt.Description": "Overcast: +WPB damage per point.\nYou hurl a bolt of lightning. The target takes the damage.",
+
+"SDP.Item.Spell.chainarc.Name": "Chain arc",
+"SDP.Item.Spell.chainarc.Description": "Overcast: +WPB damage per point.\nYou stretch an arc of lightning that strikes one target, then jumps to another within the target's radius. Each creature hit takes the damage, then must pass a Toughness Test (+0). On a failure, they gain 1 Stunned Condition.",
+
+"SDP.Item.Spell.jolttouch.Name": "Electric touch",
+"SDP.Item.Spell.jolttouch.Description": "Overcast: +WPB damage per point.\nYou deliver lightning on contact. The target takes the damage, then must pass a Toughness Test (+0). On a failure, they gain 1 Stunned Condition.",
+
+"SDP.Item.Spell.staticveil.Name": "Static veil",
+"SDP.Item.Spell.staticveil.Description": "Overcast: −10 to the Test per point.\nA veil of static electricity wraps the target. Whenever they are hit in melee, the veil discharges: the attacker must pass a Toughness Test (+0) or gain 1 Stunned Condition.",
+
+"SDP.Item.Spell.arcwall.Name": "Arc wall",
+"SDP.Item.Spell.arcwall.Description": "Overcast: wall value can be increased.\nYou raise a wall of electric arcs. It blocks movement; line of sight remains possible through it (it is not opaque).\nAny creature that crosses it or starts their turn in it takes the damage, then must pass a Toughness Test (−20). On a failure, they gain 1 Stunned Condition.\nRanged attacks that try to cross it require a Ranged Test (−40): on a failure, the projectile is deflected and misses.",
+
+"SDP.Item.Spell.thunderhost.Name": "Thunder host",
+"SDP.Item.Spell.thunderhost.Description": "Overcast: +WPB damage per point, or −10 to the Toughness Test per point.\nYou call lightning onto yourself: it passes through you without harm and discharges around you. Every other creature within 3 m or less takes the damage, then must pass a Toughness Test (+0). On a failure, they gain 1 Stunned Condition.",
+
+"SDP.Item.Spell.voltlink.Name": "Voltaic link",
+"SDP.Item.Spell.voltlink.Description": "Overcast: +1 extra damage per point.\nYou conjure a melee magical weapon of lightning into the target's hand (any form: sword, hammer, mace…). It counts as a magical weapon for the duration. Its damage equals the wielder's Strength Bonus + the caster's Willpower Bonus. A creature hit must pass a Toughness Test (+0) or gain 1 Stunned Condition. When it ends, the weapon dissipates without a trace.",
 
 "SDP.MagicType": "Magic Type",
 "SDP.Used": "Used",
@@ -3117,6 +3140,6 @@
   "SDP.Folder.minor.Name": "Minor",
   "SDP.Folder.fire.Name": "Fire",
   "SDP.Folder.earth.Name": "Earth",
-  "SDP.Folder.air.Name": "Air"
-
+  "SDP.Folder.air.Name": "Air",
+  "SDP.Folder.lightning.Name": "Lightning"
 }

@@ -223,10 +223,25 @@ static countBleedingStacks(traits, dieResults) {
   return { stacks, threshold };
 }
 
-static async rollDamage({ actor, weapon, target, location, critical, brutal, ammoId, damageType = null, defenseType, ignoreArmor = null }) {
+static async rollDamage({
+  actor,
+  weapon,
+  target,
+  location,
+  critical,
+  brutal,
+  ammoId,
+  damageType = null,
+  defenseType,
+  ignoreArmor = null,
+  chatFlatBonus = 0,
+  chatPercentBonus = 0
+}) {
 
   const dialogMods = game.sdp?.dialogModifiers || {};
 const useFinesse = dialogMods.finesse;
+  const flatBonus = Number(chatFlatBonus) || 0;
+  const percentBonus = Number(chatPercentBonus) || 0;
 
   // =========================
 // AMMO
@@ -368,19 +383,8 @@ let diceFormula =
   weapon.system.damage?.dice ??
   "";
 
-  let weaponDiceFormula = diceFormula; // 🔥 garde les dés de l'arme uniquement
-
-  // 🔥 IMPORTANT : sync avec crit
-if (critical && weaponDiceFormula) {
-  weaponDiceFormula = weaponDiceFormula.replace(/(\d+)d(\d+)/g, (match, diceCount, diceSize) => {
-    return `${Number(diceCount) * 2}d${diceSize}`;
-  });
-}
-
-// cas spell structuré
-if (typeof diceFormula === "object") {
-
-  // { value: "1d4" }
+// cas spell / item structuré { value: "1d4" }
+if (typeof diceFormula === "object" && diceFormula !== null) {
   if (diceFormula.value !== undefined) {
     diceFormula = diceFormula.value;
   } else {
@@ -393,9 +397,19 @@ if (Array.isArray(diceFormula)) {
   diceFormula = diceFormula.flat().join(" + ");
 }
 
-// final clean
-baseFormula = String(baseFormula).trim();
-diceFormula = String(diceFormula).trim();
+baseFormula = String(baseFormula ?? "").trim();
+diceFormula = String(diceFormula ?? "").trim();
+
+// dés de l'arme / sort uniquement (après normalisation string)
+let weaponDiceFormula = diceFormula;
+
+// sync crit sur les dés arme/sort
+if (critical && weaponDiceFormula) {
+  weaponDiceFormula = weaponDiceFormula.replace(
+    /(\d+)d(\d+)/g,
+    (_match, diceCount, diceSize) => `${Number(diceCount) * 2}d${diceSize}`
+  );
+}
 
 const { statBonus, flatBase } = parseWeaponDamageFormula(
   baseFormula,
@@ -539,6 +553,12 @@ if (talentDamageBonus) {
   });
 }
 
+if (flatBonus) {
+  damage += flatBonus;
+}
+
+const postRollFlat = (Number(talentDamageBonus) || 0) + flatBonus;
+
 const hasAntiLarge = traits.some((t) => {
   if (!t) return false;
   const key = this.normalizeTraitKey(t);
@@ -553,6 +573,10 @@ const damageMultipliers = this.collectDamageMultipliers({
   counterCharge: dialogMods.counterCharge,
   hasAntiLarge
 });
+
+if (percentBonus) {
+  damageMultipliers.push(1 + (percentBonus / 100));
+}
 
 damage = this.applyAdditiveDamageMultipliers(damage, damageMultipliers);
 
@@ -611,7 +635,7 @@ weaponDetail.push(
   // TOTAL FINAL
   // =========================
 
-  damage = weaponMax + signTotal + baseWeapon + statBonus + talentDamageBonus;
+  damage = weaponMax + signTotal + baseWeapon + statBonus + talentDamageBonus + flatBonus;
   damage = this.applyAdditiveDamageMultipliers(damage, damageMultipliers);
 
   const damageAfterArmor = Math.max(damage - armor, 0);
@@ -634,6 +658,9 @@ weaponDetail.push(
   formula,
   devastating,
   damageMultipliers,
+  chatFlatBonus: flatBonus,
+  chatPercentBonus: percentBonus,
+  postRollFlat,
   weaponDetail: weaponDetail.join(" + "),
   baseWeapon,
   SB: statBonus,
@@ -664,6 +691,9 @@ weaponDetail.push(
   formula,
   devastating,
   damageMultipliers,
+  chatFlatBonus: flatBonus,
+  chatPercentBonus: percentBonus,
+  postRollFlat,
   rolledDiceFormula,
   bleedingStacks: bleeding.stacks,
   bleedingThreshold: bleeding.threshold

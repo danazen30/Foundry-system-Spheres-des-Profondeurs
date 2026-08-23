@@ -22,6 +22,9 @@ import {
   vis
 } from "./combat-visibility.js";
 import { SdpMount } from "../system/mount-utils.js";
+import {
+  readDamageModsFromCard
+} from "./damage-mods-ui.js";
 
 function formatWoundSeverityKey(severity) {
 
@@ -40,10 +43,26 @@ function buildDamageModifierLines({
   location = "",
   damageMultipliers = [],
   mountedCharge = false,
-  counterCharge = false
+  counterCharge = false,
+  chatFlatBonus = 0,
+  chatPercentBonus = 0
 } = {}) {
 
   const lines = [];
+
+  const flat = Number(chatFlatBonus) || 0;
+  if (flat) {
+    lines.push(
+      `${game.i18n.localize("SDP.ChatDamageFlat")}: ${flat >= 0 ? "+" : ""}${flat}`
+    );
+  }
+
+  const percent = Number(chatPercentBonus) || 0;
+  if (percent) {
+    lines.push(
+      `${game.i18n.localize("SDP.ChatDamagePercent")}: ${percent >= 0 ? "+" : ""}${percent}%`
+    );
+  }
 
   const sizeKey = SdpDamage.resolveActorSize(actor);
   const sizeMult = Number(
@@ -110,7 +129,9 @@ function buildDamageRollSummaryHtml({
   damage,
   damageMultipliers = [],
   devastating = false,
-  includeTotal = true
+  includeTotal = true,
+  chatFlatBonus = 0,
+  chatPercentBonus = 0
 } = {}) {
 
   const dialogMods = game.sdp?.dialogModifiers || {};
@@ -124,7 +145,9 @@ function buildDamageRollSummaryHtml({
     location,
     damageMultipliers,
     mountedCharge,
-    counterCharge: !!dialogMods.counterCharge
+    counterCharge: !!dialogMods.counterCharge,
+    chatFlatBonus,
+    chatPercentBonus
   });
 
   const locationHtml = location
@@ -396,6 +419,9 @@ if (!card) {
       || weapon?.system?.ignoreArmor === true
       || weapon?.system?.ignoreArmor?.value === true;
 
+    const { flat: chatFlatBonus, percent: chatPercentBonus } =
+      readDamageModsFromCard(card);
+
 const result = await SdpDamage.rollDamage({
   actor,
   weapon,
@@ -406,10 +432,12 @@ const result = await SdpDamage.rollDamage({
   ammoId,
   damageType,
   defenseType,
-  ignoreArmor
+  ignoreArmor,
+  chatFlatBonus,
+  chatPercentBonus
 });
 
-  const { roll, damage, damageAfterArmor, finalDamage, armor, armorBase, armorMultiplierReason, formula, devastating, weaponDetail, baseWeapon, SB, bleedingStacks = 0, bleedingThreshold = 0, rolledDiceFormula = "", damageMultipliers = [] } = result;
+  const { roll, damage, damageAfterArmor, finalDamage, armor, armorBase, armorMultiplierReason, formula, devastating, weaponDetail, baseWeapon, SB, bleedingStacks = 0, bleedingThreshold = 0, rolledDiceFormula = "", damageMultipliers = [], postRollFlat = 0 } = result;
 
    if (!brutal) {
 
@@ -456,6 +484,7 @@ await roll.toMessage({
        }))
      )}'
      data-total="${roll.total}"
+     data-post-roll-flat="${postRollFlat || 0}"
      data-multipliers='${JSON.stringify(damageMultipliers)}'
      data-ignore-armor="${ignoreArmor}"
      data-attacker="${actorId}"
@@ -481,7 +510,9 @@ ${buildDamageRollSummaryHtml({
   damage,
   damageMultipliers,
   devastating: true,
-  includeTotal: false
+  includeTotal: false,
+  chatFlatBonus,
+  chatPercentBonus
 })}
 
       <div class="dice-container">
@@ -546,7 +577,9 @@ ${buildDamageRollSummaryHtml({
   locationProfile: card.dataset.locationProfile || "humanoid",
   damage,
   damageMultipliers,
-  devastating
+  devastating,
+  chatFlatBonus,
+  chatPercentBonus
 })}
     </div>
     `
@@ -611,7 +644,9 @@ ${buildDamageRollSummaryHtml({
   locationProfile: card.dataset.locationProfile || "humanoid",
   damage,
   damageMultipliers,
-  devastating
+  devastating,
+  chatFlatBonus,
+  chatPercentBonus
 })}
     `
   });
@@ -650,7 +685,9 @@ ${buildDamageRollSummaryHtml({
   locationProfile: card.dataset.locationProfile || "humanoid",
   damage,
   damageMultipliers,
-  devastating
+  devastating,
+  chatFlatBonus,
+  chatPercentBonus
 })}
     `
   });
@@ -1526,6 +1563,7 @@ const originalDiceTotal = originalDice.reduce((a, d) => {
 
 // base = tout ce qui n'est PAS les dés (avant multiplicateurs taille / tête / etc.)
 const base = originalTotal - originalDiceTotal;
+const postRollFlat = Number(card.dataset.postRollFlat || 0);
 
 // nouveau total brut, puis réapplication des multiplicateurs (ex. Énorme ×2)
 let multipliers = [];
@@ -1536,7 +1574,7 @@ try {
 }
 
 const newTotal = SdpDamage.applyAdditiveDamageMultipliers(
-  base + diceTotal,
+  base + diceTotal + postRollFlat,
   multipliers
 );
 

@@ -6,6 +6,7 @@ import {
   resolveActorFromIds,
   resolveActorItem
 } from "../system/actor-utils.js";
+import { buildDamageModsControlsHtml } from "./damage-mods-ui.js";
 
 export function registerEditHandlers(html, message) {
 
@@ -536,6 +537,7 @@ if (isImpaling && isRound && newRoll <= target) {
 
               if(success){
                 damageButton = `
+                ${buildDamageModsControlsHtml()}
                 <button class="roll-damage"
                   data-actor="${card.dataset.actor}"
                   data-weapon="${card.dataset.weapon}"
