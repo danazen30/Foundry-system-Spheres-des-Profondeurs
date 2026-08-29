@@ -6,6 +6,56 @@ import {
 } from "../system/roll-table-utils.js";
 import { formatPlainTextAsHtml } from "../system/text-format.js";
 
+/**
+ * Live input values are not in attributes; innerHTML would wipe typed damage mods.
+ * Sync before cloning/serializing the spell chat card.
+ */
+function syncSpellCardFormControls(card) {
+  if (!card) return;
+
+  card.querySelectorAll("input, textarea, select").forEach((el) => {
+    if (el instanceof HTMLInputElement) {
+      if (el.type === "checkbox" || el.type === "radio") {
+        if (el.checked) el.setAttribute("checked", "");
+        else el.removeAttribute("checked");
+      } else {
+        el.setAttribute("value", el.value ?? "");
+      }
+      return;
+    }
+
+    if (el instanceof HTMLTextAreaElement) {
+      el.textContent = el.value ?? "";
+      return;
+    }
+
+    if (el instanceof HTMLSelectElement) {
+      Array.from(el.options).forEach((opt) => {
+        if (opt.selected) opt.setAttribute("selected", "");
+        else opt.removeAttribute("selected");
+      });
+    }
+  });
+}
+
+async function persistSpellCardMessage(card) {
+  const messageEl = card?.closest(".message");
+  const messageId = messageEl?.dataset?.messageId;
+  if (!messageId) return;
+
+  const message = game.messages.get(messageId);
+  if (!message) return;
+
+  syncSpellCardFormControls(card);
+
+  const wrapper = document.createElement("div");
+  wrapper.appendChild(card.cloneNode(true));
+
+  await message.update({
+    content: wrapper.innerHTML
+  });
+}
+
 export function registerSpellHandlers(html) {
 
   // =========================
@@ -288,16 +338,7 @@ const type = el.dataset.type;
     // UPDATE MESSAGE
     // =========================
 
-    const message = game.messages.get(
-      card.closest(".message").dataset.messageId
-    );
-
-    const wrapper = document.createElement("div");
-    wrapper.appendChild(card.cloneNode(true));
-
-    await message.update({
-      content: wrapper.innerHTML
-    });
+    await persistSpellCardMessage(card);
 
   });
 
@@ -351,16 +392,7 @@ ${game.i18n.localize(labelKey)}: ${newValue}
   // UPDATE MESSAGE
   // =========================
 
-  const message = game.messages.get(
-    card.closest(".message").dataset.messageId
-  );
-
-  const wrapper = document.createElement("div");
-  wrapper.appendChild(card.cloneNode(true));
-
-  await message.update({
-    content: wrapper.innerHTML
-  });
+  await persistSpellCardMessage(card);
 
 });
 
@@ -475,22 +507,7 @@ html.find(".reset-overcast").click(async ev => {
   // UPDATE MESSAGE
   // =========================
 
-  const message =
-    game.messages.get(
-      card.closest(".message")
-        .dataset.messageId
-    );
-
-  const wrapper =
-    document.createElement("div");
-
-  wrapper.appendChild(
-    card.cloneNode(true)
-  );
-
-  await message.update({
-    content: wrapper.innerHTML
-  });
+  await persistSpellCardMessage(card);
 
 });
 

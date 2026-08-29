@@ -1,14 +1,19 @@
 import { processRollDamageClick } from "../chat/damage-handler.js";
 import { getTokenIdForActor } from "../system/actor-utils.js";
+import { sanitizeChatDiceFormula } from "../chat/damage-mods-ui.js";
 
 /**
  * Roll spell damage via hotbar macro (same path as chat "Roll Damage").
  * Expects exactly one controlled target token.
+ * Replays flat / % / dice mods captured when the macro was created.
  */
 export async function rollSpellDamageMacro({
   actorId,
   spellId,
-  critical = false
+  critical = false,
+  chatFlatBonus = 0,
+  chatPercentBonus = 0,
+  chatDiceFormula = ""
 } = {}) {
 
   if (!actorId || !spellId) {
@@ -48,6 +53,8 @@ export async function rollSpellDamageMacro({
   const fixedHitLocation =
     spell.system?.fixedHitLocation?.value || "body";
 
+  const dice = sanitizeChatDiceFormula(chatDiceFormula);
+
   const card = document.createElement("div");
   card.className = "sdp-spell";
   card.dataset.actor = actorId;
@@ -64,23 +71,31 @@ export async function rollSpellDamageMacro({
       ? spell.system.damageType?.value
       : spell.system?.damageType) || "special";
   card.dataset.traits = "[]";
+  card.dataset.chatFlat = String(Number(chatFlatBonus) || 0);
+  card.dataset.chatPercent = String(Number(chatPercentBonus) || 0);
+  card.dataset.chatDice = dice;
 
   const button = document.createElement("button");
   button.className = "roll-damage";
   button.dataset.token = tokenId;
   button.dataset.ignoreArmor = ignoreArmor ? "true" : "false";
   button.dataset.traits = "[]";
+  button.dataset.fromResolveMacro = "true";
 
   await processRollDamageClick(card, button);
 }
 
 /**
  * Request a resolve macro on the GM hotbar (player → socket, GM → local).
+ * Called when rolling damage from the spell chat card (with chat mods baked in).
  */
 export async function createSpellResolveMacro({
   actor,
   spell,
-  critical = false
+  critical = false,
+  chatFlatBonus = 0,
+  chatPercentBonus = 0,
+  chatDiceFormula = ""
 } = {}) {
 
   if (!actor || !spell) return null;
@@ -88,7 +103,10 @@ export async function createSpellResolveMacro({
   const payload = {
     actorId: actor.id,
     spellId: spell.id,
-    critical: !!critical
+    critical: !!critical,
+    chatFlatBonus: Number(chatFlatBonus) || 0,
+    chatPercentBonus: Number(chatPercentBonus) || 0,
+    chatDiceFormula: sanitizeChatDiceFormula(chatDiceFormula)
   };
 
   if (game.user.isGM) {
@@ -126,7 +144,10 @@ export async function createSpellResolveMacro({
 export async function createSpellResolveMacroAsGM({
   actorId,
   spellId,
-  critical = false
+  critical = false,
+  chatFlatBonus = 0,
+  chatPercentBonus = 0,
+  chatDiceFormula = ""
 } = {}) {
 
   if (!game.user.isGM) return null;
@@ -136,11 +157,18 @@ export async function createSpellResolveMacroAsGM({
 
   if (!actor || !spell || spell.type !== "spell") return null;
 
+  const dice = sanitizeChatDiceFormula(chatDiceFormula);
+  const flat = Number(chatFlatBonus) || 0;
+  const percent = Number(chatPercentBonus) || 0;
+
   const command = [
     `game.sdp.spells.rollDamageMacro({`,
     `  actorId: ${JSON.stringify(actor.id)},`,
     `  spellId: ${JSON.stringify(spell.id)},`,
-    `  critical: ${critical ? "true" : "false"}`,
+    `  critical: ${critical ? "true" : "false"},`,
+    `  chatFlatBonus: ${flat},`,
+    `  chatPercentBonus: ${percent},`,
+    `  chatDiceFormula: ${JSON.stringify(dice)}`,
     `});`
   ].join("\n");
 
@@ -162,7 +190,17 @@ export async function createSpellResolveMacroAsGM({
     await macro.update({
       name,
       command,
-      img: spell.img || macro.img
+      img: spell.img || macro.img,
+      flags: {
+        sdp: {
+          spellResolveMacro: true,
+          actorId: actor.id,
+          spellId: spell.id,
+          chatFlatBonus: flat,
+          chatPercentBonus: percent,
+          chatDiceFormula: dice
+        }
+      }
     });
   } else {
     macro = await Macro.create({
@@ -175,7 +213,10 @@ export async function createSpellResolveMacroAsGM({
         sdp: {
           spellResolveMacro: true,
           actorId: actor.id,
-          spellId: spell.id
+          spellId: spell.id,
+          chatFlatBonus: flat,
+          chatPercentBonus: percent,
+          chatDiceFormula: dice
         }
       }
     });

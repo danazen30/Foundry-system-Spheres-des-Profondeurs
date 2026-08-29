@@ -1,0 +1,28 @@
+spell+folder en=258 fr=262
+missing_vs_en=0
+english_leaks=0
+---CRIT---
+anchoredform: name='Forme ancrée' desc=yes
+animalhearth: name='Foyer Animal' desc=yes
+ardentheart: name='Cœur Ardent' desc=yes
+martialimprint: name='Empreinte martiale' desc=yes
+fluxmaterialization: name='Matérialisation de flux' desc=yes
+shapematter: name='Façonnage' desc=yes
+plantwhip: name='Fouet végétal' desc=yes
+linkink: name='Encre de lien' desc=yes
+brightflash: name='Flash intense' desc=yes
+manifestation: name='Manifestation' desc=yes
+makeshiftwall: name='Mur improvisé' desc=yes
+objectseal: name="Sceau d'objet" desc=yes
+stonesetting: name='Sertissage' desc=yes
+waterchannel: name="Conduite d'eau" desc=yes
+channelsupport='Canalisation (Altération)'
+arcanediscipline='Discipline arcanique (Altération)'
+career="Mage d'altération"
+folder.alteration='Altération'
+folder.modulation='Modulation'
+folder.invocation='Invocation'
+SAMPLE shapematter: 'Tu modèles la matière à portée de main : polir, assembler des briques, ouvrir une brèche, réparation'
+SAMPLE linkink: 'Tu noues un lien avec une créature non consciente et tu le matérialises en tatouage. Elle est ancrée'
+SAMPLE ardentheart: "L'arme doit porter une pierre de Feu sertie. Tu ancre une flamme vivante au cœur de l'arme. Ses dégâ"
+SAMPLE icearmor: "Surincantation : −10 au Test de Résistance de l'attaquant par point.\nTu enveloppes la cible d'un giv"

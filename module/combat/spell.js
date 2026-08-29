@@ -2,7 +2,6 @@ import { SdpRoll } from "../rolls/roll.js";
 import { resolveSdpFormula } from "../system/formula-utils.js";
 import { getActorItemDisplayName } from "../system/item-localization.js";
 import { getTokenIdForActor } from "../system/actor-utils.js";
-import { createSpellResolveMacro } from "./spell-resolve-macro.js";
 import { buildDamageModsControlsHtml } from "../chat/damage-mods-ui.js";
 
 export class SdpSpell {
@@ -375,7 +374,7 @@ await actor.update({
 </div>
   ${magicConsequence ? `
   <p><strong>${game.i18n.localize("SDP.MagicalConsequence")}:</strong> ${game.i18n.localize(
-  `SDP.MagicSeverity.${foundry.utils.capitalize(magicConsequence)}`
+  `SDP.MagicSeverity.${String(magicConsequence).charAt(0).toUpperCase()}${String(magicConsequence).slice(1)}`
 )}</p>
 ` : ""}
 ${talentsHTML}
@@ -485,14 +484,6 @@ ${hasSpecialOvercast ? `
     speaker: ChatMessage.getSpeaker({ actor }),
     content: html
   });
-
-  if (success && hasDamage && system.resolveMacro) {
-    await createSpellResolveMacro({
-      actor,
-      spell,
-      critical: !!crit.success
-    });
-  }
 
 }
 

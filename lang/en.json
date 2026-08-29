@@ -462,6 +462,7 @@
   "SDP.RollDamage": "Roll Damage",
   "SDP.ChatDamageFlat": "Flat Damage",
   "SDP.ChatDamagePercent": "Damage %",
+  "SDP.ChatDamageDice": "Dice",
   "SDP.Traits": "Traits",
   "SDP.Location": "Location",
   "SDP.Charge": "Charge",
@@ -596,7 +597,7 @@
 "SDP.Item.Spell.iceweapon.Description": "Overcast: +1 additional damage per point.\nYou conjure a magical ice weapon into the target's hand. It counts as a magical melee weapon for as long as the spell lasts. Its damage equals the wielder's Strength Bonus + the caster's Willpower Bonus. A creature hit must pass a Toughness Test (+0) or gain 1 Numbed Condition. When it ends, the weapon melts away without a trace.",
 
 "SDP.Item.Spell.icearmor.Name": "Ice armor",
-"SDP.Item.Spell.icearmor.Description": "Overcast: −10 to the target's Toughness Test per point.\nYou wrap the target in biting frost. They must pass a Toughness Test (+0). On a failure, they gain 1 Numbed Condition.",
+"SDP.Item.Spell.icearmor.Description": "Overcast: −10 to the attacker's Resilience Test per point.\nYou wrap the target in biting frost. Whenever they are hit in melee, the attacker must pass a Resilience Test (+0). On a failure, they gain 1 Numbed Condition.",
 
 "SDP.Item.Spell.icerink.Name": "Ice rink",
 "SDP.Item.Spell.icerink.Description": "You turn the ground into a sheet of ice. Any creature that moves through the area must pass an Athletics Test (−20). On a failure, they fall Prone.",
@@ -736,8 +737,8 @@
 "SDP.Item.Spell.chainarc.Name": "Chain arc",
 "SDP.Item.Spell.chainarc.Description": "Overcast: +WPB damage per point.\nYou stretch an arc of lightning that strikes one target, then jumps to another within the target's radius. Each creature hit takes the damage, then must pass a Toughness Test (+0). On a failure, they gain 1 Stunned Condition.",
 
-"SDP.Item.Spell.jolttouch.Name": "Electric touch",
-"SDP.Item.Spell.jolttouch.Description": "Overcast: +WPB damage per point.\nYou deliver lightning on contact. The target takes the damage, then must pass a Toughness Test (+0). On a failure, they gain 1 Stunned Condition.",
+"SDP.Item.Spell.jolttouch.Name": "Direct arc",
+"SDP.Item.Spell.jolttouch.Description": "Overcast: +WPB damage per point.\nYou release an electric arc at point-blank range. The target takes the damage, then must pass a Toughness Test (+0). On a failure, they gain 1 Stunned Condition.",
 
 "SDP.Item.Spell.staticveil.Name": "Static veil",
 "SDP.Item.Spell.staticveil.Description": "Overcast: −10 to the Test per point.\nA veil of static electricity wraps the target. Whenever they are hit in melee, the veil discharges: the attacker must pass a Toughness Test (+0) or gain 1 Stunned Condition.",
@@ -750,6 +751,159 @@
 
 "SDP.Item.Spell.voltlink.Name": "Voltaic link",
 "SDP.Item.Spell.voltlink.Description": "Overcast: +1 extra damage per point.\nYou conjure a melee magical weapon of lightning into the target's hand (any form: sword, hammer, mace…). It counts as a magical weapon for the duration. Its damage equals the wielder's Strength Bonus + the caster's Willpower Bonus. A creature hit must pass a Toughness Test (+0) or gain 1 Stunned Condition. When it ends, the weapon dissipates without a trace.",
+
+"SDP.Item.Spell.stormsurge.Name": "Electric tide",
+"SDP.Item.Spell.stormsurge.Description": "Overcast: +WPB damage per point.\nYou saturate a sheet of magical water with electricity. Any creature that enters the area or starts its turn there takes the damage (ignores armour), then must pass a Toughness Test (−20). On a failure, it gains 1 Stunned Condition.",
+
+"SDP.Item.Spell.neuralshock.Name": "Neural shock",
+"SDP.Item.Spell.neuralshock.Description": "Overcast: +WPB damage per point, or −10 to the Toughness Test per point.\nYou send a discharge along the target's nerves and blood. They take the damage (to the head), then must pass a Toughness Test (+0). On a failure, they gain 1 Stunned Condition, plus 1 additional Stunned Condition per 2 SL of failure, and fall Prone. You must then pass a Cool Test (+0) or gain 1 Corruption point.",
+
+"SDP.Item.Spell.gravepulse.Name": "Grave pulse",
+"SDP.Item.Spell.gravepulse.Description": "Overcast: +WPB damage per point, or −10 to the Toughness Test per point.\nYou project an electric pulse that does not strike the body, but the soul. The target takes the damage (ignores armour), then must pass a Toughness Test (+0). On a failure, they gain 1 Stunned Condition.\nTheir maximum Wounds then decrease by an amount equal to the caster's Willpower Bonus, until a prolonged rest or a purification. The target must also pass a Cool Test (+0) or gain 1 Corruption point.",
+
+"SDP.Item.Spell.rootcurrent.Name": "Root current",
+"SDP.Item.Spell.rootcurrent.Description": "Overcast: +WPB damage per point, or −10 to the Tests per point.\nYou raise a network of conductive roots charged with arcs. Any creature that enters the area or starts its turn there takes the damage and gains 1 Slowed Condition, then must pass a Toughness Test (+0). On a failure, they gain 1 Stunned Condition.\nWhen the spell ends, the roots wither and the Slowed Condition from this effect disappears.",
+
+"SDP.Item.Spell.thornbolt.Name": "Plant dart",
+"SDP.Item.Spell.thornbolt.Description": "Overcast: +WPB damage per point.\nYou hurl a plant dart. The target takes the damage.",
+
+"SDP.Item.Spell.vinegrasp.Name": "Vine grasp",
+"SDP.Item.Spell.vinegrasp.Description": "Overcast: SL required +1.\nVines surge forth and bind the target. They gain the Entangled Condition. Breaking free requires 2 SL.\nWhen the spell ends, Entangled from this effect is removed.",
+
+"SDP.Item.Spell.poisonbloom.Name": "Toxic bloom",
+"SDP.Item.Spell.poisonbloom.Description": "Overcast: −10 to the Toughness Test per point, or +WPB damage per point.\nYou cause a toxic bloom to burst open. Any creature that enters the area or starts its turn there must pass a Toughness Test (+0). On a failure, they gain 1 Poisoned Condition, plus 1 additional Poisoned Condition per 2 SL of failure.",
+
+"SDP.Item.Spell.grovebarrier.Name": "Sylvan barrier",
+"SDP.Item.Spell.grovebarrier.Description": "Overcast: wall value can be increased.\nYou raise a barrier of living wood. It blocks movement and line of sight, providing cover. 3 m wide × 2 m high × 0.5 m thick.",
+
+"SDP.Item.Spell.livingweapon.Name": "Living branch",
+"SDP.Item.Spell.livingweapon.Description": "Overcast: +1 extra damage per point.\nYou conjure a melee magical weapon of living wood into the target's hand (any form: staff, mace, blade…). It counts as a magical weapon for the duration. Its damage equals the wielder's Strength Bonus + the caster's Willpower Bonus. A creature hit must pass a Toughness Test (+0) or gain 1 Poisoned Condition. When it ends, the weapon withers into dust.",
+
+"SDP.Item.Spell.sporespray.Name": "Spore spray",
+"SDP.Item.Spell.sporespray.Description": "Overcast: +WPB damage per point.\nYou project a cloud of spores at melee range. The target takes the damage, then must pass a Toughness Test (+0). On a failure, they gain 1 Poisoned Condition.",
+
+"SDP.Item.Spell.canopyveil.Name": "Canopy veil",
+"SDP.Item.Spell.canopyveil.Description": "Overcast: −10 to the Test per point.\nA veil of living foliage wraps the target. Whenever they are hit in melee, the flowers react and blow poison: the attacker must pass a Toughness Test (+0) or gain 1 Poisoned Condition.",
+
+"SDP.Item.Spell.bloodvine.Name": "Blood vine",
+"SDP.Item.Spell.bloodvine.Description": "Overcast: +WPB damage per point.\nYou project a leeching vine that anchors into the target. They take the damage (ignores armour). You then recover a number of Wounds equal to half the damage dealt.",
+
+"SDP.Item.Spell.fireorchid.Name": "Fire orchid",
+"SDP.Item.Spell.fireorchid.Description": "Overcast: +WPB damage per point, or −10 to the Reflexes Test per point.\nYou cause a fire orchid to bloom within range. While you maintain concentration, it acts on your turn according to your orders: once per turn, it spits a jet of flame at a target within its range. The target takes the damage, then must pass a Reflexes Test (+0). On a failure, they take 1d6 additional fire damage.\nIf you lose concentration, the orchid burns away and disappears.",
+
+"SDP.Item.Spell.dreambloom.Name": "Dream flowers",
+"SDP.Item.Spell.dreambloom.Description": "Overcast: −10 to the Toughness Test per point, or +1 round of residual confusion.\nYou grow dream flowers that imitate the voices of the allies of those who breathe them in. Any creature that enters the area or starts its turn there must pass a Toughness Test (+0). On a failure, they are confused: during their turn, they must attack an ally (or the nearest allied creature).\nAs soon as they leave the area, confusion from this effect ends.",
+
+"SDP.Item.Spell.lifesap.Name": "Vital sap",
+"SDP.Item.Spell.lifesap.Description": "Overcast: +1 healing per point.\nYou cast a seed that clings to the target's skin and grows into a flower. At the start of each of their turns, the target recovers a number of Wounds equal to the caster's Willpower Bonus, and removes 1 Poisoned Condition as well as 1 Exhausted Condition.\nWhen the spell ends, the flower withers and falls.",
+
+"SDP.Item.Spell.brightflash.Name": "Intense flash",
+"SDP.Item.Spell.brightflash.Description": "Overcast: +WPB damage per point.\nAt point-blank range, you release an intense flash of magical clarity. The target takes the damage, then must pass a Reflexes Test (+0). On a failure, they gain 1 Dazzled Condition.",
+
+"SDP.Item.Spell.veilshade.Name": "Shadow veil",
+"SDP.Item.Spell.veilshade.Description": "Overcast: −10 to Tests to discern you per point.\nYou make light reflect around the target like a chameleon.\nAs long as they remain still and no creature is in immediate proximity (melee / a few meters, GM's call), they are invisible.\nIf they move, or if someone approaches, an opposed Perception Test is required to discern them; the bearer of Shadow Veil gains a bonus to this Test (set by the GM based on distance and movement).\nThis spell is not meant for combat: too broad an action (running, attacking, etc.) ends it at once.",
+
+"SDP.Item.Spell.concentratedluminosity.Name": "Concentrated luminosity",
+"SDP.Item.Spell.concentratedluminosity.Description": "Overcast: +1 extra damage per point.\nYou shape a melee magical weapon of concentrated light into the target's hand (any form: staff, mace, blade…). It counts as a magical weapon for the duration. Its damage equals the wielder's Strength Bonus + the caster's Willpower Bonus. A creature hit must pass a Reflexes Test (+0) or gain 1 Dazzled Condition. When it ends, the weapon dissipates in a flash without a trace.",
+
+"SDP.Item.Spell.falsecontour.Name": "False contour",
+"SDP.Item.Spell.falsecontour.Description": "Overcast: −10 to the Reflection Test per point.\nYou wrap the target in an armor of shifted images. Whenever a creature tries to strike them in melee, they must pass a Reflection Test (+0) to aim at the right outline. On a failure, they take a −2 penalty to their attack score for that attack.",
+
+"SDP.Item.Spell.lightray.Name": "Focused ray",
+"SDP.Item.Spell.lightray.Description": "Overcast: +WPB damage per point.\nYou project a focused ray of light. The target takes the damage.",
+
+"SDP.Item.Spell.shadowembrace.Name": "Shadow's embrace",
+"SDP.Item.Spell.shadowembrace.Description": "Overcast: −10 to the Cool Test per point.\nThe target's shadow freezes and forces them to remain still. They must pass a Cool Test (+0). On a failure, they are completely vulnerable to attacks (they can neither move, Parry, nor Dodge).\nAt the start of each of their following turns, they may retry a Cool Test: +10 on the 2nd test, +20 on the 3rd, and so on. As soon as they succeed, the effect ends.\nWhen the spell ends, the shadow resumes its normal behaviour.",
+
+"SDP.Item.Spell.flashnova.Name": "Nova",
+"SDP.Item.Spell.flashnova.Description": "Overcast: +WPB damage per point, or −10 to the Reflexes Test per point.\nYou amplify magical brightness in an area, then release it at once, causing a luminous explosion. Every creature in the radius takes the damage, then must pass a Reflexes Test (+0). On a failure, they gain 1 Dazzled Condition.",
+
+"SDP.Item.Spell.mistmaze.Name": "Mist maze",
+"SDP.Item.Spell.mistmaze.Description": "Overcast: −10 to Tests per point.\nYou blend moisture and illusions into an opaque fog. Within the area, vision is completely blocked.\nAny creature that enters the mist or starts its turn there must pass a Reflection Test (+0). On a failure, the mirages disorient them: they lose their movement this turn — wandering in circles or walking toward a false exit.\nAt the start of each of their following turns in the mist, they retry the Reflection Test: +10 on the 2nd test, +20 on the 3rd, and so on. As soon as they succeed, they are no longer disoriented.",
+
+"SDP.Item.Spell.shadowedouble.Name": "Shadow double",
+"SDP.Item.Spell.shadowedouble.Description": "Overcast: +1 round after concentration ends, or +1 damage per point.\nYou create a sealed shadow, permanently fastened to a target's shadow: it remains bound to them and cannot move away.\nThe double uses the caster's Melee Capability. It has Wounds equal to 3 × the caster's WPB. When it strikes, it deals 1d4 per point of the caster's WPB (e.g. WPB 3 → 3d4).\nOnce per round, it may interpose to take a hit meant for an adjacent ally.\nOnce per creature, using its action, it may try to frighten them (a target that can see it at short range): Cool Test (+0); on a failure, they gain 1 Shaken Condition.",
+
+"SDP.Item.Spell.maskshift.Name": "Shifting mask",
+"SDP.Item.Spell.maskshift.Description": "Overcast: penalty to the Test to pierce the appearance per point.\nYou awaken an illusory faculty on the target's face. For the duration, they may alter their facial appearance to resemble another person of similar build. Body, voice, and clothing remain unchanged.\nAnyone who doubts opposes Reflection to the target's Cool: on a success, they notice the lie (blur, sliding features, mismatched manner). Bonuses and penalties depend on the situation (distance, familiarity, light), at the GM's discretion.",
+
+"SDP.Item.Spell.luminousrock.Name": "Luminous rock",
+"SDP.Item.Spell.luminousrock.Description": "Overcast: +WPB damage per point, or −10 to Tests per point.\nYou hurl a dazzling rock. The target takes the damage, then must pass a Reflexes Test (+0). On a failure, the impact knocks them Prone.",
+
+"SDP.Item.Spell.forcedreminiscence.Name": "Forced reminiscence",
+"SDP.Item.Spell.forcedreminiscence.Description": "Overcast: −10 to Tests per point.\nYou tear a painful memory from the target and force it before their eyes. They must pass a Cool Test (+0). On a failure, they are overwhelmed: they lose Action and movement this round, and remain vulnerable to attacks (neither Parry nor Dodge).\nAt the start of each of their following turns, while you concentrate, they may retry a Cool Test: +10 on the 2nd test, +20 on the 3rd, and so on. As soon as they succeed, the vision ends.",
+
+"SDP.Item.Spell.linkink.Name": "Bond ink",
+"SDP.Item.Spell.linkink.Description": "You forge a bond with a non-sapient creature and materialize it as a tattoo. It is anchored to you: its characteristics remain its own (including training and developments). If it falls to 0 Wounds once manifested, it is not destroyed: it is recalled into the seal. It only dies permanently if you die, or if you willingly break the seal.",
+
+"SDP.Item.Spell.mentalgrip.Name": "Mental grip",
+"SDP.Item.Spell.mentalgrip.Description": "Overcast: −10 to the Resilience Test per point.\nYou force an invocation bond. The target must pass a Resilience Test (+0); depending on the situation, the difficulty may vary. On a failure, the bond is established and you may anchor it as a tattoo as with Bond Ink. On a success, the spell fails: they remain free.",
+
+"SDP.Item.Spell.mindbridge.Name": "Mind bridge",
+"SDP.Item.Spell.mindbridge.Description": "You open a bridge between two minds. Between sapient beings, communication is by thought (words, simple images). With a non-sapient creature, it is not language: you share feelings and intentions (fear, hunger, threat, attachment, memory, imminent action).\nIf the target is not willing, an opposed Cool Test is required. The bridge ends if you lose concentration or if either party leaves range.",
+
+"SDP.Item.Spell.sharedsenses.Name": "Shared senses",
+"SDP.Item.Spell.sharedsenses.Description": "You borrow the senses of your choice from the target. Your body stays where it is: you are distracted, and Tests that require your local attention take a penalty at the GM's discretion.",
+
+"SDP.Item.Spell.manifestation.Name": "Manifestation",
+"SDP.Item.Spell.manifestation.Description": "Overcast: +1 bonus damage, or +WPB Wounds.\nYou materialize the sealed creature within range. It is itself, with its characteristics and training. You control it without needing to concentrate. Only one manifestation per tattoo at a time. At 0 Wounds, it is recalled into the seal (no permanent death). You may send it back with an action (simple recall, no damage).\nPower cost depends on the creature (size, danger, natural power, abilities, flight, aquatic, etc.). Guide: Tiny 1–3 · Small / Average 4–8 · Large 10–15 · Enormous 25–40.",
+
+"SDP.Item.Spell.linkflare.Name": "Bond flare",
+"SDP.Item.Spell.linkflare.Description": "Overcast: +WPB damage per point.\nYou overload the bond and release the seal's energy in a blast around your manifested creature. Every creature in contact with it takes the damage.",
+
+"SDP.Item.Spell.wildimprint.Name": "Wild imprint",
+"SDP.Item.Spell.wildimprint.Description": "Overcast: one additional borrow.\nYou imbue the target with the essence of one of your sealed creatures: you copy a real element from its sheet—hard skin, scales, natural weapon (claws, fangs, stinger…), venom, special ability (charge, camouflage, fear cry, regeneration…), or any other listed trait.",
+
+"SDP.Item.Spell.galvanizedmanifestation.Name": "Galvanized manifestation",
+"SDP.Item.Spell.galvanizedmanifestation.Description": "Overcast: +5 to one Characteristic per point, or one additional Characteristic per point.\nAdd the Manifestation cost (based on the creature) to this spell's cost.\nYou materialize a sealed creature and reinforce its seal: it appears with +5 to one Characteristic of your choice (Strength, Toughness, Initiative, Agility…). You control it as with Manifestation. Only one manifestation per tattoo. At 0 Wounds → recall. Does not stack with another Manifestation already active on that seal.",
+
+"SDP.Item.Spell.tormentchain.Name": "Torment chain",
+"SDP.Item.Spell.tormentchain.Description": "Overcast: −10 to the Cool Test per point, or +1 target per point.\nYou seal enemies in the same suffering. Each may attempt a Cool Test (+0) at casting; on a failure, they are caught in the seal.\nWhile you concentrate, whenever one takes damage, every other linked creature takes half of it as raw damage (rounded down). If one dies or leaves range, their link breaks.",
+
+"SDP.Item.Spell.telluricvein.Name": "Telluric vein",
+"SDP.Item.Spell.telluricvein.Description": "You forge a bond with the ground: you sense what moves in contact with the earth within the radius. You roughly perceive weight / mass (light · medium · heavy · enormous) and direction, not precise identity. Stone, floors, soil: OK; deep water / air: no.",
+
+"SDP.Item.Spell.armoredmanifestation.Name": "Armored manifestation",
+"SDP.Item.Spell.armoredmanifestation.Description": "Overcast: +1 AP per point.\nAdd the Manifestation cost (based on the creature) to this spell's cost.\nYou draw the creature out of the seal while shaping a carapace onto it for the duration of the call. It gains the Carapace trait.",
+
+"SDP.Item.Spell.glacialmanifestation.Name": "Glacial manifestation",
+"SDP.Item.Spell.glacialmanifestation.Description": "Overcast: −10 to the Resilience Test per point.\nAdd the Manifestation cost (based on the creature) to this spell's cost.\nYou materialize a sealed creature imbued with cold: whenever it wounds a target in contact or is itself hit, the creature concerned must pass a Resilience Test (+0) or gain 1 Numbed Condition.",
+
+"SDP.Item.Spell.shapematter.Name": "Shaping",
+"SDP.Item.Spell.shapematter.Description": "You shape matter within reach: polish, assemble bricks, open a breach, simple repair, fashion a tool.\nYou may also create a weapon or armor: stats of the intended item, ordinary quality, Durability 1, no added traits. Forbidden materials: platinum and superior metals, magical woods.",
+
+"SDP.Item.Spell.makeshiftwall.Name": "Makeshift wall",
+"SDP.Item.Spell.makeshiftwall.Description": "Overcast: wall value can be increased.\nYou bind present stone, earth, wood, or debris into a wall / barricade. It blocks movement and line of sight (cover). No viable materials = failure.",
+
+"SDP.Item.Spell.stonesetting.Name": "Stone setting",
+"SDP.Item.Spell.stonesetting.Description": "You bind a stone (catalyst or talisman) to an object. Without setting, the stone's bonuses / functions do not apply through that object. Removing the stone breaks the setting.",
+
+"SDP.Item.Spell.anchoredfunction.Name": "Anchored function",
+"SDP.Item.Spell.anchoredfunction.Description": "You set an amber into an object and anchor a command into it. The object carries it out within reason: a broom that cleans a room, a mannequin that guards a door or carries a load, a parchment illegible except to a named recipient, a chest that opens only to a password, and so on.\nThis is not an intelligence: no creative initiative, no spells, no conversation. If the command is vague, the GM rules the simplest reading (or the spell fails).\nRemoving or destroying the amber → the function ends at once.",
+
+"SDP.Item.Spell.objectseal.Name": "Object seal",
+"SDP.Item.Spell.objectseal.Description": "You seal an object into a Modulation mark (pure storage): you no longer carry its weight. When you recall it within range, the object reappears and the seal vanishes (you must reseal it to store it again). Only one sealed object at a time.\nCost by object:\n• Small (Power 1) — ring, flask, knife…\n• Medium (Power 3) — sword, armor, crate…\n• Large (Power 7) — table, wardrobe…\n• Massive (Power 15) — cart…",
+
+"SDP.Item.Spell.waterchannel.Name": "Water channel",
+"SDP.Item.Spell.waterchannel.Description": "Overcast: +WPB × 10 litres per point.\nYou guide water already present within range (puddle, barrel, stream, bucket…). Base volume: WPB × 10 litres. You may water plants, fill or empty a container, quench a weak fire, or move that volume. If less water is available than that volume, you only move what is there.",
+
+"SDP.Item.Spell.plantwhip.Name": "Plant whip",
+"SDP.Item.Spell.plantwhip.Description": "You force a present branch or root to strike. The target takes the damage.",
+
+"SDP.Item.Spell.anchoredform.Name": "Anchored form",
+"SDP.Item.Spell.anchoredform.Description": "The object must bear a set Transformation stone. You seal a transformation into that object. While it is equipped, the wearer gains that form (horns, claws, limited wings, hide, or another clear effect fixed at creation). As soon as the object is removed, the form vanishes. Only the anchored transformation applies. One form imprint per object. Removing the stone breaks the imprint.",
+
+"SDP.Item.Spell.animalhearth.Name": "Animal Hearth",
+"SDP.Item.Spell.animalhearth.Description": "The object must bear a set Invocation stone. You transfer the bond of a sealed creature into an object: the hearth becomes its material anchor. You may summon it from the object with no duration limit, as an action, without a new Manifestation cost. At 0 Wounds, it is recalled without permanent death and cannot be summoned again for 1 day. If the object is destroyed, the bond breaks. One creature per hearth. Removing the stone breaks the bond.",
+
+"SDP.Item.Spell.ardentheart.Name": "Ardent Heart",
+"SDP.Item.Spell.ardentheart.Description": "The weapon must bear a set Fire stone. You anchor a living flame into the heart of the weapon. Its damage becomes fire and it gains +1d4 damage. The imprint lasts as long as the weapon and stone remain bound. Only one imprint of this type per weapon. Removing the stone breaks the imprint.",
+
+"SDP.Item.Spell.martialimprint.Name": "Martial imprint",
+"SDP.Item.Spell.martialimprint.Description": "The weapon must bear a set Alteration stone. You anchor a trait into a weapon. It gains one of the following: Precise, Defensive, Crushing, Devastating, Fast, Light, or Durable. If it already has Stunning or Bleeding, you may improve that trait by +1 instead. The effect is permanent. Only one imprint per weapon. Removing the stone breaks the imprint.",
+
+"SDP.Item.Spell.fluxmaterialization.Name": "Flux materialization",
+"SDP.Item.Spell.fluxmaterialization.Description": "Cost: the elemental spell's Power + one quarter of that Power (rounded down, minimum 1).\nYou cast this spell at the same time as a duration-based elemental spell. The two form a single effect: the result no longer has a magical duration and becomes consistent. Example: a Power 8 spell, Materialization surcharge 2, total 10. Incompatible with concentration spells and instantaneous spells.",
 
 "SDP.MagicType": "Magic Type",
 "SDP.Used": "Used",
@@ -1581,7 +1735,7 @@
 "SDP.Item.Skill.performanceantics.Name": "Performance (Antics)",
 "SDP.Item.Skill.performanceprestidigitation.Name": "Performance (Prestidigitation)",
 "SDP.Item.Skill.channel.Name": "Channel (choose)",
-"SDP.Item.Skill.channel.Description": "You have received thorough training in this branch of magic and know how to better manage the risks associated with its use.\n\nWhen you cast a spell of this type, critical failures only occur on a result of 96 to 100 instead of 86 to 100.\n\nThis Skill is also required to learn and use the most powerful forms of this magical specialization (advanced magic).\n\nSpecializations: Curative, Elemental (Fire, Water, Lightning, Earth, Air, Plant, Twilight), Invocation, Support, Modulation, Transformation, Clairvoyance, Necromancy, Carnomancy.",
+"SDP.Item.Skill.channel.Description": "You have received thorough training in this branch of magic and know how to better manage the risks associated with its use.\n\nWhen you cast a spell of this type, critical failures only occur on a result of 96 to 100 instead of 86 to 100.\n\nThis Skill is also required to learn and use the most powerful forms of this magical specialization (advanced magic).\n\nSpecializations: Curative, Elemental (Fire, Water, Lightning, Earth, Air, Plant, Twilight), Invocation, Alteration, Modulation, Transformation, Clairvoyance, Necromancy, Carnomancy.",
 "SDP.Item.Skill.channelcurative.Name": "Channel (Curative)",
 "SDP.Item.Skill.channelfire.Name": "Channel (Fire)",
 "SDP.Item.Skill.channelwater.Name": "Channel (Water)",
@@ -1591,7 +1745,7 @@
 "SDP.Item.Skill.channelplant.Name": "Channel (Plant)",
 "SDP.Item.Skill.channeltwilight.Name": "Channel (Twilight)",
 "SDP.Item.Skill.channelinvocation.Name": "Channel (Invocation)",
-"SDP.Item.Skill.channelsupport.Name": "Channel (Support)",
+"SDP.Item.Skill.channelsupport.Name": "Channel (Alteration)",
 "SDP.Item.Skill.channelmodulation.Name": "Channel (Modulation)",
 "SDP.Item.Skill.channeltransformation.Name": "Channel (Transformation)",
 "SDP.Item.Skill.channelclairvoyance.Name": "Channel (Clairvoyance)",
@@ -1711,7 +1865,7 @@
 "SDP.Item.Talent.snooper.Name": "Snooper",
 "SDP.Item.Talent.snooper.Description": "Max: Initiative Bonus. Bonus: SL.\n\nYou have an eye for spotting what others would overlook. Secret compartments, hidden passages, false bottoms, and carefully concealed objects naturally draw your attention.\n\nWhen you search a room, container, vehicle, or any other environment, add your level in this Talent to the roll result.",
 "SDP.Item.Talent.arcanediscipline.Name": "Arcane Discipline (choose)",
-"SDP.Item.Talent.arcanediscipline.Description": "Max: Intelligence Bonus. Bonus: Success.\n\nYou have perfected your understanding and mastery of this form of magic. Your experience allows you to better control errors and limit their consequences.\n\nWhen you suffer a critical consequence with advanced magic of this specialization, it is treated as a minor consequence instead of a major consequence.\n\nThis Talent is required to learn and use the superior forms of this magic.\n\nSpecializations: Curative, Elemental (Fire, Water, Lightning, Earth, Air, Plant, Twilight), Invocation, Support, Modulation, Transformation, Clairvoyance, Necromancy, Carnomancy.",
+"SDP.Item.Talent.arcanediscipline.Description": "Max: Intelligence Bonus. Bonus: Success.\n\nYou have perfected your understanding and mastery of this form of magic. Your experience allows you to better control errors and limit their consequences.\n\nWhen you suffer a critical consequence with advanced magic of this specialization, it is treated as a minor consequence instead of a major consequence.\n\nThis Talent is required to learn and use the superior forms of this magic.\n\nSpecializations: Curative, Elemental (Fire, Water, Lightning, Earth, Air, Plant, Twilight), Invocation, Alteration, Modulation, Transformation, Clairvoyance, Necromancy, Carnomancy.",
 "SDP.Item.Talent.arcanedisciplinecurative.Name": "Arcane Discipline (Curative)",
 "SDP.Item.Talent.arcanedisciplinefire.Name": "Arcane Discipline (Fire)",
 "SDP.Item.Talent.arcanedisciplinewater.Name": "Arcane Discipline (Water)",
@@ -1721,7 +1875,7 @@
 "SDP.Item.Talent.arcanedisciplineplant.Name": "Arcane Discipline (Plant)",
 "SDP.Item.Talent.arcanedisciplinetwilight.Name": "Arcane Discipline (Twilight)",
 "SDP.Item.Talent.arcanedisciplineinvocation.Name": "Arcane Discipline (Invocation)",
-"SDP.Item.Talent.arcanedisciplinesupport.Name": "Arcane Discipline (Support)",
+"SDP.Item.Talent.arcanedisciplinesupport.Name": "Arcane Discipline (Alteration)",
 "SDP.Item.Talent.arcanedisciplinemodulation.Name": "Arcane Discipline (Modulation)",
 "SDP.Item.Talent.arcanedisciplinetransformation.Name": "Arcane Discipline (Transformation)",
 "SDP.Item.Talent.arcanedisciplineclairvoyance.Name": "Arcane Discipline (Clairvoyance)",
@@ -2675,7 +2829,7 @@
   "SDP.Item.Career.battlemage.Name": "Battle Mage",
   "SDP.Item.Career.warmage.Name": "War Mage",
   "SDP.Item.Career.arcaneravager.Name": "Arcane Ravager",
-  "SDP.Item.Career.supportmage.Name": "Support Mage",
+  "SDP.Item.Career.supportmage.Name": "Alteration Mage",
   "SDP.Item.Career.arcanefortifier.Name": "Arcane Fortifier",
   "SDP.Item.Career.warhealer.Name": "War Healer",
   "SDP.Item.Career.fieldmedic.Name": "Field Medic",
@@ -3141,5 +3295,10 @@
   "SDP.Folder.fire.Name": "Fire",
   "SDP.Folder.earth.Name": "Earth",
   "SDP.Folder.air.Name": "Air",
-  "SDP.Folder.lightning.Name": "Lightning"
+  "SDP.Folder.lightning.Name": "Lightning",
+  "SDP.Folder.plant.Name": "Plant",
+  "SDP.Folder.twilight.Name": "Twilight",
+  "SDP.Folder.invocation.Name": "Invocation",
+  "SDP.Folder.modulation.Name": "Modulation",
+  "SDP.Folder.alteration.Name": "Alteration"
 }

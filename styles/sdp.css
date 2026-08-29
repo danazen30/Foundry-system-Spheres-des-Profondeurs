@@ -786,3 +786,9 @@
   min-width: 3.5rem;
   text-align: center;
 }
+
+.sdp-damage-mods .sdp-damage-dice {
+  width: 4.5rem;
+  min-width: 4.5rem;
+  text-align: center;
+}

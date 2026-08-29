@@ -235,13 +235,15 @@ static async rollDamage({
   defenseType,
   ignoreArmor = null,
   chatFlatBonus = 0,
-  chatPercentBonus = 0
+  chatPercentBonus = 0,
+  chatDiceFormula = ""
 }) {
 
   const dialogMods = game.sdp?.dialogModifiers || {};
 const useFinesse = dialogMods.finesse;
   const flatBonus = Number(chatFlatBonus) || 0;
   const percentBonus = Number(chatPercentBonus) || 0;
+  const chatDice = String(chatDiceFormula || "").trim();
 
   // =========================
 // AMMO
@@ -498,6 +500,10 @@ if (signDiceFormula) {
   formula += (formula ? " + " : "") + signDiceFormula;
 }
 
+if (chatDice) {
+  formula += (formula ? " + " : "") + chatDice;
+}
+
   // =========================
 // IMPACTFUL (PERCUTANTE) — foot charge only
 // =========================
@@ -523,6 +529,9 @@ if (impactfulTrait && dialogMods.charge && !mountedCharge) {
     if (diceFormula) formula += (formula ? " + " : "") + diceFormula;
     if (signDiceFormula) {
       formula += (formula ? " + " : "") + signDiceFormula;
+    }
+    if (chatDice) {
+      formula += (formula ? " + " : "") + chatDice;
     }
 
     console.log("SDP | IMPACTFUL ADDED:", impactfulValue);
@@ -614,6 +623,16 @@ weaponDetail.push(
     }
   }
 
+  if (chatDice) {
+    const matches = chatDice.match(/(\d+)d(\d+)/g) || [];
+    for (const m of matches) {
+      const [, count, faces] = m.match(/(\d+)d(\d+)/);
+      const max = Number(count) * Number(faces);
+      weaponMax += max;
+      weaponDetail.push(`${count}d${faces} → ${max}`);
+    }
+  }
+
   // =========================
   // SIGN DICE → VRAI ROLL
   // =========================
@@ -660,6 +679,7 @@ weaponDetail.push(
   damageMultipliers,
   chatFlatBonus: flatBonus,
   chatPercentBonus: percentBonus,
+  chatDiceFormula: chatDice,
   postRollFlat,
   weaponDetail: weaponDetail.join(" + "),
   baseWeapon,
@@ -693,6 +713,7 @@ weaponDetail.push(
   damageMultipliers,
   chatFlatBonus: flatBonus,
   chatPercentBonus: percentBonus,
+  chatDiceFormula: chatDice,
   postRollFlat,
   rolledDiceFormula,
   bleedingStacks: bleeding.stacks,

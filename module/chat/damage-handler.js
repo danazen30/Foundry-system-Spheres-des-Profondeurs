@@ -22,9 +22,8 @@ import {
   vis
 } from "./combat-visibility.js";
 import { SdpMount } from "../system/mount-utils.js";
-import {
-  readDamageModsFromCard
-} from "./damage-mods-ui.js";
+import { readDamageModsFromCard } from "./damage-mods-ui.js";
+import { createSpellResolveMacro } from "../combat/spell-resolve-macro.js";
 
 function formatWoundSeverityKey(severity) {
 
@@ -45,7 +44,8 @@ function buildDamageModifierLines({
   mountedCharge = false,
   counterCharge = false,
   chatFlatBonus = 0,
-  chatPercentBonus = 0
+  chatPercentBonus = 0,
+  chatDiceFormula = ""
 } = {}) {
 
   const lines = [];
@@ -61,6 +61,13 @@ function buildDamageModifierLines({
   if (percent) {
     lines.push(
       `${game.i18n.localize("SDP.ChatDamagePercent")}: ${percent >= 0 ? "+" : ""}${percent}%`
+    );
+  }
+
+  const dice = String(chatDiceFormula || "").trim();
+  if (dice) {
+    lines.push(
+      `${game.i18n.localize("SDP.ChatDamageDice")}: ${dice}`
     );
   }
 
@@ -131,7 +138,8 @@ function buildDamageRollSummaryHtml({
   devastating = false,
   includeTotal = true,
   chatFlatBonus = 0,
-  chatPercentBonus = 0
+  chatPercentBonus = 0,
+  chatDiceFormula = ""
 } = {}) {
 
   const dialogMods = game.sdp?.dialogModifiers || {};
@@ -147,7 +155,8 @@ function buildDamageRollSummaryHtml({
     mountedCharge,
     counterCharge: !!dialogMods.counterCharge,
     chatFlatBonus,
-    chatPercentBonus
+    chatPercentBonus,
+    chatDiceFormula
   });
 
   const locationHtml = location
@@ -419,8 +428,23 @@ if (!card) {
       || weapon?.system?.ignoreArmor === true
       || weapon?.system?.ignoreArmor?.value === true;
 
-    const { flat: chatFlatBonus, percent: chatPercentBonus } =
+    const { flat: chatFlatBonus, percent: chatPercentBonus, dice: chatDiceFormula } =
       readDamageModsFromCard(card);
+
+    if (
+      isSpellCard
+      && weapon?.system?.resolveMacro
+      && button.dataset.fromResolveMacro !== "true"
+    ) {
+      await createSpellResolveMacro({
+        actor,
+        spell: weapon,
+        critical,
+        chatFlatBonus,
+        chatPercentBonus,
+        chatDiceFormula
+      });
+    }
 
 const result = await SdpDamage.rollDamage({
   actor,
@@ -434,7 +458,8 @@ const result = await SdpDamage.rollDamage({
   defenseType,
   ignoreArmor,
   chatFlatBonus,
-  chatPercentBonus
+  chatPercentBonus,
+  chatDiceFormula
 });
 
   const { roll, damage, damageAfterArmor, finalDamage, armor, armorBase, armorMultiplierReason, formula, devastating, weaponDetail, baseWeapon, SB, bleedingStacks = 0, bleedingThreshold = 0, rolledDiceFormula = "", damageMultipliers = [], postRollFlat = 0 } = result;
@@ -512,7 +537,8 @@ ${buildDamageRollSummaryHtml({
   devastating: true,
   includeTotal: false,
   chatFlatBonus,
-  chatPercentBonus
+  chatPercentBonus,
+  chatDiceFormula
 })}
 
       <div class="dice-container">
@@ -579,7 +605,8 @@ ${buildDamageRollSummaryHtml({
   damageMultipliers,
   devastating,
   chatFlatBonus,
-  chatPercentBonus
+  chatPercentBonus,
+  chatDiceFormula
 })}
     </div>
     `
@@ -646,7 +673,8 @@ ${buildDamageRollSummaryHtml({
   damageMultipliers,
   devastating,
   chatFlatBonus,
-  chatPercentBonus
+  chatPercentBonus,
+  chatDiceFormula
 })}
     `
   });
@@ -687,7 +715,8 @@ ${buildDamageRollSummaryHtml({
   damageMultipliers,
   devastating,
   chatFlatBonus,
-  chatPercentBonus
+  chatPercentBonus,
+  chatDiceFormula
 })}
     `
   });
