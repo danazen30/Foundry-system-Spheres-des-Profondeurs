@@ -600,7 +600,7 @@
 "SDP.Item.Spell.icearmor.Description": "Overcast: −10 to the attacker's Resilience Test per point.\nYou wrap the target in biting frost. Whenever they are hit in melee, the attacker must pass a Resilience Test (+0). On a failure, they gain 1 Numbed Condition.",
 
 "SDP.Item.Spell.icerink.Name": "Ice rink",
-"SDP.Item.Spell.icerink.Description": "You turn the ground into a sheet of ice. Any creature that moves through the area must pass an Athletics Test (−20). On a failure, they fall Prone.",
+"SDP.Item.Spell.icerink.Description": "Overcast: −10 to the Test per point.\nYou turn the ground into a sheet of ice. Any creature that moves through the area must pass an Athletics Test (+0). On a failure, they fall Prone.",
 
 "SDP.Item.Spell.iceshard.Name": "Ice shard",
 "SDP.Item.Spell.iceshard.Description": "Overcast: +Willpower Bonus damage per point.\nYou hurl a sharp shard of ice. The target takes cold and piercing damage.",
@@ -618,7 +618,7 @@
 "SDP.Item.Spell.steamcloud.Description": "Overcast: +Willpower Bonus damage per point.\nYou clash fire and ice to form a scalding cloud of steam. Creatures in the cloud are Blinded for as long as they remain there. Any creature that enters the cloud or starts its turn there takes the damage. The cloud blocks line of sight beyond 3 m.",
 
 "SDP.Item.Spell.cuttingblizzard.Name": "Cutting blizzard",
-"SDP.Item.Spell.cuttingblizzard.Description": "Overcast: +Willpower Bonus damage per point.\nYou unleash a storm of ice blades carried by the wind. Every creature in the area takes the damage, then must pass a Toughness Test (−20). On a failure, they gain 1 Numbed Condition.",
+"SDP.Item.Spell.cuttingblizzard.Description": "Overcast: +WPB damage per point, or −10 to the Test per point.\nYou unleash a storm of ice blades carried by the wind. Every creature in the area takes the damage, then must pass a Resilience Test (+0). On a failure, they gain 1 Numbed Condition.",
 
 "SDP.Item.Spell.iceenchantment.Name": "Ice enchantment",
 "SDP.Item.Spell.iceenchantment.Description": "Overcast: +1 additional damage or +1 Armor point per point.\nYou imbue an existing object with glacial magic: you increase a weapon's damage or an armor's protection. When an attack with the enchanted weapon hits, or when an opponent hits in melee against enchanted armor, the target must pass a Toughness Test (+0) or gain 1 Numbed Condition.",
@@ -648,7 +648,7 @@
 "SDP.Item.Spell.emberarc.Description": "Overcast: +Willpower Bonus damage per point.\nYou stretch a glowing arc of lightning that strikes one target then leaps to another nearby. Each creature hit takes the damage, then must pass a Toughness Test (+0). On a failure, they gain 1 Stunned Condition and automatically fail the following Reflexes Test: they take an additional 1d6 fire damage. On a success, they attempt a Reflexes Test (+0); on a failure, they take an additional 1d6 fire damage.",
 
 "SDP.Item.Spell.heatpressure.Name": "Heat pressure",
-"SDP.Item.Spell.heatpressure.Description": "Overcast: +Willpower Bonus damage per point.\nYou form an area where the air contracts and traps heat as under a bell jar. The air compresses the fire around anyone who enters. Any creature that enters the area or starts its turn there takes the damage (ignoring armor), then must pass a Toughness Test (−20). On a failure, they gain 1 Exhausted Condition.",
+"SDP.Item.Spell.heatpressure.Description": "Overcast: +WPB damage per point, or −10 to the Test per point.\nYou form an area where the air contracts and traps heat as under a bell jar. The air compresses the fire around anyone who enters. Any creature that enters the area or starts its turn there takes the damage (ignoring armor), then must pass a Resilience Test (+0). On a failure, they gain 1 Exhausted Condition.",
 
 "SDP.Item.Spell.flameenchantment.Name": "Flame enchantment",
 "SDP.Item.Spell.flameenchantment.Description": "Overcast: +1 additional damage or +1 Armor point per point.\nYou imbue an existing object with fiery magic: you increase a weapon's damage or an armor's protection. A creature hit by the enchanted weapon, or that hits enchanted armor in melee, must pass a Reflexes Test (+0) or take an additional 1d6 fire damage.",
@@ -681,13 +681,13 @@
 "SDP.Item.Spell.stoneskin.Description": "Overcast: +1 Armor point per point.\nYou envelop the target in a shell of stone. For as long as the spell lasts, they gain +1 Armor point on the whole body. When it ends, the stone cracks and falls away.",
 
 "SDP.Item.Spell.quicksand.Name": "Quicksand",
-"SDP.Item.Spell.quicksand.Description": "You turn the ground into quicksand. Any creature that enters the area or starts its turn there must pass an Athletics Test (−20). On a failure, they gain 1 Slowed Condition, plus 1 additional Slowed Condition for every 2 SL of failure.\nWhen the spell ends, the ground firms up again. A creature still sunk in when the spell ends gains the Prone Condition.",
+"SDP.Item.Spell.quicksand.Description": "Overcast: −10 to the Test per point.\nYou turn the ground into quicksand. Any creature that enters the area or starts its turn there must pass an Athletics Test (+0). On a failure, they gain 1 Slowed Condition, plus 1 additional Slowed Condition for every 2 SL of failure.\nWhen the spell ends, the ground firms up again. A creature still sunk in when the spell ends gains the Prone Condition.",
 
 "SDP.Item.Spell.telluriccage.Name": "Telluric cage",
-"SDP.Item.Spell.telluriccage.Description": "Overcast: +Willpower Bonus damage per point.\nYou charge the ground and raise a cage of electricity along its edges. Any creature that tries to enter or leave the cage takes the damage (ignoring armor) and must pass a Toughness Test (−20) to cross. On a failure, they gain 1 Stunned Condition and remain on the side they tried to leave.",
+"SDP.Item.Spell.telluriccage.Description": "Overcast: −10 to the Test per point.\nYou raise a cage of earth and stone from the ground, then charge it with lightning. For as long as you concentrate, the cage blocks passage. Any creature that tries to enter or leave must attempt a Resilience Test (+0). On a failure, they gain 1 Stunned Condition.",
 
 "SDP.Item.Spell.radiantstele.Name": "Radiant stele",
-"SDP.Item.Spell.radiantstele.Description": "Overcast: +1 Dazzled Condition per point.\nYou raise a stele of stone imbued with light. For as long as you maintain concentration, once per turn as a bonus action you may flash the stele at a target that can see it: they must pass a Reflexes Test (+0) or gain 1 Dazzled Condition.",
+"SDP.Item.Spell.radiantstele.Description": "Overcast: −10 to the Test per point.\nYou raise a stele of stone imbued with light. For as long as you maintain concentration, once per turn as a bonus action you may flash the stele at a target that can see it: they must pass a Reflexes Test (+0) or gain 1 Dazzled Condition.",
 
 "SDP.Item.Spell.lavaspit.Name": "Lava spit",
 "SDP.Item.Spell.lavaspit.Description": "Overcast: +Willpower Bonus damage per point.\nYou hurl a jet of lava into the area. Every creature caught within takes the damage, then must pass a Reflexes Test (−20). On a failure, they take an additional 2d4 fire damage.",
@@ -702,7 +702,7 @@
 "SDP.Item.Spell.airgust.Description": "Overcast: +WPB damage per point.\nYou slash the air and hurl a cutting gust. The target takes the damage.",
 
 "SDP.Item.Spell.soundbarrier.Name": "Sound barrier",
-"SDP.Item.Spell.soundbarrier.Description": "Overcast: +1 to the wall's value per point.\nYou raise a noisy wind barrier. It is not opaque and grants no Armour Points. 3 m wide × 2 m high × 0.5 m thick.\nThe wall's value equals the caster's Willpower Bonus (hardness if someone tries to disperse or break it).\nProjectiles that attempt to pass through require a Ranged Test (−60): on a failure, the projectile is deflected and misses.\nA creature that attempts to cross must pass a Toughness Test (+0). On a failure, they are pushed back to the side they came from and gain 1 Deafened Condition.",
+"SDP.Item.Spell.soundbarrier.Description": "You raise a noisy wind barrier. It is not opaque and grants no Armour Points. 3 m wide × 2 m high × 0.5 m thick.\nProjectiles that attempt to pass through require a Ranged Test (−60): on a failure, the projectile is deflected and misses.\nA creature that attempts to cross must pass a Resilience Test (+0). On a failure, they are pushed back to the side they came from and gain 1 Deafened Condition.",
 
 "SDP.Item.Spell.tornado.Name": "Tornado",
 "SDP.Item.Spell.tornado.Description": "Overcast: −10 to the Toughness Test per point, or +1 metre of height per point.\nYou raise a tornado. Its height equals the caster's Willpower Bonus (in metres).\nThis spell deals no direct damage. Each creature caught in the area must pass a Toughness Test (+0). On a failure, they are drawn to the top of the tornado and dropped: they take falling damage for a height equal to the tornado's (no damage for the first 2 metres; then 3 + 1d4 damage per metre of fall) and fall Prone.",
@@ -726,7 +726,7 @@
 "SDP.Item.Spell.radiantgust.Description": "Overcast: +WPB damage per point.\nYou hurl a gust of air saturated with bright light. The target takes the damage, then must pass a Reflexes Test (+0) to look away or shield themselves. On a failure, they gain 1 Dazzled Condition.",
 
 "SDP.Item.Spell.bloodresonance.Name": "Blood resonance",
-"SDP.Item.Spell.bloodresonance.Description": "Overcast: +WPB damage per point.\nYou pollute the air around the target with a carnomantic vibration that makes their blood resonate. They take the damage (ignores armour), then must pass a Toughness Test (−20). On a failure, they gain 1 Bleeding Condition, plus 1 additional Bleeding Condition per 2 SL of failure.",
+"SDP.Item.Spell.bloodresonance.Description": "Overcast: +WPB damage per point, or −10 to the Test per point.\nYou pollute the air around the target with a carnomantic vibration that makes their blood resonate. They take the damage (ignores armour), then must pass a Resilience Test (+0). On a failure, they gain 1 Bleeding Condition, plus 1 additional Bleeding Condition per 2 SL of failure.",
 
 "SDP.Item.Spell.telluricsuction.Name": "Telluric suction",
 "SDP.Item.Spell.telluricsuction.Description": "Overcast: +1 SL required to break free per point.\nYou create a brief air suction that pins the target to the ground, then the earth closes over them. They must pass a Toughness Test (+0). On a failure, they fall Prone and gain the Entangled Condition.\nWhile the spell lasts, no one may attack the target. At the start of each of their turns, they may attempt a Physical Mastery Test (−20): SL gained accumulate from turn to turn. As soon as they have accumulated at least 2 SL, they break free (Entangled is removed). Until they reach that total, they remain Entangled.\nWhen the spell ends, Entangled from this effect is removed.",
@@ -753,7 +753,7 @@
 "SDP.Item.Spell.voltlink.Description": "Overcast: +1 extra damage per point.\nYou conjure a melee magical weapon of lightning into the target's hand (any form: sword, hammer, mace…). It counts as a magical weapon for the duration. Its damage equals the wielder's Strength Bonus + the caster's Willpower Bonus. A creature hit must pass a Toughness Test (+0) or gain 1 Stunned Condition. When it ends, the weapon dissipates without a trace.",
 
 "SDP.Item.Spell.stormsurge.Name": "Electric tide",
-"SDP.Item.Spell.stormsurge.Description": "Overcast: +WPB damage per point.\nYou saturate a sheet of magical water with electricity. Any creature that enters the area or starts its turn there takes the damage (ignores armour), then must pass a Toughness Test (−20). On a failure, it gains 1 Stunned Condition.",
+"SDP.Item.Spell.stormsurge.Description": "Overcast: +WPB damage per point, or −10 to the Test per point.\nYou saturate a sheet of magical water with electricity. Any creature that enters the area or starts its turn there takes the damage (ignores armour), then must pass a Resilience Test (+0). On a failure, it gains 1 Stunned Condition.",
 
 "SDP.Item.Spell.neuralshock.Name": "Neural shock",
 "SDP.Item.Spell.neuralshock.Description": "Overcast: +WPB damage per point, or −10 to the Toughness Test per point.\nYou send a discharge along the target's nerves and blood. They take the damage (to the head), then must pass a Toughness Test (+0). On a failure, they gain 1 Stunned Condition, plus 1 additional Stunned Condition per 2 SL of failure, and fall Prone. You must then pass a Cool Test (+0) or gain 1 Corruption point.",
@@ -904,6 +904,39 @@
 
 "SDP.Item.Spell.fluxmaterialization.Name": "Flux materialization",
 "SDP.Item.Spell.fluxmaterialization.Description": "Cost: the elemental spell's Power + one quarter of that Power (rounded down, minimum 1).\nYou cast this spell at the same time as a duration-based elemental spell. The two form a single effect: the result no longer has a magical duration and becomes consistent. Example: a Power 8 spell, Materialization surcharge 2, total 10. Incompatible with concentration spells and instantaneous spells.",
+
+"SDP.Item.Spell.stimulus.Name": "Stimulus",
+"SDP.Item.Spell.stimulus.Description": "Overcast: +5 to a Characteristic per point, +5 to another raisable Characteristic.\nYou inject a surplus of flow into the target's body. One of their Characteristics rises by +5. The target carries exactly the split you set at casting for as long as you concentrate.",
+
+"SDP.Item.Spell.weakening.Name": "Weakening",
+"SDP.Item.Spell.weakening.Description": "Overcast: −5 to the same Characteristic per point, −10 to the Resilience Test per point.\nYou pull on the target's flows to weaken them. They attempt a Resilience Test (+0). On a failure, one of their Characteristics drops by −5 for as long as you concentrate.",
+
+"SDP.Item.Spell.amplification.Name": "Amplification",
+"SDP.Item.Spell.amplification.Description": "Overcast: +1 damage per point.\nYou amplify the force of the weapon's strikes. For as long as you concentrate, it gains +1 damage.",
+
+"SDP.Item.Spell.shielding.Name": "Shielding",
+"SDP.Item.Spell.shielding.Description": "Overcast: +1 AP of layer per point.\nYou compact everything the target wears into a magical protection. For as long as you concentrate, they gain +1 global AP.",
+
+"SDP.Item.Spell.attenuation.Name": "Attenuation",
+"SDP.Item.Spell.attenuation.Description": "Overcast: −1 damage per point.\nYou attenuate the force of the weapon's strikes. For as long as you concentrate, it deals −1 damage.",
+
+"SDP.Item.Spell.impulse.Name": "Impulse",
+"SDP.Item.Spell.impulse.Description": "Overcast: +10 to the bonus per point.\nYou release a brief surge through the target's nerves. They gain +10 to their next Test, then the effect ends. A single impulse: no sustaining, no free second roll.",
+
+"SDP.Item.Spell.exhaustion.Name": "Exhaustion",
+"SDP.Item.Spell.exhaustion.Description": "Overcast: −10 to the Resilience Test per point.\nYou try to empty the target's energy. They attempt a Resilience Test (+0). On a failure, they gain 1 Exhausted Condition.",
+
+"SDP.Item.Spell.bittersap.Name": "Bitter sap",
+"SDP.Item.Spell.bittersap.Description": "Overcast: −10 to the Test per point, or +WPB damage per point.\nYou project a corrosive sap. The target takes the damage, then attempts a Resilience Test (+0). On a failure, they gain 1 Poisoned Condition and take −10 to their next Test. On a success, they only take the damage.",
+
+"SDP.Item.Spell.bloodgraft.Name": "Blood graft",
+"SDP.Item.Spell.bloodgraft.Description": "Overcast: +1 life steal per point, or +1 damage per point.\nYou impregnate a weapon with blood magic. For as long as you concentrate, it gains +1 damage. On each successful hit, the wielder recovers 1 Health. This healing cannot exceed the damage dealt by that hit.",
+
+"SDP.Item.Spell.leadenblizzard.Name": "Leaden blizzard",
+"SDP.Item.Spell.leadenblizzard.Description": "Overcast: −10 to the Test per point, or +WPB damage per point.\nYou unleash and maintain a heavy blizzard. For as long as you concentrate, the area remains active. Any creature in it at casting, that enters it, or that starts its turn there takes the damage, then attempts a Resilience Test (+0). On a failure, they gain 1 Numbed Condition and 1 Exhausted Condition. On a success, they only take the damage.",
+
+"SDP.Item.Spell.skillecho.Name": "Skill echo",
+"SDP.Item.Spell.skillecho.Description": "Overcast: +1 accessible Skill per point, or +1 linked target per point.\nYou bind a flow-link between two minds. For as long as you concentrate and both remain in range, one may borrow a Skill from the other: they use the partner's Skill value instead of their own. Only one Skill may be borrowed at a time, unless overcast. The link ends if you lose concentration or if either target leaves range.",
 
 "SDP.MagicType": "Magic Type",
 "SDP.Used": "Used",
