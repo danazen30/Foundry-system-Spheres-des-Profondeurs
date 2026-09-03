@@ -54,6 +54,11 @@
     {{ability.system.duration.type}}
   {{/if}}
 </p>
+{{#if ability.system.concentration.value}}
+{{#if ability.system.maintainRange.value}}
+  <p><strong>{{localize "SDP.MaintainRange"}}:</strong> {{ability.system.maintainRange.value}}</p>
+{{/if}}
+{{/if}}
 
   <p>
   <strong>{{localize "SDP.Target"}}:</strong>
@@ -140,6 +145,11 @@
     {{ability.system.duration.type}}
   {{/if}}
 </p>
+{{#if ability.system.concentration.value}}
+{{#if ability.system.maintainRange.value}}
+  <p><strong>{{localize "SDP.MaintainRange"}}:</strong> {{ability.system.maintainRange.value}}</p>
+{{/if}}
+{{/if}}
 
   <p>
   <strong>{{localize "SDP.Target"}}:</strong>
@@ -241,6 +251,11 @@
     {{#if spell.system.duration.extendable}} (Extendable){{/if}}
   {{/if}}
 </p>
+{{#if spell.system.concentration.value}}
+{{#if spell.system.maintainRange.value}}
+  <p><strong>{{localize "SDP.MaintainRange"}}:</strong> {{spell.system.maintainRange.value}}</p>
+{{/if}}
+{{/if}}
 
   <!-- ========================= -->
   <!-- TARGET -->
@@ -369,6 +384,11 @@
     {{#if spell.system.duration.extendable}} (Extendable){{/if}}
   {{/if}}
 </p>
+{{#if spell.system.concentration.value}}
+{{#if spell.system.maintainRange.value}}
+  <p><strong>{{localize "SDP.MaintainRange"}}:</strong> {{spell.system.maintainRange.value}}</p>
+{{/if}}
+{{/if}}
 
   <!-- ========================= -->
   <!-- TARGET -->
@@ -504,6 +524,11 @@
     {{#if spell.system.duration.extendable}} ({{localize "SDP.Extendable"}}){{/if}}
   {{/if}}
 </p>
+{{#if spell.system.concentration.value}}
+{{#if spell.system.maintainRange.value}}
+  <p><strong>{{localize "SDP.MaintainRange"}}:</strong> {{spell.system.maintainRange.value}}</p>
+{{/if}}
+{{/if}}
 
   <!-- ========================= -->
   <!-- TARGET -->

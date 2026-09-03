@@ -393,6 +393,9 @@ prepareDerivedData(){
     system.ignoreArmor = !!system.ignoreArmor;
     system.damageType ??= "special";
     system.damageType = String(system.damageType || "special");
+    system.maintainRange ??= {};
+    system.maintainRange.value ??= "";
+    system.maintainRange.value = String(system.maintainRange.value ?? "");
   }
   else if (this.type === "spell") {
     system.ignoreArmor ??= false;
@@ -412,6 +415,9 @@ prepareDerivedData(){
     system.movable ??= {};
     system.movable.value ??= "";
     system.movable.value = String(system.movable.value ?? "");
+    system.maintainRange ??= {};
+    system.maintainRange.value ??= "";
+    system.maintainRange.value = String(system.maintainRange.value ?? "");
     const raw = system.overcastSpecialEffects?.value;
     system.overcastSpecialEffects ??= {};
     if (!Array.isArray(raw)) {

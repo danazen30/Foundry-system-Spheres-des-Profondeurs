@@ -1210,6 +1210,11 @@
         "value": ""
       },
 
+      "maintainRange": {
+        "type": "string",
+        "value": ""
+      },
+
       "overcast": {
         "type": "boolean",
         "value": false
@@ -1284,6 +1289,11 @@
       "concentration": {
         "type": "boolean",
         "value": false
+      },
+
+      "maintainRange": {
+        "type": "string",
+        "value": ""
       },
 
       "passive": {

@@ -116,6 +116,12 @@ export class SdpAbilitySheet extends SdpItemSheet {
     data.system.concentration.value =
       !!data.system.concentration?.value;
 
+    data.system.maintainRange ??= {};
+    data.system.maintainRange.value =
+      data.system.maintainRange?.value != null
+        ? String(data.system.maintainRange.value)
+        : "";
+
     return data;
 
   }

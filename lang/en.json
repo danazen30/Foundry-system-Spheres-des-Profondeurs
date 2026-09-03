@@ -938,6 +938,72 @@
 "SDP.Item.Spell.skillecho.Name": "Skill echo",
 "SDP.Item.Spell.skillecho.Description": "Overcast: +1 accessible Skill per point, or +1 linked target per point.\nYou bind a flow-link between two minds. For as long as you concentrate and both remain in range, one may borrow a Skill from the other: they use the partner's Skill value instead of their own. Only one Skill may be borrowed at a time, unless overcast. The link ends if you lose concentration or if either target leaves range.",
 
+"SDP.Item.Spell.nightgaze.Name": "Night gaze",
+"SDP.Item.Spell.nightgaze.Description": "Overcast: +1 hour per point, or +1 target.\nYour eyes adapt to the dark. For the duration, you see in darkness as in broad daylight.",
+
+"SDP.Item.Spell.wingedlimbs.Name": "Winged limbs",
+"SDP.Item.Spell.wingedlimbs.Description": "Overcast: +1 minute per point, or +10 to the Winged Index.\nWings sprout from you. For the duration, you gain the Winged trait (I, 40).",
+
+"SDP.Item.Spell.beastskin.Name": "Beast skin",
+"SDP.Item.Spell.beastskin.Description": "Overcast: +1 minute per point, or +1 global Armour Point.\nThe target's skin densifies. For the duration, they gain the Thick Skin trait (bludgeoning −50%, piercing +50%).",
+
+"SDP.Item.Spell.aquaticbreath.Name": "Aquatic breath",
+"SDP.Item.Spell.aquaticbreath.Description": "Overcast: +1 hour per point, or +1 target.\nGills appear. For the duration, the target can breathe underwater. Out of water, they still breathe air normally.",
+
+"SDP.Item.Spell.hornedbrow.Name": "Horned brow",
+"SDP.Item.Spell.hornedbrow.Description": "Overcast: +1 minute per point, or +1 Horns damage.\nHorns sprout. For the duration, the target gains a Horns natural weapon (melee, SB + 1d8) and the Horns trait (Charge: +50% damage with that weapon).",
+
+"SDP.Item.Spell.ratform.Name": "Rat form",
+"SDP.Item.Spell.ratform.Description": "Overcast: +the bonus of one of the caster's Characteristics to the form, or another Characteristic.\nYou transform the target into a rat (yourself or another at Touch). They use the form's Characteristics and traits, with their own Health.\nForced end (form Health ≤ 0): you resume your original form and lose as much Health as the form lost in total (form max Health − current form Health; negatives count). If that loss is ≥ your original max Health, you fall Unconscious and Dying.\nVoluntary end (you end concentration, or the target leaves maintain range): the same loss is applied, but your original Health cannot fall below 1 (no Dying merely for ending the transformation).",
+
+"SDP.Item.Spell.bearform.Name": "Bear form",
+"SDP.Item.Spell.bearform.Description": "Overcast: +the bonus of one of the caster's Characteristics to the form, or another Characteristic.\nYou transform into a bear. You use the form's Characteristics and traits, with their own Health.\nForced end (form Health ≤ 0): you resume your original form and lose as much Health as the form lost in total (form max Health − current form Health; negatives count). If that loss is ≥ your original max Health, you fall Unconscious and Dying.\nVoluntary end (you end concentration): the same loss is applied, but your original Health cannot fall below 1.",
+
+"SDP.Item.Spell.vigorousbeastskin.Name": "Vigorous beast skin",
+"SDP.Item.Spell.vigorousbeastskin.Description": "Overcast: +5 to the Characteristic, +5 to another Characteristic.\nYou stimulate and densify the target's flesh. For the duration, they gain the Thick Skin trait (bludgeoning −50%, piercing +50%) and +5 to one Characteristic (set at casting).",
+
+"SDP.Item.Spell.rhaegorthroat.Name": "Rhaegor throat",
+"SDP.Item.Spell.rhaegorthroat.Description": "Overcast: +1 minute per point.\nYou reshape the target's throat. For the duration, they gain the Projection (Howl) ability (identical to the Rhaegor's).",
+
+"SDP.Item.Spell.velkrisscales.Name": "Velkris scales",
+"SDP.Item.Spell.velkrisscales.Description": "Overcast: +1 minute per point.\nThe target's skin covers itself in iridescent scales that play with light. For the duration, they gain the Scales trait (slashing −50%, piercing +50%) and the Camouflage trait (II).",
+
+"SDP.Item.Spell.staticcarapace.Name": "Static carapace",
+"SDP.Item.Spell.staticcarapace.Description": "Overcast: −10 to the Test per point.\nAn electricity-charged carapace forms over the target. For the duration, they gain the Carapace trait (slashing and piercing −50%, bludgeoning +50%). Each time they are hit in melee, the carapace releases a small discharge: the attacker must pass a Toughness Test (+0) or gain 1 Stunned Condition.",
+
+"SDP.Item.Spell.animation.Name": "Animation",
+"SDP.Item.Spell.animation.Description": "You create an artificial soul.\nYou may anchor it in a corpse: depending on the body's state, you gain a Skeleton or a Zombie under your control. When the body falls to 0 Health, the artificial soul is destroyed.\nYou may also anchor it in an object to make a bodiless spirit under your control. If the anchor object is destroyed, the artificial soul is destroyed.",
+
+"SDP.Item.Spell.dreadbreath.Name": "Dread breath",
+"SDP.Item.Spell.dreadbreath.Description": "Overcast: −10 to the Test per point.\nYou project a funerary energy that touches the target's soul. They must pass a Cool Test (+0). On a failure, their soul is destabilized and they gain 1 Frightened Condition.",
+
+"SDP.Item.Spell.soulstain.Name": "Soul stain",
+"SDP.Item.Spell.soulstain.Description": "Overcast: −10 to the Test per point.\nYou force a breach in the target's soul and let the Void seep through. They must pass a Cool Test (−20). On a failure, they gain 1 Corruption point, plus 1 additional Corruption for every 2 degrees of failure. On a success, nothing happens.",
+
+"SDP.Item.Spell.spiritenslavement.Name": "Spirit enslavement",
+"SDP.Item.Spell.spiritenslavement.Description": "Overcast: −10 to the Test per point.\nYou may enslave an artificial soul, a bodiless soul, or a soul weakened by Corruption (at least one active Corruption effect). The target must pass a Cool Test (+0). On a failure, they obey you for as long as you maintain concentration. Ineffective against a soul already bound to another master.",
+
+"SDP.Item.Spell.soulbite.Name": "Soul bite",
+"SDP.Item.Spell.soulbite.Description": "Overcast: +WPB damage per point.\nYou plunge your will into the target's soul and sink invisible fangs into it. The target takes the damage. Their maximum Health then decreases by WPB until a prolonged rest or a purification.",
+
+"SDP.Item.Spell.soultear.Name": "Soul tear",
+"SDP.Item.Spell.soultear.Description": "Overcast: +WPB damage per point.\nYou pull the soul one way and the body the other. The target takes damage.",
+
+"SDP.Item.Spell.voidpressure.Name": "Void pressure",
+"SDP.Item.Spell.voidpressure.Description": "Overcast: +WPB damage per point, −10 to Cool per point.\nYou briefly draw an invisible pressure around yourself: the air grows heavy, a cold absence weighs on every chest. Creatures in the area that you consider enemies take damage, then must pass a Cool Test (+0). On a failure, they gain 1 Shaken Condition.",
+
+"SDP.Item.Spell.ossuaryveil.Name": "Ossuary veil",
+"SDP.Item.Spell.ossuaryveil.Description": "Overcast: −10 to the Tests per point.\nYou create an artificial soul in the corpse and drape it in an illusion: the dead appear alive but do not speak. This is not the deceased: it is a masked servant. A Perception Test can pierce the veil. Body at 0 Health: the soul and the illusion vanish.",
+
+"SDP.Item.Spell.soulpuncture.Name": "Soul puncture",
+"SDP.Item.Spell.soulpuncture.Description": "Overcast: +WPB damage per point, −10 to the Test per point.\nYou siphon part of the target's soul. They take the damage and you recover Health equal to half the damage dealt (rounded down). They must pass a Cool Test (+0). On a failure, their maximum Health decreases by an amount equal to half the damage dealt (rounded down), and your maximum Health increases by the same amount, until a prolonged rest or a purification.",
+
+"SDP.Item.Spell.lightningadvent.Name": "Lightning advent",
+"SDP.Item.Spell.lightningadvent.Description": "You create an artificial soul anchored in a diamond and imbue it with Lightning. Choose at casting:\nLightning Draug — warrior. Their strikes deal lightning damage; a creature hit must pass a Toughness Test (+0) or gain 1 Stunned Condition.\nLightning Lich — mage. They may learn and cast Lightning and Necromancy spells. Their magical attacks follow the same particularity (Stunned).\nIndependent. Diamond destroyed or body at 0 Health: the entity is destroyed.",
+
+"SDP.Item.Spell.cadaverousstate.Name": "Cadaverous state",
+"SDP.Item.Spell.cadaverousstate.Description": "Overcast: +1 minute per point.\nYou transform the target into a living corpse. For the duration, they gain the Undead trait: no need to breathe; immunity to Poison, Bleeding, and Exhaustion. Cadaverous appearance; they cannot speak. When the spell ends, the body becomes living again (Health unchanged, except wounds already taken).",
+
 "SDP.MagicType": "Magic Type",
 "SDP.Used": "Used",
 "SDP.Intelligence": "Intelligence",
@@ -946,6 +1012,7 @@
 "SDP.Failure": "FAILURE",
 "SDP.ManaCost": "Mana Cost",
   "SDP.Concentration": "Concentration",
+  "SDP.MaintainRange": "Maintain Range",
   "SDP.Movable": "Movable",
 "SDP.Overcast": "Overcast",
 "SDP.ResetOvercast": "Reset Overcast",
@@ -3333,5 +3400,7 @@
   "SDP.Folder.twilight.Name": "Twilight",
   "SDP.Folder.invocation.Name": "Invocation",
   "SDP.Folder.modulation.Name": "Modulation",
-  "SDP.Folder.alteration.Name": "Alteration"
+  "SDP.Folder.alteration.Name": "Alteration",
+  "SDP.Folder.transformation.Name": "Transformation",
+  "SDP.Folder.necromancy.Name": "Necromancy"
 }

@@ -84,6 +84,18 @@ export class SdpAbility {
       );
     const isAoE = system.aoe?.value === true;
 
+    const maintainRangeRaw = String(
+      system.maintainRange?.value ?? ""
+    ).trim();
+    const maintainRange = maintainRangeRaw
+      ? SdpAbility.resolveFormula(maintainRangeRaw, actor)
+      : 0;
+    const maintainRangeLabel = maintainRangeRaw
+      ? (maintainRange > 0
+          ? `${maintainRange} m`
+          : maintainRangeRaw)
+      : "";
+
     const tokenId = getTokenIdForActor(actor);
 
     const ignoreArmor = !!system.ignoreArmor;
@@ -146,6 +158,7 @@ export class SdpAbility {
   </p>
 
   ${concentration ? `<p><strong>${game.i18n.localize("SDP.Concentration")}</strong></p>` : ""}
+  ${concentration && maintainRangeLabel ? `<p><strong>${game.i18n.localize("SDP.MaintainRange")}:</strong> ${maintainRangeLabel}</p>` : ""}
 
   <hr>
 

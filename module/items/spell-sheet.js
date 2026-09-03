@@ -183,6 +183,12 @@ export class SdpSpellSheet extends SdpItemSheet {
         ? String(data.system.movable.value)
         : "";
 
+    data.system.maintainRange ??= {};
+    data.system.maintainRange.value =
+      data.system.maintainRange?.value != null
+        ? String(data.system.maintainRange.value)
+        : "";
+
     data.system.aoe ??= {};
     data.system.aoe.value =
       !!data.system.aoe?.value;

@@ -249,6 +249,13 @@ const targets = system.target?.value ?? 0;
 const lockTargets = system.lockTargets?.value === true;
 const rangeRaw = system.range?.value ?? 0;
 const radiusRaw = system.radius?.value ?? 0;
+const maintainRangeRaw = String(system.maintainRange?.value ?? "").trim();
+const maintainRange = maintainRangeRaw
+  ? SdpSpell.resolveFormula(maintainRangeRaw, actor)
+  : 0;
+const maintainRangeLabel = maintainRangeRaw
+  ? (maintainRange > 0 ? `${maintainRange} m` : maintainRangeRaw)
+  : "";
 
 const range = SdpSpell.resolveFormula(rangeRaw, actor);
 const radius = SdpSpell.resolveFormula(radiusRaw, actor);
@@ -385,6 +392,7 @@ ${talentsHTML}
 <p><strong>${game.i18n.localize("SDP.ManaCost")}:</strong> ${manaCost}</p>
 
 ${concentration ? `<p><strong>${game.i18n.localize("SDP.Concentration")}</strong></p>` : ""}
+${concentration && maintainRangeLabel ? `<p><strong>${game.i18n.localize("SDP.MaintainRange")}:</strong> ${maintainRangeLabel}</p>` : ""}
 
 <hr>
 

@@ -630,6 +630,7 @@
   "SDP.Failure": "ÉCHEC",
   "SDP.ManaCost": "Coût en mana",
   "SDP.Concentration": "Concentration",
+  "SDP.MaintainRange": "Portée de maintien",
   "SDP.Movable": "Déplaçable",
   "SDP.Overcast": "Surincantation",
   "SDP.ResetOvercast": "Réinitialiser la surincantation",
@@ -2950,9 +2951,77 @@
   "SDP.Item.Spell.skillecho.Name": "Écho de compétence",
   "SDP.Item.Spell.skillecho.Description": "Surincantation : +1 compétence accessible par point, ou +1 cible liée par point.\nTu noues un lien de flux entre deux esprits. Tant que tu te concentres et que les deux restent à portée, l'un peut emprunter une compétence de l'autre : il utilise la valeur de compétence du partenaire à la place de la sienne. Une seule compétence empruntée à la fois, sauf surincantation. Le lien cesse si tu perds la concentration ou si l'une des cibles sort de portée.",
 
+  "SDP.Item.Spell.nightgaze.Name": "Regard nocturne",
+  "SDP.Item.Spell.nightgaze.Description": "Surincantation : +1 heure par point, ou +1 cible.\nTes yeux s'adaptent à l'obscurité. Pendant la durée, tu vois dans le noir comme en plein jour.",
+
+  "SDP.Item.Spell.wingedlimbs.Name": "Membres ailés",
+  "SDP.Item.Spell.wingedlimbs.Description": "Surincantation : +1 minute par point, ou +10 à l'Indice Ailée.\nDes ailes te poussent. Pendant la durée, tu gagnes le trait Ailée (I, 40).",
+
+  "SDP.Item.Spell.beastskin.Name": "Peau de bête",
+  "SDP.Item.Spell.beastskin.Description": "Surincantation : +1 minute par point, ou +1 PA global.\nLa peau de la cible se densifie. Pendant la durée, elle gagne le trait Peau épaisse (contondants −50 %, perforants +50 %).",
+
+  "SDP.Item.Spell.aquaticbreath.Name": "Souffle aquatique",
+  "SDP.Item.Spell.aquaticbreath.Description": "Surincantation : +1 heure par point, ou +1 cible.\nDes branchies apparaissent. Pendant la durée, la cible peut respirer sous l'eau. Hors de l'eau, elle respire toujours à l'air libre.",
+
+  "SDP.Item.Spell.hornedbrow.Name": "Front cornu",
+  "SDP.Item.Spell.hornedbrow.Description": "Surincantation : +1 minute par point, ou +1 dégât aux Cornes.\nDes cornes poussent. Pendant la durée, la cible gagne une arme naturelle Cornes (mêlée, BF + 1d8) et le trait Cornes (Charge : +50 % de dégâts avec cette arme).",
+
+  "SDP.Item.Spell.ratform.Name": "Forme de rat",
+  "SDP.Item.Spell.ratform.Description": "Surincantation : +bonus d'une caractéristique du lanceur à la forme, autre caractéristique.\nTu transformes la cible en rat (toi ou autrui au contact). Elle utilise les caractéristiques et traits de la forme, avec une Santé propre.\nFin forcée (Santé de la forme ≤ 0) : tu reprends ta forme d'origine et perds autant de Santé que la forme a perdu au total (Santé max de forme − Santé actuelle, le négatif compte). Si cette perte est ≥ ta Santé max d'origine, tu tombes Inconscient et Agonisant.\nFin volontaire (tu cesses la concentration, ou la cible sort de la portée de maintien) : même report de perte, mais ta Santé d'origine ne peut pas descendre en dessous de 1 (pas d'agonie juste pour avoir détansformé).",
+
+  "SDP.Item.Spell.bearform.Name": "Forme d'ours",
+  "SDP.Item.Spell.bearform.Description": "Surincantation : +bonus d'une caractéristique du lanceur à la forme, autre caractéristique.\nTu te transformes en ours. Tu utilises les caractéristiques et traits de la forme, avec une Santé propre.\nFin forcée (Santé de la forme ≤ 0) : tu reprends ta forme d'origine et perds autant de Santé que la forme a perdu au total (Santé max de forme − Santé actuelle, le négatif compte). Si cette perte est ≥ ta Santé max d'origine, tu tombes Inconscient et Agonisant.\nFin volontaire (tu cesses la concentration) : même report de perte, mais ta Santé d'origine ne peut pas descendre en dessous de 1.",
+
+  "SDP.Item.Spell.vigorousbeastskin.Name": "Peau de bête vigoureuse",
+  "SDP.Item.Spell.vigorousbeastskin.Description": "Surincantation : +5 à la caractéristique, +5 à une autre caractéristique.\nTu stimules et densifies la chair de la cible. Pendant la durée, elle gagne le trait Peau épaisse (contondants −50 %, perforants +50 %) et +5 à une caractéristique (fixée au lancer).",
+
+  "SDP.Item.Spell.rhaegorthroat.Name": "Gorge du Rhaegor",
+  "SDP.Item.Spell.rhaegorthroat.Description": "Surincantation : +1 minute par point.\nTu remodeles la gorge de la cible. Pendant la durée, elle gagne la capacité Projection (Hurlement) (identique à celle du Rhaegor).",
+
+  "SDP.Item.Spell.velkrisscales.Name": "Écailles du Velkris",
+  "SDP.Item.Spell.velkrisscales.Description": "Surincantation : +1 minute par point.\nLa peau de la cible se couvre d'écailles iridescentes qui jouent avec la lumière. Pendant la durée, elle gagne le trait Écailles (tranchants −50 %, perforants +50 %) et le trait Camouflage (II).",
+
+  "SDP.Item.Spell.staticcarapace.Name": "Carapace statique",
+  "SDP.Item.Spell.staticcarapace.Description": "Surincantation : −10 au Test par point.\nUne carapace chargée d'électricité se forme sur la cible. Pendant la durée, elle gagne le trait Carapace (tranchants et perforants −50 %, contondants +50 %). Chaque fois qu'elle est touchée au corps à corps, la carapace provoque une petite décharge : l'attaquant doit réussir un Test de Résistance (+0) ou gagner 1 Condition Étourdi.",
+
+  "SDP.Item.Spell.animation.Name": "Animation",
+  "SDP.Item.Spell.animation.Description": "Tu crées une âme artificielle.\nTu peux l'ancrer dans une dépouille : selon l'état du corps, tu obtiens un Squelette ou un Zombie sous ton contrôle. Quand le corps tombe à 0 Santé, l'âme artificielle est détruite.\nTu peux aussi l'ancrer dans un objet pour en faire un esprit sans corps sous ton contrôle. Si l'objet-ancre est détruit, l'âme artificielle est détruite.",
+
+  "SDP.Item.Spell.dreadbreath.Name": "Souffle d'effroi",
+  "SDP.Item.Spell.dreadbreath.Description": "Surincantation : −10 au Test par point.\nTu projettes une énergie funèbre qui touche l'âme de la cible. Elle doit réussir un Test de Calme (+0). En cas d'échec, son âme est déstabilisée et gagne 1 Condition Effrayé.",
+
+  "SDP.Item.Spell.soulstain.Name": "Souillure d'âme",
+  "SDP.Item.Spell.soulstain.Description": "Surincantation : −10 au Test par point.\nTu forces une brèche dans l'âme de la cible et tu y laisses filer le Néant. Elle doit réussir un Test de Calme (−20). En cas d'échec, elle gagne 1 point de Corruption, plus 1 Corruption supplémentaire par tranche de 2 DR d'échec. En cas de réussite, rien.",
+
+  "SDP.Item.Spell.spiritenslavement.Name": "Asservissement d'esprit",
+  "SDP.Item.Spell.spiritenslavement.Description": "Surincantation : −10 au Test par point.\nTu peux asservir une âme artificielle, une âme sans corps, ou une âme affaiblie par la Corruption (au moins un effet de Corruption actif). La cible doit réussir un Test de Calme (+0). En cas d'échec, elle t'obéit tant que tu maintiens la concentration. Inefficace contre une âme déjà liée à un autre maître.",
+
+  "SDP.Item.Spell.soulbite.Name": "Morsure d'âme",
+  "SDP.Item.Spell.soulbite.Description": "Surincantation : +BFM dégâts par point.\nTu plonges ta volonté dans l'âme de la cible et tu y plantes des crocs invisibles. La cible subit les dégâts. Son maximum de Santé baisse ensuite de BFM jusqu'à un repos prolongé ou une purification.",
+
+  "SDP.Item.Spell.soultear.Name": "Déchirure d'âme",
+  "SDP.Item.Spell.soultear.Description": "Surincantation : +BFM dégâts par point.\nTu tires l'âme dans un sens et le corps dans l'autre. La cible subit des dégâts.",
+
+  "SDP.Item.Spell.voidpressure.Name": "Pression du Néant",
+  "SDP.Item.Spell.voidpressure.Description": "Surincantation : +BFM dégâts par point, −10 au Calme par point.\nTu tends un instant une pression invisible autour de toi : l'air se fait lourd, une absence froide pèse sur les poitrines. Les créatures dans la zone que tu considères comme ennemies subissent des dégâts, puis doivent réussir un Test de Calme (+0). En cas d'échec, elles gagnent 1 Condition Secoué.",
+
+  "SDP.Item.Spell.ossuaryveil.Name": "Voile d'ossuaire",
+  "SDP.Item.Spell.ossuaryveil.Description": "Surincantation : −10 aux Tests par point.\nTu crées une âme artificielle dans la dépouille et tu la drapes d'une illusion : le mort paraît vivant mais ne parle pas. Ce n'est pas le défunt : c'est un serviteur masqué. Un Test de Perception peut percer le voile. Corps à 0 Santé : l'âme et l'illusion disparaissent.",
+
+  "SDP.Item.Spell.soulpuncture.Name": "Ponction d'âme",
+  "SDP.Item.Spell.soulpuncture.Description": "Surincantation : +BFM dégâts par point, −10 au Test par point.\nTu aspires une partie de l'âme de la cible. Elle subit les dégâts et tu récupères autant de Santé que la moitié des dégâts infligés (arrondi à l'inférieur). Elle doit réussir un Test de Calme (+0). En cas d'échec, son maximum de Santé baisse d'un montant égal à la moitié des dégâts infligés (arrondi à l'inférieur), et ton maximum de Santé augmente du même montant, jusqu'à un repos prolongé ou une purification.",
+
+  "SDP.Item.Spell.lightningadvent.Name": "Avènement de foudre",
+  "SDP.Item.Spell.lightningadvent.Description": "Tu crées une âme artificielle ancrée dans un diamant et tu l'imprègne de Foudre. Choisis au lancer :\nDraug de Foudre — guerrier. Ses coups infligent des dégâts de foudre ; une créature touchée doit réussir un Test de Résistance (+0) ou gagner 1 Condition Étourdi.\nLiche de Foudre — mage. Elle peut apprendre et lancer des sorts de Foudre et de Nécromancie. Ses attaques magiques suivent la même particularité (Étourdi).\nIndépendant. Diamant détruit ou corps à 0 Santé : l'entité est détruite.",
+
+  "SDP.Item.Spell.cadaverousstate.Name": "État cadavérique",
+  "SDP.Item.Spell.cadaverousstate.Description": "Surincantation : +1 minute par point.\nTu transformes la cible en cadavre vivant. Pendant la durée, elle gagne le trait Mort-vivant : plus besoin de respirer ; immunité au Poison, au Saignement et à l'Épuisement. Apparence cadavérique ; elle ne peut pas parler. Fin du sort : le corps redevient vivant (état de Santé inchangé, sauf blessures déjà subies).",
+
   "SDP.Folder.alteration.Name": "Altération",
   "SDP.Folder.invocation.Name": "Invocation",
   "SDP.Folder.modulation.Name": "Modulation",
+  "SDP.Folder.transformation.Name": "Transformation",
+  "SDP.Folder.necromancy.Name": "Nécromancie",
   "SDP.Item.Spell.manifestation.Name": "Manifestation",
   "SDP.Item.Spell.flashnova.Name": "Nova d'éclat"
 }
