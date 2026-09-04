@@ -396,6 +396,8 @@ prepareDerivedData(){
     system.maintainRange ??= {};
     system.maintainRange.value ??= "";
     system.maintainRange.value = String(system.maintainRange.value ?? "");
+    system.projectile ??= {};
+    system.projectile.value = !!system.projectile?.value;
   }
   else if (this.type === "spell") {
     system.ignoreArmor ??= false;
@@ -418,6 +420,8 @@ prepareDerivedData(){
     system.maintainRange ??= {};
     system.maintainRange.value ??= "";
     system.maintainRange.value = String(system.maintainRange.value ?? "");
+    system.projectile ??= {};
+    system.projectile.value = !!system.projectile?.value;
     const raw = system.overcastSpecialEffects?.value;
     system.overcastSpecialEffects ??= {};
     if (!Array.isArray(raw)) {

@@ -1215,6 +1215,11 @@
         "value": ""
       },
 
+      "projectile": {
+        "type": "boolean",
+        "value": false
+      },
+
       "overcast": {
         "type": "boolean",
         "value": false
@@ -1294,6 +1299,11 @@
       "maintainRange": {
         "type": "string",
         "value": ""
+      },
+
+      "projectile": {
+        "type": "boolean",
+        "value": false
       },
 
       "passive": {

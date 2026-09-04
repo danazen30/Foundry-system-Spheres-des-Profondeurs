@@ -995,9 +995,6 @@
 "SDP.Item.Spell.ossuaryveil.Name": "Ossuary veil",
 "SDP.Item.Spell.ossuaryveil.Description": "Overcast: −10 to the Tests per point.\nYou create an artificial soul in the corpse and drape it in an illusion: the dead appear alive but do not speak. This is not the deceased: it is a masked servant. A Perception Test can pierce the veil. Body at 0 Health: the soul and the illusion vanish.",
 
-"SDP.Item.Spell.soulpuncture.Name": "Soul puncture",
-"SDP.Item.Spell.soulpuncture.Description": "Overcast: +WPB damage per point, −10 to the Test per point.\nYou siphon part of the target's soul. They take the damage and you recover Health equal to half the damage dealt (rounded down). They must pass a Cool Test (+0). On a failure, their maximum Health decreases by an amount equal to half the damage dealt (rounded down), and your maximum Health increases by the same amount, until a prolonged rest or a purification.",
-
 "SDP.Item.Spell.lightningadvent.Name": "Lightning advent",
 "SDP.Item.Spell.lightningadvent.Description": "You create an artificial soul anchored in a diamond and imbue it with Lightning. Choose at casting:\nLightning Draug — warrior. Their strikes deal lightning damage; a creature hit must pass a Toughness Test (+0) or gain 1 Stunned Condition.\nLightning Lich — mage. They may learn and cast Lightning and Necromancy spells. Their magical attacks follow the same particularity (Stunned).\nIndependent. Diamond destroyed or body at 0 Health: the entity is destroyed.",
 
@@ -1189,6 +1186,8 @@
 "SDP.Extendable": "Extendable",
 "SDP.AreaOfEffect": "Area of Effect",
   "SDP.LockTargets": "Lock targets",
+  "SDP.Projectile": "Projectile",
+  "SDP.Projectiles": "Projectiles",
   "SDP.Fixed": "Fixed",
 "SDP.Base": "Base",
 "SDP.AddEffect": "Add Effect",
@@ -3402,5 +3401,49 @@
   "SDP.Folder.modulation.Name": "Modulation",
   "SDP.Folder.alteration.Name": "Alteration",
   "SDP.Folder.transformation.Name": "Transformation",
-  "SDP.Folder.necromancy.Name": "Necromancy"
+  "SDP.Folder.necromancy.Name": "Necromancy",
+  "SDP.Folder.carnomancy.Name": "Carnomancy",
+  "SDP.Folder.clairvoyance.Name": "Clairvoyance",
+
+  "SDP.Item.Spell.fleshpuppet.Name": "Flesh puppet",
+  "SDP.Item.Spell.fleshpuppet.Description": "Overcast: −10 to the Test per point.\nYou pilot the target's body. Opposed Channeling vs Cool Test. On a success, on each of their turns you choose simple actions (attack, move, drop an object…). They keep their mind (speak, resist mental spells). At the start of each of their turns, they retry Cool (+0, then cumulative +10).",
+
+  "SDP.Item.Spell.bloodbolt.Name": "Blood bolt",
+  "SDP.Item.Spell.bloodbolt.Description": "Overcast: +WPB damage per point.\nYou create a strand of blood and hurl it as a coagulated bolt, hard as a blade. It strikes the target and deals the damage.",
+
+  "SDP.Item.Spell.directedhemorrhage.Name": "Directed hemorrhage",
+  "SDP.Item.Spell.directedhemorrhage.Description": "Overcast: −10 Resilience per point.\nYou force the target's blood to open outward. They must pass a Resilience Test (+0). On a failure, they gain 1 Bleeding Condition, plus 1 additional Bleeding Condition per 2 degrees of failure.",
+
+  "SDP.Item.Spell.bloodthirst.Name": "Blood thirst",
+  "SDP.Item.Spell.bloodthirst.Description": "Overcast: +1 life steal.\nYou bind a thirst for blood into the weapon: it draws a trickle of blood with every wound. For the duration, on each successful hit the wielder recovers 1 Health (this healing cannot exceed the damage of that hit).",
+
+  "SDP.Item.Spell.bloodarmor.Name": "Blood armor",
+  "SDP.Item.Spell.bloodarmor.Description": "Overcast: −10 to the Test per point.\nYou make the blood throb in the plates and straps. For the duration, whenever the wearer is hit in melee, blood sprays back at the attacker. They must pass a Resilience Test (+0). On a failure, they gain 1 Bleeding Condition.",
+
+  "SDP.Item.Spell.bloodbite.Name": "Blood bite",
+  "SDP.Item.Spell.bloodbite.Description": "Overcast: +WPB damage per point, −10 to the Test.\nYou materialize fangs of blood on the target: they condense and sink into their flesh. The target must make a Resilience Test (+0) or gain 1 Bleeding.",
+
+  "SDP.Item.Spell.bloodpulse.Name": "Blood pulse",
+  "SDP.Item.Spell.bloodpulse.Description": "Overcast: +WPB damage per point, −10 to the Test per point.\nYou trigger a blood explosion in your enemies within the area. Each takes the damage, then must pass a Resilience Test (+0). On a failure, they gain 1 Bleeding Condition.",
+
+  "SDP.Item.Spell.vitaldilation.Name": "Vital dilation",
+  "SDP.Item.Spell.vitaldilation.Description": "Overcast: +1 maximum Health per point.\nYou force the target's soul to widen the vessel of the body. For the duration, their maximum Health increases by the caster's Willpower Bonus (plus overcast). Their current Health increases by the same amount on application; when the spell ends, the maximum drops back and any Health above the new maximum is lost.",
+
+  "SDP.Item.Spell.bloodoffering.Name": "Blood offering",
+  "SDP.Item.Spell.bloodoffering.Description": "Overcast: −1 Health spent per point.\nYou use your blood to heal. Choose how much Health you sacrifice; the total healed is double that amount. You may split this total among several targets in range: the overall amount does not change.",
+
+  "SDP.Item.Spell.bloodcold.Name": "Blood cold",
+  "SDP.Item.Spell.bloodcold.Description": "Overcast: +WPB damage per point, or −10 to the Test per point.\nYou form a zone of cold that sinks into the blood. Within the radius, enemies' blood contracts and freezes for an instant. Each takes the damage, then must pass a Resilience Test (+0). On a failure, they gain 1 Numbed Condition. If they already had at least 1 Bleeding, the frozen blood cracks in the open wound: +1 Bleeding.",
+
+  "SDP.Item.Spell.boilingblood.Name": "Boiling blood",
+  "SDP.Item.Spell.boilingblood.Description": "Overcast: +WPB damage per point, or −10 to the Test per point.\nYou boil the target's blood from within. They take the damage, then must pass a Resilience Test (+0). On a failure, they gain 1 Bleeding Condition.",
+
+  "SDP.Item.Spell.livingvessel.Name": "Living vessel",
+  "SDP.Item.Spell.livingvessel.Description": "Overcast: +1 Resistance per point.\nYou create an artificial soul and force it into a living body that still has blood, taking control of it.\nThe soul has Resistance equal to the caster's WPB. This Resistance is the total SL to reach through extended Cool Tests: at the start of each of their turns, the target makes a Cool Test (+0) and adds their SL to a track. When the track reaches the soul's Resistance, the soul is expelled and control ends.",
+
+  "SDP.Item.Spell.pasttrace.Name": "Trace of the past",
+  "SDP.Item.Spell.pasttrace.Description": "Overcast: +1 vision linked to the object per point.\nYou dive into the imprints left on the target (a place you touch, an object, or a willing or Unconscious creature). For as long as you concentrate, the GM shows you one scene or impression from the past linked to it (who touched it, recent violence, how an object was used, who passed through a place). The image may be partial or symbolic.",
+
+  "SDP.Item.Spell.futuresign.Name": "Sign of the future",
+  "SDP.Item.Spell.futuresign.Description": "Overcast: +1 detail per point.\nYou stretch your mind toward a possible future. You state a request, broad or narrow. The GM shows you one possible future event linked to that request, near or very distant, as an image, a sensation, or a short scene. It is not a certainty. The broader or more distant the request, the blurrier or more symbolic the vision."
 }

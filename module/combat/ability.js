@@ -72,6 +72,7 @@ export class SdpAbility {
       system.duration?.type ?? "";
 
     const targets = system.target?.value ?? 0;
+    const isProjectile = system.projectile?.value === true;
     const range =
       SdpAbility.resolveFormula(
         system.range?.value ?? 0,
@@ -187,7 +188,7 @@ ${!concentration && (duration > 0 || String(durationRaw).trim()) ? `
 </p>` : "")
   : (targets > 0 ? `
     <p class="ability-target-count">
-       <strong>${game.i18n.localize("SDP.Targets")}:</strong>
+       <strong>${isProjectile ? game.i18n.localize("SDP.Projectiles") : game.i18n.localize("SDP.Targets")}:</strong>
 <span class="value">${targets}</span>
     </p>` : "")
 }

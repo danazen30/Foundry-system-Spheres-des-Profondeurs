@@ -189,6 +189,10 @@ export class SdpSpellSheet extends SdpItemSheet {
         ? String(data.system.maintainRange.value)
         : "";
 
+    data.system.projectile ??= {};
+    data.system.projectile.value =
+      !!data.system.projectile?.value;
+
     data.system.aoe ??= {};
     data.system.aoe.value =
       !!data.system.aoe?.value;

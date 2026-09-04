@@ -247,6 +247,7 @@ const durationType = system.duration?.type ?? "";
 
 const targets = system.target?.value ?? 0;
 const lockTargets = system.lockTargets?.value === true;
+const isProjectile = system.projectile?.value === true;
 const rangeRaw = system.range?.value ?? 0;
 const radiusRaw = system.radius?.value ?? 0;
 const maintainRangeRaw = String(system.maintainRange?.value ?? "").trim();
@@ -469,7 +470,7 @@ ${!concentration ? `
        ${lockTargets ? "" : `data-type="target"`}
        data-base="${targets}"
        data-value="${targets}">
-       <strong>${game.i18n.localize("SDP.Targets")}:</strong>
+       <strong>${isProjectile ? game.i18n.localize("SDP.Projectiles") : game.i18n.localize("SDP.Targets")}:</strong>
 <span class="value">${targets}</span>${lockTargets ? ` <em>(${game.i18n.localize("SDP.Fixed")})</em>` : ""}
     </p>` : "")
 }

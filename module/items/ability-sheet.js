@@ -122,6 +122,10 @@ export class SdpAbilitySheet extends SdpItemSheet {
         ? String(data.system.maintainRange.value)
         : "";
 
+    data.system.projectile ??= {};
+    data.system.projectile.value =
+      !!data.system.projectile?.value;
+
     return data;
 
   }

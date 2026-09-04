@@ -796,6 +796,8 @@
   "SDP.Extendable": "Prolongeable",
   "SDP.AreaOfEffect": "Zone d'Effet",
   "SDP.LockTargets": "Verrouiller les cibles",
+  "SDP.Projectile": "Projectile",
+  "SDP.Projectiles": "Projectiles",
   "SDP.Fixed": "Fixe",
   "SDP.Base": "Base",
   "SDP.AddEffect": "Ajouter un Effet",
@@ -3008,20 +3010,61 @@
   "SDP.Item.Spell.ossuaryveil.Name": "Voile d'ossuaire",
   "SDP.Item.Spell.ossuaryveil.Description": "Surincantation : −10 aux Tests par point.\nTu crées une âme artificielle dans la dépouille et tu la drapes d'une illusion : le mort paraît vivant mais ne parle pas. Ce n'est pas le défunt : c'est un serviteur masqué. Un Test de Perception peut percer le voile. Corps à 0 Santé : l'âme et l'illusion disparaissent.",
 
-  "SDP.Item.Spell.soulpuncture.Name": "Ponction d'âme",
-  "SDP.Item.Spell.soulpuncture.Description": "Surincantation : +BFM dégâts par point, −10 au Test par point.\nTu aspires une partie de l'âme de la cible. Elle subit les dégâts et tu récupères autant de Santé que la moitié des dégâts infligés (arrondi à l'inférieur). Elle doit réussir un Test de Calme (+0). En cas d'échec, son maximum de Santé baisse d'un montant égal à la moitié des dégâts infligés (arrondi à l'inférieur), et ton maximum de Santé augmente du même montant, jusqu'à un repos prolongé ou une purification.",
-
   "SDP.Item.Spell.lightningadvent.Name": "Avènement de foudre",
   "SDP.Item.Spell.lightningadvent.Description": "Tu crées une âme artificielle ancrée dans un diamant et tu l'imprègne de Foudre. Choisis au lancer :\nDraug de Foudre — guerrier. Ses coups infligent des dégâts de foudre ; une créature touchée doit réussir un Test de Résistance (+0) ou gagner 1 Condition Étourdi.\nLiche de Foudre — mage. Elle peut apprendre et lancer des sorts de Foudre et de Nécromancie. Ses attaques magiques suivent la même particularité (Étourdi).\nIndépendant. Diamant détruit ou corps à 0 Santé : l'entité est détruite.",
 
   "SDP.Item.Spell.cadaverousstate.Name": "État cadavérique",
   "SDP.Item.Spell.cadaverousstate.Description": "Surincantation : +1 minute par point.\nTu transformes la cible en cadavre vivant. Pendant la durée, elle gagne le trait Mort-vivant : plus besoin de respirer ; immunité au Poison, au Saignement et à l'Épuisement. Apparence cadavérique ; elle ne peut pas parler. Fin du sort : le corps redevient vivant (état de Santé inchangé, sauf blessures déjà subies).",
 
+  "SDP.Item.Spell.fleshpuppet.Name": "Pantin charnelle",
+  "SDP.Item.Spell.fleshpuppet.Description": "Surincantation : −10 au Test par point.\nTu pilotes le corps de la cible. Test opposé Canalisation vs Calme. En cas de réussite, à chacun de ses tours tu choisis des actions simples (attaquer, se déplacer, lâcher un objet…). Elle garde son esprit (parler, résister aux sorts mentaux). Au début de chacun de ses tours, elle retente Calme (+0, puis +10 cumulatif).",
+
+  "SDP.Item.Spell.bloodbolt.Name": "Trait de sang",
+  "SDP.Item.Spell.bloodbolt.Description": "Surincantation : +BFM dégâts par point.\nTu crées un filet de sang et tu le projettes en trait coagulé, dur comme une lame. Il frappe la cible et lui inflige les dégâts.",
+
+  "SDP.Item.Spell.directedhemorrhage.Name": "Hémorragie dirigée",
+  "SDP.Item.Spell.directedhemorrhage.Description": "Surincantation : −10 Résistance par point.\nTu forces le sang de la cible à s’ouvrir vers l’extérieur. Elle doit réussir un Test de Résistance (+0). En cas d’échec, elle gagne 1 Condition Saignement, plus 1 Condition Saignement supplémentaire par tranche de 2 DR d’échec.",
+
+  "SDP.Item.Spell.bloodthirst.Name": "Soif sanglante",
+  "SDP.Item.Spell.bloodthirst.Description": "Surincantation : +1 Vol de vie.\nTu noues une soif de sang dans l’arme : elle aspire un filet de sang à chaque blessure. Pendant la durée, à chaque touche réussie le porteur récupère 1 Santé (ce soin ne peut pas dépasser les dégâts de la touche).",
+
+  "SDP.Item.Spell.bloodarmor.Name": "Armure de sang",
+  "SDP.Item.Spell.bloodarmor.Description": "Surincantation : −10 au Test par point.\nTu fais battre le sang dans les plaques et les lanières. Pendant la durée, chaque fois que le porteur est touché au corps à corps, le sang rejaillit vers l’attaquant. Celui-ci doit réussir un Test de Résistance (+0). En cas d’échec, il gagne 1 Condition Saignement.",
+
+  "SDP.Item.Spell.bloodbite.Name": "Morsure du sang",
+  "SDP.Item.Spell.bloodbite.Description": "Surincantation : +BFM dégâts par point, −10 au Test.\nTu matérialises des crocs de sang sur la cible : ils se condensent et s’enfoncent dans sa chair. La cible doit effectuer un Test de Résistance (+0) ou subir 1 Saignement.",
+
+  "SDP.Item.Spell.bloodpulse.Name": "Pulsion de sang",
+  "SDP.Item.Spell.bloodpulse.Description": "Surincantation : +BFM dégâts par point, −10 au Test par point.\nTu déclenches une explosion sanguine chez tes ennemis dans la zone. Chacun subit les dégâts, puis doit réussir un Test de Résistance (+0). En cas d’échec, il gagne 1 Condition Saignement.",
+
+  "SDP.Item.Spell.vitaldilation.Name": "Dilatation vitale",
+  "SDP.Item.Spell.vitaldilation.Description": "Surincantation : +1 Santé max par point.\nTu forces l’âme de la cible à élargir le vase du corps. Pendant la durée, son maximum de Santé augmente du Bonus de Force Mentale du lanceur (plus la surincantation). Sa Santé actuelle augmente du même montant à l’application ; à la fin, le maximum redescend et l’excédent de Santé au-dessus du nouveau max est perdu.",
+
+  "SDP.Item.Spell.bloodoffering.Name": "Offrande sanglante",
+  "SDP.Item.Spell.bloodoffering.Description": "Surincantation : −1 Santé dépensée par point.\nTu utilises ton sang pour soigner. Tu choisis combien de Santé tu sacrifies ; le total soigné est le double de ce montant. Tu peux répartir ce total entre plusieurs cibles à portée : le montant global ne change pas.",
+
+  "SDP.Item.Spell.bloodcold.Name": "Froid sanguin",
+  "SDP.Item.Spell.bloodcold.Description": "Surincantation : +BFM dégâts par point, ou −10 au Test par point.\nTu formes une zone de froid qui s’enfonce dans le sang. Dans le rayon, le sang des ennemis se contracte et se fige un instant. Chacun subit les dégâts, puis doit réussir un Test de Résistance (+0). En cas d’échec, il gagne 1 Condition Engourdi. S’il avait déjà au moins 1 Saignement, le sang gelé craque dans la plaie ouverte : +1 Saignement.",
+
+  "SDP.Item.Spell.boilingblood.Name": "Sang bouillant",
+  "SDP.Item.Spell.boilingblood.Description": "Surincantation : +BFM dégâts par point, ou −10 au Test par point.\nTu fais bouillir le sang de la cible de l’intérieur. Elle subit les dégâts, puis doit réussir un Test de Résistance (+0). En cas d’échec, elle gagne 1 Condition Saignement.",
+
+  "SDP.Item.Spell.livingvessel.Name": "Réceptacle vivant",
+  "SDP.Item.Spell.livingvessel.Description": "Surincantation : +1 Résistance par point.\nTu crées une âme artificielle et tu l’intègres de force dans un corps vivant encore pourvu de sang, en en prenant le contrôle.\nL’âme a une Résistance égale au BFM du lanceur. Cette Résistance est le total de DR à atteindre par tests étendus de Calme : au début de chacun de ses tours, la cible fait un Test de Calme (+0) et ajoute ses DR à une jauge. Quand la jauge atteint la Résistance de l’âme, celle-ci est expulsée et le contrôle cesse.",
+
+  "SDP.Item.Spell.pasttrace.Name": "Trace du passé",
+  "SDP.Item.Spell.pasttrace.Description": "Surincantation : +1 vision liée à l’objet par point.\nTu plonges dans les empreintes laissées sur la cible (lieu touché, objet, ou créature consentante ou Inconsciente). Tant que tu te concentres, le MJ te montre une scène ou impression du passé liée à elle (qui l’a touchée, violence récente, usage d’un objet, passage dans un lieu). L’image peut être partielle ou symbolique.",
+
+  "SDP.Item.Spell.futuresign.Name": "Signe du futur",
+  "SDP.Item.Spell.futuresign.Description": "Surincantation : +1 détail par point.\nTu tends l’esprit vers un avenir possible. Tu formules une demande, large ou étroite. Le MJ te montre un événement futur possible lié à cette demande, proche ou très lointain, sous forme d’image, de sensation ou de courte scène. Ce n’est pas une certitude. Plus la demande est vaste ou lointaine, plus la vision est floue ou symbolique.",
+
   "SDP.Folder.alteration.Name": "Altération",
   "SDP.Folder.invocation.Name": "Invocation",
   "SDP.Folder.modulation.Name": "Modulation",
   "SDP.Folder.transformation.Name": "Transformation",
   "SDP.Folder.necromancy.Name": "Nécromancie",
+  "SDP.Folder.carnomancy.Name": "Carnomancie",
+  "SDP.Folder.clairvoyance.Name": "Clairvoyance",
   "SDP.Item.Spell.manifestation.Name": "Manifestation",
   "SDP.Item.Spell.flashnova.Name": "Nova d'éclat"
 }
