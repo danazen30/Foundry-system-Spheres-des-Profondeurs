@@ -147,6 +147,17 @@
 
     </div>
 
+    <div class="compact-checkbox">
+
+      <input
+        type="checkbox"
+        name="system.lockRange.value"
+        {{checked system.lockRange.value}}>
+
+      <label>{{localize "SDP.LockRange"}}</label>
+
+    </div>
+
   </div>
 
 </div>
@@ -183,17 +194,6 @@
 
     </div>
 
-    <div class="form-group">
-
-      <label>{{localize "SDP.MaintainRange"}}</label>
-
-      <input
-        type="text"
-        name="system.maintainRange.value"
-        value="{{system.maintainRange.value}}">
-
-    </div>
-
     {{/if}}
 
     {{#unless system.concentration.value}}
@@ -220,17 +220,6 @@
           selected=system.duration.type}}
 
       </select>
-
-    </div>
-
-    <div class="compact-checkbox">
-
-      <input
-        type="checkbox"
-        name="system.duration.extendable"
-        {{checked system.duration.extendable}}>
-
-      <label>{{localize "SDP.Extendable"}}</label>
 
     </div>
 

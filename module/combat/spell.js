@@ -248,15 +248,9 @@ const durationType = system.duration?.type ?? "";
 const targets = system.target?.value ?? 0;
 const lockTargets = system.lockTargets?.value === true;
 const isProjectile = system.projectile?.value === true;
+const lockRange = system.lockRange?.value === true;
 const rangeRaw = system.range?.value ?? 0;
 const radiusRaw = system.radius?.value ?? 0;
-const maintainRangeRaw = String(system.maintainRange?.value ?? "").trim();
-const maintainRange = maintainRangeRaw
-  ? SdpSpell.resolveFormula(maintainRangeRaw, actor)
-  : 0;
-const maintainRangeLabel = maintainRangeRaw
-  ? (maintainRange > 0 ? `${maintainRange} m` : maintainRangeRaw)
-  : "";
 
 const range = SdpSpell.resolveFormula(rangeRaw, actor);
 const radius = SdpSpell.resolveFormula(radiusRaw, actor);
@@ -393,7 +387,6 @@ ${talentsHTML}
 <p><strong>${game.i18n.localize("SDP.ManaCost")}:</strong> ${manaCost}</p>
 
 ${concentration ? `<p><strong>${game.i18n.localize("SDP.Concentration")}</strong></p>` : ""}
-${concentration && maintainRangeLabel ? `<p><strong>${game.i18n.localize("SDP.MaintainRange")}:</strong> ${maintainRangeLabel}</p>` : ""}
 
 <hr>
 
@@ -433,13 +426,13 @@ ${overcast > 0 ? `
 
 
 ${range > 0 ? `
-  <p class="spell-range overcast-click"
-   data-type="range"
+  <p class="spell-range${lockRange ? "" : " overcast-click"}"
+   ${lockRange ? "" : `data-type="range"`}
    data-base="${range}"
    data-value="${range}"
    data-unit="m">
    <strong>${game.i18n.localize("SDP.Range")}:</strong>
-   <span class="value">${range}</span> m
+   <span class="value">${range}</span> m${lockRange ? ` <em>(${game.i18n.localize("SDP.Fixed")})</em>` : ""}
 </p> ` : ""}
 
 ${duration > 0 ? `

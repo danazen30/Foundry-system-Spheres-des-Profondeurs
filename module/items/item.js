@@ -393,9 +393,6 @@ prepareDerivedData(){
     system.ignoreArmor = !!system.ignoreArmor;
     system.damageType ??= "special";
     system.damageType = String(system.damageType || "special");
-    system.maintainRange ??= {};
-    system.maintainRange.value ??= "";
-    system.maintainRange.value = String(system.maintainRange.value ?? "");
     system.projectile ??= {};
     system.projectile.value = !!system.projectile?.value;
   }
@@ -417,9 +414,8 @@ prepareDerivedData(){
     system.movable ??= {};
     system.movable.value ??= "";
     system.movable.value = String(system.movable.value ?? "");
-    system.maintainRange ??= {};
-    system.maintainRange.value ??= "";
-    system.maintainRange.value = String(system.maintainRange.value ?? "");
+    system.lockRange ??= {};
+    system.lockRange.value = !!system.lockRange?.value;
     system.projectile ??= {};
     system.projectile.value = !!system.projectile?.value;
     const raw = system.overcastSpecialEffects?.value;

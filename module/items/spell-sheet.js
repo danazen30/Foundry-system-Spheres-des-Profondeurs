@@ -183,12 +183,6 @@ export class SdpSpellSheet extends SdpItemSheet {
         ? String(data.system.movable.value)
         : "";
 
-    data.system.maintainRange ??= {};
-    data.system.maintainRange.value =
-      data.system.maintainRange?.value != null
-        ? String(data.system.maintainRange.value)
-        : "";
-
     data.system.projectile ??= {};
     data.system.projectile.value =
       !!data.system.projectile?.value;
@@ -196,6 +190,10 @@ export class SdpSpellSheet extends SdpItemSheet {
     data.system.aoe ??= {};
     data.system.aoe.value =
       !!data.system.aoe?.value;
+
+    data.system.lockRange ??= {};
+    data.system.lockRange.value =
+      !!data.system.lockRange?.value;
 
     data.system.lockTargets ??= {};
     data.system.lockTargets.value =
@@ -237,10 +235,6 @@ export class SdpSpellSheet extends SdpItemSheet {
     data.system.memorized ??= {};
     data.system.memorized.value =
       !!data.system.memorized?.value;
-
-    data.system.duration ??= {};
-    data.system.duration.extendable =
-      !!data.system.duration?.extendable;
 
     return data;
 

@@ -1009,7 +1009,6 @@
 "SDP.Failure": "FAILURE",
 "SDP.ManaCost": "Mana Cost",
   "SDP.Concentration": "Concentration",
-  "SDP.MaintainRange": "Maintain Range",
   "SDP.Movable": "Movable",
 "SDP.Overcast": "Overcast",
 "SDP.ResetOvercast": "Reset Overcast",
@@ -1183,9 +1182,9 @@
 "SDP.Table": "Table",
 "SDP.None": "None",
 "SDP.Power": "Power",
-"SDP.Extendable": "Extendable",
 "SDP.AreaOfEffect": "Area of Effect",
   "SDP.LockTargets": "Lock targets",
+  "SDP.LockRange": "Lock range",
   "SDP.Projectile": "Projectile",
   "SDP.Projectiles": "Projectiles",
   "SDP.Fixed": "Fixed",
@@ -3445,5 +3444,53 @@
   "SDP.Item.Spell.pasttrace.Description": "Overcast: +1 vision linked to the object per point.\nYou dive into the imprints left on the target (a place you touch, an object, or a willing or Unconscious creature). For as long as you concentrate, the GM shows you one scene or impression from the past linked to it (who touched it, recent violence, how an object was used, who passed through a place). The image may be partial or symbolic.",
 
   "SDP.Item.Spell.futuresign.Name": "Sign of the future",
-  "SDP.Item.Spell.futuresign.Description": "Overcast: +1 detail per point.\nYou stretch your mind toward a possible future. You state a request, broad or narrow. The GM shows you one possible future event linked to that request, near or very distant, as an image, a sensation, or a short scene. It is not a certainty. The broader or more distant the request, the blurrier or more symbolic the vision."
+  "SDP.Item.Spell.futuresign.Description": "Overcast: +1 detail per point.\nYou stretch your mind toward a possible future. You state a request, broad or narrow. The GM shows you one possible future event linked to that request, near or very distant, as an image, a sensation, or a short scene. It is not a certainty. The broader or more distant the request, the blurrier or more symbolic the vision.",
+
+  "SDP.Item.Spell.glow.Name": "Glow",
+  "SDP.Item.Spell.glow.Description": "Overcast: +3 m of bright light and +3 m of dim light per point.\nYou make an object glow faintly. It brightly lights a 3 m radius, and leaves a dim glow out to 6 m. No heat.",
+
+  "SDP.Item.Spell.clean.Name": "Clean",
+  "SDP.Item.Spell.clean.Description": "You clean a creature, a garment, or a small object (dirt, dust, light odor).",
+
+  "SDP.Item.Spell.spark.Name": "Spark",
+  "SDP.Item.Spell.spark.Description": "You produce a spark able to light a wick, tinder, or a pipe. Not enough to wound.",
+
+  "SDP.Item.Spell.invisiblehand.Name": "Invisible hand",
+  "SDP.Item.Spell.invisiblehand.Description": "You slowly move a small object through the air (weight ≤ 1 kg). You cannot yank free a held object, nor attack with it.",
+
+  "SDP.Item.Spell.whisper.Name": "Whisper",
+  "SDP.Item.Spell.whisper.Description": "You murmur a short message that only the target hears, if you can see them.",
+
+  "SDP.Item.Spell.magicthread.Name": "Magic thread",
+  "SDP.Item.Spell.magicthread.Description": "You stretch an invisible thread between two points. You feel a vibration if it is touched or cut.",
+
+  "SDP.Item.Spell.northsense.Name": "Sense of north",
+  "SDP.Item.Spell.northsense.Description": "You align your mind to true north. For the duration, you know exactly where it lies, even without landmarks, at night, or underground. The spell gives neither map nor path, only the direction.",
+
+  "SDP.Item.Spell.flavor.Name": "Flavor",
+  "SDP.Item.Spell.flavor.Description": "You change the taste or smell of the food or drink for WPB hours. No toxic or nutritional effect.",
+
+  "SDP.Item.Spell.waterremoval.Name": "Water removal",
+  "SDP.Item.Spell.waterremoval.Description": "You draw water from a target on contact. On a book, powder, or small object, you preserve the contents. You may also affect clothes or a creature.",
+
+  "SDP.Item.Spell.mending.Name": "Mending",
+  "SDP.Item.Spell.mending.Description": "You repair a tear, crack, or join on a small non-magical object. Useless on a weapon broken in combat or on a structure.",
+
+  "SDP.Item.Spell.lightalarm.Name": "Light alarm",
+  "SDP.Item.Spell.lightalarm.Description": "If a creature enters the area, you receive a mental signal. Once triggered, the spell ends.",
+
+  "SDP.Item.Spell.mark.Name": "Mark",
+  "SDP.Item.Spell.mark.Description": "You place a magical mark on the target. It appears clear to you (a symbol, thread, or discreet glow of your style). Others cannot see it.\nFor as long as the mark lasts, you know which direction it lies in and roughly how far. Purification, destruction of the object, or the creature's death erases the mark.\nIf you cast the spell while trying to go unnoticed, make an opposed Stealth Test against witnesses' Perception.",
+
+  "SDP.Item.Spell.windbreath.Name": "Breath of wind",
+  "SDP.Item.Spell.windbreath.Description": "A brief push of air snuffs small flames, scatters light smoke, flutters papers, or makes someone shiver. Not enough to knock a creature down.",
+
+  "SDP.Item.Spell.minormagnet.Name": "Minor magnet",
+  "SDP.Item.Spell.minormagnet.Description": "You pull a small unheld metal object toward you (key, coin, needle).\nAnyone who can see or feel the object must pass a Perception Test to notice the movement. The GM applies a penalty or bonus based on the situation (darkness, crowd, object already in view, and so on).",
+
+  "SDP.Item.Spell.magicprojectile.Name": "Magic projectile",
+  "SDP.Item.Spell.magicprojectile.Description": "You hurl a tip of raw energy. The target takes the damage.",
+
+  "SDP.Item.Spell.openlock.Name": "Open lock",
+  "SDP.Item.Spell.openlock.Description": "You open an ordinary non-magical lock or latch. Useless on a reinforced, magical, or especially complex lock."
 }

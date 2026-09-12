@@ -630,7 +630,6 @@
   "SDP.Failure": "ÉCHEC",
   "SDP.ManaCost": "Coût en mana",
   "SDP.Concentration": "Concentration",
-  "SDP.MaintainRange": "Portée de maintien",
   "SDP.Movable": "Déplaçable",
   "SDP.Overcast": "Surincantation",
   "SDP.ResetOvercast": "Réinitialiser la surincantation",
@@ -793,9 +792,9 @@
   "SDP.Table": "Table",
   "SDP.None": "Aucun",
   "SDP.Power": "Puissance",
-  "SDP.Extendable": "Prolongeable",
   "SDP.AreaOfEffect": "Zone d'Effet",
   "SDP.LockTargets": "Verrouiller les cibles",
+  "SDP.LockRange": "Verrouiller la portée",
   "SDP.Projectile": "Projectile",
   "SDP.Projectiles": "Projectiles",
   "SDP.Fixed": "Fixe",
@@ -3057,6 +3056,54 @@
 
   "SDP.Item.Spell.futuresign.Name": "Signe du futur",
   "SDP.Item.Spell.futuresign.Description": "Surincantation : +1 détail par point.\nTu tends l’esprit vers un avenir possible. Tu formules une demande, large ou étroite. Le MJ te montre un événement futur possible lié à cette demande, proche ou très lointain, sous forme d’image, de sensation ou de courte scène. Ce n’est pas une certitude. Plus la demande est vaste ou lointaine, plus la vision est floue ou symbolique.",
+
+  "SDP.Item.Spell.glow.Name": "Lueur",
+  "SDP.Item.Spell.glow.Description": "Surincantation : +3 m de luminosité nette et +3 m de lueur faible par point.\nTu fais briller faiblement un objet. Il éclaire nettement dans un rayon de 3 m, et laisse une lueur faible jusqu’à 6 m. Pas de chaleur.",
+
+  "SDP.Item.Spell.clean.Name": "Propreté",
+  "SDP.Item.Spell.clean.Description": "Tu nettoies une créature, un vêtement ou un petit objet (saleté, poussière, odeur légère).",
+
+  "SDP.Item.Spell.spark.Name": "Étincelle",
+  "SDP.Item.Spell.spark.Description": "Tu produis une étincelle capable d’allumer une mèche, de l’amadou ou une pipe. Pas assez pour blesser.",
+
+  "SDP.Item.Spell.invisiblehand.Name": "Main invisible",
+  "SDP.Item.Spell.invisiblehand.Description": "Tu déplaces lentement un petit objet dans les airs (poids ≤ 1 kg). Tu ne peux ni arracher un objet tenu, ni attaquer avec.",
+
+  "SDP.Item.Spell.whisper.Name": "Chuchotement",
+  "SDP.Item.Spell.whisper.Description": "Tu murmures un court message que seule la cible entend, si tu la vois.",
+
+  "SDP.Item.Spell.magicthread.Name": "Fil magique",
+  "SDP.Item.Spell.magicthread.Description": "Tu tends un fil invisible entre deux points. Tu sens une vibration si on le touche ou le coupe.",
+
+  "SDP.Item.Spell.northsense.Name": "Sens du nord",
+  "SDP.Item.Spell.northsense.Description": "Tu alignes ton esprit sur le nord réel. Pendant la durée, tu sais exactement où il se trouve, même sans repère, de nuit ou sous terre. Le sort ne te donne ni carte ni chemin, seulement la direction.",
+
+  "SDP.Item.Spell.flavor.Name": "Saveur",
+  "SDP.Item.Spell.flavor.Description": "Tu changes le goût ou l’odeur de l’aliment ou de la boisson pendant BFM heures. Aucun effet toxique ni nutritif.",
+
+  "SDP.Item.Spell.waterremoval.Name": "Retrait d’eau",
+  "SDP.Item.Spell.waterremoval.Description": "Tu retires l’eau d’une cible au contact. Sur un livre, une poudre ou un petit objet, tu préserves le contenu. Tu peux aussi agir sur des vêtements ou une créature.",
+
+  "SDP.Item.Spell.mending.Name": "Raccommodage",
+  "SDP.Item.Spell.mending.Description": "Tu répares une déchirure, une fissure ou une jointure sur un petit objet non magique. Inutile sur une arme brisée au combat ou une structure.",
+
+  "SDP.Item.Spell.lightalarm.Name": "Alarme légère",
+  "SDP.Item.Spell.lightalarm.Description": "Si une créature entre dans la zone, tu reçois un signal mental. Une fois déclenchée, le sort se dissipe.",
+
+  "SDP.Item.Spell.mark.Name": "Marque",
+  "SDP.Item.Spell.mark.Description": "Tu poses une marque magique sur la cible. Elle te paraît nette (symbole, fil ou lueur discrète selon ton style). Les autres ne la voient pas.\nTant que la marque dure, tu sais dans quelle direction elle se trouve et approximativement à quelle distance. Une purification, la destruction de l’objet ou la mort de la créature efface la marque.\nSi tu lances le sort en cherchant à passer inaperçu, Test opposé Discrétion contre Perception des témoins.",
+
+  "SDP.Item.Spell.windbreath.Name": "Souffle de vent",
+  "SDP.Item.Spell.windbreath.Description": "Une brève poussée d’air éteint de petites flammes, disperse une fumée légère, fait voler des papiers, ou fait frissonner quelqu’un. Pas assez pour faire tomber une créature.",
+
+  "SDP.Item.Spell.minormagnet.Name": "Aimant mineur",
+  "SDP.Item.Spell.minormagnet.Description": "Tu tires vers toi un petit objet métallique non tenu (clé, pièce, aiguille).\nQuiconque peut voir ou sentir l’objet doit réussir un Test de Perception pour remarquer le mouvement. Le MJ applique un malus ou un bonus selon la situation (obscurité, foule, objet déjà en vue, etc.).",
+
+  "SDP.Item.Spell.magicprojectile.Name": "Projectile de magie",
+  "SDP.Item.Spell.magicprojectile.Description": "Tu projettes une pointe d’énergie brute. La cible subit les dégâts.",
+
+  "SDP.Item.Spell.openlock.Name": "Serrure ouverte",
+  "SDP.Item.Spell.openlock.Description": "Tu ouvres une serrure ou un loquet ordinaire non magique. Inutile sur une serrure renforcée, magique ou particulièrement complexe.",
 
   "SDP.Folder.alteration.Name": "Altération",
   "SDP.Folder.invocation.Name": "Invocation",

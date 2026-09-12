@@ -1133,6 +1133,11 @@
         "value": 0
       },
 
+      "lockRange": {
+        "type": "boolean",
+        "value": false
+      },
+
       "duration": {
         "value": "",
         "type": "round"
@@ -1206,11 +1211,6 @@
       },
 
       "movable": {
-        "type": "string",
-        "value": ""
-      },
-
-      "maintainRange": {
         "type": "string",
         "value": ""
       },
@@ -1294,11 +1294,6 @@
       "concentration": {
         "type": "boolean",
         "value": false
-      },
-
-      "maintainRange": {
-        "type": "string",
-        "value": ""
       },
 
       "projectile": {
