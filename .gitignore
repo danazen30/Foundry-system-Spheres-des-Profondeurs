@@ -1,5 +1,6 @@
 # Cursor / IDE
 .cursor/
+*.code-workspace
 
 # Release artifacts
 *.zip

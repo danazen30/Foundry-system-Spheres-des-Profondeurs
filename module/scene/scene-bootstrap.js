@@ -1,24 +1,30 @@
 /**
- * Premier lancement MJ : importe les scènes SDP et affiche Elysium.
+ * Premier lancement MJ : importe les scènes SDP et affiche Mirath.
  */
 
 export const SDP_SCENES_PACK = "sdp.scenes";
-const START_SCENE = "Elysium";
+const START_SCENE = "Mirath";
 const MAP_DIR = "systems/sdp/assets/maps";
 const REPO = "danazen30/Foundry-system-Spheres-des-Profondeurs";
 
+/** Anciens noms de scènes à migrer (monde + compendium). */
+const SCENE_RENAMES = {
+  Elysium: "Mirath"
+};
+
 /** @type {Record<string, string>} */
 const MAP_FILES = {
-  "Elysium": "ElysiumV1.jpg",
-  "Fretanie": "FretanieV2.jpg",
-  "Katrade": "KatradeV4.jpg"
+  "Mirath": "Mirath.jpg",
+  "Elysium": "Mirath.jpg",
+  "Fretanie": "Fretanie final.jpg",
+  "Katrade": "Katrade final.jpg"
 };
 
 /** @type {Record<string, string[]>} */
 const MAP_REMOTE_FALLBACKS = {
-  "ElysiumV1.jpg": ["Elysium V1.jpg"],
-  "FretanieV2.jpg": ["Fretanie V2.jpg"],
-  "KatradeV4.jpg": ["Katrade V4.jpg"]
+  "Mirath.jpg": ["ElysiumV1.jpg", "Elysium V1.jpg"],
+  "Fretanie final.jpg": ["FretanieV2.jpg", "Fretanie V2.jpg"],
+  "Katrade final.jpg": ["KatradeV4.jpg", "Katrade V4.jpg"]
 };
 
 /** @type {Record<string, string>} */
@@ -198,6 +204,37 @@ function findImportedScene(doc) {
 }
 
 /**
+ * Renomme les scènes legacy (monde + compendium).
+ * @param {CompendiumCollection} pack
+ */
+async function renameLegacyScenes(pack) {
+
+  for (const [from, to] of Object.entries(SCENE_RENAMES)) {
+    const worldScene = game.scenes.getName(from);
+    if (worldScene && !game.scenes.getName(to)) {
+      await worldScene.update({ name: to });
+    }
+  }
+
+  const wasLocked = pack.locked;
+
+  if (wasLocked) await pack.configure({ locked: false });
+
+  try {
+    for (const doc of await pack.getDocuments()) {
+      const to = SCENE_RENAMES[doc.name];
+      if (to && to !== doc.name) {
+        await doc.update({ name: to });
+      }
+    }
+  }
+  finally {
+    if (wasLocked) await pack.configure({ locked: true });
+  }
+
+}
+
+/**
  * Corrige le fond de map (monde + compendium).
  * @param {CompendiumCollection} pack
  */
@@ -227,7 +264,7 @@ async function ensureAllSceneMaps(pack) {
 }
 
 /**
- * Importe les scènes si besoin, corrige les maps, affiche Elysium au premier lancement MJ uniquement.
+ * Importe les scènes si besoin, corrige les maps, affiche Mirath au premier lancement MJ uniquement.
  */
 export async function bootstrapSdpStartScene() {
 
@@ -262,7 +299,7 @@ export async function bootstrapSdpStartScene() {
 
   }
 
-  await ensureAllSceneMaps(pack);
+  await renameLegacyScenes(pack);
 
   await ensureAllSceneMaps(pack);
 
