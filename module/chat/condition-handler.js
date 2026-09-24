@@ -1,3 +1,44 @@
+import { findActorItemByRef } from "../system/item-localization.js";
+import { resolveActorFromElement } from "../system/actor-utils.js";
+
+function getConditionStack(actor, key) {
+  return Math.max(
+    0,
+    Number(
+      actor?.system?.conditionTotals?.[key]
+      ?? actor?.system?.conditions?.[key]
+      ?? 0
+    ) || 0
+  );
+}
+
+function getResistanceTarget(actor) {
+  const skill = findActorItemByRef(actor, "skill", "resistance")
+    || actor?.items?.find((item) =>
+      item.type === "skill"
+      && String(item.flags?.sdp?.key || "").toLowerCase().trim() === "resistance"
+    );
+  if (!skill) {
+    return Number(actor?.system?.attributes?.toughness?.value || 0);
+  }
+
+  const skillKey = (
+    skill.system.key
+    || skill.flags?.sdp?.key
+    || "resistance"
+  ).toLowerCase().trim();
+  const attribute =
+    actor.system.attributes?.[skill.system.characteristic]?.value ?? 0;
+  const extraMod = actor.system.skillModifiers?.[skillKey] || 0;
+
+  return (
+    attribute
+    + Number(skill.system.advances || 0)
+    + Number(skill.system.modifier || 0)
+    + extraMod
+  );
+}
+
 export function registerConditionHandlers(html, message) {
 
 /* ========================= */
@@ -7,34 +48,26 @@ export function registerConditionHandlers(html, message) {
 html.find(".stunned-roll").click(async ev => {
 
   const card = ev.currentTarget.closest(".sdp-stunned-test");
-
-  const actorId = card.dataset.actor;
+  const actor = resolveActorFromElement(card);
   const conditionKey = card.dataset.condition;
 
-  const actor = game.actors.get(actorId);
+  if (!actor || !conditionKey) return;
 
-  const stack =
-    actor.system.conditions?.[conditionKey] ?? 0;
-
-  const resistance = actor.items.find(i =>
-    i.type === "skill" && i.system.key === "resistance"
-  );
-
-  const target = resistance?.system.value ?? actor.system.attributes.toughness.value;
+  const stack = getConditionStack(actor, conditionKey);
+  const target = getResistanceTarget(actor);
 
   const roll = await (new Roll("1d100")).roll();
-
   const result = roll.total;
-
   const SL = Math.floor(target / 10) - Math.floor(result / 10);
 
   let removed = 0;
-
-  if(result <= target){
-    removed = Math.max(SL,1);
+  if (result <= target) {
+    removed = Math.max(SL, 1);
   }
+  removed = Math.min(removed, stack);
 
   const newStack = Math.max(stack - removed, 0);
+  const gainedExhausted = removed > 0 && newStack === 0;
 
   roll.toMessage({
     speaker: ChatMessage.getSpeaker({actor}),
@@ -74,7 +107,7 @@ html.find(".stunned-roll").click(async ev => {
   </strong>
 
 </p>
-    ${newStack === 0
+    ${gainedExhausted
   ? `
   <p>
     <strong>
@@ -113,34 +146,28 @@ html.find(".poison-roll").click(async ev => {
   button.dataset.used = true;
 
   const card = button.closest(".sdp-poison-test");
-
-  const actorId = card.dataset.actor;
+  const actor = resolveActorFromElement(card);
   const conditionKey = card.dataset.condition;
 
-  const actor = game.actors.get(actorId);
+  if (!actor || !conditionKey) return;
 
-  // ✅ BASE + EFFECT
-  const total = actor.system.conditions?.[conditionKey] ?? 0;
+  const total = getConditionStack(actor, conditionKey);
   if(total <= 0) return;
 
-  const resistance = actor.items.find(i =>
-    i.type === "skill" && i.system.key === "resistance"
-  );
-
-  const target = resistance?.system.value ?? actor.system.attributes.toughness.value;
+  const target = getResistanceTarget(actor);
 
   const roll = await (new Roll("1d100")).roll();
-
   const result = roll.total;
-
   const SL = Math.floor(target / 10) - Math.floor(result / 10);
 
   let removed = 0;
-
   if(result <= target){
     removed = Math.max(SL,1);
   }
-const newTotal = Math.max(total - removed, 0);
+  removed = Math.min(removed, total);
+
+  const newTotal = Math.max(total - removed, 0);
+  const gainedExhausted = removed > 0 && newTotal === 0;
 
   roll.toMessage({
     speaker: ChatMessage.getSpeaker({actor}),
@@ -178,7 +205,7 @@ const newTotal = Math.max(total - removed, 0);
   </strong>
 
 </p>
-    ${newTotal === 0
+    ${gainedExhausted
   ? `
   <p>
 
@@ -457,16 +484,11 @@ html.find(".strength-roll").click(async ev => {
 html.find(".dying-roll").click(async ev => {
 
   const card = ev.currentTarget.closest(".sdp-dying-test");
+  const actor = resolveActorFromElement(card);
 
-  const actor = game.actors.get(card.dataset.actor);
+  if (!actor) return;
 
-  const resistance = actor.items.find(i =>
-    i.type === "skill" && i.system.key === "resistance"
-  );
-
-  const target =
-    resistance?.system.value ??
-    actor.system.attributes.toughness.value;
+  const target = getResistanceTarget(actor);
 
   const roll = await new Roll("1d100").roll();
 
@@ -509,7 +531,7 @@ html.find(".dying-roll").click(async ev => {
 
   if(stacks > 0){
 
-    const deathChance = stacks * 10;
+    const deathChance = stacks * 5;
 
     const deathRoll = await new Roll("1d100").roll();
 
@@ -622,40 +644,6 @@ html.find(".dying-roll").click(async ev => {
     `
 
   });
-
-
-
-// =========================
-// WOUND THRESHOLD DEATH
-// =========================
-
-const threshold = actor.system.derived.woundThreshold.value;
-
-if(Math.abs(actor.system.health.value) > threshold){
-
-  await ChatMessage.create({
-
-    content: `
-    <h3>
-  ${game.i18n.localize(
-    "SDP.Death"
-  )}
-</h3>
-
-<p>
-
-  ${game.i18n.format(
-    "SDP.ActorDiesFromWounds",
-    {
-      actor: actor.name
-    }
-  )}
-
-</p>
-    `
-  });
-
-}
 
 });
 

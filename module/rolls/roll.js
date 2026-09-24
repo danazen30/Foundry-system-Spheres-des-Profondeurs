@@ -257,7 +257,7 @@ if (SL >= 4) {
 }
 
 if (SL >= 2) {
-  return game.i18n.localize("SDP.Success");
+  return game.i18n.localize("SDP.RegularSuccess");
 }
 
 if (SL >= 0) {

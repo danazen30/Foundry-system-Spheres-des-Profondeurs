@@ -16,6 +16,30 @@ import {
 } from "../chat/opposed.js";
 import { getConditionTestModifier } from "../system/condition-modifier-utils.js";
 
+function getRangedTargetActor() {
+  return Array.from(game.user.targets)[0]?.actor || null;
+}
+
+function isActorProne(actor) {
+  return Boolean(
+    actor?.system?.conditions?.prone
+    || actor?.system?.conditionTotals?.prone
+  );
+}
+
+function withRangedProneModifier(modifiers, weapon) {
+  const label = game.i18n.localize("SDP.ConditionProne");
+  const next = (modifiers || []).filter((modifier) => modifier.label !== label);
+
+  if (weapon?.system?.category !== "ranged") return next;
+
+  if (isActorProne(getRangedTargetActor())) {
+    next.push({ label, value: -20 });
+  }
+
+  return next;
+}
+
 const { ApplicationV2 } = foundry.applications.api;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -319,7 +343,7 @@ if (
     }
 
     modifiers.push({
-      label: `${game.i18n.localize("SDP.Range")} (${rangeLabel})`,
+      label: `${game.i18n.localize("SDP.Range")} (${game.i18n.localize(rangeLabel)})`,
       value: rangeModifier
     });
 
@@ -476,7 +500,7 @@ if (this.weapon) {
 
 
 }
-  this._modifiers = modifiers;
+  this._modifiers = withRangedProneModifier(modifiers, this.weapon);
 
 // 🔥 AJOUT ICI (JUSTE AVANT RETURN)
 const isAttribute =
@@ -549,7 +573,7 @@ return {
     effects: this.actor.effects.contents,
     conditionMod,
     conditionDetails,
-    modifiers,
+    modifiers: this._modifiers,
     hitLocations,
     inspirationDice: this.signEffects.inspirationDice,
     inspirationResult: this.inspirationResult,
@@ -745,7 +769,7 @@ const finesse = root.querySelector('[name="finesse"]')?.checked || false;
 // =========================
 
 let dynamicModifiers =
-  (this._modifiers || [])
+  withRangedProneModifier(this._modifiers || [], this.weapon)
     .filter(m =>
       m.label !== "Custom" &&
       m.label !== "Difficulty"

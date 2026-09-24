@@ -44,13 +44,13 @@ export const SDP = {
     long: {
   label: "SDP.RangeLong",
       multiplier: 2,
-      modifier: -10
+      modifier: -20
     },
 
     extreme: {
   label: "SDP.RangeExtreme",
       multiplier: 3,
-      modifier: -30
+      modifier: -40
     }
 
   }

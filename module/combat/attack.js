@@ -384,8 +384,16 @@ if (dialogMods.location) {
 
 }
 
+const proneLabel = game.i18n.localize("SDP.ConditionProne");
+const targetActor = targetToken?.actor;
+const targetProne = Boolean(
+  targetActor?.system?.conditions?.prone
+  || targetActor?.system?.conditionTotals?.prone
+);
+
 const dynamicModifierTotal =
   (dialogMods.dynamicModifiers || [])
+    .filter(m => m.label !== proneLabel)
     .reduce((acc, m) => {
       return acc + Number(m.value || 0);
     }, 0);
@@ -396,6 +404,10 @@ let targetValue =
   (dialogMods.conditionMod || 0) +
   dynamicModifierTotal +
   locationMod;
+
+if (targetProne) {
+  targetValue -= 20;
+}
 
 targetValue += SdpRoll.getTargetBonus(
   actor,

@@ -36,6 +36,7 @@ export function resolveOpposedOutcome({
   let finalSL = Math.abs(challengerSL - baseSL);
   let resultText;
   let wonByTarget = false;
+  let isDraw = false;
 
   if (challengerSL > baseSL) {
     resultText = game.i18n.format("SDP.ActorWins", { actor: challengerActor });
@@ -56,9 +57,10 @@ export function resolveOpposedOutcome({
   } else {
     resultText = game.i18n.localize("SDP.Draw");
     finalSL = 0;
+    isDraw = true;
   }
 
-  return { finalSL, resultText, wonByTarget };
+  return { finalSL, resultText, wonByTarget, isDraw };
 }
 
 export function buildOpposedResultContent({
@@ -67,13 +69,23 @@ export function buildOpposedResultContent({
   challengerActor,
   challengerSL,
   finalSL,
-  resultText
+  resultText,
+  isDraw = false
 }) {
+  const dr = game.i18n.localize("SDP.SuccessLevel");
+  const Roll = game.sdp?.Roll;
+  const formattedFinal = Roll?.formatSL
+    ? Roll.formatSL(finalSL, true)
+    : String(finalSL);
+  const quality = (!isDraw && Roll?.getSLLabel)
+    ? ` (${Roll.getSLLabel(finalSL, true)})`
+    : "";
+
   return `
     <h3>${game.i18n.localize("SDP.OpposedTest")}</h3>
-    <p>${baseActor} SL: ${baseSL}</p>
-    <p>${challengerActor} SL: ${challengerSL}</p>
-    <p><strong>${game.i18n.localize("SDP.FinalSL")}: ${finalSL}</strong></p>
+    <p>${baseActor} ${dr}: ${baseSL}</p>
+    <p>${challengerActor} ${dr}: ${challengerSL}</p>
+    <p><strong>${game.i18n.localize("SDP.FinalSL")}: ${formattedFinal}${quality}</strong></p>
     <strong>${resultText}</strong>
   `;
 }
@@ -91,7 +103,7 @@ export async function createOpposedResultMessage({
   speaker = null
 } = {}) {
 
-  const { finalSL, resultText } = resolveOpposedOutcome({
+  const { finalSL, resultText, isDraw } = resolveOpposedOutcome({
     baseSL,
     baseActor,
     baseTarget,
@@ -107,7 +119,8 @@ export async function createOpposedResultMessage({
       challengerActor,
       challengerSL,
       finalSL,
-      resultText
+      resultText,
+      isDraw
     }),
     speaker: speaker ?? ChatMessage.getSpeaker()
   };

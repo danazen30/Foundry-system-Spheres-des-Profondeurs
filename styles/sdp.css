@@ -556,6 +556,49 @@
   margin: 0 0 1rem;
 }
 
+.sdp-lore-journal .sdp-lore-intro h2 {
+  margin: 1.4rem 0 0.65rem;
+  font-size: 1.15em;
+  letter-spacing: 0.03em;
+}
+
+.sdp-lore-journal .sdp-lore-intro h2:first-child {
+  margin-top: 0;
+}
+
+.sdp-lore-journal .sdp-lore-intro ul {
+  margin: 0 0 1rem 1.2rem;
+  padding: 0;
+}
+
+.sdp-lore-journal .sdp-lore-intro li {
+  margin: 0.25rem 0;
+}
+
+.sdp-lore-journal .sdp-lore-formula {
+  font-family: var(--font-primary, "Signika", sans-serif);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.sdp-lore-journal .sdp-lore-table {
+  width: 100%;
+  margin: 0 0 1rem;
+  border-collapse: collapse;
+}
+
+.sdp-lore-journal .sdp-lore-table td {
+  padding: 0.28rem 0.55rem;
+  border: 1px solid rgba(160, 130, 90, 0.35);
+  vertical-align: top;
+}
+
+.sdp-lore-journal .sdp-lore-table td:first-child {
+  width: 3.5rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
 .sdp-career-journal .sdp-career-header h1 {
   margin: 0 0 0.75em;
   padding: 0.35em 0.65em;

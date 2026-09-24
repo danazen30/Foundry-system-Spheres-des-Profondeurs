@@ -85,7 +85,7 @@ static getRangedAttackModifier(targetSize) {
 
   const sizeMap = {
 
-    tiny: -30,
+    tiny: -40,
     verySmall: -20,
     small: -10,
     average: 0,

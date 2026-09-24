@@ -1,6 +1,12 @@
 import { SDP } from "./config.js";
 import { SdpDamage } from "../combat/damage.js";
 import { getInjuryDurationRounds } from "./injury-utils.js";
+import { getTokenIdForActor } from "./actor-utils.js";
+
+function conditionCardActorAttrs(actor) {
+  const tokenId = getTokenIdForActor(actor);
+  return `data-actor="${actor.id}" data-token="${tokenId}"`;
+}
 
 export class SdpTurnEngine {
 
@@ -40,7 +46,7 @@ export class SdpTurnEngine {
 
           content: `
           <div class="sdp-stunned-test"
-               data-actor="${actor.id}"
+               ${conditionCardActorAttrs(actor)}
                data-condition="${key}">
 
             <h3>${game.i18n.localize(config.label)}</h3>
@@ -73,7 +79,7 @@ export class SdpTurnEngine {
 
           content: `
           <div class="sdp-strength-test"
-               data-actor="${actor.id}"
+               ${conditionCardActorAttrs(actor)}
                data-condition="${key}">
 
             <h3>${game.i18n.localize("SDP.ConditionEntangled")}</h3>
@@ -104,7 +110,7 @@ export class SdpTurnEngine {
 
           content: `
           <div class="sdp-dying-test"
-               data-actor="${actor.id}">
+               ${conditionCardActorAttrs(actor)}>
 
             <h3>${game.i18n.localize("SDP.ConditionDying")}</h3>
 
@@ -322,7 +328,7 @@ if(config.test === "resistance"){
 
     content: `
     <div class="sdp-poison-test"
-         data-actor="${actor.id}"
+         ${conditionCardActorAttrs(actor)}
          data-condition="${key}"
          data-stack="${stack}">
 

@@ -662,6 +662,127 @@ function formatIntro(text) {
 
 }
 
+function formatLoreInline(text) {
+
+  return foundry.utils.escapeHTML(text.trim())
+    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+
+}
+
+function isMarkdownTable(lines) {
+
+  return lines.length >= 2
+    && lines.every(line => line.startsWith("|"));
+
+}
+
+function parseLoreTableRow(line) {
+
+  return line
+    .replace(/^\|/, "")
+    .replace(/\|$/, "")
+    .split("|")
+    .map(cell => cell.trim());
+
+}
+
+function isLoreTableSeparator(cells) {
+
+  return cells.every(cell => !cell || /^:?-{2,}:?$/.test(cell));
+
+}
+
+function formatLoreTable(lines) {
+
+  const rows = lines
+    .map(parseLoreTableRow)
+    .filter(cells => !isLoreTableSeparator(cells));
+
+  if (!rows.length) return "";
+
+  const body = rows.map(cells => {
+    const tds = cells.map(cell => `<td>${formatLoreInline(cell)}</td>`).join("");
+    return `<tr>${tds}</tr>`;
+  }).join("");
+
+  return `<table class="sdp-lore-table"><tbody>${body}</tbody></table>`;
+
+}
+
+function formatLoreBody(text) {
+
+  if (!text?.trim()) return "";
+
+  const html = [];
+  let listItems = [];
+
+  const flushList = () => {
+
+    if (!listItems.length) return;
+
+    html.push(
+      `<ul>${listItems.map(item => `<li>${item}</li>`).join("")}</ul>`
+    );
+    listItems = [];
+
+  };
+
+  for (const rawBlock of text.split(/\n{2,}/)) {
+
+    const block = rawBlock.trim();
+
+    if (!block) continue;
+
+    const lines = block.split(/\n/).map(line => line.trim()).filter(Boolean);
+    const isList = lines.length > 0
+      && lines.every(line => /^[-•]\s+/.test(line));
+
+    if (isList) {
+
+      for (const line of lines) {
+        listItems.push(formatLoreInline(line.replace(/^[-•]\s+/, "")));
+      }
+
+      flushList();
+      continue;
+
+    }
+
+    flushList();
+
+    if (isMarkdownTable(lines)) {
+      html.push(formatLoreTable(lines));
+      continue;
+    }
+
+    if (lines.length === 1 && /^##\s+/.test(lines[0])) {
+      html.push(`<h2>${formatLoreInline(lines[0].replace(/^##\s+/, ""))}</h2>`);
+      continue;
+    }
+
+    if (
+      lines.length === 1
+      && /=\s/.test(lines[0])
+      && lines[0].length < 80
+    ) {
+      html.push(
+        `<p class="sdp-lore-formula">${formatLoreInline(lines[0])}</p>`
+      );
+      continue;
+    }
+
+    html.push(
+      `<p>${formatLoreInline(block).replace(/\n/g, "<br>")}</p>`
+    );
+
+  }
+
+  flushList();
+
+  return html.join("");
+
+}
+
 function formatEpigraph(text) {
 
   if (!text?.trim()) return "";
@@ -971,7 +1092,7 @@ export function prepareLoreJournalContext(page) {
     epigraph2: formatEpigraph(
       localizeLoreField(pageKey, "Epigraph2")
     ),
-    intro: formatIntro(
+    intro: formatLoreBody(
       localizeLoreField(pageKey, "Intro")
     )
   };
