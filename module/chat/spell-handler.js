@@ -5,6 +5,9 @@ import {
   getLocalizedRollTableResultName
 } from "../system/roll-table-utils.js";
 import { formatPlainTextAsHtml } from "../system/text-format.js";
+import {
+  presentDice
+} from "../system/dice-utils.js";
 
 /**
  * Live input values are not in attributes; innerHTML would wipe typed damage mods.
@@ -169,6 +172,11 @@ ${game.i18n.localize("SDP.MultipleConcentrationDescription")}
       await table.draw({
         displayChat: false
       });
+
+    await presentDice(
+      drawn.roll
+      ?? drawn.rolls?.[0]
+    );
 
     const rollTotal =
       drawn.rolls?.[0]?.total

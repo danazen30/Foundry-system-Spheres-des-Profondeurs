@@ -3,6 +3,9 @@ import {
   findActorItemByRef,
   getLocalizedItemName
 } from "../system/item-localization.js";
+import {
+  presentDice
+} from "./dice-utils.js";
 
 export class SdpWorkEngine {
 
@@ -176,13 +179,7 @@ const localizedTier =
     // DICE 3D
     // =========================
 
-    if (game.dice3d) {
-
-      await game.dice3d.showForRoll(testRoll);
-
-      await game.dice3d.showForRoll(moneyRoll);
-
-    }
+    await presentDice([testRoll, moneyRoll]);
 
     const careerLabel = getLocalizedItemName(
       "career",

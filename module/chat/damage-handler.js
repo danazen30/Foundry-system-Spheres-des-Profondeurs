@@ -24,6 +24,10 @@ import {
 import { SdpMount } from "../system/mount-utils.js";
 import { readDamageModsFromCard } from "./damage-mods-ui.js";
 import { createSpellResolveMacro } from "../combat/spell-resolve-macro.js";
+import {
+  presentDice,
+  presentRollToMessage
+} from "../system/dice-utils.js";
 
 function formatWoundSeverityKey(severity) {
 
@@ -496,7 +500,7 @@ const diceHTML = dice.map((d, i) => `
 const traitsJson = JSON.stringify(weapon?.system?.traits || traits || []);
 const targetActor = targetId ? canvas.tokens.get(targetId)?.actor : null;
 
-await roll.toMessage({
+await presentRollToMessage(roll, {
   speaker: ChatMessage.getSpeaker({actor}),
   flavor: `
     <div class="sdp-damage-roll"
@@ -585,7 +589,7 @@ ${buildDamageRollSummaryHtml({
   });
   delete damageRollMsg.content;
 
-  roll.toMessage({
+  await presentRollToMessage(roll, {
     ...damageRollMsg,
     flavor: `
     <div class="sdp-damage-roll-summary">
@@ -620,7 +624,7 @@ ${buildDamageRollSummaryHtml({
 
   const brutalTarget = targetId ? canvas.tokens.get(targetId)?.actor : null;
 
-  await roll.toMessage({
+  await presentRollToMessage(roll, {
     speaker: ChatMessage.getSpeaker({actor}),
     flavor: `
       <h3>
@@ -1557,7 +1561,7 @@ try {
 const reroll = new Roll(`1d${faces}`);
   await reroll.evaluate();
 
-  await game.dice3d?.showForRoll(reroll);
+  await presentDice(reroll);
 
   const newValue = reroll.total;
 

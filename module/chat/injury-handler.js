@@ -13,6 +13,9 @@ import {
   createCombatMessage,
   getCurrentRollMode
 } from "./combat-visibility.js";
+import {
+  presentRollToMessage
+} from "../system/dice-utils.js";
 
 function getInjuryPreviewHtml(injury, {
   location = "",
@@ -115,7 +118,7 @@ html.find(".roll-resistance").click(async ev => {
 
   const success = result <= target;
 
-  await roll.toMessage({
+  await presentRollToMessage(roll, {
     speaker: ChatMessage.getSpeaker({actor}),
     flavor: `
       <h3>${game.i18n.localize("SDP.ResistanceTest")}</h3>

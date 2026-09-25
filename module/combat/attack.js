@@ -20,6 +20,9 @@ import {
   vis
 } from "../chat/combat-visibility.js";
 import { buildDamageModsControlsHtml } from "../chat/damage-mods-ui.js";
+import {
+  presentRollToMessage
+} from "../system/dice-utils.js";
 
 export class SdpAttack {
 
@@ -792,7 +795,7 @@ ${game.i18n.localize(
 
     const defenderActor = targets[0]?.actor ?? null;
 
-    roll.toMessage(combatRollMessageData({
+    await presentRollToMessage(roll, combatRollMessageData({
       speaker: ChatMessage.getSpeaker({actor}),
       content: html,
       attackerActor: actor,
@@ -1138,7 +1141,7 @@ ${game.i18n.localize(
 
   const defenderActor = targets[0]?.actor ?? null;
 
-  roll.toMessage(combatRollMessageData({
+  await presentRollToMessage(roll, combatRollMessageData({
     speaker: ChatMessage.getSpeaker({actor}),
     content: html,
     attackerActor: actor,
@@ -1280,7 +1283,7 @@ ${critText}
 </div>
 `;
 
-  roll.toMessage({
+  await presentRollToMessage(roll, {
     speaker: ChatMessage.getSpeaker({ actor }),
     content: html
   });

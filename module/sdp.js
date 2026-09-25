@@ -73,6 +73,9 @@ import {
   registerSdpRollTableDrawHook
 } from "./system/roll-table-utils.js";
 import {
+  registerDicePresentationHooks
+} from "./system/dice-utils.js";
+import {
   registerInjuryHooks
 } from "./system/injury-utils.js";
 import {
@@ -358,6 +361,7 @@ Handlebars.registerHelper("includes", function(value, key) {
 
 registerChatHandlers();
 registerSdpRollTableDrawHook();
+registerDicePresentationHooks();
 registerInjuryHooks();
 
 /* ========================================= */

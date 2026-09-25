@@ -2,6 +2,9 @@ import { SDP } from "./config.js";
 import { SdpDamage } from "../combat/damage.js";
 import { getInjuryDurationRounds } from "./injury-utils.js";
 import { getTokenIdForActor } from "./actor-utils.js";
+import {
+  presentRollToMessage
+} from "./dice-utils.js";
 
 function conditionCardActorAttrs(actor) {
   const tokenId = getTokenIdForActor(actor);
@@ -183,7 +186,7 @@ export class SdpTurnEngine {
           "system.health.value": newHealth
         });
 
-        await roll.toMessage({
+        await presentRollToMessage(roll, {
           flavor: game.i18n.format("SDP.ChatConditionDamage", {
   condition: game.i18n.localize(config.label)
 })
@@ -402,7 +405,7 @@ if(config.damagePerStack){
 
         const roll = await new Roll(`${stack}${config.dicePerStack}`).roll();
 
-        await roll.toMessage({
+        await presentRollToMessage(roll, {
           speaker: ChatMessage.getSpeaker({actor}),
           flavor: `<h3>${game.i18n.format("SDP.ChatConditionDamage", {
   condition: game.i18n.localize(config.label)

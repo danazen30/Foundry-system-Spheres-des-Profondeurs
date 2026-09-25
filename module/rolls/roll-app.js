@@ -15,6 +15,9 @@ import {
   createOpposedResultMessage
 } from "../chat/opposed.js";
 import { getConditionTestModifier } from "../system/condition-modifier-utils.js";
+import {
+  presentRollToMessage
+} from "../system/dice-utils.js";
 
 function getRangedTargetActor() {
   return Array.from(game.user.targets)[0]?.actor || null;
@@ -685,7 +688,7 @@ updatePreview();
 
       this.inspirationResult = roll.total;
 
-      roll.toMessage({
+      await presentRollToMessage(roll, {
         speaker: ChatMessage.getSpeaker({ actor: this.actor }),
         flavor: `${game.i18n.localize("SDP.Inspiration")} (${dice})`
       });
@@ -821,6 +824,9 @@ game.sdp.dialogModifiers = {
 // DEBUG
 console.log("=== FINAL MODS ===", game.sdp.dialogModifiers);
 
+root.querySelector('[data-action="roll"]')?.setAttribute("disabled", "true");
+this.close();
+
   // =========================
   // ATTACK
   // =========================
@@ -939,7 +945,7 @@ if (result === 100) {
 // CHAT CARD PROPRE
 // =========================
 
-await roll.toMessage({
+await presentRollToMessage(roll, {
   speaker: ChatMessage.getSpeaker({ actor: this.actor }),
   content: `
   <div class="sdp-roll"
@@ -1015,13 +1021,8 @@ if (game.sdp?.opposed) {
 }
   }
 
-  // =========================
-  // RESET
-  // =========================
-
   this.inspirationResult = 0;
 
-  this.close();
 }
 
 }

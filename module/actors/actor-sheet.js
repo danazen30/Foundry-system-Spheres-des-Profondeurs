@@ -15,6 +15,9 @@ import {
 } from "../system/injury-utils.js";
 
 import { getCost, getTalentCost, getTalentMax, getAttributes, getXPData, getSkillMap, getCurrentCareer, getXPBar, getSpellsByType, sortCurrencyItems} from "./actor-sheet-utils.js";
+import {
+  presentDice
+} from "../system/dice-utils.js";
 import { registerAttributeListeners, registerSkillListeners} from "./actor-sheet-listeners.js";
 import { prepareWeapons, prepareArmors, prepareInventory, prepareContainerData, prepareEquipmentSlots} from "./actor-sheet-equipment.js";
 import { registerCombatListeners } from "./actor-sheet-combat.js";
@@ -1158,13 +1161,7 @@ async _doRest(type) {
 await hpRoll.evaluate();
 await manaRoll.evaluate();
 
-// 🎲 Animation + son SANS créer de message
-if (game.dice3d) {
-  await game.dice3d.showForRoll(hpRoll);
-  await game.dice3d.showForRoll(manaRoll);
-} else {
-  foundry.audio.AudioHelper.play({ src: CONFIG.sounds.dice }, true);
-}
+await presentDice([hpRoll, manaRoll]);
 
   const hp = hpRoll.total;
   const mana = manaRoll.total;

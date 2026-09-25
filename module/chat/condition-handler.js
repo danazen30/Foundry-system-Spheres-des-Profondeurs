@@ -1,5 +1,10 @@
 import { findActorItemByRef } from "../system/item-localization.js";
 import { resolveActorFromElement } from "../system/actor-utils.js";
+import {
+  presentDice,
+  presentRollToMessage,
+  sendPresentedDiceMessage
+} from "../system/dice-utils.js";
 
 function getConditionStack(actor, key) {
   return Math.max(
@@ -69,7 +74,7 @@ html.find(".stunned-roll").click(async ev => {
   const newStack = Math.max(stack - removed, 0);
   const gainedExhausted = removed > 0 && newStack === 0;
 
-  roll.toMessage({
+  await presentRollToMessage(roll, {
     speaker: ChatMessage.getSpeaker({actor}),
     flavor: `
     <h3>
@@ -169,7 +174,7 @@ html.find(".poison-roll").click(async ev => {
   const newTotal = Math.max(total - removed, 0);
   const gainedExhausted = removed > 0 && newTotal === 0;
 
-  roll.toMessage({
+  await presentRollToMessage(roll, {
     speaker: ChatMessage.getSpeaker({actor}),
     flavor: `
     <h3>
@@ -302,7 +307,7 @@ if(success){
 
 }
 
-await roll.toMessage({
+await presentRollToMessage(roll, {
 
   speaker: ChatMessage.getSpeaker({actor}),
 
@@ -428,7 +433,7 @@ html.find(".strength-roll").click(async ev => {
 
   }
 
-  await roll.toMessage({
+  await presentRollToMessage(roll, {
 
     speaker: ChatMessage.getSpeaker({actor}),
 
@@ -528,12 +533,13 @@ html.find(".dying-roll").click(async ev => {
   const stacks = bleeding + poisoned;
 
   let deathText = "";
+  let deathRoll = null;
 
   if(stacks > 0){
 
     const deathChance = stacks * 5;
 
-    const deathRoll = await new Roll("1d100").roll();
+    deathRoll = await new Roll("1d100").roll();
 
     if(deathRoll.total <= deathChance){
 
@@ -601,7 +607,9 @@ html.find(".dying-roll").click(async ev => {
 
   }
 
-  await roll.toMessage({
+  await presentDice(deathRoll ? [roll, deathRoll] : roll);
+
+  await sendPresentedDiceMessage(roll, {
 
     speaker: ChatMessage.getSpeaker({actor}),
 

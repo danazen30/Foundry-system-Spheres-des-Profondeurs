@@ -2,6 +2,10 @@
  * Blessures SDP : clés, options de fiche, lookup compendium.
  */
 
+import {
+  presentRollToMessage
+} from "./dice-utils.js";
+
 export const SDP_INJURY_SEVERITIES = [
   "light",
   "moderate",
@@ -364,7 +368,7 @@ export async function rollInjuryDurationFormula(
     const roll =
       await new Roll(text).evaluate();
 
-    await roll.toMessage({
+    await presentRollToMessage(roll, {
       speaker: actor
         ? ChatMessage.getSpeaker({ actor })
         : ChatMessage.getSpeaker(),

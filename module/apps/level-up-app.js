@@ -1,3 +1,7 @@
+import {
+  presentRollToMessage
+} from "../system/dice-utils.js";
+
 const { ApplicationV2 } = foundry.applications.api;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -93,7 +97,7 @@ return {
   this.baseHP = roll.total;
   this.hasRolledBase = true;
 
-  roll.toMessage({
+  await presentRollToMessage(roll, {
     speaker: ChatMessage.getSpeaker({ actor: this.actor }),
     flavor: `${game.i18n.localize("SDP.LevelHP")} (${dice})`
   });
@@ -116,7 +120,7 @@ root.querySelector('[data-action="sign-roll"]')?.addEventListener("click", async
 
   this.signHP = roll.total;
 
-  roll.toMessage({
+  await presentRollToMessage(roll, {
     speaker: ChatMessage.getSpeaker({ actor: this.actor }),
     flavor: `${game.i18n.localize("SDP.SignHP")} (${this.signDice})`
   });

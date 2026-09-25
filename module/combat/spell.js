@@ -3,6 +3,9 @@ import { resolveSdpFormula } from "../system/formula-utils.js";
 import { getActorItemDisplayName } from "../system/item-localization.js";
 import { getTokenIdForActor } from "../system/actor-utils.js";
 import { buildDamageModsControlsHtml } from "../chat/damage-mods-ui.js";
+import {
+  presentRollToMessage
+} from "../system/dice-utils.js";
 
 export class SdpSpell {
 
@@ -482,7 +485,7 @@ ${hasSpecialOvercast ? `
 </div>
 `;
 
-  roll.toMessage({
+  await presentRollToMessage(roll, {
     speaker: ChatMessage.getSpeaker({ actor }),
     content: html
   });

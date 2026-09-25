@@ -11,6 +11,9 @@ import {
   vis
 } from "./combat-visibility.js";
 import { buildDamageModsControlsHtml } from "./damage-mods-ui.js";
+import {
+  presentTableDraw
+} from "../system/dice-utils.js";
 
 function buildDefenseResolutionHtml({
   targetName,
@@ -631,7 +634,7 @@ const table =
   // ROLL TABLE
   // =========================
 
-  await table.draw();
+  await presentTableDraw(table);
 
 });
 

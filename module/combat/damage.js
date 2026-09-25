@@ -644,9 +644,6 @@ weaponDetail.push(
     signRoll = new Roll(signDiceFormula);
     await signRoll.evaluate();
 
-    // 🎲 Dice So Nice
-    await game.dice3d?.showForRoll(signRoll);
-
     signTotal = signRoll.total;
   }
 
