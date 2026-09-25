@@ -2991,6 +2991,7 @@
   "SDP.Item.Career.ambassador.Name": "Ambassador",
 
   "SDP.Item.Career.receiver.Name": "Receiver",
+  "SDP.Item.Career.intend.Name": "Intendant",
   "SDP.Item.Career.intendant.Name": "Intendant",
   "SDP.Item.Career.administrator.Name": "Administrator",
   "SDP.Item.Career.superintendent.Name": "Superintendent",
@@ -3250,6 +3251,7 @@
   "SDP.Journal.Career.intendant.Epigraph1": "\"Peasants think I come for their coin. They forget that without that coin, there would be no mill, no bridge, and soon no harvests left to protect.\"\n— Elaith the Receiver",
   "SDP.Journal.Career.intendant.Intro": "Stewards are the guardians of the property and interests of those they serve. Whether they work for a lord, a guild, a temple, a wealthy merchant family, or a city, they ensure the proper functioning of the estates entrusted to them.\n\nTheir trade is not limited to keeping ledgers. They travel the land to inspect harvests, collect taxes and dues, settle minor disputes, supervise employees, and ensure that every coin is spent correctly. They must know how to negotiate with a merchant as well as bring a recalcitrant farmer to order or organize the rebuilding of a bridge swept away by floods.\n\nWith experience, their responsibilities extend far beyond a single estate. The most capable administer vast properties, manage a guild's finances, oversee several holdings, or become their employer's principal representatives. The greatest among them govern immense territories or administer powerful institutions, where the slightest decision may affect the lives of thousands.\n\nWhile many consider soldiers the strength of a kingdom, stewards know that no army marches for long without provisions, without taxes, and without an administration capable of sustaining the war effort.",
   "SDP.Journal.Career.intendant.CareerGroup": "intendant",
+  "SDP.Journal.Career.intend.Title": "Stewards",
 
   "SDP.Journal.Career.courtesan.Title": "Pleasure Houses",
   "SDP.Journal.Career.courtesan.Epigraph1": "\"When I was young, I believed our house sold pleasure. It took me years to understand that we mostly sold attention. Merchants came to speak of their affairs, captains of their battles, priests of their doubts, and nobles of their ambitions. I listened more than I answered. One evening, an old man whispered to me that whoever knows the desires of a city already holds half its power. Many years later, when I opened my own house, I finally understood he was right. The greatest profits never came from the rooms, but from the conversations that preceded them.\"\n— Excerpt from the memoirs of Phila, Mistress of the House",

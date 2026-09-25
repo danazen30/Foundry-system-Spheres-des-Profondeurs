@@ -93,7 +93,8 @@ import {
 } from "./scene/scene-bootstrap.js";
 import {
   registerPackMigrationSettings,
-  removeTradeAlchemistSkill
+  removeTradeAlchemistSkill,
+  renameIntendCareer
 } from "./system/pack-migrations.js";
 import { SdpMount } from "./system/mount-utils.js";
 
@@ -842,6 +843,7 @@ installSdpCompendiumIndexLocalization(
 await indexSdpItemPacks();
 
 await removeTradeAlchemistSkill();
+await renameIntendCareer();
 
 localizeAllSdpCompendiumIndices(
   SDP_ROLLTABLE_LOCALIZATION
