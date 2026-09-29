@@ -1461,7 +1461,7 @@ const cond = system.conditions || {};
 let conditionPenalty = 0;
 
 // stack conditions
-conditionPenalty -= Number(cond.poisoned || 0);
+if (Number(cond.poisoned || 0) > 0) conditionPenalty -= 1;
 conditionPenalty -= Number(cond.exhausted || 0);
 conditionPenalty -= Number(cond.stunned || 0);
 conditionPenalty -= Number(cond.deafened || 0);

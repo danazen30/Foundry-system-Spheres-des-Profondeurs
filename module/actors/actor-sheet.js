@@ -14,7 +14,7 @@ import {
   getInjuryLocationLabel
 } from "../system/injury-utils.js";
 
-import { getCost, getTalentCost, getTalentMax, getAttributes, getXPData, getSkillMap, getCurrentCareer, getXPBar, getSpellsByType, sortCurrencyItems} from "./actor-sheet-utils.js";
+import { getCost, getTalentCost, getTalentMax, getAttributes, getXPData, getSkillMap, getCurrentCareer, getXPBar, getSpellsByType, sortCurrencyItems, decorateMagicItemForSheet} from "./actor-sheet-utils.js";
 import {
   presentDice
 } from "../system/dice-utils.js";
@@ -595,11 +595,11 @@ return {
   passiveAbilities:
     this.document.items.filter(
       i => i.type === "ability" && !!i.system.passive
-    ),
+    ).map(item => decorateMagicItemForSheet(item, this.document)),
   activeAbilities:
     this.document.items.filter(
       i => i.type === "ability" && !i.system.passive
-    ),
+    ).map(item => decorateMagicItemForSheet(item, this.document)),
   meleeWeapons,
   rangedWeapons,
   naturalMeleeWeapons,

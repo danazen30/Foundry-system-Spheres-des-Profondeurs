@@ -17,24 +17,25 @@ function getConditionStack(actor, key) {
   );
 }
 
-function getResistanceTarget(actor) {
-  const skill = findActorItemByRef(actor, "skill", "resistance")
+function getResistanceTarget(actor, skillKey = "resistance") {
+  const key = String(skillKey || "resistance").toLowerCase().trim();
+  const skill = findActorItemByRef(actor, "skill", key)
     || actor?.items?.find((item) =>
       item.type === "skill"
-      && String(item.flags?.sdp?.key || "").toLowerCase().trim() === "resistance"
+      && String(item.flags?.sdp?.key || item.system?.key || "").toLowerCase().trim() === key
     );
   if (!skill) {
     return Number(actor?.system?.attributes?.toughness?.value || 0);
   }
 
-  const skillKey = (
+  const resolvedSkillKey = (
     skill.system.key
     || skill.flags?.sdp?.key
-    || "resistance"
+    || key
   ).toLowerCase().trim();
   const attribute =
     actor.system.attributes?.[skill.system.characteristic]?.value ?? 0;
-  const extraMod = actor.system.skillModifiers?.[skillKey] || 0;
+  const extraMod = actor.system.skillModifiers?.[resolvedSkillKey] || 0;
 
   return (
     attribute
@@ -159,7 +160,10 @@ html.find(".poison-roll").click(async ev => {
   const total = getConditionStack(actor, conditionKey);
   if(total <= 0) return;
 
-  const target = getResistanceTarget(actor);
+  const target = getResistanceTarget(
+    actor,
+    card.dataset.skill || "alcoholtolerance"
+  );
 
   const roll = await (new Roll("1d100")).roll();
   const result = roll.total;

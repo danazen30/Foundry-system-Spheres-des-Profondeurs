@@ -1,3 +1,69 @@
+function getSdpFormulaTokenMap(actor, options = {}) {
+
+  const attrs = actor?.system?.attributes ?? {};
+  const overrides = options.overrides ?? {};
+
+  return {
+    SB: overrides.SB ?? attrs.strength?.bonus ?? 0,
+    S: attrs.strength?.value ?? 0,
+    TB: attrs.toughness?.bonus ?? 0,
+    T: attrs.toughness?.value ?? 0,
+    AGB: attrs.agility?.bonus ?? 0,
+    AG: attrs.agility?.value ?? 0,
+    DEXB: attrs.dexterity?.bonus ?? 0,
+    DEX: attrs.dexterity?.value ?? 0,
+    IB: attrs.initiative?.bonus ?? 0,
+    I: attrs.initiative?.value ?? 0,
+    INTB: attrs.intelligence?.bonus ?? 0,
+    INT: attrs.intelligence?.value ?? 0,
+    WPB: attrs.willpower?.bonus ?? 0,
+    WP: attrs.willpower?.value ?? 0,
+    CHAB: attrs.charisma?.bonus ?? 0,
+    CHA: attrs.charisma?.value ?? 0,
+    MAB: attrs.meleeAbility?.bonus ?? 0,
+    MA: attrs.meleeAbility?.value ?? 0,
+    RAB: attrs.rangedAbility?.bonus ?? 0,
+    RA: attrs.rangedAbility?.value ?? 0
+  };
+
+}
+
+function substituteSdpFormulaTokens(value, actor, options = {}) {
+
+  if (value === null || value === undefined || value === "") {
+    return "";
+  }
+
+  if (typeof value === "number") {
+    return String(Math.floor(value));
+  }
+
+  const trimmed = String(value).trim();
+
+  if (!trimmed || !actor) return trimmed;
+
+  const map = getSdpFormulaTokenMap(actor, options);
+  const keys = Object.keys(map).sort((a, b) => b.length - a.length);
+  let str = trimmed;
+
+  for (const key of keys) {
+    str = str.replace(
+      new RegExp(`\\b${key}\\b`, "gi"),
+      String(map[key])
+    );
+  }
+
+  return str;
+
+}
+
+/**
+ * Remplace WP, WPB, SB… par les valeurs de l'acteur, en laissant les dés.
+ */
+export function substituteSdpFormulaValues(value, actor, options = {}) {
+  return substituteSdpFormulaTokens(value, actor, options);
+}
+
 /**
  * Résout une formule SDP (SB, S, SB x 3, etc.) pour un acteur.
  */
@@ -26,42 +92,7 @@ export function resolveSdpFormula(value, actor, options = {}) {
 
   if (!actor) return 0;
 
-  let str = trimmed.toUpperCase();
-  const attrs = actor.system?.attributes ?? {};
-  const overrides = options.overrides ?? {};
-
-  const map = {
-    SB: overrides.SB ?? attrs.strength?.bonus ?? 0,
-    S: attrs.strength?.value ?? 0,
-    TB: attrs.toughness?.bonus ?? 0,
-    T: attrs.toughness?.value ?? 0,
-    AGB: attrs.agility?.bonus ?? 0,
-    AG: attrs.agility?.value ?? 0,
-    DEXB: attrs.dexterity?.bonus ?? 0,
-    DEX: attrs.dexterity?.value ?? 0,
-    IB: attrs.initiative?.bonus ?? 0,
-    I: attrs.initiative?.value ?? 0,
-    INTB: attrs.intelligence?.bonus ?? 0,
-    INT: attrs.intelligence?.value ?? 0,
-    WPB: attrs.willpower?.bonus ?? 0,
-    WP: attrs.willpower?.value ?? 0,
-    CHAB: attrs.charisma?.bonus ?? 0,
-    CHA: attrs.charisma?.value ?? 0,
-    MAB: attrs.meleeAbility?.bonus ?? 0,
-    MA: attrs.meleeAbility?.value ?? 0,
-    RAB: attrs.rangedAbility?.bonus ?? 0,
-    RA: attrs.rangedAbility?.value ?? 0
-  };
-
-  const keys = Object.keys(map).sort((a, b) => b.length - a.length);
-
-  for (const key of keys) {
-    str = str.replace(
-      new RegExp(`\\b${key}\\b`, "g"),
-      map[key]
-    );
-  }
-
+  let str = substituteSdpFormulaTokens(trimmed, actor, options);
   str = str.replace(/\s*[x×]\s*/gi, "*");
 
   try {

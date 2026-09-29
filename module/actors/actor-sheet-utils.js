@@ -1,6 +1,12 @@
 import { SDP } from "../system/config.js";
 import { SdpLevelService } from "../services/level-service.js";
-import { getActorItemDisplayName } from "../system/item-localization.js";
+import {
+  getActorItemDisplayName,
+  getLocalizedItemDescription,
+  getLocalizedItemName
+} from "../system/item-localization.js";
+import { formatPlainTextAsHtml } from "../system/text-format.js";
+import { substituteSdpFormulaValues } from "../system/formula-utils.js";
 
 export function resolveXPLogTarget(actor, entry) {
 
@@ -275,6 +281,160 @@ export function getXPBar(actor, xpData) {
 
 }
 
+function unwrapFieldValue(field) {
+
+  if (field && typeof field === "object" && "value" in field) {
+    return field.value;
+  }
+
+  return field;
+
+}
+
+function localizeDurationType(type) {
+
+  const keys = {
+    round: "SDP.DurationRound",
+    minute: "SDP.DurationMinute",
+    hour: "SDP.DurationHour",
+    instant: "SDP.DurationInstant"
+  };
+
+  return keys[type]
+    ? game.i18n.localize(keys[type])
+    : (type || "");
+
+}
+
+function formatMagicSchoolLabel(magicValue) {
+
+  if (!magicValue) return "";
+
+  return String(magicValue)
+    .split(",")
+    .map(part => part.trim())
+    .filter(Boolean)
+    .map(key => getLocalizedItemName("skill", key, key))
+    .join(", ");
+
+}
+
+function normalizeSheetOvercastEffects(raw) {
+
+  if (Array.isArray(raw)) {
+    return raw.filter(entry => entry && typeof entry === "object");
+  }
+
+  if (raw && typeof raw === "object") {
+    return Object.keys(raw)
+      .sort((a, b) => Number(a) - Number(b))
+      .map(key => raw[key])
+      .filter(entry => entry && typeof entry === "object");
+  }
+
+  return [];
+
+}
+
+export function decorateMagicItemForSheet(item, actor) {
+
+  if (!item) return item;
+
+  const system = item.system || {};
+  const itemKey =
+    (typeof system?.key === "string" ? system.key.trim() : "")
+    || (typeof item.flags?.sdp?.key === "string"
+      ? item.flags.sdp.key.trim()
+      : "");
+
+  const localizedDescription = itemKey
+    ? getLocalizedItemDescription(item.type, itemKey, "")
+    : "";
+
+  const customDescription = system?.description ?? "";
+
+  let descriptionText = "";
+
+  if (localizedDescription && customDescription) {
+    descriptionText = `${localizedDescription}\n\n${customDescription}`;
+  }
+  else if (localizedDescription) {
+    descriptionText = localizedDescription;
+  }
+  else {
+    descriptionText = customDescription;
+  }
+
+  item.localizedDescription = formatPlainTextAsHtml(descriptionText);
+
+  const magicType = unwrapFieldValue(system.magicType) || "";
+  const magicTypeKeys = {
+    minor: "SDP.MagicMinor",
+    advanced: "SDP.MagicAdvanced",
+    superior: "SDP.MagicSuperior"
+  };
+
+  item.magicTypeLabel = magicTypeKeys[magicType]
+    ? game.i18n.localize(magicTypeKeys[magicType])
+    : "";
+
+  item.magicSchoolLabel = formatMagicSchoolLabel(
+    unwrapFieldValue(system.magic)
+  );
+
+  item.durationTypeLabel = localizeDurationType(
+    system.duration?.type || ""
+  );
+
+  item.rangeDisplay = substituteSdpFormulaValues(
+    unwrapFieldValue(system.range),
+    actor
+  );
+
+  item.durationValueDisplay = substituteSdpFormulaValues(
+    system.duration?.value,
+    actor
+  );
+
+  item.radiusDisplay = substituteSdpFormulaValues(
+    unwrapFieldValue(system.radius),
+    actor
+  );
+
+  item.movableDisplay = substituteSdpFormulaValues(
+    unwrapFieldValue(system.movable),
+    actor
+  );
+
+  const damageBase = substituteSdpFormulaValues(
+    String(system.damage?.base?.value ?? "").trim(),
+    actor
+  );
+  const damageDice = substituteSdpFormulaValues(
+    String(system.damage?.dice?.value ?? "").trim(),
+    actor
+  );
+
+  item.damageDisplay = [damageBase, damageDice]
+    .filter(Boolean)
+    .join(" + ");
+
+  item.ignoreArmor = !!unwrapFieldValue(system.ignoreArmor);
+  item.isProjectile = !!unwrapFieldValue(system.projectile);
+  item.lockRange = !!unwrapFieldValue(system.lockRange);
+  item.lockTargets = !!unwrapFieldValue(system.lockTargets);
+  item.hasOvercast = !!unwrapFieldValue(system.overcast);
+  item.overcastEffects = normalizeSheetOvercastEffects(
+    unwrapFieldValue(system.overcastSpecialEffects)
+  ).map(effect => ({
+    ...effect,
+    value: substituteSdpFormulaValues(effect.value, actor)
+  }));
+
+  return item;
+
+}
+
 export function getSpellsByType(actor) {
 
   const spells = actor.items.filter(
@@ -282,17 +442,23 @@ export function getSpellsByType(actor) {
   );
 
   return {
-    spellsMinor: spells.filter(
-      s => (s.system.magicType?.value || "minor") === "minor"
-    ),
+    spellsMinor: spells
+      .filter(
+        s => (s.system.magicType?.value || "minor") === "minor"
+      )
+      .map(spell => decorateMagicItemForSheet(spell, actor)),
 
-    spellsAdvanced: spells.filter(
-      s => (s.system.magicType?.value || "minor") === "advanced"
-    ),
+    spellsAdvanced: spells
+      .filter(
+        s => (s.system.magicType?.value || "minor") === "advanced"
+      )
+      .map(spell => decorateMagicItemForSheet(spell, actor)),
 
-    spellsSuperior: spells.filter(
-      s => (s.system.magicType?.value || "minor") === "superior"
-    )
+    spellsSuperior: spells
+      .filter(
+        s => (s.system.magicType?.value || "minor") === "superior"
+      )
+      .map(spell => decorateMagicItemForSheet(spell, actor))
   };
 
 }
@@ -363,6 +529,26 @@ export function registerTalentRows(sheet, root) {
 
       event.stopPropagation();
 
+      const item = sheet.document.items.get(row.dataset.itemId);
+
+      if (!item) return;
+
+      item.sheet.render(true);
+
+    });
+
+    row.addEventListener("contextmenu", (event) => {
+
+      if (
+        event.target.closest(
+          ".talent-advance-btn, input, button, .item-actions"
+        )
+      ) {
+        return;
+      }
+
+      event.preventDefault();
+
       const itemId = row.dataset.itemId;
 
       const details = root.querySelector(
@@ -376,74 +562,6 @@ export function registerTalentRows(sheet, root) {
       details.style.display = isHidden
         ? "table-row"
         : "none";
-
-    });
-
-    row.addEventListener("contextmenu", (event) => {
-
-      // Ne pas ouvrir la fiche depuis le + ou l'input de niveau.
-      if (
-        event.target.closest(
-          ".talent-advance-btn, input, button, .item-actions"
-        )
-      ) {
-        return;
-      }
-
-      event.preventDefault();
-
-      const item = sheet.document.items.get(row.dataset.itemId);
-
-      if (!item) return;
-
-      item.sheet.render(true);
-
-    });
-
-  });
-
-}
-
-function registerSpellRows(sheet, root) {
-
-  root.querySelectorAll('[data-action="rollSpell"]').forEach(el => {
-
-    el.addEventListener("click", (event) => {
-
-      const spell = sheet.document.items.get(
-        event.currentTarget.dataset.itemId
-      );
-
-      if (!spell) return;
-
-      sheet._castSpell({
-        preventDefault: () => {},
-        currentTarget: {
-          dataset: {
-            itemId: spell.id
-          }
-        }
-      });
-
-    });
-
-    el.addEventListener("contextmenu", (event) => {
-
-      event.preventDefault();
-
-      const itemId = event.currentTarget.dataset.itemId;
-
-      const details = root.querySelector(
-        `.spell-details[data-details="${itemId}"]`
-      );
-
-      if (!details) return;
-
-      const isHidden =
-        details.style.display === "none";
-
-      details.style.display =
-        isHidden ? "table-row" : "none";
 
     });
 

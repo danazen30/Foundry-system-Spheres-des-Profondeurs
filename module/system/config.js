@@ -305,7 +305,9 @@ SDP.conditionConfig = {
     trigger: "endTurn",
     damagePerStack: 1,
     modifier: -10,
+    modifierOnce: true,
     test: "resistance",
+    testSkill: "alcoholtolerance",
     onRecover: "exhausted",
     description: "SDP.ConditionPoisonedDescription"
   },

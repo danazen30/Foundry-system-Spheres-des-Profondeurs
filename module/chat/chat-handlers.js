@@ -48,7 +48,20 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
     });
   });
 
-html.find(".sdp-opposed").click(async ev => {
+  const opposedButtons = html.find(".sdp-opposed");
+
+  if (!game.user.isGM) {
+    opposedButtons.each((_, btn) => {
+      btn.hidden = true;
+      btn.disabled = true;
+      btn.tabIndex = -1;
+      btn.setAttribute("aria-hidden", "true");
+    });
+  }
+
+  opposedButtons.click(async ev => {
+
+  if (!game.user.isGM) return;
 
   const card = ev.currentTarget.closest(".sdp-roll");
   if (!card) return;

@@ -1,0 +1,104 @@
+<tr class="spell-details" data-details="{{item.id}}" style="display:none;">
+  <td colspan="{{colspan}}">
+
+    <div class="spell-detail-box">
+
+      {{#if item.magicTypeLabel}}
+      <p>
+        <strong>{{localize "SDP.MagicType"}}:</strong>
+        {{item.magicTypeLabel}}
+      </p>
+      {{/if}}
+
+      {{#if item.magicSchoolLabel}}
+      <p>
+        <strong>{{localize "SDP.Magic"}}:</strong>
+        {{item.magicSchoolLabel}}
+      </p>
+      {{/if}}
+
+      <p>
+        <strong>{{localize "SDP.Range"}}:</strong>
+        {{item.rangeDisplay}}
+        {{#if item.lockRange}}
+          ({{localize "SDP.LockRange"}})
+        {{/if}}
+      </p>
+
+      <p>
+        <strong>{{localize "SDP.Duration"}}:</strong>
+        {{#if item.system.concentration.value}}
+          {{localize "SDP.Concentration"}}
+          {{#if item.movableDisplay}}
+            ({{localize "SDP.Movable"}}: {{item.movableDisplay}})
+          {{/if}}
+        {{else}}
+          {{item.durationValueDisplay}}
+          {{item.durationTypeLabel}}
+        {{/if}}
+      </p>
+
+      <p>
+        <strong>{{localize "SDP.Target"}}:</strong>
+        {{#if item.system.aoe.value}}
+          {{localize "SDP.AreaOfEffect"}}
+          ({{localize "SDP.Radius"}}: {{item.radiusDisplay}})
+        {{else}}
+          {{item.system.target.value}} {{localize "SDP.Targets"}}
+          {{#if item.lockTargets}}
+            ({{localize "SDP.LockTargets"}})
+          {{/if}}
+        {{/if}}
+      </p>
+
+      {{#if item.isProjectile}}
+      <p>
+        <strong>{{localize "SDP.Projectile"}}:</strong>
+        {{localize "SDP.Yes"}}
+      </p>
+      {{/if}}
+
+      {{#if item.damageDisplay}}
+      <p>
+        <strong>{{localize "SDP.Damage"}}:</strong>
+        {{item.damageDisplay}}
+      </p>
+      {{/if}}
+
+      {{#if item.ignoreArmor}}
+      <p>
+        <strong>{{localize "SDP.IgnoreArmor"}}:</strong>
+        {{localize "SDP.Yes"}}
+      </p>
+      {{/if}}
+
+      {{#if item.hasOvercast}}
+      <p>
+        <strong>{{localize "SDP.Overcast"}}:</strong>
+        {{localize "SDP.Yes"}}
+      </p>
+      {{/if}}
+
+      {{#if item.overcastEffects.length}}
+      <div class="overcast-line">
+        <strong>{{localize "SDP.SpecialOvercast"}}:</strong>
+        <ul>
+          {{#each item.overcastEffects as |effect|}}
+          <li>
+            <strong>{{effect.label}}</strong> : {{effect.value}}
+          </li>
+          {{/each}}
+        </ul>
+      </div>
+      {{/if}}
+
+      {{#if item.localizedDescription}}
+      <div class="spell-description">
+        {{{item.localizedDescription}}}
+      </div>
+      {{/if}}
+
+    </div>
+
+  </td>
+</tr>

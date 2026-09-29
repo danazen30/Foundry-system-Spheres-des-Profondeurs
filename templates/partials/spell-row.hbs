@@ -1,0 +1,33 @@
+<tr class="spell-row" data-item-id="{{id}}">
+
+  <td class="spell-img-cell">
+    <img src="{{img}}" title="{{displayName}}">
+  </td>
+
+  <td
+    class="spell-name roll-spell-name"
+    data-action="rollSpell"
+    data-item-id="{{id}}"
+  >
+    {{displayName}}
+  </td>
+
+  <td>
+    {{system.power.value}}
+  </td>
+
+  <td>
+    <input type="checkbox"
+      data-action="toggleSpellMemory"
+      data-item-id="{{id}}"
+      {{checked system.memorized.value}}>
+  </td>
+
+  <td class="item-actions">
+    <button data-action="editItem" data-item-id="{{id}}">✏️</button>
+    <button data-action="deleteItem" data-item-id="{{id}}">🗑️</button>
+  </td>
+
+</tr>
+
+{{> "systems/sdp/templates/partials/spell-details.hbs" item=this colspan=5}}

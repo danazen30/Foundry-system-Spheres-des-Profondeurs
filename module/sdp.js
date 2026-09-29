@@ -203,6 +203,8 @@ const templateJson = await templateResponse.json();
     "systems/sdp/templates/partials/skills.hbs",
     "systems/sdp/templates/partials/talents.hbs",
     "systems/sdp/templates/partials/magic.hbs",
+    "systems/sdp/templates/partials/spell-row.hbs",
+    "systems/sdp/templates/partials/spell-details.hbs",
     "systems/sdp/templates/partials/inventory.hbs",
     "systems/sdp/templates/partials/effects.hbs",
     "systems/sdp/templates/partials/info.hbs",

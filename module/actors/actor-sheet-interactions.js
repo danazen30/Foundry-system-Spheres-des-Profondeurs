@@ -652,6 +652,26 @@ function registerSpellCasting(sheet, root) {
 
     });
 
+    el.addEventListener("contextmenu", (event) => {
+
+      event.preventDefault();
+
+      const itemId = event.currentTarget.dataset.itemId;
+
+      const details = root.querySelector(
+        `.spell-details[data-details="${itemId}"]`
+      );
+
+      if (!details) return;
+
+      const isHidden =
+        details.style.display === "none";
+
+      details.style.display =
+        isHidden ? "table-row" : "none";
+
+    });
+
   });
 
 }
@@ -677,6 +697,15 @@ function registerAbilityUse(sheet, root) {
   root.querySelectorAll('[data-action="toggleAbilityDetails"]').forEach(el => {
 
     el.addEventListener("click", (event) => {
+
+      event.preventDefault();
+      toggleAbilityDetails(
+        event.currentTarget.dataset.itemId
+      );
+
+    });
+
+    el.addEventListener("contextmenu", (event) => {
 
       event.preventDefault();
       toggleAbilityDetails(

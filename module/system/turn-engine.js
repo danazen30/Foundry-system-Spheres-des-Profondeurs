@@ -11,6 +11,12 @@ function conditionCardActorAttrs(actor) {
   return `data-actor="${actor.id}" data-token="${tokenId}"`;
 }
 
+function conditionStackDamage(config, stack) {
+  if (!config.damagePerStack) return 0;
+  if (config.damageOnce) return Number(config.damagePerStack) || 0;
+  return stack * config.damagePerStack;
+}
+
 export class SdpTurnEngine {
 
   // =========================
@@ -137,7 +143,7 @@ export class SdpTurnEngine {
 
       if(config.damagePerStack){
 
-        const damage = stack * config.damagePerStack;
+        const damage = conditionStackDamage(config, stack);
 
         const current = actor.system.health.value;
 
@@ -333,6 +339,7 @@ if(config.test === "resistance"){
     <div class="sdp-poison-test"
          ${conditionCardActorAttrs(actor)}
          data-condition="${key}"
+         data-skill="${config.testSkill || "resistance"}"
          data-stack="${stack}">
 
       <h3>${game.i18n.localize(config.label)}</h3>
@@ -344,7 +351,7 @@ if(config.test === "resistance"){
 })}</p>
 
 <button class="poison-roll">
-  ${game.i18n.localize("SDP.RollResistance")}
+  ${game.i18n.localize(config.testSkill === "alcoholtolerance" ? "SDP.RollToxinResistance" : "SDP.RollResistance")}
 </button>
 
     </div>
@@ -365,7 +372,7 @@ if(config.damagePerStack){
     // skip damage but keep other mechanics
   } else {
 
-    const damage = stack * config.damagePerStack;
+    const damage = conditionStackDamage(config, stack);
 
     const current = actor.system.health.value;
 
