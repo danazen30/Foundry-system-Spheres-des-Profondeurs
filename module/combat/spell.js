@@ -13,6 +13,98 @@ export class SdpSpell {
       return resolveSdpFormula(value, actor);
     }
 
+  static overcastManaCost(points) {
+    const n = Math.max(0, Math.floor(Number(points) || 0));
+    return (n * (n + 1)) / 2;
+  }
+
+  static overcastPool(card) {
+    if (!card) return 0;
+    return Number(card.dataset.overcast || 0)
+      + Number(card.dataset.overcastUsed || 0);
+  }
+
+  static isOvercastValidated(card) {
+    return card?.dataset?.overcastValidated === "true";
+  }
+
+  static needsOvercastValidation(card) {
+    if (!card?.classList?.contains("sdp-spell")) return false;
+    if (SdpSpell.isOvercastValidated(card)) return false;
+    return SdpSpell.overcastPool(card) > 0;
+  }
+
+  static refreshOvercastCost(card) {
+    const used = Number(card?.dataset?.overcastUsed || 0);
+    const cost = SdpSpell.overcastManaCost(used);
+    const el = card?.querySelector?.(".spell-overcast-cost");
+    if (!el) return cost;
+    const valueEl = el.querySelector(".value");
+    if (valueEl) valueEl.textContent = String(cost);
+    el.dataset.cost = String(cost);
+    return cost;
+  }
+
+  static lockOvercastControls(card) {
+    if (!card) return;
+    card.dataset.overcastValidated = "true";
+    card.querySelectorAll(".reset-overcast, .validate-overcast").forEach(el => {
+      el.disabled = true;
+    });
+    const validateBtn = card.querySelector(".validate-overcast");
+    if (validateBtn) {
+      validateBtn.textContent = game.i18n.localize("SDP.OvercastValidated");
+    }
+  }
+
+  static buildOvercastSectionHtml(spell, actor, overcast) {
+
+    const points = Number(overcast) || 0;
+    if (points <= 0) return "";
+
+    let specialEffects = spell?.system?.overcastSpecialEffects?.value;
+
+    if (!Array.isArray(specialEffects)) {
+      specialEffects = Object.values(specialEffects || {});
+    }
+
+    const effectsHtml = specialEffects.map((effect, index) => {
+
+      const start = SdpSpell.resolveFormula(effect.start ?? 0, actor);
+      const increment = SdpSpell.resolveFormula(effect.value, actor);
+
+      return `
+    <p class="spell-special overcast-click"
+       data-type="special"
+       data-index="${index}"
+       data-start="${start}"
+       data-base="${increment}"
+       data-value="${start}">
+      <strong>${effect.label}:</strong>
+      <span class="value">${start}</span>
+    </p>`;
+
+    }).join("");
+
+    return `
+<div class="spell-overcast-line">
+<p class="spell-overcast">
+  <strong>${game.i18n.localize("SDP.Overcast")}:</strong> ${points}
+</p>
+<p class="spell-overcast-cost" data-cost="0">
+  <strong>${game.i18n.localize("SDP.OvercastCost")}:</strong>
+  <span class="value">0</span>
+</p>
+</div>
+<div class="spell-overcast-controls">
+<button type="button" class="reset-overcast">
+  ${game.i18n.localize("SDP.ResetOvercast")}
+</button>
+${effectsHtml}
+</div>`;
+
+  }
+
 static _getBestSpellSkill(actor, spell){
 
   const skillString = spell.system.magic?.value || "";
@@ -259,12 +351,6 @@ const range = SdpSpell.resolveFormula(rangeRaw, actor);
 const radius = SdpSpell.resolveFormula(radiusRaw, actor);
 
 const overcast = SdpRoll.getOvercast(SL);
-let specialEffects = system.overcastSpecialEffects?.value;
-
-// 🔥 FIX Foundry (object → array)
-if (!Array.isArray(specialEffects)) {
-  specialEffects = Object.values(specialEffects || {});
-}
 
 const isAoE = system.aoe?.value === true;
 
@@ -361,11 +447,14 @@ await actor.update({
   ${spell.name}
 </h3>
 
-  <button class="edit-attack">${game.i18n.localize("SDP.Edit")}</button>
-
+  <div class="sdp-card-row">
   <p><strong>${game.i18n.localize("SDP.MagicType")}:</strong> ${game.i18n.localize(
   CONFIG.SDP.magicTypes?.[magicType] || "SDP.MagicMinor"
 )}</p>
+  <button type="button" class="edit-attack sdp-chat-edit" title="${game.i18n.localize("SDP.Edit")}">
+    <i class="fas fa-pen"></i>
+  </button>
+  </div>
   <p><strong>${game.i18n.localize("SDP.Used")}:</strong> ${bestSkill ? skillName : game.i18n.localize("SDP.Intelligence")} (${bestSkill ? skillValue : INT})</p>
 
   <p class="spell-target"><strong>${game.i18n.localize("SDP.Target")}:</strong> ${targetValue}</p>
@@ -393,39 +482,7 @@ ${concentration ? `<p><strong>${game.i18n.localize("SDP.Concentration")}</strong
 
 <hr>
 
-${overcast > 0 ? `
-<p class="spell-overcast">
-  <strong>${game.i18n.localize("SDP.Overcast")}:</strong> ${overcast}
-</p>
-
-<div class="spell-overcast-controls">
-<button class="reset-overcast">
-  ${game.i18n.localize("SDP.ResetOvercast")}
-</button>
-
-  ${specialEffects.map((e, i) => {
-
-  const start = SdpSpell.resolveFormula(e.start ?? 0, actor);
-  const increment = SdpSpell.resolveFormula(e.value, actor);
-
-  return `
-    <p class="spell-special overcast-click"
-       data-type="special"
-       data-index="${i}"
-       data-start="${start}"
-       data-base="${increment}"
-       data-value="${start}">
-       
-      <strong>${e.label}:</strong>
-      <span class="value">${start}</span>
-      
-    </p>
-  `;
-
-}).join("")}
-
-    </div>
-  ` : ""}
+${SdpSpell.buildOvercastSectionHtml(spell, actor, overcast)}
 
 
 ${range > 0 ? `
@@ -476,6 +533,12 @@ ${hasSpecialOvercast ? `
   <strong>${game.i18n.localize("SDP.SpecialOvercast")}:</strong>
   ${game.i18n.localize("SDP.Yes")}
 </p>
+` : ""}
+
+${overcast > 0 ? `
+<button type="button" class="validate-overcast">
+  ${game.i18n.localize("SDP.ValidateOvercast")}
+</button>
 ` : ""}
 
   <hr>

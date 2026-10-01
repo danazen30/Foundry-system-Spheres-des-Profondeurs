@@ -1591,6 +1591,175 @@ export async function resolveJournalEntry(ref) {
 
 }
 
+const JOURNAL_PACK_ID = "sdp.journals";
+
+let journalPageIndex = null;
+
+function isJournalDocumentUuid(uuid) {
+
+  const value = String(uuid ?? "");
+
+  return value.includes("JournalEntry")
+    || value.includes("JournalEntryPage");
+
+}
+
+function journalPageIdFromUuid(uuid) {
+
+  const parts = String(uuid ?? "").split(".");
+  const marker = parts.lastIndexOf("JournalEntryPage");
+
+  if (marker >= 0 && parts[marker + 1]) {
+    return parts[marker + 1];
+  }
+
+  return parts.at(-1) ?? "";
+
+}
+
+function pageLabelMatches(page, label) {
+
+  const wanted = String(label ?? "").trim().toLocaleLowerCase();
+
+  if (!wanted) return false;
+
+  const names = [
+    page?.name,
+    getLocalizedCareerPageDisplayName(page),
+    getLocalizedLorePageDisplayName(page)
+  ];
+
+  return names.some(name =>
+    String(name ?? "").trim().toLocaleLowerCase() === wanted
+  );
+
+}
+
+async function loadJournalPages() {
+
+  if (journalPageIndex) return journalPageIndex;
+
+  const pages = [];
+
+  for (const entry of game.journal ?? []) {
+
+    for (const page of entry.pages ?? []) {
+      pages.push(page);
+    }
+
+  }
+
+  const pack = game.packs?.get(JOURNAL_PACK_ID);
+
+  if (pack?.documentName === "JournalEntry") {
+
+    try {
+
+      const documents = await pack.getDocuments();
+
+      for (const entry of documents) {
+
+        for (const page of entry.pages ?? []) {
+          pages.push(page);
+        }
+
+      }
+
+    }
+    catch (error) {
+      console.warn(
+        "SDP | Impossible de lire le compendium des journaux",
+        error
+      );
+    }
+
+  }
+
+  journalPageIndex = pages;
+
+  return pages;
+
+}
+
+async function resolveExistingJournalUuid(uuid, label = "") {
+
+  if (!isJournalDocumentUuid(uuid)) return uuid;
+
+  const existing = await fromUuid(uuid).catch(() => null);
+
+  if (existing) return existing.uuid;
+
+  const pages = await loadJournalPages();
+  const pageId = journalPageIdFromUuid(uuid);
+  const byId = pages.find(page => page.id === pageId);
+
+  if (byId) return byId.uuid;
+
+  const byLabel = pages.find(page =>
+    pageLabelMatches(page, label)
+  );
+
+  return byLabel?.uuid ?? uuid;
+
+}
+
+/**
+ * Réécrit les liens @UUID de journal dont l'id de JournalEntry
+ * ne correspond plus (monde recréé, compendium seulement).
+ * La page est retrouvée par son id, puis par son nom.
+ */
+export async function rewriteJournalDocumentLinks(html) {
+
+  if (typeof html !== "string" || !html) return html;
+
+  if (!html.includes("UUID") && !html.includes("data-uuid")) {
+    return html;
+  }
+
+  if (!game.packs?.get) return html;
+
+  let result = html;
+
+  const uuidPattern =
+    /@UUID\[([^\]]+)\](?:\{([^}]*)\})?/g;
+
+  for (const match of html.matchAll(uuidPattern)) {
+
+    const uuid = match[1];
+
+    if (!isJournalDocumentUuid(uuid)) continue;
+
+    const resolved = await resolveExistingJournalUuid(
+      uuid,
+      match[2] ?? ""
+    );
+
+    if (resolved && resolved !== uuid) {
+      result = result.replaceAll(uuid, resolved);
+    }
+
+  }
+
+  const anchorPattern = /data-uuid="([^"]+)"/g;
+
+  for (const match of result.matchAll(anchorPattern)) {
+
+    const uuid = match[1];
+
+    if (!isJournalDocumentUuid(uuid)) continue;
+
+    const resolved = await resolveExistingJournalUuid(uuid);
+
+    if (resolved && resolved !== uuid) {
+      result = result.replaceAll(uuid, resolved);
+    }
+
+  }
+
+  return result;
+
+}
+
 /**
  * Résout une JournalEntryPage depuis son document, id ou UUID.
  */

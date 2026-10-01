@@ -206,6 +206,7 @@ const templateJson = await templateResponse.json();
     "systems/sdp/templates/partials/spell-row.hbs",
     "systems/sdp/templates/partials/spell-details.hbs",
     "systems/sdp/templates/partials/inventory.hbs",
+    "systems/sdp/templates/partials/inventory-item-fold.hbs",
     "systems/sdp/templates/partials/effects.hbs",
     "systems/sdp/templates/partials/info.hbs",
     "systems/sdp/templates/partials/npc-header.hbs",

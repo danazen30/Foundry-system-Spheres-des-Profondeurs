@@ -729,8 +729,7 @@ if (finalTraits.some(t => t.key === "reload")) {
   })}
 </h3>
 
-  <button class="edit-attack" ${vis("attacker", "gm")}>${game.i18n.localize("SDP.Edit")}</button>
-
+  <div class="sdp-card-row">
 ${displayTraits.length ? `
 <div class="weapon-traits" ${vis("attacker", "gm")}>
 
@@ -753,9 +752,17 @@ ${displayTraits.length ? `
   ` : ""}
 
 </div>
-` : ""}
-
+` : `
   <p ${vis("attacker", "gm")}>${game.i18n.localize("SDP.Test")}: ${source}</p>
+`}
+  <button type="button" class="edit-attack sdp-chat-edit" ${vis("attacker", "gm")} title="${game.i18n.localize("SDP.Edit")}">
+    <i class="fas fa-pen"></i>
+  </button>
+  </div>
+
+  ${displayTraits.length ? `
+  <p ${vis("attacker", "gm")}>${game.i18n.localize("SDP.Test")}: ${source}</p>
+  ` : ""}
   <p ${vis("attacker", "gm")}>${game.i18n.localize("SDP.Target")}: ${targetValue}</p>
   <p ${vis("attacker", "gm")}>
   ${game.i18n.localize("SDP.Range")}:
@@ -1089,10 +1096,7 @@ const talentsHTML =
   })}
 </h3>
 
-  <button class="edit-attack" ${vis("attacker", "gm")}>
-  ${game.i18n.localize("SDP.Edit")}
-</button>
-
+  <div class="sdp-card-row">
   ${traitsData.length ? `
   <div class="weapon-traits" ${vis("attacker", "gm")}>
     <strong>${game.i18n.localize("SDP.Traits")}:</strong>
@@ -1104,9 +1108,17 @@ const talentsHTML =
       </span>
     `).join("")}
   </div>
-` : ""}
-
+` : `
   <p ${vis("attacker", "gm")}>${game.i18n.localize("SDP.Roll")}: ${result}</p>
+`}
+  <button type="button" class="edit-attack sdp-chat-edit" ${vis("attacker", "gm")} title="${game.i18n.localize("SDP.Edit")}">
+    <i class="fas fa-pen"></i>
+  </button>
+  </div>
+
+  ${traitsData.length ? `
+  <p ${vis("attacker", "gm")}>${game.i18n.localize("SDP.Roll")}: ${result}</p>
+  ` : ""}
   <p ${vis("attacker", "gm")}>${game.i18n.localize("SDP.SuccessLevel")}: ${SL}</p>
   ${inspiration > 0 ? `<p ${vis("attacker", "gm")}>${game.i18n.localize("SDP.Inspiration")}: +${inspiration}</p>` : ""}
   <p ${vis("attacker", "defender", "gm")}>

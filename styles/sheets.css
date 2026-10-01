@@ -1860,6 +1860,66 @@ input.movement-value {
   font-size: 12px;
 }
 
+.inventory-item-name,
+.armor-toggle {
+  cursor: pointer;
+}
+
+.weapons-table tr.inventory-item-details,
+.ammo-table tr.inventory-item-details,
+.armors-table tr.inventory-item-details,
+.inventory-table tr.inventory-item-details,
+.container-table tr.inventory-item-details {
+  height: auto;
+  min-height: 0;
+}
+
+.weapons-table tr.inventory-item-details > td,
+.ammo-table tr.inventory-item-details > td,
+.armors-table tr.inventory-item-details > td,
+.inventory-table tr.inventory-item-details > td,
+.container-table tr.inventory-item-details > td {
+  height: auto;
+  min-height: 0;
+  width: auto;
+  padding: 0 8px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.inventory-item-details-content {
+  padding: 0;
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.15;
+}
+
+.inventory-fold-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-bottom: 4px;
+}
+
+.inventory-fold-line:empty {
+  display: none;
+}
+
+.inventory-fold-desc {
+  font-size: 15px;
+  line-height: 1.15;
+  margin: 0;
+  padding: 0;
+  white-space: normal;
+}
+
+.inventory-item-details .inventory-fold-desc p {
+  margin: 0;
+  padding: 0;
+  font-size: 15px;
+  line-height: 1.15;
+}
+
 /* =========================
    CONTAINER FIX CLEAN
 ========================= */

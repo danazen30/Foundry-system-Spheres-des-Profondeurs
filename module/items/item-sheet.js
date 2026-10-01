@@ -6,6 +6,7 @@ import {
 } from "../system/item-localization.js";
 import { restoreItemScroll, registerEditorToggles, setupRichTextEditors, setupTextareaResize} from "../actors/actor-sheet-ui.js";
 import { isPlayerEditableItemField } from "./item-permissions.js";
+import { rewriteJournalDocumentLinks } from "../journal/career-journal.js";
 
 const { ItemSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -237,7 +238,9 @@ const localizedDescription =
     : "";
 
 const customDescription =
-  this.document.system.description ?? "";
+  await rewriteJournalDocumentLinks(
+    this.document.system.description ?? ""
+  );
 
 let description = "";
 
@@ -272,7 +275,9 @@ const editors = {
   description:
   await foundry.applications.ux.TextEditor
     .enrichHTML(description, {
-      async: true
+      async: true,
+      documents: true,
+      links: true
     }),
 
   playerNotes:
@@ -301,6 +306,7 @@ const editors = {
 negativeArmorTraits,
   activeTab: this.activeTab,
   editors,
+  descriptionSource: customDescription,
   effects: this.document.effects,
   isGM: game.user.isGM,
   isCompendiumViewer: this.isCompendiumViewer,

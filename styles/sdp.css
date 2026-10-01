@@ -809,29 +809,70 @@
 /* Chat card damage modifiers (flat / %) */
 .sdp-damage-mods {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 0.75rem;
-  align-items: center;
+  flex-wrap: nowrap;
+  gap: 0.35rem;
+  align-items: flex-end;
   margin: 0.35rem 0 0.5rem;
 }
 
 .sdp-damage-mods .sdp-damage-mod {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  min-width: 0;
+  gap: 0.1rem;
   margin: 0;
-  font-size: 0.9em;
+  font-size: 0.75rem;
+  line-height: 1.1;
 }
 
 .sdp-damage-mods .sdp-damage-flat,
-.sdp-damage-mods .sdp-damage-percent {
-  width: 3.5rem;
-  min-width: 3.5rem;
+.sdp-damage-mods .sdp-damage-percent,
+.sdp-damage-mods .sdp-damage-dice {
+  width: 100%;
+  min-width: 0;
   text-align: center;
 }
 
-.sdp-damage-mods .sdp-damage-dice {
-  width: 4.5rem;
-  min-width: 4.5rem;
-  text-align: center;
+.chat-message .sdp-card-row {
+  position: relative;
+  margin: 0;
+  padding: 0 1.35rem 0 0;
+}
+
+.chat-message .message-content .sdp-card-row > p,
+.chat-message .message-content .sdp-card-row > div {
+  margin: 0;
+}
+
+.chat-message .message-content button.sdp-chat-edit {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1.15rem;
+  height: 1.15rem;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  box-shadow: none;
+  line-height: 1;
+  font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat-message .spell-overcast-line {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 0;
+}
+
+.chat-message .spell-overcast-line > p {
+  margin: 0;
 }

@@ -195,55 +195,72 @@
     },
     "Item": {
   "skill": {
-    "label": "TYPES.Item.skill"
+    "label": "TYPES.Item.skill",
+    "htmlFields": ["system.description", "system.playerNotes", "system.gmNotes"]
   },
   "talent": {
-    "label": "TYPES.Item.talent"
+    "label": "TYPES.Item.talent",
+    "htmlFields": ["system.description", "system.playerNotes", "system.gmNotes"]
   },
   "weapon": {
-    "label": "TYPES.Item.weapon"
+    "label": "TYPES.Item.weapon",
+    "htmlFields": ["system.description", "system.playerNotes", "system.gmNotes"]
   },
   "armor": {
-    "label": "TYPES.Item.armor"
+    "label": "TYPES.Item.armor",
+    "htmlFields": ["system.description", "system.playerNotes", "system.gmNotes"]
   },
   "spell": {
-    "label": "TYPES.Item.spell"
+    "label": "TYPES.Item.spell",
+    "htmlFields": ["system.description", "system.playerNotes", "system.gmNotes"]
   },
   "ability": {
-    "label": "TYPES.Item.ability"
+    "label": "TYPES.Item.ability",
+    "htmlFields": ["system.description", "system.playerNotes", "system.gmNotes"]
   },
   "injury": {
-    "label": "TYPES.Item.injury"
+    "label": "TYPES.Item.injury",
+    "htmlFields": ["system.description", "system.playerNotes", "system.gmNotes"]
   },
   "specie": {
-    "label": "TYPES.Item.specie"
+    "label": "TYPES.Item.specie",
+    "htmlFields": ["system.description", "system.playerNotes", "system.gmNotes"]
   },
   "career": {
-    "label": "TYPES.Item.career"
+    "label": "TYPES.Item.career",
+    "htmlFields": ["system.description", "system.playerNotes", "system.gmNotes"]
   },
   "sign": {
-    "label": "TYPES.Item.sign"
+    "label": "TYPES.Item.sign",
+    "htmlFields": ["system.description", "system.playerNotes", "system.gmNotes"]
   },
   "ammunition": {
-    "label": "TYPES.Item.ammunition"
+    "label": "TYPES.Item.ammunition",
+    "htmlFields": ["system.description", "system.playerNotes", "system.gmNotes"]
   },
   "possession": {
-    "label": "TYPES.Item.possession"
+    "label": "TYPES.Item.possession",
+    "htmlFields": ["system.description", "system.playerNotes", "system.gmNotes"]
   },
   "disease": {
-    "label": "TYPES.Item.disease"
+    "label": "TYPES.Item.disease",
+    "htmlFields": ["system.description", "system.playerNotes", "system.gmNotes"]
   },
   "trait": {
-    "label": "TYPES.Item.trait"
+    "label": "TYPES.Item.trait",
+    "htmlFields": ["system.description", "system.playerNotes", "system.gmNotes"]
   },
   "clothing": {
-    "label": "TYPES.Item.clothing"
+    "label": "TYPES.Item.clothing",
+    "htmlFields": ["system.description", "system.playerNotes", "system.gmNotes"]
   },
   "container": {
-    "label": "TYPES.Item.container"
+    "label": "TYPES.Item.container",
+    "htmlFields": ["system.description", "system.playerNotes", "system.gmNotes"]
   },
   "currency": {
-    "label": "TYPES.Item.currency"
+    "label": "TYPES.Item.currency",
+    "htmlFields": ["system.description", "system.playerNotes", "system.gmNotes"]
   }
 }
   }

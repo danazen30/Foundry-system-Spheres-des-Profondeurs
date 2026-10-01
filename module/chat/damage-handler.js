@@ -1,4 +1,5 @@
 import { SdpDamage } from "../combat/damage.js";
+import { SdpSpell } from "../combat/spell.js";
 import { getHitLocationLabel, resolveSpellHitLocation } from "../combat/hit-location.js";
 import {
   getInjuryFromPack,
@@ -288,6 +289,13 @@ export async function processRollDamageClick(card, button) {
 
 if (!card || !button) {
   console.error("SDP | processRollDamageClick missing card/button");
+  return;
+}
+
+if (SdpSpell.needsOvercastValidation(card)) {
+  ui.notifications.warn(
+    game.i18n.localize("SDP.ValidateOvercastFirst")
+  );
   return;
 }
 

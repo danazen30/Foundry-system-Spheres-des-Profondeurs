@@ -1,4 +1,6 @@
 import { SimpleDialog } from "../apps/simple-dialog.js";
+import { SdpSpell } from "../combat/spell.js";
+import { resolveActorFromIds } from "../system/actor-utils.js";
 import {
   findSdpRollTable,
   getLocalizedRollTableResultDescription,
@@ -243,6 +245,8 @@ export function registerOvercastHandlers(html){
     const el = ev.currentTarget;
 const card = el.closest(".sdp-spell");
 
+if (!card || SdpSpell.isOvercastValidated(card)) return;
+
 const type = el.dataset.type;
 
     let overcast = Number(card.dataset.overcast || 0);
@@ -342,6 +346,8 @@ const type = el.dataset.type;
         `<strong>${game.i18n.localize("SDP.Overcast")}:</strong> ${overcast}`;
     }
 
+    SdpSpell.refreshOvercastCost(card);
+
     // =========================
     // UPDATE MESSAGE
     // =========================
@@ -354,6 +360,8 @@ html.find(".overcast-special-btn").click(async ev => {
 
   const btn = ev.currentTarget;
   const card = btn.closest(".sdp-spell");
+
+  if (!card || SdpSpell.isOvercastValidated(card)) return;
 
   let overcast = Number(card.dataset.overcast || 0);
 
@@ -388,6 +396,8 @@ ${game.i18n.localize(labelKey)}: ${newValue}
  overcast -= 1;
 
   card.dataset.overcast = overcast;
+  card.dataset.overcastUsed = Number(card.dataset.overcastUsed || 0) + 1;
+  SdpSpell.refreshOvercastCost(card);
 
   const overcastEl = card.querySelector(".spell-overcast");
 
@@ -410,6 +420,14 @@ html.find(".place-aoe").click(async ev => {
   ev.stopPropagation();
 
   const btn = ev.currentTarget;
+  const card = btn.closest(".sdp-spell");
+
+  if (SdpSpell.needsOvercastValidation(card)) {
+    ui.notifications.warn(
+      game.i18n.localize("SDP.ValidateOvercastFirst")
+    );
+    return;
+  }
 
   // 🔥 VALEUR DYNAMIQUE (overcast inclus)
   const parent = btn.closest(".spell-radius, .ability-radius");
@@ -454,7 +472,7 @@ html.find(".reset-overcast").click(async ev => {
   const card =
     ev.currentTarget.closest(".sdp-spell");
 
-  if (!card) return;
+  if (!card || SdpSpell.isOvercastValidated(card)) return;
 
   // =========================
   // RESET ALL VALUES
@@ -511,9 +529,42 @@ html.find(".reset-overcast").click(async ev => {
 
   }
 
+  SdpSpell.refreshOvercastCost(card);
+
   // =========================
   // UPDATE MESSAGE
   // =========================
+
+  await persistSpellCardMessage(card);
+
+});
+
+html.find(".validate-overcast").click(async ev => {
+
+  const card = ev.currentTarget.closest(".sdp-spell");
+  if (!card || SdpSpell.isOvercastValidated(card)) return;
+
+  const used = Number(card.dataset.overcastUsed || 0);
+  const cost = SdpSpell.overcastManaCost(used);
+
+  const actor = resolveActorFromIds(card.dataset.actor, card.dataset.token);
+  if (!actor) return;
+
+  const currentMana = Number(actor.system.resources?.mana?.value || 0);
+
+  if (currentMana < cost) {
+    ui.notifications.warn(game.i18n.localize("SDP.NotEnoughMana"));
+    return;
+  }
+
+  if (cost > 0) {
+    await actor.update({
+      "system.resources.mana.value": currentMana - cost
+    });
+  }
+
+  SdpSpell.refreshOvercastCost(card);
+  SdpSpell.lockOvercastControls(card);
 
   await persistSpellCardMessage(card);
 

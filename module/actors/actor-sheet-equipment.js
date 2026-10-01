@@ -1,5 +1,45 @@
 import { SDP } from "../system/config.js";
 import { getItemLayer, applyFinalWeight} from "./actor-sheet-utils.js";
+import { getLocalizedItemDescription } from "../system/item-localization.js";
+import { formatPlainTextAsHtml } from "../system/text-format.js";
+
+function attachFoldDescription(item) {
+
+  if (!item) return;
+
+  const system = item.system || {};
+  const itemKey =
+    (typeof system.key === "string" ? system.key.trim() : "")
+    || (typeof item.flags?.sdp?.key === "string"
+      ? item.flags.sdp.key.trim()
+      : "");
+
+  const localizedDescription = itemKey
+    ? getLocalizedItemDescription(item.type, itemKey, "")
+    : "";
+
+  const customDescription =
+    typeof system.description === "string"
+      ? system.description
+      : "";
+
+  let descriptionText = "";
+
+  if (localizedDescription && customDescription) {
+    descriptionText =
+      `${localizedDescription}\n\n${customDescription}`;
+  }
+  else if (localizedDescription) {
+    descriptionText = localizedDescription;
+  }
+  else {
+    descriptionText = customDescription;
+  }
+
+  item.foldDescription =
+    formatPlainTextAsHtml(descriptionText);
+
+}
 import {
   resolveWeaponRange
 } from "../system/formula-utils.js";
@@ -109,6 +149,8 @@ export function prepareWeapons(actor) {
 
   for (let w of weapons) {
 
+    attachFoldDescription(w);
+
     const weaponTraits = w.system.traits || [];
     const itemTraits = w.system.itemTraits || [];
 
@@ -182,6 +224,8 @@ export function prepareArmors(actor) {
   );
 
   for (let a of armors) {
+
+    attachFoldDescription(a);
 
     const armorTraits =
       a.system.armorTraits || {};
@@ -290,6 +334,15 @@ export function prepareInventory(actor) {
     i.type === "container"
   );
 
+  for (const item of [
+    ...possessions,
+    ...ammunition,
+    ...clothing,
+    ...containers
+  ]) {
+    attachFoldDescription(item);
+  }
+
   applyFinalWeight(possessions);
   applyFinalWeight(ammunition);
   applyFinalWeight(containers);
@@ -326,6 +379,7 @@ export function prepareContainerData(actor, containers) {
       containerMap[cid] = [];
     }
 
+    attachFoldDescription(item);
     containerMap[cid].push(item);
 
   }

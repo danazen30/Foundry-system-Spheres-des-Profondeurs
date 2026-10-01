@@ -7,6 +7,7 @@ import {
   resolveActorItem
 } from "../system/actor-utils.js";
 import { buildDamageModsControlsHtml } from "./damage-mods-ui.js";
+import { SdpSpell } from "../combat/spell.js";
 
 export function registerEditHandlers(html, message) {
 
@@ -97,14 +98,15 @@ if (crit.failure){
 
   <h3>${label}</h3>
 
-  <button class="edit-roll">
-  ${game.i18n.localize("SDP.Edit")}
-</button>
-
+  <div class="sdp-card-row">
   <p>
   ${game.i18n.localize("SDP.Target")}:
   ${newTarget} (${oldTarget})
 </p>
+  <button type="button" class="edit-roll sdp-chat-edit" title="${game.i18n.localize("SDP.Edit")}">
+    <i class="fas fa-pen"></i>
+  </button>
+  </div>
   <p>
   ${game.i18n.localize("SDP.Roll")}:
   ${newRoll} (${oldRoll})
@@ -297,19 +299,69 @@ if (slEl){
     `<strong>${game.i18n.localize("SDP.SuccessLevel")}:</strong> ${game.sdp.Roll.formatSL(SL, success)} (${game.sdp.Roll.getSLLabel(SL, success)})`;
 }
 
-let overcastEl = card.querySelector(".spell-overcast");
+if (!SdpSpell.isOvercastValidated(card)) {
 
-if (!overcastEl && overcast > 0){
-  overcastEl = document.createElement("p");
-  overcastEl.classList.add("spell-overcast");
-  slEl.after(overcastEl);
+card.dataset.overcast = overcast;
+card.dataset.overcastUsed = 0;
+
+card.querySelectorAll(".overcast-click").forEach(el => {
+
+  const resetTo =
+    el.dataset.start !== undefined && el.dataset.start !== ""
+      ? Number(el.dataset.start)
+      : Number(el.dataset.base || 0);
+
+  el.dataset.value = resetTo;
+
+  const valueEl = el.querySelector(".value");
+  if (valueEl) valueEl.textContent = String(resetTo);
+
+});
+
+let overcastEl = card.querySelector(".spell-overcast");
+const controlsEl = card.querySelector(".spell-overcast-controls");
+
+if (overcast > 0 && !controlsEl) {
+
+  const holder = document.createElement("div");
+  holder.innerHTML = SdpSpell.buildOvercastSectionHtml(spell, actor, overcast);
+
+  const hr = card.querySelector("hr");
+  if (hr) hr.after(...holder.childNodes);
+  else card.append(...holder.childNodes);
+
+} else if (overcastEl) {
+
+  overcastEl.innerHTML =
+    `<strong>${game.i18n.localize("SDP.Overcast")}:</strong> ${overcast}`;
+
 }
 
-if (overcastEl){
-  overcastEl.innerHTML =
-    overcast > 0
-      ? `<strong>${game.i18n.localize("SDP.Overcast")}:</strong> ${overcast}`
-      : "";
+SdpSpell.refreshOvercastCost(card);
+
+let validateBtn = card.querySelector(".validate-overcast");
+
+if (overcast > 0) {
+
+  if (!validateBtn) {
+    validateBtn = document.createElement("button");
+    validateBtn.type = "button";
+    validateBtn.className = "validate-overcast";
+    validateBtn.textContent = game.i18n.localize("SDP.ValidateOvercast");
+
+    const lines = card.querySelectorAll(
+      ".spell-special, .spell-range, .spell-duration, .spell-radius, .spell-target-count"
+    );
+    const last = lines[lines.length - 1];
+
+    if (last) last.after(validateBtn);
+    else card.querySelector(".spell-overcast-controls")?.after(validateBtn);
+  }
+
+} else if (validateBtn) {
+  validateBtn.remove();
+}
+
 }
 
 const resultEl = card.querySelector(".spell-result");
@@ -573,10 +625,7 @@ if (isImpaling && isRound && newRoll <= target) {
   )}
 </h3>
 
-  <button class="edit-attack">
-  ${game.i18n.localize("SDP.Edit")}
-</button>
-
+  <div class="sdp-card-row">
   ${traitsData.length ? `
   <div class="weapon-traits">
     <strong>${game.i18n.localize("SDP.Traits")}:</strong>
@@ -588,12 +637,23 @@ if (isImpaling && isRound && newRoll <= target) {
       </span>
     `).join("")}
   </div>
-` : ""}
-
+` : `
   <p>
   ${game.i18n.localize("SDP.Target")}:
   ${finalTarget}
 </p>
+`}
+  <button type="button" class="edit-attack sdp-chat-edit" title="${game.i18n.localize("SDP.Edit")}">
+    <i class="fas fa-pen"></i>
+  </button>
+  </div>
+
+  ${traitsData.length ? `
+  <p>
+  ${game.i18n.localize("SDP.Target")}:
+  ${finalTarget}
+  </p>
+  ` : ""}
 
 <p>
   ${game.i18n.localize("SDP.Roll")}:
@@ -754,10 +814,7 @@ ${game.i18n.format(
 )}
 </h3>
 
-  <button class="edit-attack">
-  ${game.i18n.localize("SDP.Edit")}
-</button>
-
+  <div class="sdp-card-row">
   ${traitsData.length ? `
   <div class="weapon-traits">
     <strong>${game.i18n.localize("SDP.Traits")}:</strong>
@@ -768,12 +825,23 @@ ${game.i18n.format(
       </span>
     `).join("")}
   </div>
-` : ""}
-
+` : `
   <p>
   ${game.i18n.localize("SDP.Roll")}:
   ${newRoll} (${oldRoll})
 </p>
+`}
+  <button type="button" class="edit-attack sdp-chat-edit" title="${game.i18n.localize("SDP.Edit")}">
+    <i class="fas fa-pen"></i>
+  </button>
+  </div>
+
+  ${traitsData.length ? `
+  <p>
+  ${game.i18n.localize("SDP.Roll")}:
+  ${newRoll} (${oldRoll})
+  </p>
+  ` : ""}
 
 <p>
   ${game.i18n.localize("SDP.SuccessLevel")}:

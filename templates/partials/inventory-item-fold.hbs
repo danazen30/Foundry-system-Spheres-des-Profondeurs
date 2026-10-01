@@ -1,0 +1,63 @@
+<tr class="inventory-item-details" data-details="{{id}}" style="display:none;">
+  <td colspan="100%">
+    <div class="inventory-item-details-content">
+
+      {{#unless compact}}
+
+        {{#if (eq type "weapon")}}
+        <div class="inventory-fold-line">
+          <strong>{{localize "SDP.Damage"}}:</strong>
+          {{system.damage}}
+          {{#if system.damageDice}}
+            + {{system.damageDice}}
+          {{/if}}
+        </div>
+        {{/if}}
+
+        {{#if (eq type "armor")}}
+        <div class="inventory-fold-line">
+          <strong>{{localize "SDP.Head"}}:</strong> {{system.AP.head}}
+          <strong>{{localize "SDP.Body"}}:</strong> {{system.AP.body}}
+          <strong>{{localize "SDP.LeftArmShort"}}:</strong> {{system.AP.leftArm}}
+          <strong>{{localize "SDP.RightArmShort"}}:</strong> {{system.AP.rightArm}}
+          <strong>{{localize "SDP.LeftLegShort"}}:</strong> {{system.AP.leftLeg}}
+          <strong>{{localize "SDP.RightLegShort"}}:</strong> {{system.AP.rightLeg}}
+        </div>
+        {{/if}}
+
+        {{#if (eq type "ammunition")}}
+        <div class="inventory-fold-line">
+          <strong>{{localize "SDP.Damage"}}:</strong>
+          {{system.damage.base.value}}
+          {{#if system.damage.dice.value}}
+            + {{system.damage.dice.value}}
+          {{/if}}
+          <strong>{{localize "SDP.RangeModifier"}}:</strong>
+          {{system.rangeModifier}}
+        </div>
+        {{/if}}
+
+      {{/unless}}
+
+      {{#if (eq type "clothing")}}
+      <div class="inventory-fold-line">
+        {{#if system.slots.head}}<span>{{localize "SDP.Head"}}</span>{{/if}}
+        {{#if system.slots.chest}}<span>{{localize "SDP.Body"}}</span>{{/if}}
+        {{#if system.slots.armLeft}}<span>{{localize "SDP.LeftArmShort"}}</span>{{/if}}
+        {{#if system.slots.armRight}}<span>{{localize "SDP.RightArmShort"}}</span>{{/if}}
+        {{#if system.slots.legLeft}}<span>{{localize "SDP.LeftLegShort"}}</span>{{/if}}
+        {{#if system.slots.legRight}}<span>{{localize "SDP.RightLegShort"}}</span>{{/if}}
+      </div>
+      {{/if}}
+
+      <div class="inventory-fold-desc">
+        {{#if foldDescription}}
+          {{{foldDescription}}}
+        {{else}}
+          {{localize "SDP.NoDescription"}}
+        {{/if}}
+      </div>
+
+    </div>
+  </td>
+</tr>

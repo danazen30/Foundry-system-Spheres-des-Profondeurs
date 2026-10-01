@@ -18,7 +18,9 @@ registerConditionStates(sheet, root);
 
 registerQuantityControls(sheet, root);
 
-registerArmorRows(root);
+registerArmorRows(sheet, root);
+
+registerInventoryItemFolds(sheet, root);
 
 registerTalentRows(sheet, root);
 
@@ -29,6 +31,43 @@ setupRichTextEditors(root);
 setupTextareaResize(root);
 
 registerConditionDetails(root);
+
+}
+
+function registerInventoryItemFolds(sheet, root) {
+
+  root.querySelectorAll(".inventory-item-name").forEach(el => {
+
+    el.addEventListener("click", (event) => {
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      const item = sheet.document.items.get(el.dataset.itemId);
+
+      if (item) item.sheet.render(true);
+
+    });
+
+    el.addEventListener("contextmenu", (event) => {
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      const details = root.querySelector(
+        `.inventory-item-details[data-details="${el.dataset.itemId}"]`
+      );
+
+      if (!details) return;
+
+      details.style.display =
+        details.style.display === "none"
+          ? "table-row"
+          : "none";
+
+    });
+
+  });
 
 }
 

@@ -569,9 +569,26 @@ export function registerTalentRows(sheet, root) {
 
 }
 
-export function registerArmorRows(root) {
+export function registerArmorRows(sheet, root) {
 
   root.querySelectorAll(".armor-toggle").forEach(el => {
+
+    const openSheet = (event) => {
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      const item = sheet.document.items.get(el.dataset.itemId);
+
+      if (item) item.sheet.render(true);
+
+    };
+
+    el.addEventListener("click", openSheet);
+
+    el.closest("tr")
+      ?.querySelector(".item-img")
+      ?.addEventListener("click", openSheet);
 
     el.addEventListener("contextmenu", (event) => {
 

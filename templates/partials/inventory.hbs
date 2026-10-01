@@ -162,9 +162,9 @@
     </div>
 
     <!-- 🔽 DESCRIPTION -->
-    {{#if item.system.description}}
+    {{#if item.foldDescription}}
       <div class="weapon-desc">
-        {{item.system.description}}
+        {{{item.foldDescription}}}
       </div>
     {{/if}}
 
@@ -364,9 +364,9 @@
     </div>
 
     <!-- DESCRIPTION -->
-    {{#if item.system.description}}
+    {{#if item.foldDescription}}
       <div class="weapon-desc">
-        {{item.system.description}}
+        {{{item.foldDescription}}}
       </div>
     {{/if}}
 
@@ -405,11 +405,11 @@
 
 <tr class="item-row" data-item-id="{{item.id}}">
 
-  <td>
+  <td class="inventory-item-name" data-item-id="{{item.id}}">
   <img src="{{item.img}}" class="item-img">
 </td>
 
-<td>{{item.displayName}}</td>
+<td class="inventory-item-name" data-item-id="{{item.id}}">{{item.displayName}}</td>
 
 <td>{{localizeWeaponGroup item.system.weaponGroup}}</td>
 
@@ -435,6 +435,18 @@
   <button data-action="deleteItem" data-item-id="{{item.id}}">🗑️</button>
 </td>
 
+</tr>
+
+<tr class="inventory-item-details" data-details="{{item.id}}" style="display:none;">
+  <td colspan="100%">
+    <div class="inventory-fold-desc">
+      {{#if item.foldDescription}}
+        {{{item.foldDescription}}}
+      {{else}}
+        {{localize "SDP.NoDescription"}}
+      {{/if}}
+    </div>
+  </td>
 </tr>
 
 {{/each}}
@@ -541,9 +553,9 @@
 </div>
 
       <!-- DESCRIPTION -->
-      {{#if item.system.description}}
+      {{#if item.foldDescription}}
         <div class="armor-desc">
-          {{item.system.description}}
+          {{{item.foldDescription}}}
         </div>
       {{/if}}
 
@@ -579,11 +591,11 @@
 {{#each clothing}}
 <tr class="item-row" data-item-id="{{this.id}}">
 
-  <td>
+  <td class="inventory-item-name" data-item-id="{{this.id}}">
     <img src="{{this.img}}" class="item-img">
   </td>
 
-  <td>{{this.displayName}}</td>
+  <td class="inventory-item-name" data-item-id="{{this.id}}">{{this.displayName}}</td>
 
   <td>
     <input type="checkbox"
@@ -606,6 +618,9 @@
   </td>
 
 </tr>
+
+{{> "systems/sdp/templates/partials/inventory-item-fold.hbs"}}
+
 {{/each}}
 
 </tbody>
@@ -627,11 +642,11 @@
   {{#each possessions as |item|}}
 <tr class="item-row" data-item-id="{{item.id}}">
 
-  <td>
+  <td class="inventory-item-name" data-item-id="{{item.id}}">
   <img src="{{item.img}}" class="item-img">
 </td>
 
-  <td class="item-name">
+  <td class="item-name inventory-item-name" data-item-id="{{item.id}}">
     {{item.displayName}}
   </td>
 
@@ -649,6 +664,9 @@
   </td>
 
 </tr>
+
+{{> "systems/sdp/templates/partials/inventory-item-fold.hbs"}}
+
   {{/each}}
 </table>
 {{/if}}
@@ -676,14 +694,14 @@
 
 <tr class="container-header-row" data-container-id="{{container.id}}">
 
-  <td>
+  <td class="inventory-item-name" data-item-id="{{container.id}}">
     <img src="{{container.img}}" class="item-img">
   </td>
 
 <td>
   <div class="container-cell">
     <button class="container-toggle" data-action="toggleContainer">▶</button>
-    <strong>{{container.displayName}}</strong>
+    <strong class="inventory-item-name" data-item-id="{{container.id}}">{{container.displayName}}</strong>
   </div>
 </td>
 
@@ -709,6 +727,8 @@
 
 </tr>
 
+{{> "systems/sdp/templates/partials/inventory-item-fold.hbs" id=container.id type=container.type system=container.system compact=true foldDescription=container.foldDescription}}
+
 <tr class="container-content-row" data-container="{{container.id}}" style="display:none;">
 <td colspan="100%">
   <div class="container-inner-wrapper">
@@ -731,8 +751,8 @@
 
 <tr class="item-row" draggable="true" data-item-id="{{item.id}}">
 
-  <td><img src="{{item.img}}" class="item-img"></td>
-  <td>{{item.displayName}}</td>
+  <td class="inventory-item-name" data-item-id="{{item.id}}"><img src="{{item.img}}" class="item-img"></td>
+  <td class="inventory-item-name" data-item-id="{{item.id}}">{{item.displayName}}</td>
 <td class="qty-clickable" data-item-id="{{item.id}}">
   {{item.system.quantity.value}}
 </td>
@@ -746,6 +766,8 @@
   </td>
 
 </tr>
+
+{{> "systems/sdp/templates/partials/inventory-item-fold.hbs"}}
 
 {{/each}}
 

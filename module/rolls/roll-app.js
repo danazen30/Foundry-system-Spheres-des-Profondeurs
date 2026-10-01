@@ -956,14 +956,15 @@ await presentRollToMessage(roll, {
 
     <h3>${this.label}</h3>
 
-    <button class="edit-roll">
-  ${game.i18n.localize("SDP.Edit")}
-</button>
-
+    <div class="sdp-card-row">
     <p>
   <strong>${game.i18n.localize("SDP.Target")}:</strong>
   ${target}
 </p>
+    <button type="button" class="edit-roll sdp-chat-edit" title="${game.i18n.localize("SDP.Edit")}">
+      <i class="fas fa-pen"></i>
+    </button>
+    </div>
     <p>
   <strong>${game.i18n.localize("SDP.Roll")}:</strong>
   ${result}
