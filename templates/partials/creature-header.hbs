@@ -52,7 +52,7 @@
         <div class="bar">
           <div
             class="bar-fill health-fill"
-            style="width: {{multiply (divide system.health.value system.health.max) 100}}%;">
+            style="width: {{barPercent system.health.value system.health.max}}%;">
           </div>
         </div>
 
@@ -85,7 +85,7 @@
         <div class="bar">
           <div
             class="bar-fill mana-fill"
-            style="width: {{multiply (divide system.resources.mana.value system.resources.mana.max) 100}}%;">
+            style="width: {{barPercent system.resources.mana.value system.resources.mana.max}}%;">
           </div>
         </div>
 

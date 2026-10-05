@@ -312,6 +312,15 @@ Handlebars.registerHelper("divide", function(a, b) {
   return a / b;
 });
 
+Handlebars.registerHelper("barPercent", function(value, max) {
+  const current = Number(value);
+  const total = Number(max);
+  if (!Number.isFinite(current) || !Number.isFinite(total) || total <= 0 || current <= 0) {
+    return 0;
+  }
+  return Math.min(100, (current / total) * 100);
+});
+
 Handlebars.registerHelper("includes", function(value, key) {
 
   if (!value) return false;
@@ -890,6 +899,11 @@ Hooks.on("updateCombat", async (combat, changed) => {
 
   // ignore first activation of combat
   if(combat.round === 1 && combat.turn === 0 && changed.turn === 0) return;
+
+  // updateCombat runs on every client. Turn effects write actor and item
+  // data (injury timers, conditions). A player cannot update an item on
+  // another token's ActorDelta, and two GMs would apply the same effect twice.
+  if (game.users.activeGM?.id !== game.user.id) return;
 
   const newTurn = combat.turn;
 

@@ -60,6 +60,8 @@
 
 .health-bar-fill {
   height: 100%;
+  width: 0;
+  max-width: 100%;
   background: #c0392b;
   transition: width 0.3s;
 }
@@ -116,6 +118,8 @@
 
 .xp-bar-fill {
   height: 100%;
+  width: 0;
+  max-width: 100%;
   background: linear-gradient(to right, #4caf50, #8bc34a);
   transition: width 0.3s ease;
 }

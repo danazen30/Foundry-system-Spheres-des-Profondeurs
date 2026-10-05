@@ -421,13 +421,22 @@ if (!card) {
       });
 
       if (newValue === 0) {
-        ChatMessage.create({
-         content: `<p><strong>${game.i18n.format(
-  "SDP.WeaponBreaks",
-  {
-    weapon: weapon.name
-  }
-)}</strong></p>`
+        const breakDefender = targetId
+          ? canvas.tokens.get(targetId)?.actor
+            ?? game.actors.get(targetId)
+          : null;
+
+        await createCombatMessage({
+          speaker: ChatMessage.getSpeaker({ actor }),
+          content: `<p><strong>${game.i18n.format(
+            "SDP.WeaponBreaks",
+            { weapon: weapon.name }
+          )}</strong></p>`,
+          attackerActor: actor,
+          defenderActor: breakDefender,
+          rollMode: getCurrentRollMode(),
+          stage: "damage-roll",
+          audience: "attacker"
         });
       }
     }
@@ -628,12 +637,25 @@ ${buildDamageRollSummaryHtml({
     
     else {
 
+  const brutalTarget = targetId
+    ? canvas.tokens.get(targetId)?.actor ?? game.actors.get(targetId)
+    : null;
+
+  const brutalMessage = combatRollMessageData({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    content: "",
+    attackerActor: actor,
+    defenderActor: brutalTarget,
+    rollMode: getCurrentRollMode(),
+    stage: "damage-roll",
+    audience: "attacker"
+  });
+  delete brutalMessage.content;
+
   if (roll) {
 
-  const brutalTarget = targetId ? canvas.tokens.get(targetId)?.actor : null;
-
   await presentRollToMessage(roll, {
-    speaker: ChatMessage.getSpeaker({actor}),
+    ...brutalMessage,
     flavor: `
       <h3>
   ${game.i18n.localize(
@@ -693,11 +715,13 @@ ${buildDamageRollSummaryHtml({
 
 } else {
 
-  // cas sans sign → pas de roll du tout
-  const brutalTargetNoSign = targetId ? canvas.tokens.get(targetId)?.actor : null;
-
-  ChatMessage.create({
-    speaker: ChatMessage.getSpeaker({actor}),
+  await createCombatMessage({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    attackerActor: actor,
+    defenderActor: brutalTarget,
+    rollMode: getCurrentRollMode(),
+    stage: "damage-roll",
+    audience: "attacker",
     content: `
       <h3>
   ${game.i18n.localize(
@@ -720,7 +744,7 @@ ${buildDamageRollSummaryHtml({
 ${buildDamageRollSummaryHtml({
   actor,
   weapon,
-  target: brutalTargetNoSign,
+  target: brutalTarget,
   location,
   locationProfile: card.dataset.locationProfile || "humanoid",
   damage,

@@ -264,9 +264,12 @@ export function getXPBar(actor, xpData) {
 
     xpProgress = Math.min(
       100,
-      Math.floor(
-        ((xpTotal - currentLevelXP) /
-        (nextXP - currentLevelXP)) * 100
+      Math.max(
+        0,
+        Math.floor(
+          ((xpTotal - currentLevelXP) /
+          (nextXP - currentLevelXP)) * 100
+        )
       )
     );
 

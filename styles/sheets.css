@@ -593,10 +593,13 @@ grid-area: sidebar;
 
 .bar {
   height: 6px;        /* 🔥 AVANT 8 */
+  overflow: hidden;
 }
 
 .bar-fill {
   height: 100%; /* 🔥 parfois oublié */
+  width: 0;
+  max-width: 100%;
 }
 
 /* couleurs */
