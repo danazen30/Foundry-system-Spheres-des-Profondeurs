@@ -1,4 +1,5 @@
 import { SdpActor } from "./actors/actor.js";
+import { getEffectChanges } from "./system/effect-utils.js";
 import { SdpActorSheet } from "./actors/actor-sheet.js";
 import { SdpNpcSheet } from "./actors/npc-sheet.js";
 import { SdpCreatureSheet } from "./actors/creature-sheet.js";
@@ -154,6 +155,11 @@ const SDP_ROLLTABLE_LOCALIZATION = {
     registerSceneBootstrapSettings();
     registerPackMigrationSettings();
     registerSdpCompendiumIndexFields();
+
+    if (foundry.data?.ActiveEffectTypeDataModel) {
+      CONFIG.ActiveEffect.dataModels ??= {};
+      CONFIG.ActiveEffect.dataModels.base ??= foundry.data.ActiveEffectTypeDataModel;
+    }
 
     Handlebars.registerHelper(
       "localize",
@@ -939,7 +945,7 @@ Hooks.on("createItem", async (item, _options, userId) => {
 
   for (const effect of item.effects) {
 
-    for (const change of effect.changes) {
+    for (const change of getEffectChanges(effect)) {
 
       if (!change.key?.startsWith("system.custom.conditionEffects")) continue;
 
@@ -969,7 +975,7 @@ Hooks.on("deleteItem", async (item, _options, userId) => {
 
   for (const effect of item.effects) {
 
-    for (const change of effect.changes) {
+    for (const change of getEffectChanges(effect)) {
 
       if (!change.key?.startsWith("system.custom.conditionEffects")) continue;
 

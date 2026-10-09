@@ -433,16 +433,42 @@ html.find(".place-aoe").click(async ev => {
   const parent = btn.closest(".spell-radius, .ability-radius");
   const radius = Number(parent?.dataset.value || btn.dataset.radius || 0);
 
-  if (!canvas.scene) return;
+  if (!canvas.scene || !(radius > 0)) return;
+
+  const areaName = card?.querySelector("h3")?.textContent?.trim() || "Zone";
+
+  if (canvas.regions?.placeRegion) {
+    const gridDistance = canvas.scene.grid?.distance || canvas.dimensions?.distance || 1;
+    const gridSize = canvas.grid?.size || canvas.dimensions?.size || 100;
+    const distancePixels = canvas.dimensions?.distancePixels || (gridSize / gridDistance);
+    const levels = canvas.level?.id ? [canvas.level.id] : undefined;
+
+    await canvas.regions.placeRegion({
+      name: areaName,
+      color: game.user.color,
+      highlightMode: "shapes",
+      displayMeasurements: true,
+      shapes: [{
+        type: "circle",
+        x: 0,
+        y: 0,
+        radius: radius * distancePixels
+      }],
+      ...(levels ? { levels } : {}),
+      visibility: CONST.REGION_VISIBILITY?.ALWAYS,
+      ownership: {
+        [game.user.id]: CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER
+      }
+    });
+    return;
+  }
 
   canvas.templates.activate();
 
-  // 🔥 on attend UN clic sur la scène
   const layer = canvas.templates;
 
   const handler = async (event) => {
 
-    // position du clic
     const pos = event.data.getLocalPosition(canvas.stage);
 
     const templateData = {
@@ -456,7 +482,6 @@ html.find(".place-aoe").click(async ev => {
 
     await canvas.scene.createEmbeddedDocuments("MeasuredTemplate", [templateData]);
 
-    // 🔥 IMPORTANT → on enlève le listener après 1 clic
     layer.off("mousedown", handler);
   };
 

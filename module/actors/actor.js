@@ -17,6 +17,10 @@ import {
   getActiveTraitAttributeBonus,
   getTraitIndexTotal
 } from "../system/creature-trait-utils.js";
+import {
+  getEffectChanges,
+  setEffectChanges
+} from "../system/effect-utils.js";
 
 export class SdpActor extends Actor {
 
@@ -394,26 +398,26 @@ if (lvl.inspirationDice) {
   }
 
   /** @inheritdoc */
-  applyActiveEffects() {
+  applyActiveEffects(phase = "initial") {
     const pendingRestore = [];
 
     for (const effect of this.allApplicableEffects()) {
-      const original = effect.changes ?? [];
+      const original = getEffectChanges(effect);
       const filtered = original.filter(
         change => !SdpActor.isRuntimeAttributeEffectKey(change.key)
       );
 
       if (filtered.length !== original.length) {
         pendingRestore.push([effect, original]);
-        effect.changes = filtered;
+        setEffectChanges(effect, filtered);
       }
     }
 
     try {
-      super.applyActiveEffects();
+      super.applyActiveEffects(phase);
     } finally {
       for (const [effect, original] of pendingRestore) {
-        effect.changes = original;
+        setEffectChanges(effect, original);
       }
     }
   }
@@ -456,7 +460,7 @@ if (lvl.inspirationDice) {
       const source = effect.parent;
       if (source?.documentName === "Item" && !this._isItemEffectSourceActive(source)) continue;
 
-      for (const change of effect.changes ?? []) {
+      for (const change of getEffectChanges(effect)) {
 
         if (!change.key) continue;
         if (change.key.startsWith("system.conditions")) continue;
@@ -578,7 +582,7 @@ _getActiveEffectModifier(changeKey) {
 
       if (effect.disabled) continue;
 
-      for (const change of effect.changes ?? []) {
+      for (const change of getEffectChanges(effect)) {
 
         if (change.key !== changeKey) {
           continue;
@@ -606,7 +610,7 @@ _getWoundThresholdModifier() {
 
       if (effect.disabled) continue;
 
-      for (const change of effect.changes ?? []) {
+      for (const change of getEffectChanges(effect)) {
 
         if (change.key !== "system.custom.woundThresholdModifier") {
           continue;
@@ -769,7 +773,7 @@ for (const item of this.items.contents) {
 
     if (effect.disabled) continue;
 
-    for (const change of effect.changes) {
+    for (const change of getEffectChanges(effect)) {
 
       if (change.key === "system.custom.offhandReduction") {
 
@@ -1152,7 +1156,7 @@ if (
 
     if (effect.disabled) continue;
 
-    for (const change of effect.changes) {
+    for (const change of getEffectChanges(effect)) {
 
       if (!change.key) continue;
 

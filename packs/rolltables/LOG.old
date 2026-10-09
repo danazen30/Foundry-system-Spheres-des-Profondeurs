@@ -1,3 +1,7 @@
-2026/10/05-04:07:46.743 3eec Recovering log #583
-2026/10/05-04:07:46.749 3eec Delete type=0 #583
-2026/10/05-04:07:46.750 3eec Delete type=3 #582
+2026/10/05-08:18:51.154 b308 Recovering log #590
+2026/10/05-08:18:51.159 b308 Delete type=0 #590
+2026/10/05-08:18:51.160 b308 Delete type=3 #588
+2026/10/05-08:19:34.506 a304 Level-0 table #595: started
+2026/10/05-08:19:34.506 a304 Level-0 table #595: 0 bytes OK
+2026/10/05-08:19:34.507 a304 Delete type=0 #593
+2026/10/05-08:19:34.513 a304 Manual compaction at level-0 from '!tables!6AY1b31Cy8uYYBTj' @ 72057594037927935 : 1 .. '!tables.results!uiomVIaoy9Drhemu.wZ2MdfVqpuSIOV9P' @ 0 : 0; will stop at (end)

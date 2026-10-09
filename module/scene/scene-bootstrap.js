@@ -158,13 +158,24 @@ async function resolveMapUrl(filename) {
 
 }
 
+function primaryLevel(scene) {
+  return scene?.levels?.contents?.[0] ?? null;
+}
+
+function backgroundSrc(scene) {
+  const level = primaryLevel(scene);
+  if (level) return level.background?.src ?? "";
+  if (scene?.levels) return "";
+  return scene.background?.src ?? "";
+}
+
 /**
  * @param {Scene|SceneDocument} scene
  * @param {string} mapUrl
  */
 function needsBackgroundPatch(scene, mapUrl) {
 
-  const bg = scene.background?.src ?? "";
+  const bg = backgroundSrc(scene);
 
   if (bg === mapUrl) return false;
 
@@ -187,7 +198,17 @@ async function ensureSceneMap(scene) {
   const mapUrl = await resolveMapUrl(filename);
 
   if (needsBackgroundPatch(scene, mapUrl)) {
-    await scene.update({ "background.src": mapUrl });
+    const level = primaryLevel(scene);
+    if (level) {
+      await level.update({ "background.src": mapUrl });
+    } else if (scene.levels) {
+      await scene.createEmbeddedDocuments("Level", [{
+        name: scene.name,
+        background: { src: mapUrl }
+      }]);
+    } else {
+      await scene.update({ "background.src": mapUrl });
+    }
   }
 
 }

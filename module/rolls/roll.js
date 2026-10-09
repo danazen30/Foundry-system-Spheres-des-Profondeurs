@@ -1,4 +1,5 @@
 import { SdpRollApp } from "./roll-app.js";
+import { getEffectChanges } from "../system/effect-utils.js";
 
 export class SdpRoll {
 
@@ -84,7 +85,7 @@ static _getTalentEffectBonus(actor, selectedTalents, effectKey) {
 
       if (effect.disabled) continue;
 
-      for (const change of effect.changes) {
+      for (const change of getEffectChanges(effect)) {
 
         if (change.key !== effectKey) continue;
 

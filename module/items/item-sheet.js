@@ -7,6 +7,7 @@ import {
 import { restoreItemScroll, registerEditorToggles, setupRichTextEditors, setupTextareaResize} from "../actors/actor-sheet-ui.js";
 import { isPlayerEditableItemField } from "./item-permissions.js";
 import { rewriteJournalDocumentLinks } from "../journal/career-journal.js";
+import { newActiveEffectData } from "../system/effect-utils.js";
 
 const { ItemSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -541,11 +542,7 @@ async _createEffect() {
 
   await this.document.createEmbeddedDocuments(
     "ActiveEffect",
-    [{
-      name: game.i18n.localize("SDP.NewEffect"),
-      icon: "icons/svg/aura.svg",
-      changes: []
-    }]
+    [newActiveEffectData(game.i18n.localize("SDP.NewEffect"))]
   );
 
 }

@@ -6,6 +6,7 @@ import {
   parseWeaponDamageFormula
 } from "../system/formula-utils.js";
 import { getIncomingDamageTypeMultiplier } from "../system/creature-trait-utils.js";
+import { getEffectChanges } from "../system/effect-utils.js";
 
 export class SdpDamage {
 
@@ -25,7 +26,7 @@ static getTalentDamageReduction(actor) {
 
       if (effect.disabled) continue;
 
-      for (const change of effect.changes) {
+      for (const change of getEffectChanges(effect)) {
 
         if (change.key !== "damageReduction") continue;
 
