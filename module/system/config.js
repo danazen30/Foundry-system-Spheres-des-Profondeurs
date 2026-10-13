@@ -278,7 +278,7 @@ SDP.conditionConfig = {
     label: "SDP.ConditionStunned",
     type: "stack",
     modifier: -10,
-    attackBonusAgainst: 1,
+    modifierOnce: true,
     trigger: "startTurn",
     test: "resistance",
     onRecover: "exhausted",
@@ -332,7 +332,7 @@ SDP.conditionConfig = {
     label: "SDP.ConditionDeafened",
     type: "stack",
     modifier: -10,
-    attackBonusAgainst : 1,
+    modifierOnce: true,
     trigger: "endTurn",
     removePerTurn: 1,
     description: "SDP.ConditionDeafenedDescription"

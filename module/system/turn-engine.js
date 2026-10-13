@@ -376,11 +376,29 @@ if(config.damagePerStack){
 
     const current = actor.system.health.value;
 
-    const newHealth = current - damage;
+    let applied = damage;
+    let newHealth = current - damage;
+    const updates = {};
 
-    await actor.update({
-      "system.health.value": newHealth
-    });
+    if (key === "bleeding") {
+      if (current <= -1) {
+        applied = 0;
+        newHealth = current;
+      } else {
+        newHealth = Math.max(-1, current - damage);
+        applied = current - newHealth;
+      }
+    }
+
+    if (applied > 0 || newHealth !== current) {
+      updates["system.health.value"] = newHealth;
+    }
+
+    if (Object.keys(updates).length) {
+      await actor.update(updates);
+    }
+
+    if (applied <= 0) continue;
 
     await ChatMessage.create({
 
@@ -391,7 +409,7 @@ if(config.damagePerStack){
 
 <p>${game.i18n.format("SDP.ChatActorLosesHealth", {
   actor: actor.name,
-  damage: damage
+  damage: applied
 })}</p>
 
 <p>${game.i18n.format("SDP.ChatHealthChange", {

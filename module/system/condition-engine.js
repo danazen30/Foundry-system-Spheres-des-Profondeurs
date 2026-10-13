@@ -3,8 +3,7 @@ import { SDP } from "./config.js";
 /** États cumulables : +1 Épuisé uniquement quand la pile tombe à 0. */
 const RECOVERY_EXHAUST_KEYS = [
   "stunned",
-  "poisoned",
-  "bleeding"
+  "poisoned"
 ];
 
 export class SdpConditionEngine {
@@ -49,7 +48,7 @@ export class SdpConditionEngine {
   }
 
   /**
-   * +1 Épuisé si une pile stunned/poisoned/bleeding vient de tomber à 0.
+   * +1 Épuisé si une pile stunned/poisoned vient de tomber à 0.
    */
   static async _applyRecoveryExhaustion(
     actor,
@@ -121,7 +120,7 @@ static async add(actor, key, value = 1){
       thresholdBefore: actor.system.derived?.woundThreshold?.value
     });
 
-const threshold = actor.system.derived?.woundThreshold?.value || 0;
+const threshold = this.getToughnessBonus(actor);
 
 console.log("EXHAUST CHECK FINAL", {
   newValue,

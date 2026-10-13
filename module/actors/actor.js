@@ -1467,8 +1467,8 @@ let conditionPenalty = 0;
 // stack conditions
 if (Number(cond.poisoned || 0) > 0) conditionPenalty -= 1;
 conditionPenalty -= Number(cond.exhausted || 0);
-conditionPenalty -= Number(cond.stunned || 0);
-conditionPenalty -= Number(cond.deafened || 0);
+if (Number(cond.stunned || 0) > 0) conditionPenalty -= 1;
+if (Number(cond.deafened || 0) > 0) conditionPenalty -= 1;
 if (Number(cond.numbed || 0) > 0) conditionPenalty -= 1;
 if (Number(cond.dazzled || 0) > 0) conditionPenalty -= 1;
 

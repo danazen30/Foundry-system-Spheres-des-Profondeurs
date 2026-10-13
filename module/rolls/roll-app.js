@@ -157,7 +157,8 @@ modifiers.push({
   for (const c of conditionDetails) {
     modifiers.push({
       label: c.name,
-      value: c.value
+      value: c.value,
+      condition: true
     });
   }
 
@@ -775,7 +776,8 @@ let dynamicModifiers =
   withRangedProneModifier(this._modifiers || [], this.weapon)
     .filter(m =>
       m.label !== "Custom" &&
-      m.label !== "Difficulty"
+      m.label !== "Difficulty" &&
+      !m.condition
     );
 
 if (

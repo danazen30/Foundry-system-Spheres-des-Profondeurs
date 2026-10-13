@@ -1096,6 +1096,28 @@ Hooks.on("updateActor", async (actor, changes) => {
     }
   }
 
+  const healthChanged = changes.system?.health?.value !== undefined;
+
+  if (healthChanged && actor.type !== "vehicle") {
+    const value = Number(actor.system.health?.value);
+    const bleeding = Number(actor.system.conditions?.bleeding || 0);
+
+    if (value < 0 && actor.system.conditions?.dying !== true) {
+      await actor.update({
+        "system.conditions.dying": true
+      });
+    } else if (
+      value === 0
+      && bleeding > 0
+      && actor.system.conditions?.unconscious !== true
+      && actor.system.conditions?.dying !== true
+    ) {
+      await actor.update({
+        "system.conditions.unconscious": true
+      });
+    }
+  }
+
   const cond = changes.system?.conditions;
   if (!cond) return;
 
