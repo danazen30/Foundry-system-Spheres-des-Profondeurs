@@ -98,7 +98,8 @@ import {
 import {
   registerPackMigrationSettings,
   removeTradeAlchemistSkill,
-  renameIntendCareer
+  renameIntendCareer,
+  removeLuckyAndStubbornCareerTalents
 } from "./system/pack-migrations.js";
 import { SdpMount } from "./system/mount-utils.js";
 
@@ -866,6 +867,7 @@ await indexSdpItemPacks();
 
 await removeTradeAlchemistSkill();
 await renameIntendCareer();
+await removeLuckyAndStubbornCareerTalents();
 
 localizeAllSdpCompendiumIndices(
   SDP_ROLLTABLE_LOCALIZATION

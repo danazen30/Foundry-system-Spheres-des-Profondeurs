@@ -33,6 +33,10 @@ export function registerInteractionListeners(sheet, root) {
 
   registerRest(sheet, root);
 
+  registerInspirationRestore(sheet, root);
+
+  registerMomentumEdit(sheet, root);
+
   registerContainers(sheet, root);
 
   registerDragAndDrop(sheet, root);
@@ -410,6 +414,56 @@ function registerRest(sheet, root) {
     el.addEventListener("click", async () => {
 
       await sheet._doRest("long");
+
+    });
+
+  });
+
+}
+
+function registerMomentumEdit(sheet, root) {
+
+  root.querySelectorAll('[data-action="editMomentum"]').forEach(input => {
+
+    input.disabled = false;
+
+    input.addEventListener("change", async event => {
+
+      if (sheet.isEditable) return;
+
+      const value = Number(event.currentTarget.value);
+      if (!Number.isFinite(value)) return;
+
+      const update = {
+        "system.resources.momentum.value": value
+      };
+
+      const socket = game.sdp?.socket;
+      if (!socket) return;
+
+      await socket.executeAsGM(
+        "observerUpdate",
+        sheet.actor.id,
+        update
+      );
+
+    });
+
+  });
+
+}
+
+function registerInspirationRestore(sheet, root) {
+
+  root.querySelectorAll('[data-action="restoreInspiration"]').forEach(el => {
+
+    el.addEventListener("click", async (event) => {
+
+      event.preventDefault();
+
+      await sheet.actor.update({
+        "system.resources.inspiration.spent": false
+      });
 
     });
 

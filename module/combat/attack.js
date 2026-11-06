@@ -556,7 +556,11 @@ if (finalTraits.some(t => t.key === "dangerous")) {
   result <= targetValue ||
   (targetValue <= 5 && result <= 5)
 
-const crit = SdpRoll.getCritical(result, targetValue);
+const crit = SdpRoll.getCritical(
+  result,
+  targetValue,
+  SdpRoll.withCritModifier({ critFailBase }, dialogMods.critMod)
+);
 
 // 🔥 HARD OVERRIDE
 if (result === 100) {
@@ -719,6 +723,7 @@ if (finalTraits.some(t => t.key === "reload")) {
      data-location="${hitLocation.location}"
      data-location-profile="${hitProfileKey}"
      data-talents='${JSON.stringify(dialogMods.talents || [])}'
+     data-crit-mod="${dialogMods.critMod || 0}"
      data-traits='${JSON.stringify(normalizedTraits)}'
      data-damagetype="${(typeof weapon.system.damageType === "object" ? weapon.system.damageType?.value : weapon.system.damageType) || "slashing"}">
 
@@ -903,9 +908,7 @@ if (finalTraits.some(t => t.key === "dangerous")) {
 const crit = SdpRoll.getCritical(
   result,
   baseAttack * 10,
-  {
-    critFailBase
-  }
+  SdpRoll.withCritModifier({ critFailBase }, dialogMods.critMod)
 );
 
 // =========================
@@ -1078,6 +1081,7 @@ const talentsHTML =
      data-baseattack="${baseAttack}"
     data-type="melee"
     data-meleemodifier="${meleeModifier}"
+    data-crit-mod="${dialogMods.critMod || 0}"
      data-actor="${actor.id}"
      data-token="${tokenId}"
      data-weapon="${weapon.id}"
@@ -1193,9 +1197,11 @@ let targetValue =
   (dialogMods.totalMod || 0) +
   (dialogMods.conditionMod || 0);
 
-  const crit = SdpRoll.getCritical(result, targetValue, {
-  critFailBase: critFailMin
-});
+  const crit = SdpRoll.getCritical(
+    result,
+    targetValue,
+    SdpRoll.withCritModifier({ critFailBase: critFailMin }, dialogMods.critMod)
+  );
 
 let success;
 

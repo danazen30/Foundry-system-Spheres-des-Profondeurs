@@ -152,10 +152,16 @@ html.find(".apply-rest").click(async ev => {
   const currentMana = actor.system.resources.mana.value;
   const maxMana = actor.system.resources.mana.max;
 
-  await actor.update({
+  const updates = {
     "system.health.value": Math.min(currentHP + hp, maxHP),
     "system.resources.mana.value": Math.min(currentMana + mana, maxMana)
-  });
+  };
+
+  if (card.dataset.type === "long") {
+    updates["system.resources.inspiration.spent"] = false;
+  }
+
+  await actor.update(updates);
 
   // 💬 feedback visuel
   button.innerText =

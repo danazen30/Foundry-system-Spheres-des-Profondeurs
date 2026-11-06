@@ -755,6 +755,16 @@ function formatLoreBody(text) {
       continue;
     }
 
+    if (lines.length === 1 && lines[0] === "---") {
+      html.push(`<hr class="sdp-lore-break">`);
+      continue;
+    }
+
+    if (lines.length === 1 && /^###\s+/.test(lines[0])) {
+      html.push(`<h3>${formatLoreInline(lines[0].replace(/^###\s+/, ""))}</h3>`);
+      continue;
+    }
+
     if (lines.length === 1 && /^##\s+/.test(lines[0])) {
       html.push(`<h2>${formatLoreInline(lines[0].replace(/^##\s+/, ""))}</h2>`);
       continue;
@@ -1226,6 +1236,34 @@ function shouldInjectCareerJournalPage(app) {
 
 }
 
+function journalPagesRoot(root) {
+
+  if (!(root instanceof HTMLElement)) return null;
+
+  return root.querySelector(".journal-entry-pages")
+    ?? root.querySelector("[data-application-part='pages']");
+
+}
+
+function viewedJournalPageId(app, root = null) {
+
+  if (typeof app?.pageId === "string" && app.pageId) {
+    return app.pageId;
+  }
+
+  const inView = app?.pagesInView?.[0]?.dataset?.pageId;
+  if (inView) return inView;
+
+  const article = journalPagesRoot(root)
+    ?.querySelector(".journal-entry-page[data-page-id]");
+
+  return article?.dataset?.pageId
+    ?? app?._currentPageId
+    ?? app?.viewedPage?.id
+    ?? null;
+
+}
+
 function resolveJournalPageFromApp(app) {
 
   const directPage =
@@ -1250,28 +1288,10 @@ function resolveJournalPageFromApp(app) {
       ? app.element
       : app.element?.[0];
 
-  const pageId =
-    root?.querySelector?.("[data-page-id]")?.dataset?.pageId
-    ?? root?.querySelector?.(".journal-entry-page.active")?.dataset?.pageId
-    ?? app._currentPageId
-    ?? app.viewedPage?.id;
+  const pageId = viewedJournalPageId(app, root);
+  if (!pageId) return null;
 
-  if (pageId) {
-    return journal.pages.get(pageId) ?? null;
-  }
-
-  const className = app.constructor?.name ?? "";
-
-  if (
-    /JournalEntrySheet/i.test(className)
-    && !/ownership|permission/i.test(className)
-  ) {
-    return journal.pages.contents.find(page =>
-      isSdpJournalPage(page)
-    ) ?? null;
-  }
-
-  return null;
+  return journal.pages.get(pageId) ?? null;
 
 }
 
@@ -1281,11 +1301,16 @@ function findJournalPageInjectRoot(root, page) {
 
   if (page?.id) {
 
+    const pagesRoot = journalPagesRoot(root) ?? root;
+
     const byPageId =
-      root.querySelector(`[data-page-id="${page.id}"]`)
+      pagesRoot.querySelector(`.journal-entry-page[data-page-id="${page.id}"]`)
+      ?? pagesRoot.querySelector(`[data-page-id="${page.id}"]`)
       ?? root.querySelector(`[data-document-id="${page.id}"]`);
 
-    if (byPageId) return byPageId;
+    if (byPageId && !byPageId.closest(".toc, .pages-list")) {
+      return byPageId;
+    }
 
   }
 
@@ -1962,28 +1987,22 @@ function highlightSdpJournalActivePage(app, root = null) {
   const sheetRoot = root ?? getSdpJournalRoot(app);
   if (!app || !sheetRoot) return;
 
-  const pageId =
-    resolveJournalPageFromApp(app)?.id
-    ?? sheetRoot.querySelector("[data-application-part='pages'] [data-page-id]")?.dataset?.pageId
-    ?? sheetRoot.querySelector(".journal-entry-page.active, article[data-page-id]")?.dataset?.pageId
-    ?? app._currentPageId
-    ?? null;
-
+  const pageId = viewedJournalPageId(app, sheetRoot);
   if (!pageId) return;
 
   const tocRoot =
-    sheetRoot.querySelector("[data-application-part='sidebar']")
-    ?? sheetRoot.querySelector("aside.sidebar")
-    ?? sheetRoot.querySelector(".journal-sidebar")
-    ?? sheetRoot;
+    sheetRoot.querySelector("nav.toc, .pages-list.toc, .toc")
+    ?? sheetRoot.querySelector("[data-application-part='sidebar']")
+    ?? sheetRoot.querySelector("aside.sidebar");
 
-  tocRoot.querySelectorAll("[data-page-id].active").forEach(el => {
+  if (!tocRoot) return;
+
+  tocRoot.querySelectorAll("li[data-page-id].active").forEach(el => {
     el.classList.remove("active");
   });
 
-  tocRoot.querySelectorAll(`[data-page-id="${pageId}"]`).forEach(el => {
-    el.classList.add("active");
-  });
+  tocRoot.querySelector(`li[data-page-id="${pageId}"]`)
+    ?.classList.add("active");
 
 }
 

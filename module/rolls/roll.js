@@ -66,6 +66,28 @@ static getCritical(result, target, options = {}) {
   };
 }
 
+static withCritModifier(options = {}, critMod = 0) {
+
+  const mod = Number(critMod) || 0;
+  const critFailMax = Number(options.critFailMax ?? 100);
+  let critSuccessBase = Number(options.critSuccessBase ?? 5);
+  let critFailBase = Number(options.critFailBase ?? 96);
+
+  if (mod > 0) {
+    critSuccessBase = Math.min(critSuccessBase + mod, critFailBase - 1);
+  } else if (mod < 0) {
+    critFailBase = Math.max(critSuccessBase + 1, critFailBase + mod);
+  }
+
+  return {
+    ...options,
+    critSuccessBase,
+    critFailBase,
+    critFailMax
+  };
+
+}
+
   // =====================
 // TALENT SL MODIFIERS
 // =====================

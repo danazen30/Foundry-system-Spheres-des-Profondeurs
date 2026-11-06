@@ -98,6 +98,10 @@ export class SdpActor extends Actor {
     system.resources.corruption ??= {};
     system.resources.corruption.value ??= 0;
     system.resources.corruption.max ??= 0;
+    system.resources.inspiration ??= {};
+    system.resources.inspiration.spent ??= false;
+    system.resources.momentum ??= {};
+    system.resources.momentum.value ??= 1;
 
     // =====================
     // CUSTOM
@@ -231,6 +235,32 @@ if (lvl.inspirationDice) {
 
   return effects;
   }
+
+getInspirationDisplay() {
+
+  const formula = String(this.getSignEffects().inspirationDice || "").trim();
+  const match = formula.match(/^(\d+)\s*d\s*(\d+)/i);
+  const spent = !!this.system.resources?.inspiration?.spent;
+
+  if (!match) {
+    return {
+      formula,
+      faces: null,
+      current: spent ? 0 : 1,
+      spent,
+      available: !!formula && !spent
+    };
+  }
+
+  return {
+    formula,
+    faces: match[2],
+    current: spent ? 0 : Number(match[1]),
+    spent,
+    available: !spent
+  };
+
+}
 
   _prepareVehicleDerivedData() {
     const system = this.system;

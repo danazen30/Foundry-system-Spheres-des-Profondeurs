@@ -655,6 +655,25 @@ grid-area: sidebar;
   text-align: right; /* 🔥 valeur alignée à droite */
 }
 
+.inspiration-sheet-die {
+  font-size: 14px;
+  min-width: 28px;
+  text-align: right;
+}
+
+.inspiration-restore {
+  display: inline;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
 /* =========================
    MOVEMENT CLEAN
 ========================= */

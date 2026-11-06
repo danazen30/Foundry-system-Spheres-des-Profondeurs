@@ -220,9 +220,11 @@ SL = adjusted.SL;
 
 const critFailBase = hasSkill ? 96 : 81;
 
-const crit = SdpRoll.getCritical(result, targetValue, {
-  critFailBase
-});
+const crit = SdpRoll.getCritical(
+  result,
+  targetValue,
+  SdpRoll.withCritModifier({ critFailBase }, dialogMods.critMod)
+);
 
 // 🔥 HARD OVERRIDE
 if (result === 100) {
@@ -438,6 +440,7 @@ await actor.update({
      data-fixed-hit-location="${fixedHitLocation}"
      data-location-profile="${hitProfileKey}"
      data-talents='${JSON.stringify(selectedTalents)}'
+     data-crit-mod="${dialogMods.critMod || 0}"
      data-overcast="${overcast}"
      data-overcast-used="0">
 

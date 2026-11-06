@@ -9,6 +9,10 @@ import {
 import { buildDamageModsControlsHtml } from "./damage-mods-ui.js";
 import { SdpSpell } from "../combat/spell.js";
 
+function critModOf(card) {
+  return Number(card?.dataset?.critMod || 0);
+}
+
 export function registerEditHandlers(html, message) {
 
   // =========================
@@ -60,7 +64,11 @@ const adjusted = SdpRoll.applyDynamicResult(newRoll, newTarget, success, SL);
 success = adjusted.success;
 SL = adjusted.SL;
 
-const crit = SdpRoll.getCritical(newRoll, newTarget);
+const crit = SdpRoll.getCritical(
+  newRoll,
+  newTarget,
+  SdpRoll.withCritModifier({}, critModOf(card))
+);
 
 // 🔥 HARD OVERRIDE
 if (newRoll === 100) {
@@ -94,7 +102,8 @@ if (crit.failure){
      data-target="${newTarget}"
      data-roll="${newRoll}"
      data-sl="${SL}"
-     data-actor="${card.dataset.actor}">
+     data-actor="${card.dataset.actor}"
+     data-crit-mod="${critModOf(card)}">
 
   <h3>${label}</h3>
 
@@ -218,9 +227,11 @@ const hasSkill = card.dataset.hasskill === "true";
 
 const critFailBase = hasSkill ? 96 : 81;
 
-const crit = SdpRoll.getCritical(newRoll, target, {
-  critFailBase
-});
+const crit = SdpRoll.getCritical(
+  newRoll,
+  target,
+  SdpRoll.withCritModifier({ critFailBase }, critModOf(card))
+);
 
 // 🔥 HARD OVERRIDE
 if (newRoll === 100) {
@@ -523,9 +534,7 @@ if (traits.some(t => t.key === "dangerous")) {
 const crit = SdpRoll.getCritical(
   newRoll,
   finalTarget,
-  {
-    critFailBase
-  }
+  SdpRoll.withCritModifier({ critFailBase }, critModOf(card))
 );
 
 // 🔥 HARD OVERRIDE
@@ -613,6 +622,7 @@ if (isImpaling && isRound && newRoll <= target) {
      data-location-profile="${card.dataset.locationProfile || "humanoid"}"
      data-critical="${crit.success}"
      data-brutal="${card.dataset.brutal}"
+     data-crit-mod="${critModOf(card)}"
      data-traits='${JSON.stringify(traits)}'>
 
   <h3>
@@ -728,9 +738,7 @@ if (traits.some(t => t.key === "dangerous")) {
 const crit = SdpRoll.getCritical(
   newRoll,
   baseAttack * 10,
-  {
-    critFailBase: critFailMin
-  }
+  SdpRoll.withCritModifier({ critFailBase: critFailMin }, critModOf(card))
 );
 
 // 🔥 HARD OVERRIDE
@@ -802,6 +810,7 @@ if (isImpaling && isRound && successCheck && !crit.failure) {
      data-location-profile="${card.dataset.locationProfile || "humanoid"}"
      data-critical="${crit.success}"
      data-brutal="${card.dataset.brutal}"
+     data-crit-mod="${critModOf(card)}"
      data-traits='${JSON.stringify(traits)}'>
 
  <h3>

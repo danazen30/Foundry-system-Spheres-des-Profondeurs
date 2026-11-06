@@ -326,6 +326,14 @@
           "label": "Resolve",
           "value": 0
         },
+        "inspiration": {
+          "spent": false
+        },
+        "momentum": {
+          "type": "number",
+          "label": "Momentum",
+          "value": 1
+        },
         "corruption": {
           "type": "number",
           "label": "Corruption",

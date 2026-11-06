@@ -33,6 +33,20 @@
       <label>{{localize "SDP.Custom"}}</label>
       <input type="number" name="customMod" value="0">
     </div>
+
+    <div class="sdp-roll-field">
+      <label title="{{localize "SDP.CritModifierHint"}}">{{localize "SDP.CritModifier"}}</label>
+      <select name="critMod">
+        <option value="10">+10</option>
+        <option value="0" selected>0</option>
+        <option value="-10">-10</option>
+      </select>
+    </div>
+
+    <div class="sdp-roll-field">
+      <label>{{localize "SDP.Custom"}}</label>
+      <input type="number" name="critCustom" value="0">
+    </div>
   </div>
 
   <div class="modifier-box sdp-roll-modifier-total">
@@ -145,9 +159,11 @@
       <strong>{{inspirationDice}}</strong>
     </p>
 
+    {{#unless inspirationResult}}
     <button type="button" data-action="rollInspiration">
       {{localize "SDP.RollInspiration"}}
     </button>
+    {{/unless}}
 
     {{#if inspirationResult}}
       <p class="sdp-roll-inspiration-result">

@@ -579,7 +579,10 @@ return {
     conditionDetails,
     modifiers: this._modifiers,
     hitLocations,
-    inspirationDice: this.signEffects.inspirationDice,
+    inspirationDice: (
+      this._inspirationRolled
+      || !this.actor.system.resources?.inspiration?.spent
+    ) ? (this.signEffects.inspirationDice || null) : null,
     inspirationResult: this.inspirationResult,
     spellData: this.spellData,
     type: this.type,
@@ -682,12 +685,17 @@ updatePreview();
     root.querySelector('[data-action="rollInspiration"]')?.addEventListener("click", async () => {
 
       const dice = this.signEffects.inspirationDice;
-      if (!dice) return;
+      if (!dice || this.actor.system.resources?.inspiration?.spent) return;
 
       const roll = new Roll(dice);
       await roll.evaluate();
 
       this.inspirationResult = roll.total;
+      this._inspirationRolled = true;
+
+      await this.actor.update({
+        "system.resources.inspiration.spent": true
+      });
 
       await presentRollToMessage(roll, {
         speaker: ChatMessage.getSpeaker({ actor: this.actor }),
@@ -820,7 +828,9 @@ game.sdp.dialogModifiers = {
   finesse,
   talents: selectedTalents,
   inspiration: this.inspirationResult,
-  attributeOverride
+  attributeOverride,
+  critMod: Number(root.querySelector('[name="critMod"]')?.value || 0)
+    + Number(root.querySelector('[name="critCustom"]')?.value || 0)
 };
 
 // DEBUG
@@ -934,7 +944,11 @@ SL = game.sdp.Roll.applyTalentSLModifiers(
   game.sdp?.dialogModifiers?.talents || []
 );
 
-const crit = SdpRoll.getCritical(result, target);
+const crit = SdpRoll.getCritical(
+  result,
+  target,
+  SdpRoll.withCritModifier({}, dialogMods.critMod)
+);
 
 // 🔥 HARD OVERRIDE
 if (result === 100) {
@@ -954,7 +968,8 @@ await presentRollToMessage(roll, {
        data-target="${target}"
        data-roll="${result}"
        data-sl="${SL}"
-       data-actor="${this.actor.id}">
+       data-actor="${this.actor.id}"
+       data-crit-mod="${dialogMods.critMod || 0}">
 
     <h3>${this.label}</h3>
 

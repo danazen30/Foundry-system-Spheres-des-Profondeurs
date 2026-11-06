@@ -195,23 +195,33 @@
     <!-- SECONDARY -->
     <div class="resource-box secondary-box">
       <div class="secondary-item">
-        <label>{{localize "SDP.Fortune"}}</label>
-        <input type="number" name="system.resources.fortune.value" value="{{system.resources.fortune.value}}">
-      </div>
-
-      <div class="secondary-item">
-        <label>{{localize "SDP.Resolve"}}</label>
-        <input type="number" name="system.resources.resolve.value" value="{{system.resources.resolve.value}}">
-      </div>
-
-      <div class="secondary-item">
         <label>{{localize "SDP.Fate"}}</label>
         <input type="number" name="system.resources.fate.value" value="{{system.resources.fate.value}}">
       </div>
 
       <div class="secondary-item">
+        <label>{{localize "SDP.Inspiration"}}</label>
+        <span class="inspiration-sheet-die">
+          {{#if inspiration.faces}}
+            {{#if inspiration.spent}}
+              <span class="inspiration-restore" data-action="restoreInspiration" role="button">0</span>d{{inspiration.faces}}
+            {{else}}
+              {{inspiration.current}}d{{inspiration.faces}}
+            {{/if}}
+          {{else}}
+            —
+          {{/if}}
+        </span>
+      </div>
+
+      <div class="secondary-item">
         <label>{{localize "SDP.Resilience"}}</label>
         <input type="number" name="system.resources.resilience.value" value="{{system.resources.resilience.value}}">
+      </div>
+
+      <div class="secondary-item">
+        <label>{{localize "SDP.Momentum"}}</label>
+        <input type="number" name="system.resources.momentum.value" value="{{system.resources.momentum.value}}" data-action="editMomentum">
       </div>
     </div>
     {{/unless}}

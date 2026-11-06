@@ -582,6 +582,7 @@ return {
   xp: xpData,
   sign,
   signEffects,
+  inspiration: this.actor.getInspirationDisplay(),
   canLevelUp:(  currentLevel === 0 &&  !hasValidatedLevel0) ||
   game.sdp.level.canLevelUp(this.actor),
   availableLevel: game.sdp.level.getAvailableLevel(this.actor),
@@ -1176,6 +1177,7 @@ await presentDice([hpRoll, manaRoll]);
          data-actor="${actor.id}"
          data-hp="${hp}"
          data-mana="${mana}"
+         data-type="${type}"
          data-used="false">
 
       <h3>${
