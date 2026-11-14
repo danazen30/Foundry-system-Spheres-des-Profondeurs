@@ -32,21 +32,23 @@
   {{item.displayName}}
 </span>
 
-    {{#if ../currentCareer}}
-      {{#if item.isCareerSkill}}
-        <button
-          class="skill-advance-btn"
-          data-action="advanceSkill"
-          data-item-id="{{item.id}}">
-          
+    {{#if item.canPlayerAdvance}}
+      <button
+        class="skill-advance-btn"
+        data-action="advanceSkill"
+        data-item-id="{{item.id}}">
+
+        {{#if ../currentCareer}}
           {{#if (gte item.system.advances (multiply ../currentCareer.system.level 5))}}
             ✔
           {{else}}
             +
           {{/if}}
+        {{else}}
+          +
+        {{/if}}
 
-        </button>
-      {{/if}}
+      </button>
     {{/if}}
 
   </div>
@@ -122,22 +124,24 @@
   {{item.displayName}}
 </span>
 
-              {{#if ../currentCareer}}
-                {{#if item.isCareerSkill}}
-                  <button
-                    class="skill-advance-btn"
-                    data-action="advanceSkill"
-                    data-item-id="{{item.id}}"
-                    title="{{localize 'SDP.AdvanceCostXP'}}">
+              {{#if item.canPlayerAdvance}}
+                <button
+                  class="skill-advance-btn"
+                  data-action="advanceSkill"
+                  data-item-id="{{item.id}}"
+                  title="{{localize 'SDP.AdvanceCostXP'}}">
 
+                  {{#if ../currentCareer}}
                     {{#if (gte item.system.advances (multiply ../currentCareer.system.level 5))}}
                       ✔
                     {{else}}
                       +
                     {{/if}}
+                  {{else}}
+                    +
+                  {{/if}}
 
-                  </button>
-                {{/if}}
+                </button>
               {{/if}}
 
             </td>

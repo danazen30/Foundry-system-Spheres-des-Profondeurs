@@ -211,6 +211,12 @@ async function ensureSceneMap(scene) {
     }
   }
 
+  const thumb = scene.thumb ?? "";
+
+  if (!thumb || /^worlds\//.test(thumb)) {
+    await scene.update({ thumb: mapUrl });
+  }
+
 }
 
 function findImportedScene(doc) {

@@ -42,6 +42,11 @@ import { SdpActor } from "./actor.js";
 const { ActorSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 
+function itemCanAdvance(item) {
+  const flag = item.system?.canAdvance;
+  return flag === true || flag === "true";
+}
+
 export class SdpActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 
 constructor(...args) {
@@ -186,6 +191,8 @@ for (const item of this.document.items) {
     !isPurchased;
 
   item.isCareerTalent = isCareerTalent;
+  item.canPlayerAdvance =
+    isCareerTalent || itemCanAdvance(item);
   item.isPurchased = isPurchased;
   item.isAvailable = isAvailable;
 
@@ -242,6 +249,9 @@ for (const item of this.document.items) {
   item.isCareerSkill = careerSkills.some(ref =>
     matchesItemRef(item, ref)
   );
+
+  item.canPlayerAdvance =
+    item.isCareerSkill || itemCanAdvance(item);
 
 }
 
