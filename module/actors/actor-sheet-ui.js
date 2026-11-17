@@ -116,6 +116,24 @@ export function restoreScroll(sheet) {
 
   if (!rootEl) return;
 
+  const restoreSkillScrolls = () => {
+
+    const saved = sheet._scrollPositions.skills;
+
+    if (!saved) return;
+
+    for (const [key, top] of Object.entries(saved)) {
+
+      const list = rootEl.querySelector(
+        `[data-skill-scroll="${key}"]`
+      );
+
+      if (list) list.scrollTop = top || 0;
+
+    }
+
+  };
+
   const tryRestoreScroll = () => {
 
     if (!rootEl.isConnected) return;
@@ -149,6 +167,8 @@ export function restoreScroll(sheet) {
 
     requestAnimationFrame(() => {
 
+      el.scrollTop = sheet._scrollPositions.main || 0;
+
       console.log(
         "NEXT FRAME",
         el.scrollTop,
@@ -158,6 +178,11 @@ export function restoreScroll(sheet) {
     });
 
   };
+
+  requestAnimationFrame(() => {
+    restoreSkillScrolls();
+    requestAnimationFrame(restoreSkillScrolls);
+  });
 
   requestAnimationFrame(tryRestoreScroll);
 
@@ -353,6 +378,8 @@ export function registerItemListeners(sheet, root) {
 
   registerEditItem(sheet, root);
 
+  registerCreatePossession(sheet, root);
+
   registerDeleteItem(sheet, root);
 
   registerArmorToggle(sheet, root);
@@ -364,6 +391,28 @@ export function registerItemListeners(sheet, root) {
   registerBooleanToggles(sheet, root);
 
   registerTraitActiveToggle(sheet, root);
+
+}
+
+function registerCreatePossession(sheet, root) {
+
+  root.querySelectorAll('[data-action="createPossession"]').forEach(el => {
+
+    el.addEventListener("click", async (event) => {
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      const [item] = await sheet.document.createEmbeddedDocuments("Item", [{
+        name: game.i18n.localize("SDP.NewPossession"),
+        type: "possession"
+      }]);
+
+      item?.sheet?.render(true);
+
+    });
+
+  });
 
 }
 

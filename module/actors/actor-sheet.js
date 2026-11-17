@@ -96,6 +96,18 @@ if (prevEl && prevEl.scrollHeight > prevEl.clientHeight) {
   this._scrollPositions.main = prevEl.scrollTop;
 }
 
+const skillLists = this.element?.querySelectorAll("[data-skill-scroll]");
+
+if (skillLists?.length) {
+  const skillScrolls = {};
+
+  for (const list of skillLists) {
+    skillScrolls[list.dataset.skillScroll] = list.scrollTop;
+  }
+
+  this._scrollPositions.skills = skillScrolls;
+}
+
   return super.render(...args);
 }
 

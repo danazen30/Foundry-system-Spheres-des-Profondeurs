@@ -1,5 +1,5 @@
 <tr class="inventory-item-details" data-details="{{id}}" style="display:none;">
-  <td colspan="100%">
+  <td colspan="{{#if colspan}}{{colspan}}{{else}}100{{/if}}">
     <div class="inventory-item-details-content">
 
       {{#unless compact}}

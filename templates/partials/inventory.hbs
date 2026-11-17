@@ -627,9 +627,12 @@
 </table>
 {{/if}}
 
-{{#if possessions.length}}
-<h2>{{localize "SDP.Possessions"}}</h2>
+<div class="inventory-section-head">
+  <h2>{{localize "SDP.Possessions"}}</h2>
+  <button type="button" class="inventory-add" data-action="createPossession" title="{{localize 'SDP.NewPossession'}}">+</button>
+</div>
 
+{{#if possessions.length}}
 <table class="inventory-table">
   <tr>
     <th></th>
@@ -700,7 +703,7 @@
 
 <td>
   <div class="container-cell">
-    <button class="container-toggle" data-action="toggleContainer">▶</button>
+    <button type="button" class="container-toggle" data-action="toggleContainer">▶</button>
     <strong class="inventory-item-name" data-item-id="{{container.id}}">{{container.displayName}}</strong>
   </div>
 </td>
@@ -734,6 +737,14 @@
   <div class="container-inner-wrapper">
     <table class="container-table inner">
 
+<colgroup>
+  <col style="width:28px">
+  <col>
+  <col style="width:52px">
+  <col style="width:52px">
+  <col style="width:88px">
+  <col style="width:64px">
+</colgroup>
 <thead>
 <tr>
   <th></th>
@@ -767,7 +778,7 @@
 
 </tr>
 
-{{> "systems/sdp/templates/partials/inventory-item-fold.hbs"}}
+{{> "systems/sdp/templates/partials/inventory-item-fold.hbs" id=item.id type=item.type system=item.system foldDescription=item.foldDescription colspan=6}}
 
 {{/each}}
 

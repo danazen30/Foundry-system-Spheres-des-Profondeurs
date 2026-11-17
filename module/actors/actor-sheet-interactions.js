@@ -540,19 +540,26 @@ function registerContainers(sheet, root) {
 
     el.addEventListener("click", (event) => {
 
+      event.preventDefault();
+      event.stopPropagation();
+
       const button =
         event.currentTarget;
 
       const row =
         button.closest("tr");
 
+      const containerId =
+        row?.dataset.containerId;
+
+      if (!containerId) return;
+
       const contentRow =
-        row.nextElementSibling;
+        row.parentElement?.querySelector(
+          `:scope > .container-content-row[data-container="${containerId}"]`
+        );
 
       if (!contentRow) return;
-
-      const containerId =
-        row.dataset.containerId;
 
       const isOpen =
         sheet.openContainers.has(containerId);

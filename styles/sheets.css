@@ -1720,6 +1720,38 @@ input.movement-value {
   letter-spacing: 0.5px;
 }
 
+.inventory-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.inventory-section-head h2 {
+  margin: 6px 0 2px 0;
+}
+
+.inventory-add {
+  all: unset;
+  box-sizing: border-box;
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 1px solid #666;
+  border-radius: 4px;
+  color: #ddd;
+  background: #2a2222;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.inventory-add:hover {
+  background: #444;
+}
+
 
 
 /* =========================
@@ -1951,11 +1983,16 @@ input.movement-value {
   font-weight: bold;
 }
 
-.container-content-row td {
+.container-table tr.container-content-row,
+.container-table tr.container-content-row > td {
+  height: auto;
+}
+
+.container-table tr.container-content-row > td {
   padding: 0;
   width: 100%;
-  overflow: hidden;
-  vertical-align: middle;
+  overflow: visible;
+  vertical-align: top;
 }
 
 
@@ -1965,6 +2002,11 @@ input.movement-value {
   border: none;
   border-radius: 0;
   background: transparent;
+  overflow: visible;
+}
+
+.container-table.inner tr.item-row {
+  height: auto;
 }
 
 .container-table.inner td,
@@ -1996,10 +2038,23 @@ input.movement-value {
 }
 
 /* wrapper scroll clean */
-.container-table.inner td:first-child {
+.container-table.inner tr.item-row > td:first-child {
   width: 26px;
-  height: 18px; /* 🔥 même hauteur que ta row */
+  height: 18px;
   padding: 1px;
+}
+
+.container-table.inner tr.inventory-item-details {
+  height: auto;
+}
+
+.container-table.inner tr.inventory-item-details > td {
+  width: auto;
+  height: auto;
+  padding: 4px 8px;
+  text-align: left;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .container-table.inner .item-img {
@@ -3255,6 +3310,9 @@ text-align:center;
   display: flex;
   flex-direction: column;
   gap: 6px;
+
+  min-width: 0;
+  max-width: 100%;
 }
 
 .note-header {
@@ -3293,9 +3351,34 @@ text-align:center;
   min-height: 55px;
   max-height: 100px;
   color: #eee;
+  overflow-x: hidden;
   overflow-y: auto;
   font-size: 14px;
   line-height: 1.4;
+
+  min-width: 0;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.note-display :where(*),
+.note-editor,
+.note-editor prose-mirror,
+.note-editor .editor-content,
+.note-editor .editor-content :where(*) {
+  max-width: 100%;
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.note-editor,
+.note-editor prose-mirror,
+.note-editor .editor-content {
+  overflow-x: hidden;
 }
 
 /* =========================
@@ -3659,7 +3742,13 @@ text-align:center;
   min-height: 200px;
   max-height: 240px;
 
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: hidden;
   overflow-y: auto;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 /* prose mirror content */
@@ -3668,7 +3757,10 @@ text-align:center;
   min-height: 200px;
   max-height: 240px;
 
+  overflow-x: hidden;
   overflow-y: auto;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 /* =========================

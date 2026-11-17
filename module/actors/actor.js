@@ -5,6 +5,7 @@ import { SdpMount } from "../system/mount-utils.js";
 import {
   actorHasWeaponSkill,
   findActorSkillForRef,
+  getBestActorSkillForWeapon,
   parseWeaponSkillRefs
 } from "../system/weapon-skill-utils.js";
 import {
@@ -1307,45 +1308,19 @@ const defenseWeapon = this.items.find(w =>
 
 if (defenseWeapon) {
 
-  const skill = getSkill(defenseWeapon.system.skill);
+  let value = this._getParrySkillBase(defenseWeapon);
 
-  let base = skill
-    ? skill.system.value
-    : system.attributes.meleeAbility.value;
+  value += Number(defenseWeapon.system.parryBonus || 0) * 10;
 
-let value = base + (Number(defenseWeapon.system.parryBonus || 0) * 10);
+  if (defenseWeapon.system.offhand) value -= offhandPenalty;
 
-if (defenseWeapon.system.offhand) value -= offhandPenalty;
+  const hasValidSkill = actorHasWeaponSkill(
+    this,
+    defenseWeapon
+  );
 
-// =========================
-// DEFENSIVE TRAIT
-// =========================
-
-const traits = defenseWeapon.system.traits || [];
-
-// =========================
-// CHECK DEFENSIVE TRAIT
-// =========================
-
-const hasDefensive = traits.some(t => t.key === "defensive");
-
-// =========================
-// SKILL CHECK
-// =========================
-
-const hasValidSkill = actorHasWeaponSkill(
-  this,
-  defenseWeapon
-);
-
-// =========================
-// TRAIT BONUS (PROPRE)
-// =========================
-
-const traitBonus = this._getWeaponTraitParryBonus(defenseWeapon, hasValidSkill);
-
-value += traitBonus;
-parryBase = value;
+  value += this._getWeaponTraitParryBonus(defenseWeapon, hasValidSkill);
+  parryBase = value;
 
   console.log("SDP | Parry from defense weapon", {
     weapon: defenseWeapon.name,
@@ -1359,26 +1334,21 @@ else if (meleeWeapons.length > 0) {
 
   const values = [];
 
-for (let weapon of meleeWeapons) {
+  for (let weapon of meleeWeapons) {
 
-  const hasValidSkill = actorHasWeaponSkill(this, weapon);
+    const hasValidSkill = actorHasWeaponSkill(this, weapon);
 
-  const skill = getSkill(weapon.system.skill);
+    let value = this._getParrySkillBase(weapon);
 
-  let base = skill
-    ? skill.system.value
-    : system.attributes.meleeAbility.value;
+    value += Number(weapon.system.parryBonus || 0) * 10;
 
-  let value = base + (Number(weapon.system.parryBonus || 0) * 10);
+    const traitBonus = this._getWeaponTraitParryBonus(weapon, hasValidSkill);
+    value += traitBonus;
 
-  // ✅ BON ENDROIT
-  const traitBonus = this._getWeaponTraitParryBonus(weapon, hasValidSkill);
-  value += traitBonus;
+    if (weapon.system.offhand) value -= offhandPenalty;
 
-  if (weapon.system.offhand) value -= offhandPenalty;
-
-  values.push(value);
-}
+    values.push(value);
+  }
 
   parryBase = Math.max(...values);
 
@@ -1387,11 +1357,8 @@ for (let weapon of meleeWeapons) {
 // 🔥 NO WEAPON
 else {
 
-  const skill = getSkill("brawl");
+  parryBase = this._getParrySkillBase();
 
-  parryBase = skill
-    ? skill.system.value
-    : system.attributes.meleeAbility.value;
 }
     // =====================
     // ATTACK
@@ -1767,6 +1734,25 @@ base = this._getBestWeaponSkill(weapon);
   }
 
   return value;
+}
+
+_getParrySkillBase(weapon = null) {
+
+  if (weapon) {
+
+    const skill = getBestActorSkillForWeapon(this, weapon);
+
+    if (skill) return Number(skill.system.value || 0);
+
+  }
+
+  const skills = this.items.filter(item => item.type === "skill");
+  const brawl = findActorSkillForRef(skills, "brawl");
+
+  if (brawl) return Number(brawl.system.value || 0);
+
+  return Number(this.system.attributes.meleeAbility?.value || 0);
+
 }
 
 _getBestWeaponSkill(weapon) {

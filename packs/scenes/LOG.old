@@ -1,7 +1,3 @@
-2026/11/14-15:59:22.418 7fac Recovering log #463
-2026/11/14-15:59:22.423 7fac Delete type=0 #463
-2026/11/14-15:59:22.423 7fac Delete type=3 #461
-2026/11/14-15:59:23.644 744c Level-0 table #468: started
-2026/11/14-15:59:23.644 744c Level-0 table #468: 0 bytes OK
-2026/11/14-15:59:23.646 744c Delete type=0 #466
-2026/11/14-15:59:23.653 744c Manual compaction at level-0 from '!scenes!EFHb9Khe0Q62ot2h' @ 72057594037927935 : 1 .. '!scenes.walls!ZGaeysNgKZ0aIgL5.yU1o7oMus61qs4Xk' @ 0 : 0; will stop at (end)
+2026/11/16-04:27:26.144 1b7e4 Recovering log #476
+2026/11/16-04:27:26.149 1b7e4 Delete type=0 #476
+2026/11/16-04:27:26.150 1b7e4 Delete type=3 #475
