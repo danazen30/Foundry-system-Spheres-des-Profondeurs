@@ -1673,10 +1673,10 @@ _getWeaponTraitParryBonus(weapon, hasValidSkill) {
   }
 
   // =========================
-  // NEGATIVE TRAITS (si un jour)
+  // NEGATIVE TRAITS (ALWAYS)
   // =========================
 
-  // (tu peux en ajouter ici plus tard)
+  if (normalized.some(t => t.key === "slow")) bonus -= 10;
 
   // =========================
   // ITEM TRAITS (TOUJOURS ACTIFS)

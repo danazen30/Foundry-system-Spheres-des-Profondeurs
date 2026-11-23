@@ -350,6 +350,28 @@ registerWeaponToggle(
           "system.equipped": true
         });
 
+        const hasDefense = actor.items.some(i =>
+          i.type === "weapon" &&
+          i.system.equipped &&
+          i.system.isDefenseWeapon &&
+          i.id !== item.id &&
+          (
+            i.system.category === "melee" ||
+            (i.system.handedness || "").toLowerCase() === "special"
+          )
+        );
+
+        if (
+          !hasDefense &&
+          item.system.category === "melee"
+        ) {
+
+          await item.update({
+            "system.isDefenseWeapon": true
+          });
+
+        }
+
         return;
 
       }

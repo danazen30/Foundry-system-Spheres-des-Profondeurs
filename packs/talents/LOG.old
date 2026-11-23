@@ -1,11 +1,3 @@
-2026/11/16-04:27:26.025 1b7e0 Recovering log #1746
-2026/11/16-04:27:26.025 1b7e0 Level-0 table #1748: started
-2026/11/16-04:27:26.031 1b7e0 Level-0 table #1748: 1077 bytes OK
-2026/11/16-04:27:26.037 1b7e0 Delete type=0 #1746
-2026/11/16-04:27:26.037 1b7e0 Delete type=3 #1745
-2026/11/16-04:27:33.160 1b5ac Compacting 1@0 + 1@1 files
-2026/11/16-04:27:33.165 1b5ac Generated table #1750@0: 286 keys, 53958 bytes
-2026/11/16-04:27:33.165 1b5ac Compacted 1@0 + 1@1 files => 53958 bytes
-2026/11/16-04:27:33.167 1b5ac compacted to: files[ 0 1 0 0 0 0 0 ]
-2026/11/16-04:27:33.167 1b5ac Delete type=2 #1726
-2026/11/16-04:27:33.167 1b5ac Delete type=2 #1748
+2026/11/23-09:34:29.983 d78 Recovering log #1761
+2026/11/23-09:34:29.987 d78 Delete type=0 #1761
+2026/11/23-09:34:29.988 d78 Delete type=3 #1759

@@ -447,6 +447,46 @@ else {
   critBlock.innerHTML = "";
 }
 
+const baseDamage = spell.system.damage?.base?.value ?? spell.system.damage ?? 0;
+const diceDamage = spell.system.damage?.dice?.value ?? spell.system.damageDice ?? "";
+const hasDamage =
+  (String(baseDamage ?? "").trim() !== "" && String(baseDamage).trim() !== "0") ||
+  (typeof diceDamage === "string" && diceDamage.trim() !== "");
+
+let damageButton = card.querySelector(".roll-damage");
+let damageMods = card.querySelector(".sdp-damage-mods");
+
+if (success && hasDamage) {
+
+  if (!damageButton) {
+
+    const holder = document.createElement("div");
+    holder.innerHTML = `
+      ${buildDamageModsControlsHtml()}
+      <button class="roll-damage"
+        data-actor="${card.dataset.actor}"
+        data-token="${card.dataset.token || ""}"
+        data-weapon="${spell.id}"
+        data-ignore-armor="${!!spell.system.ignoreArmor}">
+        ${game.i18n.localize("SDP.RollDamage")}
+      </button>
+    `;
+
+    const hrs = card.querySelectorAll("hr");
+    const lastHr = hrs[hrs.length - 1];
+
+    if (lastHr) lastHr.after(...holder.childNodes);
+    else card.append(...holder.childNodes);
+
+  }
+
+} else {
+
+  damageButton?.remove();
+  damageMods?.remove();
+
+}
+
 const message = game.messages.get(
   ev.currentTarget.closest(".message").dataset.messageId
 );
