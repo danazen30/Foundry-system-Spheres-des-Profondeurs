@@ -671,7 +671,7 @@ function registerQuantityControls(sheet, root) {
 
 }
 
-function restoreContainerState(sheet, root) {
+export function restoreContainerState(sheet, root) {
 
   sheet.openContainers.forEach(containerId => {
 

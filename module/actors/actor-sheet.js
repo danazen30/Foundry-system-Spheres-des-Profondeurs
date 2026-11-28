@@ -829,8 +829,10 @@ async _onDropItem(event, data) {
 
   const actor = this.document;
 
-  if (event.target.closest(".container-block")) {
-    return super._onDropItem(event, data);
+  if (event.target?.closest?.(
+    ".container-table, .container-header-row, .container-content-row, .container-block"
+  )) {
+    return;
   }
 
   const item = await Item.fromDropData(data);

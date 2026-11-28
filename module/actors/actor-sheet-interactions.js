@@ -6,7 +6,8 @@ import { SimpleDialog } from "../apps/simple-dialog.js";
 
 import {
   getCost,
-  getTalentCost
+  getTalentCost,
+  restoreContainerState
 } from "./actor-sheet-utils.js";
 
 export function registerInteractionListeners(sheet, root) {
@@ -471,11 +472,22 @@ function registerInspirationRestore(sheet, root) {
 
 }
 
+function containerIdFromElement(el) {
+
+  return el?.dataset?.containerId
+    || el?.dataset?.container
+    || el?.querySelector?.(".container-header-row")?.dataset?.containerId
+    || "";
+
+}
+
 function registerContainers(sheet, root) {
 
-  root.querySelectorAll(".container-header-row").forEach(el => {
+  root.querySelectorAll("table.container-table:not(.inner)").forEach(el => {
 
-    el.addEventListener("dragover", e => e.preventDefault());
+    el.addEventListener("dragover", (event) => {
+      event.preventDefault();
+    });
 
     el.addEventListener("drop", async (event) => {
 
@@ -485,7 +497,11 @@ function registerContainers(sheet, root) {
         foundry.applications.ux.TextEditor
           .getDragEventData(event);
 
-      if (!data.uuid) return;
+      const containerId = containerIdFromElement(el);
+
+      if (!data?.uuid || !containerId) return;
+
+      event.stopPropagation();
 
       const item = await fromUuid(data.uuid);
 
@@ -493,14 +509,15 @@ function registerContainers(sheet, root) {
 
       const actor = sheet.document;
 
-      let actorItem =
+      const actorItem =
         actor.items.get(item.id);
 
       if (actorItem) {
 
+        if (actorItem.system?.containerId === containerId) return;
+
         await actorItem.update({
-          "system.containerId":
-            el.dataset.containerId
+          "system.containerId": containerId
         });
 
         return;
@@ -510,8 +527,7 @@ function registerContainers(sheet, root) {
         ...item.toObject(),
         system: {
           ...item.system,
-          containerId:
-            el.dataset.containerId
+          containerId
         }
       }]);
 
@@ -538,89 +554,76 @@ function registerContainers(sheet, root) {
 
   root.querySelectorAll('[data-action="toggleContainer"]').forEach(el => {
 
+    if (el.dataset.bound === "1") return;
+    el.dataset.bound = "1";
+
+    const toggle = (button) => {
+
+      const row = button.closest("tr");
+      const containerId = row?.dataset.containerId;
+
+      if (!containerId) return;
+
+      const contentRow = row.parentElement?.querySelector(
+        `:scope > .container-content-row[data-container="${containerId}"]`
+      );
+
+      if (!contentRow) return;
+
+      const isOpen = sheet.openContainers.has(containerId);
+
+      if (isOpen) {
+
+        sheet.openContainers.delete(containerId);
+        contentRow.style.display = "none";
+        button.textContent = "▶";
+
+      } else {
+
+        sheet.openContainers.add(containerId);
+        contentRow.style.display = "table-row";
+        button.textContent = "▼";
+
+      }
+
+    };
+
+    el.addEventListener("pointerdown", (event) => {
+
+      if (event.button !== 0) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+      toggle(event.currentTarget);
+
+    });
+
     el.addEventListener("click", (event) => {
 
       event.preventDefault();
       event.stopPropagation();
 
-      const button =
-        event.currentTarget;
+      if (event.detail !== 0) return;
 
-      const row =
-        button.closest("tr");
-
-      const containerId =
-        row?.dataset.containerId;
-
-      if (!containerId) return;
-
-      const contentRow =
-        row.parentElement?.querySelector(
-          `:scope > .container-content-row[data-container="${containerId}"]`
-        );
-
-      if (!contentRow) return;
-
-      const isOpen =
-        sheet.openContainers.has(containerId);
-
-      if (isOpen) {
-
-        sheet.openContainers.delete(containerId);
-
-        contentRow.style.display = "none";
-
-        button.textContent = "▶";
-
-      }
-
-      else {
-
-        sheet.openContainers.add(containerId);
-
-        contentRow.style.display = "table-row";
-
-        button.textContent = "▼";
-
-      }
+      toggle(event.currentTarget);
 
     });
 
   });
 
+  restoreContainerState(sheet, root);
+
 }
 
 function registerDragAndDrop(sheet, root) {
 
+  root.querySelectorAll("[data-item-id] img").forEach(img => {
+    img.setAttribute("draggable", "false");
+  });
+
   root.querySelectorAll('[data-item-id]').forEach(el => {
 
-    el.setAttribute("draggable", true);
-
-    el.addEventListener("mousedown", (event) => {
-
-      if (
-        event.target.closest(
-          "input, textarea, select, option, button, label, .condition-clickable"
-        )
-      ) {
-
-        el.setAttribute("draggable", false);
-
-      }
-
-      else {
-
-        el.setAttribute("draggable", true);
-
-      }
-
-    });
-
-    el.addEventListener("mouseup", () => {
-
-      el.setAttribute("draggable", true);
-
-    });
+    el.setAttribute("draggable", "true");
 
     el.addEventListener("dragstart", (event) => {
 
@@ -673,6 +676,8 @@ function registerDragAndDrop(sheet, root) {
 
       }
 
+      event.stopPropagation();
+      event.dataTransfer.effectAllowed = "copy";
       event.dataTransfer.setData(
         "text/plain",
         JSON.stringify({
